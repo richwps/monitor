@@ -16,10 +16,33 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class QosDataAccess {
+public class QosDataAccess extends DataAccess<AbstractQosEntity> {
+
+    @Override
+    public AbstractQosEntity find(Object primaryKey) {
+        return em.find(AbstractQosEntity.class, primaryKey);
+    }
     
+    public List<AbstractQosEntity> getByProcess(String identifier) {
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        parameter.put("identifier", identifier);
+        
+        return getBy("qos.getQosByProcess", parameter, AbstractQosEntity.class);
+    }
+    
+    public List<AbstractQosEntity> getByWps(String identifier) {
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        parameter.put("identifier", identifier);
+        
+        return getBy("qos.getQosByWps", parameter, AbstractQosEntity.class);
+    }
 }

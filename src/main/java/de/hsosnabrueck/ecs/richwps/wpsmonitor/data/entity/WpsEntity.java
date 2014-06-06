@@ -13,18 +13,27 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 /**
  *
  * @author FloH
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "wps.getAllWps", query = "SELECT t FROM WpsEntity t")
+})
 public class WpsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     private List<WpsProcessEntity> wpsProcess;
+    
+    @Version
+    private long version;
     
     @Id
     private String identifier;

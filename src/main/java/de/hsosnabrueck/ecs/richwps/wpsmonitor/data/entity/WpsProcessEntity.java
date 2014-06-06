@@ -13,15 +13,23 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 /**
  *
  * @author FloH
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier")
+})
 public class WpsProcessEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+    @Version
+    private long version;
     
     @Id
     private String identifier;

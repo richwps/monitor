@@ -16,10 +16,30 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcessDataAccess {
+public class WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
+
+    @Override
+    public WpsProcessEntity find(Object primaryKey) {
+        return em.find(WpsProcessEntity.class, primaryKey);
+    }
     
+    public List<WpsProcessEntity> getAllOfWps(String identifier) {
+        if(identifier == null || identifier.equals("")) {
+            throw new IllegalArgumentException("Identifier was null");
+        }
+        
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("identifier", identifier);
+        
+        return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
+    }
 }
