@@ -21,5 +21,24 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsRequest {
+    private final String rawRequest;
+    private final WpsProcessInfo processInfo;
+
+    public WpsRequest(final String rawRequest, final WpsProcessInfo processInfo) {
+        this.rawRequest = rawRequest;
+        this.processInfo = processInfo;
+    }
+
+    public String getRawRequest() {
+        return rawRequest;
+    }
+
+    public WpsProcessInfo getProcessInfo() {
+        return processInfo;
+    }
     
+    @Override
+    public String toString() {
+        return rawRequest;
+    }
 }

@@ -20,6 +20,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ConnectionException {
-    
+public class ConnectionException extends Exception{
+
+    public ConnectionException() {
+        super("Can't connect to the server.");
+    }
 }

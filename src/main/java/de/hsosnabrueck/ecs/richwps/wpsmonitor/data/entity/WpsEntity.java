@@ -7,6 +7,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -37,6 +38,7 @@ public class WpsEntity implements Serializable {
     
     @Id
     private String identifier;
+    private URI route;
     
     public WpsEntity() {
         this(null, new ArrayList<WpsProcessEntity>());
@@ -65,6 +67,14 @@ public class WpsEntity implements Serializable {
 
     public boolean remove(WpsProcessEntity o) {
         return wpsProcess.remove(o);
+    }
+
+    public URI getRoute() {
+        return route;
+    }
+
+    public void setRoute(URI route) {
+        this.route = route;
     }
 
     @Override

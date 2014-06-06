@@ -21,5 +21,50 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsResponse {
+    private Exception exception;
+    //private Exception exception;
+    private String responseBody;
+
+    public WpsResponse(Exception exception, String responseBody) {
+        this.exception = exception;
+        this.responseBody = responseBody;
+    }
+
+    public WpsResponse(String responseBody) {
+        this(null, responseBody);
+    }
     
+    public void setException(Exception exception) {
+        this.exception = exception;
+    }
+
+    public String getResponseBody() {
+        return responseBody;
+    }
+
+    public void setResponseBody(String responseBody) {
+        this.responseBody = responseBody;
+    }
+    
+    public Boolean isWpsException() {
+        return exception instanceof WpsException;
+    }
+    
+    public Boolean isConnectionException() {
+        return exception instanceof ConnectionException;
+    }
+    
+    public Boolean isOtherException() {
+        return !(isWpsException() || isConnectionException());
+    }
+    
+    public String getExceptionMessage() {
+        String message = null;
+        
+        if(exception != null) {
+            message = exception.getMessage();
+        }
+        
+        return message;
+    }
 }

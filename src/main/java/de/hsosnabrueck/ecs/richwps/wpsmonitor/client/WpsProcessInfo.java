@@ -16,10 +16,34 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
+import java.net.URI;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessInfo {
-    
+    private URI wpsUri;
+    private String processIdentifier;
+
+    public WpsProcessInfo(final URI wpsUri, final String processIdentifier) {
+        this.wpsUri = wpsUri;
+        this.processIdentifier = processIdentifier;
+    }
+
+    public URI getWpsUri() {
+        return wpsUri;
+    }
+
+    public void setWpsUri(URI wpsUri) {
+        this.wpsUri = wpsUri;
+    }
+
+    public String getProcessIdentifier() {
+        return processIdentifier;
+    }
+
+    public void setProcessIdentifier(String processIdentifier) {
+        this.processIdentifier = processIdentifier;
+    }
 }
