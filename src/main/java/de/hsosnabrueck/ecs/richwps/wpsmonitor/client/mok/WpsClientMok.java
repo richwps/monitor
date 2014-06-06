@@ -33,6 +33,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -71,6 +72,7 @@ public class WpsClientMok implements WpsClient {
     private HttpPost buildRequest(final WpsRequest request) throws UnsupportedEncodingException {
         HttpPost httpRequest = new HttpPost(request.getProcessInfo().getWpsUri());
         List<NameValuePair> body = new ArrayList<NameValuePair>();
+        body.add(new BasicNameValuePair("request", request.getRawRequest()));
 
         httpRequest.setEntity(new UrlEncodedFormEntity(body));
 
