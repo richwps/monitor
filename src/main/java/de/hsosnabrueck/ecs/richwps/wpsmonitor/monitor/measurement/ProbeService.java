@@ -16,10 +16,40 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ProbeService {
+    private List<Class<? extends QosProbe>> probeClasses;
+
+    public Integer addProbeClass(Class<? extends QosProbe> e) {
+        if(probeClasses.add(e)) {
+            return probeClasses.indexOf(e);
+        }
+        
+        return null;
+    }
+
+    public Class<? extends QosProbe> removeProbeClass(int index) {
+        return probeClasses.remove(index);
+    }
+
+    public boolean removeProbeClass(Class<? extends QosProbe> e) {
+        return probeClasses.remove(e);
+    }
     
+    public List<QosProbe> probesFactory() throws InstantiationException, IllegalAccessException {
+        List<QosProbe> factoredObjects = new ArrayList<QosProbe>();
+        
+        for(Class c : probeClasses) {
+            QosProbe add = (QosProbe)c.newInstance();
+            factoredObjects.add(add);
+        }
+        
+        return factoredObjects;
+    }
 }

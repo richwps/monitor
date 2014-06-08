@@ -12,6 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,6 +34,9 @@ public class WpsProcessEntity implements Serializable {
     
     @Id
     private String identifier;
+    
+    @Lob
+    private String rawRequest;
     
     @Id
     @ManyToOne(fetch=FetchType.LAZY)
@@ -67,6 +71,14 @@ public class WpsProcessEntity implements Serializable {
 
     public void setWps(WpsEntity wps) {
         this.wps = wps;
+    }
+
+    public String getRawRequest() {
+        return rawRequest;
+    }
+
+    public void setRawRequest(String rawRequest) {
+        this.rawRequest = rawRequest;
     }
     
     /**

@@ -17,6 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.mok.WpsClientMok;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,11 +29,7 @@ public class WpsClientFactory {
     private static Class<? extends WpsClient> defaultClientImpl = WpsClientMok.class;
     
     public static void setDefaultClient(final Class<? extends WpsClient> defaultImplementation) {
-        if(defaultImplementation == null) {
-            throw new IllegalArgumentException("Parameter was null");
-        }
-        
-        defaultClientImpl = defaultImplementation;
+        defaultClientImpl = Param.notNull(defaultClientImpl, "defaultImplementation");
     }
     
     public static WpsClient createDefault() {

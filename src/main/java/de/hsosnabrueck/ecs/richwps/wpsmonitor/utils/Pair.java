@@ -14,12 +14,26 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface WpsClient {
-    public WpsResponse execute(final WpsRequest request);
+public class Pair<A, B> {
+    private final A a;
+    private final B b;
+    
+    public Pair(final A a, final B b) {
+        this.a = Param.notNull(a, "a");
+        this.b = Param.notNull(b, "b");
+    }
+    
+    public A getA() {
+        return a;
+    }
+    
+    public B getB() {
+        return b;
+    }
 }

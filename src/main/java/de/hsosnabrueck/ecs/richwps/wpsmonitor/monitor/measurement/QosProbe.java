@@ -16,10 +16,26 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import java.util.Date;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class QosProbe {
+    private AbstractQosEntity measuredData;
+
+    public AbstractQosEntity getMeasuredData() {
+        return measuredData;
+    }
+
+    public void setMeasuredData(AbstractQosEntity measuredData) {
+        this.measuredData = measuredData;
+    }
     
+    public abstract void begin(WpsRequest request, Date start);
+    public abstract void end(WpsResponse response, Date end);
 }

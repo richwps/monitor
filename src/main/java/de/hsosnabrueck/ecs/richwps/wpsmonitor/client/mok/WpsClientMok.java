@@ -43,7 +43,7 @@ import org.apache.http.util.EntityUtils;
 public class WpsClientMok implements WpsClient {
 
     @Override
-    public WpsResponse execute(final WpsRequest request) throws ConnectionException, WpsException {
+    public WpsResponse execute(final WpsRequest request) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         String responseBody = null;

@@ -28,10 +28,20 @@ import javax.persistence.TypedQuery;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class DataAccess<T> {
+public abstract class DataAccess<T> implements AutoCloseable{
     private static String PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
     protected EntityManager em;
+    private final Object finalizerGuardian = new Object() {
+        @Override
+        protected void finalize() throws Throwable {
+            try {
+                close();
+            } finally {
+                super.finalize();
+            }
+        }
+    };
 
     public DataAccess() {
         em =  DataAccess.emf.createEntityManager();
@@ -61,17 +71,17 @@ public abstract class DataAccess<T> {
         return merged;
     }
 
-    public void remove(T o) {
+    public void remove(final T o) {
         beginTransaction();
         em.remove(o);
         commit();
     }
     
-    protected List<T> getBy(String queryName, Class c) {
+    protected List<T> getBy(final String queryName, final Class c) {
         return getBy(queryName, null, c);
     }
     
-    protected List<T> getBy(String queryName, Map<String, Object> parameters, Class c) {
+    protected List<T> getBy(final String queryName, final Map<String, Object> parameters, final Class c) {
         List<T> result = null;
         
         TypedQuery<T> query = em
@@ -98,5 +108,21 @@ public abstract class DataAccess<T> {
     
     protected void commit() {
         em.getTransaction().commit();
+    }
+    
+    @Override
+    public void close() {
+        if(em.isOpen()) {
+            em.close();
+        }
+    }
+    
+    @Override
+    public void finalize() throws Throwable {
+        try {
+            this.close();
+        } finally {
+            super.finalize();
+        }
     }
 }

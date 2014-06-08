@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ProbeJobListener {
-    
+public class Param {
+    public static <T> T notNull(T var, String name) {
+        if(var == null) {
+            throw new IllegalArgumentException(name + " was null.");
+        }
+        
+        return var;
+    }
 }

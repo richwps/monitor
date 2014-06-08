@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 
 /**
@@ -27,8 +28,8 @@ public class WpsProcessInfo {
     private String processIdentifier;
 
     public WpsProcessInfo(final URI wpsUri, final String processIdentifier) {
-        this.wpsUri = wpsUri;
-        this.processIdentifier = processIdentifier;
+        this.wpsUri = Param.notNull(wpsUri, "wpsUri");
+        this.processIdentifier = Param.notNull(processIdentifier, "processIdentifier");
     }
 
     public URI getWpsUri() {
