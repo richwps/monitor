@@ -24,9 +24,9 @@ public class Pair<A, B> {
     private final A a;
     private final B b;
     
-    public Pair(final A a, final B b) {
-        this.a = Param.notNull(a, "a");
-        this.b = Param.notNull(b, "b");
+    public Pair(final A left, final B right) {
+        this.a = Param.notNull(left, "left");
+        this.b = Param.notNull(right, "right");
     }
     
     public A getLeft() {
@@ -35,5 +35,36 @@ public class Pair<A, B> {
     
     public B getRight() {
         return b;
+    }
+
+    @Override
+    public String toString() {
+        return a.toString() + "." + b.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.a != null ? this.a.hashCode() : 0);
+        hash = 67 * hash + (this.b != null ? this.b.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pair<?, ?> other = (Pair<?, ?>) obj;
+        if (this.a != other.a && (this.a == null || !this.a.equals(other.a))) {
+            return false;
+        }
+        if (this.b != other.b && (this.b == null || !this.b.equals(other.b))) {
+            return false;
+        }
+        return true;
     }
 }

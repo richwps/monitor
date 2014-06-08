@@ -20,6 +20,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorControll {
+public class MonitorControl {
     
 }
