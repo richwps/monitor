@@ -30,16 +30,16 @@ import org.quartz.SchedulerException;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ProbeJobListener implements JobListener {
+public class MeasureJobListener implements JobListener {
     private final WpsProcessDataAccess dao;
     
-    public ProbeJobListener(final WpsProcessDataAccess dao) {
+    public MeasureJobListener(final WpsProcessDataAccess dao) {
         this.dao = dao;
     }
 
     @Override
     public String getName() {
-        return ProbeJobListener.class.getName();
+        return MeasureJobListener.class.getName();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ProbeJobListener implements JobListener {
                     // delete Job! must be re-created if the problem is solved
                     context.getScheduler().deleteJob(JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier()));
                 } catch (SchedulerException ex) {
-                    Logger.getLogger(ProbeJobListener.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MeasureJobListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
