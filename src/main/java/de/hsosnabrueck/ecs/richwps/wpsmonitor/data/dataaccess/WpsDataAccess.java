@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDataAccess extends DataAccess<WpsEntity> {
+public class WpsDataAccess extends AbstractDataAccess<WpsEntity> {
 
     @Override
     public WpsEntity find(Object primaryKey) {

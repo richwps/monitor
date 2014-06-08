@@ -23,6 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,27 +44,42 @@ import org.apache.http.util.EntityUtils;
 public class WpsClientMok implements WpsClient {
 
     @Override
-    public WpsResponse execute(final WpsRequest request) {
+    public WpsResponse execute(WpsRequest wpsRequest) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         String responseBody = null;
-
-        try {
-            CloseableHttpResponse httpResponse = httpClient.execute(buildRequest(request));
-            HttpEntity responseEntity = httpResponse.getEntity();
-            responseBody = EntityUtils.toString(responseEntity);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(WpsClientMok.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(WpsClientMok.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        WpsResponse response = new WpsResponse(responseBody);
+        Date responseTime = null;
+        WpsResponse response = null;
         
-        if (responseBody == null) {
-            response.setException(new ConnectionException());
-        } else if (isWpsException(responseBody)) {
-            response.setException(new WpsException());
+        if(wpsRequest != null) {
+            try {
+                // build http request
+                HttpPost httpRequest = buildRequest(wpsRequest);
+
+                // prepare request (init requestTime)
+                // and do request 
+                wpsRequest.prepareRequest();
+                CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
+                responseTime = new Date();
+                
+                // get response body
+                HttpEntity responseEntity = httpResponse.getEntity();
+                responseBody = EntityUtils.toString(responseEntity);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(WpsClientMok.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WpsClientMok.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // create response Object
+            response = new WpsResponse(responseBody, responseTime);
+
+            // set exception if necessary
+            if (responseBody == null) {
+                response.setException(new ConnectionException());
+            } else if (isWpsException(responseBody)) {
+                response.setException(new WpsException());
+            }
         }
         
         return response;

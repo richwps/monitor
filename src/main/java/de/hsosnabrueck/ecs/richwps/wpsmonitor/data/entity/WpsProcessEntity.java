@@ -7,16 +7,14 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
 /**
@@ -25,24 +23,26 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier")
+    @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier"),
+    @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier")
 })
 public class WpsProcessEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Version
     private long version;
-    
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
     private String identifier;
+    private boolean wpsException;
     
     @Lob
     private String rawRequest;
     
-    @Id
-    @ManyToOne(fetch=FetchType.LAZY)
+
+    @OneToOne
     private WpsEntity wps;
-    @OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    private List<AbstractQosEntity> qosData;
 
     public WpsProcessEntity() {
         this(null, null);
@@ -80,27 +80,42 @@ public class WpsProcessEntity implements Serializable {
     public void setRawRequest(String rawRequest) {
         this.rawRequest = rawRequest;
     }
-    
-    /**
-     * ATTENTION! If u use this method, lazy load will load ALL associated
-     * AbstractQosEntities ...
-     * 
-     * @param e
-     * @return 
-     */
-    public boolean add(AbstractQosEntity e) {
-        return qosData.add(e);
+
+    public Long getId() {
+        return id;
     }
 
-    public boolean remove(AbstractQosEntity o) {
-        return qosData.remove(o);
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public List<AbstractQosEntity> getQosData() {
-        return qosData;
+    public boolean isWpsException() {
+        return wpsException;
     }
 
-    public void setQosData(List<AbstractQosEntity> qosData) {
-        this.qosData = qosData;
+    public void setWpsException(boolean wpsException) {
+        this.wpsException = wpsException;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final WpsProcessEntity other = (WpsProcessEntity) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 }

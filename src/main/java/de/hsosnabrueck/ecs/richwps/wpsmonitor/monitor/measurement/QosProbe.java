@@ -19,7 +19,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import java.util.Date;
 
 /**
  *
@@ -36,6 +35,5 @@ public abstract class QosProbe {
         this.measuredData = measuredData;
     }
     
-    public abstract void begin(WpsRequest request, Date start);
-    public abstract void end(WpsResponse response, Date end);
+    public abstract void execute(WpsRequest request, WpsResponse response);
 }

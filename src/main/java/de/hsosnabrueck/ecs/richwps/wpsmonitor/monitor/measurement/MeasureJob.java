@@ -20,9 +20,11 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.AbstractDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Pair;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,73 +42,77 @@ import org.quartz.JobExecutionException;
 public class MeasureJob implements Job {
 
     protected final WpsProcessEntity processEntity;
-    protected final DataAccess dao;
+    protected final AbstractDataAccess dao;
     protected List<QosProbe> probes;
+    protected Boolean error;
 
-    protected Date startTime;
-    protected Date endTime;
-
-    protected WpsResponse response;
-    protected WpsRequest request;
-
-    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final DataAccess dao) {
+    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final AbstractDataAccess dao) {
         this.probes = Param.notNull(probes, "probeService");
         this.dao = Param.notNull(dao, "dao");
         this.processEntity = Param.notNull(entity, "entity");
+        error = false;
     }
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
-            initRequest();
-            doMeasure();
-            callProbes();
-            persistData();
-        } catch(Exception ex) {
+            Pair<WpsRequest, WpsResponse> pair = callWps();
+
+            // if no execption occurs, than call probes and persist Data 
+            if (!pair.getRight().isWpsException()) {
+                callProbes(pair.getLeft(), pair.getRight());
+                
+                MeasuredDataEntity toPersist = new MeasuredDataEntity();
+                
+                toPersist.setProcess(processEntity);
+                toPersist.setData(getMeasuredDatas());
+                toPersist.setCreateTime(new Date());
+                
+                dao.persist(toPersist);
+            } 
+            
+            error = pair.getRight().isOtherException() || pair.getRight().isWpsException();
+        } catch (Exception ex) {
             Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             dao.close();
         }
     }
 
-    private void persistData() {
-        for (AbstractQosEntity q : getMeasuredDatas()) {
-            dao.persist(q);
-        }
-    }
-
-    private void callProbes() {
+    /**
+     * call the probes with the request and response data
+     */
+    private void callProbes(final WpsRequest request, final WpsResponse response) {
         for (QosProbe p : probes) {
-            p.begin(request, startTime);
-            p.end(response, endTime);
+            p.execute(request, response);
         }
     }
 
-    public void initRequest() {
-        WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getRoute(), processEntity.getIdentifier());
-        request = new WpsRequest(processEntity.getRawRequest(), info);
-    }
-
-    private void doMeasure() {
+    private Pair<WpsRequest, WpsResponse> callWps() {
         WpsClient client = WpsClientFactory.createDefault();
+        WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getRoute(), processEntity.getIdentifier());
 
-        startTime = new Date();
-        response = client.execute(request);
-        endTime = new Date();
+        WpsRequest request = new WpsRequest(processEntity.getRawRequest(), info);
+        WpsResponse response = client.execute(request);
+
+        return new Pair<WpsRequest, WpsResponse>(request, response);
     }
 
     public List<AbstractQosEntity> getMeasuredDatas() {
         List<AbstractQosEntity> measuredDatas = new ArrayList<AbstractQosEntity>();
-        AbstractQosEntity add = null;
 
         for (QosProbe p : probes) {
-            // associate measured data with the specific process entity
-            add = p.getMeasuredData();
-            add.setProcess(processEntity);
-
-            measuredDatas.add(add);
+            measuredDatas.add(p.getMeasuredData());
         }
 
         return measuredDatas;
+    }
+
+    public Boolean cantMeasure() {
+        return error;
+    }
+
+    public WpsProcessEntity getProcessEntity() {
+        return processEntity;
     }
 }

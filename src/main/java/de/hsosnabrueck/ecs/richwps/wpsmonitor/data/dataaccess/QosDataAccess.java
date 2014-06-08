@@ -16,7 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,24 +25,24 @@ import java.util.Map;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class QosDataAccess extends DataAccess<AbstractQosEntity> {
+public class QosDataAccess extends AbstractDataAccess<MeasuredDataEntity> {
 
     @Override
-    public AbstractQosEntity find(Object primaryKey) {
-        return em.find(AbstractQosEntity.class, primaryKey);
+    public MeasuredDataEntity find(Object primaryKey) {
+        return em.find(MeasuredDataEntity.class, primaryKey);
     }
     
-    public List<AbstractQosEntity> getByProcess(String identifier) {
+    public List<MeasuredDataEntity> getByProcess(String identifier) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", identifier);
         
-        return getBy("qos.getQosByProcess", parameter, AbstractQosEntity.class);
+        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class);
     }
     
-    public List<AbstractQosEntity> getByWps(String identifier) {
+    public List<MeasuredDataEntity> getByWps(String identifier) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", identifier);
         
-        return getBy("qos.getQosByWps", parameter, AbstractQosEntity.class);
+        return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class);
     }
 }

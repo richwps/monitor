@@ -5,6 +5,7 @@
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity</class>
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity</class>
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity</class>
+    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby:MonitoredData"/>
       <property name="javax.persistence.jdbc.password" value=""/>

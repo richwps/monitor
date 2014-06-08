@@ -16,6 +16,8 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
+import java.util.Date;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -23,10 +25,23 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 public class WpsRequest {
     private final String rawRequest;
     private final WpsProcessInfo processInfo;
+    private Date requestTime;
 
     public WpsRequest(final String rawRequest, final WpsProcessInfo processInfo) {
         this.rawRequest = rawRequest;
         this.processInfo = processInfo;
+    }
+
+    public void prepareRequest() {
+        requestTime = new Date();
+    }
+    
+    public Boolean isExecuted() {
+        return requestTime != null;
+    }
+
+    public Date getRequestTime() {
+        return requestTime;
     }
 
     public String getRawRequest() {

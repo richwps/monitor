@@ -21,5 +21,5 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsClient {
-    public WpsResponse execute(final WpsRequest request);
+    public WpsResponse execute(final WpsRequest wpsRequest);
 }

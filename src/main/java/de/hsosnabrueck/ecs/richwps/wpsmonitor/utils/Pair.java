@@ -29,11 +29,11 @@ public class Pair<A, B> {
         this.b = Param.notNull(b, "b");
     }
     
-    public A getA() {
+    public A getLeft() {
         return a;
     }
     
-    public B getB() {
+    public B getRight() {
         return b;
     }
 }

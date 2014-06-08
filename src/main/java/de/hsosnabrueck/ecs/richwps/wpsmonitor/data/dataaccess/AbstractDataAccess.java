@@ -28,7 +28,7 @@ import javax.persistence.TypedQuery;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class DataAccess<T> implements AutoCloseable{
+public abstract class AbstractDataAccess<T> implements AutoCloseable{
     private static String PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
     protected EntityManager em;
@@ -43,16 +43,16 @@ public abstract class DataAccess<T> implements AutoCloseable{
         }
     };
 
-    public DataAccess() {
-        em =  DataAccess.emf.createEntityManager();
+    public AbstractDataAccess() {
+        em =  AbstractDataAccess.emf.createEntityManager();
     }
     
     public static void setPersistenceUnitName(String persistenceUnitName) {
-        DataAccess.PERSISTENCE_UNIT = persistenceUnitName;
+        AbstractDataAccess.PERSISTENCE_UNIT = persistenceUnitName;
     }
     
     public static String getPersistenceUnitName() {
-        return DataAccess.PERSISTENCE_UNIT;
+        return AbstractDataAccess.PERSISTENCE_UNIT;
     }
     
     public abstract T find(Object primaryKey);

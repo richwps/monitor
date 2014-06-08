@@ -17,17 +17,10 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Temporal;
 import javax.persistence.Version;
 
 /**
@@ -35,10 +28,6 @@ import javax.persistence.Version;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM AbstractQosEntity t WHERE t.process.identifier = :identifier"),
-    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM AbstractQosEntity t WHERE t.process.wps.identifier = :identifier")
-})
 public abstract class AbstractQosEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -49,13 +38,7 @@ public abstract class AbstractQosEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Column(nullable = false, updatable = false)
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date createTime;
     
-    @Column(nullable = false)
-    @ManyToOne(fetch=FetchType.LAZY)
-    private WpsProcessEntity process;
 
     public Long getId() {
         return id;
@@ -64,23 +47,7 @@ public abstract class AbstractQosEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public WpsProcessEntity getProcess() {
-        return process;
-    }
-
-    public void setProcess(WpsProcessEntity process) {
-        this.process = process;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

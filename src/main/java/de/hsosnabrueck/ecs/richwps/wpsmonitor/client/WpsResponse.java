@@ -16,22 +16,33 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
+import java.util.Date;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsResponse {
     private Exception exception;
-    //private Exception exception;
+    private Date responseTime;
     private String responseBody;
 
-    public WpsResponse(Exception exception, String responseBody) {
+    public WpsResponse(final Exception exception, final String responseBody, final Date responseTime) {
         this.exception = exception;
         this.responseBody = responseBody;
+        this.responseTime = responseTime;
     }
 
-    public WpsResponse(String responseBody) {
-        this(null, responseBody);
+    public WpsResponse(final String responseBody, final Date responseTime) {
+        this(null, responseBody, responseTime);
+    }
+
+    public Date getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Date responseTime) {
+        this.responseTime = responseTime;
     }
     
     public void setException(Exception exception) {
@@ -44,6 +55,10 @@ public class WpsResponse {
 
     public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
+    }
+    
+    public Boolean isException() {
+        return exception != null;
     }
     
     public Boolean isWpsException() {

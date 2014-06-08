@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.AbstractDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.quartz.Job;
+import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.spi.JobFactory;
@@ -29,22 +34,40 @@ import org.quartz.spi.TriggerFiredBundle;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobFactory implements JobFactory {
-    private ProbeService probeService;
-    private WpsProcessDataAccess wpsProcessDao;
-    
-    public MeasureJobFactory(ProbeService probeService, WpsProcessDataAccess dao) {
+
+    private final ProbeService probeService;
+    private final WpsProcessDataAccess processDao;
+
+    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao) {
         this.probeService = Param.notNull(probeService, "probeService");
-        this.wpsProcessDao = Param.notNull(dao, "dao");
+        this.processDao = Param.notNull(processDao, "processDao");
     }
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
-        Job job;
-        
-        if(bundle.getJobDetail().getJobClass().equals(MeasureJob.class)) {
-            /*WpsProcessEntity process = wpsProcessDao.
-            job = new MeasureJob*/
+        Job job = null;
+        JobDetail jobDetail = bundle.getJobDetail();
+
+        try {
+            if (jobDetail.getJobClass().equals(MeasureJob.class)) {
+                String jobNameAsProcess = jobDetail.getKey().getName();
+                String jobGroupAsWps = jobDetail.getKey().getGroup();
+
+                AbstractDataAccess dao = new QosDataAccess();
+                WpsProcessEntity process = processDao.find(jobGroupAsWps, jobNameAsProcess);
+
+                job = new MeasureJob(probeService.probesFactory(), process, dao);
+
+            } else {
+                job = bundle.getJobDetail().getJobClass().newInstance();
+            }
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(MeasureJobFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(MeasureJobFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return job;
     }
-    
+
 }
