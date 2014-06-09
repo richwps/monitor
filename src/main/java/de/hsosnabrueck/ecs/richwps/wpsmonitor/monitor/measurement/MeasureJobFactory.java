@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.AbstractDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDao;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -53,7 +53,7 @@ public class MeasureJobFactory implements JobFactory {
                 String jobNameAsProcess = jobDetail.getKey().getName();
                 String jobGroupAsWps = jobDetail.getKey().getGroup();
 
-                AbstractDataAccess dao = new QosDataAccess();
+                QosDataAccess dao = new QosDao();
                 WpsProcessEntity process = processDao.find(jobGroupAsWps, jobNameAsProcess);
 
                 job = new MeasureJob(probeService.probesFactory(), process, dao);

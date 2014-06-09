@@ -68,7 +68,7 @@ public class MeasureJobListener implements JobListener {
                 WpsProcessEntity process = specificJob.getProcessEntity();
                 process.setWpsException(true);
                 
-                dao.merge(process);
+                dao.update(process);
                 
                 try {
                     // delete Job! must be re-created if the problem is solved

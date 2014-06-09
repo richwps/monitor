@@ -20,7 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.AbstractDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -42,11 +42,11 @@ import org.quartz.JobExecutionException;
 public class MeasureJob implements Job {
 
     protected final WpsProcessEntity processEntity;
-    protected final AbstractDataAccess dao;
+    protected final QosDataAccess dao;
     protected List<QosProbe> probes;
     protected Boolean error;
 
-    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final AbstractDataAccess dao) {
+    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao) {
         this.probes = Param.notNull(probes, "probeService");
         this.dao = Param.notNull(dao, "dao");
         this.processEntity = Param.notNull(entity, "entity");
@@ -75,7 +75,11 @@ public class MeasureJob implements Job {
         } catch (Exception ex) {
             Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            dao.close();
+            try {
+                dao.close();
+            } catch (Exception ex) {
+                //Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

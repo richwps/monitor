@@ -17,20 +17,11 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import java.util.List;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDataAccess extends AbstractDataAccess<WpsEntity> {
+public interface WpsDataAccess extends DataAccess<WpsEntity> {
 
-    @Override
-    public WpsEntity find(Object primaryKey) {
-        return em.find(WpsEntity.class, primaryKey);
-    }
-    
-    public List<WpsEntity> getAll() {
-        return getBy("wps.getAllWps", WpsEntity.class);
-    }
 }

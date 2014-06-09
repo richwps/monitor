@@ -32,17 +32,17 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
     }
 
     @Override
-    public Boolean addWps(String wpdIdentifier, URI uri) {
+    public Boolean createWps(String wpdIdentifier, URI uri) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Boolean addProcess(String wpsIdentifier, String processIdentifier) {
+    public Boolean createProcess(String wpsIdentifier, String processIdentifier) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public TriggerKey addTrigger(String wpdIdentifier, String processIdentifier, TriggerConfig config) {
+    public TriggerKey createTrigger(String wpdIdentifier, String processIdentifier, TriggerConfig config) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

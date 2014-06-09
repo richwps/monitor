@@ -16,14 +16,23 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import java.util.List;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface QosDataAccess extends DataAccess<MeasuredDataEntity>  {
-    public List<MeasuredDataEntity> getByProcess(final String identifier);
-    public List<MeasuredDataEntity> getByWps(final String identifier);
+public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
+
+    @Override
+    public WpsEntity find(Object primaryKey) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<WpsEntity> get(Integer start, Integer count) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

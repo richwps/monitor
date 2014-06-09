@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDao;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
@@ -37,10 +37,10 @@ public class SchedulerFactory {
 
     public Scheduler getConfiguredScheduler() throws SchedulerException {        
         Scheduler result = StdSchedulerFactory.getDefaultScheduler();
-        MeasureJobFactory jobFactory = new MeasureJobFactory(probeService, new WpsProcessDataAccess());
+        MeasureJobFactory jobFactory = new MeasureJobFactory(probeService, new WpsProcessDao());
 
         result.setJobFactory(jobFactory);
-        result.getListenerManager().addJobListener(new MeasureJobListener(new WpsProcessDataAccess()));
+        result.getListenerManager().addJobListener(new MeasureJobListener(new WpsProcessDao()));
 
         return result;
     }

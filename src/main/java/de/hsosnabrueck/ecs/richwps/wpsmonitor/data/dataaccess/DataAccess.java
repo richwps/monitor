@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
+
+import java.util.List;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class TriggerData {
-    
+public interface DataAccess<T> extends AutoCloseable {
+    public T find(Object primaryKey);
+    public Boolean persist(T entityObject);
+    public T update(T entityObject);
+    public List<T> get(final Integer start, final Integer count);
 }
