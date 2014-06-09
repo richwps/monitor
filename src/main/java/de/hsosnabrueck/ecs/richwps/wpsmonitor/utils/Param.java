@@ -21,6 +21,10 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Param {
+    private Param() {
+        
+    }
+    
     public static <T> T notNull(T var, String name) {
         if(var == null) {
             throw new IllegalArgumentException(name + " was null.");
