@@ -16,15 +16,37 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
-    private Monitor monitorRef;
-
-    MonitorControl(Monitor monitor) {
-        this.monitorRef = monitor;
+public class Registry {
+    private static Map<String, Object> registryMap = new HashMap<String, Object>();
+            
+    private Registry() {
+        
     }
     
+    public static void set(final String key, final Object set) {
+        registryMap.put(key, set);
+    }
+    
+    public static <T> T get(final String key, final Class<T> typeOf) {
+        if(registryMap.containsKey(key)) {
+            Object g = registryMap.get(key);
+            
+            if(g.getClass().equals(typeOf)) {
+                return typeOf.cast(g);
+            }
+        }
+        
+        return null;
+    }
+    
+    public static Boolean isContaining(final String key) {
+        return registryMap.containsKey(key);
+    }
 }

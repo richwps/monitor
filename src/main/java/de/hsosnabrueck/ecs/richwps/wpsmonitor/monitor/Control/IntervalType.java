@@ -20,6 +20,12 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class Scheduler {
-    
+public enum IntervalType {
+    MILLISECONDS, 
+    SECONDS, 
+    MINUTES, 
+    HOURS, 
+    DAYS, 
+    WEEKS, 
+    MONTHS
 }
