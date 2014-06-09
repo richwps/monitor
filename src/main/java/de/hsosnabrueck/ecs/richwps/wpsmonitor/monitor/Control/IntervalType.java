@@ -21,11 +21,12 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public enum IntervalType {
-    MILLISECONDS, 
-    SECONDS, 
-    MINUTES, 
-    HOURS, 
-    DAYS, 
-    WEEKS, 
-    MONTHS
+    MILLISECOND, 
+    SECOND, 
+    MINUTE, 
+    HOUR, 
+    DAY, 
+    WEEK, 
+    MONTH,
+    YEAR
 }

@@ -18,13 +18,16 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.ArrayList;
+import java.util.List;
 import org.quartz.CalendarIntervalScheduleBuilder;
+import org.quartz.CalendarIntervalTrigger;
+import org.quartz.DateBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
@@ -78,37 +81,43 @@ public class SchedulerControl {
          * enum IntervalType MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS,
          * MONTHS
          */
+        Integer interval = config.getInterval();
+
         switch (Param.notNull(config, "config").getIntervalType()) {
-            case MILLISECONDS:
-                scheduleBuilder = simpleSchedule()
-                        .withIntervalInMilliseconds(config.getInterval());
-                break;
-            case SECONDS:
-                scheduleBuilder = simpleSchedule()
-                        .withIntervalInSeconds(config.getInterval().intValue());
-                break;
-            case MINUTES:
-                scheduleBuilder = simpleSchedule()
-                        .withIntervalInMinutes(config.getInterval().intValue());
-                break;
-            case HOURS:
-                scheduleBuilder = simpleSchedule()
-                        .withIntervalInHours(config.getInterval().intValue());
-                break;
-            case DAYS:
+            case MILLISECOND:
                 scheduleBuilder = CalendarIntervalScheduleBuilder
                         .calendarIntervalSchedule()
-                        .withIntervalInDays(config.getInterval().intValue());
+                        .withInterval(interval, DateBuilder.IntervalUnit.MILLISECOND);
                 break;
-            case WEEKS:
+            case SECOND:
                 scheduleBuilder = CalendarIntervalScheduleBuilder
                         .calendarIntervalSchedule()
-                        .withIntervalInWeeks(config.getInterval().intValue());
+                        .withIntervalInSeconds(interval);
                 break;
-            case MONTHS:
+            case MINUTE:
                 scheduleBuilder = CalendarIntervalScheduleBuilder
                         .calendarIntervalSchedule()
-                        .withIntervalInMonths(config.getInterval().intValue());
+                        .withIntervalInMinutes(interval);
+                break;
+            case HOUR:
+                scheduleBuilder = CalendarIntervalScheduleBuilder
+                        .calendarIntervalSchedule()
+                        .withIntervalInHours(interval);
+                break;
+            case DAY:
+                scheduleBuilder = CalendarIntervalScheduleBuilder
+                        .calendarIntervalSchedule()
+                        .withIntervalInDays(interval);
+                break;
+            case WEEK:
+                scheduleBuilder = CalendarIntervalScheduleBuilder
+                        .calendarIntervalSchedule()
+                        .withIntervalInWeeks(interval);
+                break;
+            case MONTH:
+                scheduleBuilder = CalendarIntervalScheduleBuilder
+                        .calendarIntervalSchedule()
+                        .withIntervalInMonths(interval);
                 break;
         }
 
@@ -132,8 +141,92 @@ public class SchedulerControl {
                 .getTrigger(triggerKey)
                 .getJobKey()
         );
-        
+
         // replace old trigger with a new one
         scheduler.rescheduleJob(triggerKey, createTrigger(jobDetail, config));
+    }
+
+    public List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
+        List<TriggerKey> result = new ArrayList<TriggerKey>();
+
+        for (Trigger t : getTriggers(jobKey)) {
+            result.add(t.getKey());
+        }
+
+        return result;
+    }
+
+    private List<? extends Trigger> getTriggers(final JobKey jobKey) throws SchedulerException {
+        return scheduler.getTriggersOfJob(jobKey);
+    }
+
+    public List<TriggerConfig> getTriggerConfigsOfJob(final JobKey jobKey) throws SchedulerException {
+        List<TriggerConfig> result = new ArrayList<TriggerConfig>();
+
+        for (Trigger t : getTriggers(jobKey)) {
+            result.add(getTriggerConfigOfTrigger(t));
+        }
+
+        return result;
+    }
+
+    public TriggerConfig getConfigOfTrigger(final TriggerKey triggerKey) throws SchedulerException {
+        Trigger trigger = scheduler.getTrigger(triggerKey);
+        
+        return getTriggerConfigOfTrigger(trigger);
+    }
+
+    private TriggerConfig getTriggerConfigOfTrigger(final Trigger trigger) {
+        TriggerConfig triggerConfig = null;
+        
+        // save cast!
+        if (trigger.getClass().equals(CalendarIntervalTrigger.class)) {
+            CalendarIntervalTrigger calendarTrigger = (CalendarIntervalTrigger) trigger;
+
+            DateBuilder.IntervalUnit repeatIntervalUnit = calendarTrigger.getRepeatIntervalUnit();
+
+            triggerConfig = new TriggerConfig(
+                    trigger.getStartTime(),
+                    trigger.getEndTime(),
+                    calendarTrigger.getRepeatInterval(),
+                    convertIntervalUnit(repeatIntervalUnit)
+            );
+        }
+
+        return triggerConfig;
+    }
+
+    private IntervalType convertIntervalUnit(final DateBuilder.IntervalUnit iunit) {
+        // i was unsure if i schould use DataTypes of the scheduler library
+        // but i was used JobKey and TriggerKey too ..
+        IntervalType result = null;
+        switch (iunit) {
+            case MILLISECOND:
+                result = IntervalType.MILLISECOND;
+                break;
+            case SECOND:
+                result = IntervalType.SECOND;
+                break;
+            case MINUTE:
+                result = IntervalType.MINUTE;
+                break;
+            case HOUR:
+                result = IntervalType.HOUR;
+                break;
+            case DAY:
+                result = IntervalType.DAY;
+                break;
+            case WEEK:
+                result = IntervalType.WEEK;
+                break;
+            case MONTH:
+                result = IntervalType.MONTH;
+                break;
+            case YEAR:
+                result = IntervalType.YEAR;
+                break;
+        }
+
+        return result;
     }
 }

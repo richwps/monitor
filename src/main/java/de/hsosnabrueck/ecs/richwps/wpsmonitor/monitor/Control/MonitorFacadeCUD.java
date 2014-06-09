@@ -16,10 +16,20 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
+import java.net.URI;
+import org.quartz.TriggerKey;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorFacadeCUD {
-    
+    public Boolean addWps(final String wpdIdentifier, final URI uri);
+    public Boolean addProcess(final String wpsIdentifier, final String processIdentifier);
+    public TriggerKey addTrigger(final String wpdIdentifier, final String processIdentifier, final TriggerConfig config);
+    public void setTestRequest(final String wpdIdentifier, final String processIdentifier, final String testRequest);
+    public Boolean updateWpsUri(final String wpdIdentifier, final URI newUri);
+    public Boolean deleteWps(final String wpsIdentifier);
+    public Boolean deleteProcess(final String wpdIdentifier, final String processIdentifier);
+    public Boolean deleteTrigger(final TriggerKey triggerKey);
 }

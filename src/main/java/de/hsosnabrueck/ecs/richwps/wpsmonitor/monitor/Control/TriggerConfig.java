@@ -29,9 +29,9 @@ public class TriggerConfig {
     private IntervalType intervalType;
     private Date start;
     private Date end;
-    private Long interval;
+    private Integer interval;
     
-    public TriggerConfig(final Date start, final Date end, final Long interval, final IntervalType intervalType) {
+    public TriggerConfig(final Date start, final Date end, final Integer interval, final IntervalType intervalType) {
         this.start = Param.notNull(start, "start");
         this.end = Param.notNull(end, "end");
         this.interval = Param.notNull(interval, "interval");
@@ -62,11 +62,11 @@ public class TriggerConfig {
         this.end = end;
     }
 
-    public Long getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
-    public void setInterval(Long interval) {
+    public void setInterval(Integer interval) {
         this.interval = interval;
     }
 }

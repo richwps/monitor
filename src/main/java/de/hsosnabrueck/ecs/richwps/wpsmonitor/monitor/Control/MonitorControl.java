@@ -16,6 +16,10 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
+import java.net.URI;
+import java.util.List;
+import org.quartz.TriggerKey;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -25,6 +29,76 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
 
     MonitorControl(Monitor monitor) {
         this.monitorRef = monitor;
+    }
+
+    @Override
+    public Boolean addWps(String wpdIdentifier, URI uri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Boolean addProcess(String wpsIdentifier, String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TriggerKey addTrigger(String wpdIdentifier, String processIdentifier, TriggerConfig config) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setTestRequest(String wpdIdentifier, String processIdentifier, String testRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Boolean updateWpsUri(String wpdIdentifier, URI newUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Boolean deleteWps(String wpsIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Boolean deleteProcess(String wpdIdentifier, String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Boolean deleteTrigger(TriggerKey triggerKey) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getWpsList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getProcessesOfWps(String identifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<TriggerKey> getTriggers(String wpsIdentifier, String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getRequestString(String wpsIdentifier, String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getMeasuredData(String wpsIdentifier, String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public TriggerConfig getTriggerConfig(TriggerKey triggerKey) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
