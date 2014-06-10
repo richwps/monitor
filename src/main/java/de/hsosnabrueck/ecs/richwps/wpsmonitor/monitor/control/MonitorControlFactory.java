@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
-
-import java.util.List;
-import org.quartz.TriggerKey;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface MonitorFacadeRead {
-    public List<String> getWpsList();
-    public List<String> getProcessesOfWps(final String identifier);
-    public List<TriggerKey> getTriggers(final String wpsIdentifier, final String processIdentifier);
-    public String getRequestString(final String wpsIdentifier, final String processIdentifier);
-    public List<String> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
-    public TriggerConfig getTriggerConfig(final TriggerKey triggerKey);
+public class MonitorControlFactory {
+    
 }

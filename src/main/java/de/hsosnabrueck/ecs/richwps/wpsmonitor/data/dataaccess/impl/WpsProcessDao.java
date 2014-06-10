@@ -71,5 +71,10 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     
      return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
      }*/
+
+    @Override
+    public List<WpsProcessEntity> getAlL(String wpsIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

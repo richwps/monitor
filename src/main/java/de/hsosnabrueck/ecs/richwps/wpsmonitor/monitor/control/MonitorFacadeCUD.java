@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import java.net.URI;
 import org.quartz.TriggerKey;
@@ -26,10 +26,10 @@ import org.quartz.TriggerKey;
 public interface MonitorFacadeCUD {
     public Boolean createWps(final String wpdIdentifier, final URI uri);
     public Boolean createProcess(final String wpsIdentifier, final String processIdentifier);
-    public TriggerKey createTrigger(final String wpdIdentifier, final String processIdentifier, final TriggerConfig config);
-    public void setTestRequest(final String wpdIdentifier, final String processIdentifier, final String testRequest);
-    public Boolean updateWpsUri(final String wpdIdentifier, final URI newUri);
+    public TriggerKey createTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
+    public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
+    public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri);
     public Boolean deleteWps(final String wpsIdentifier);
-    public Boolean deleteProcess(final String wpdIdentifier, final String processIdentifier);
+    public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier);
     public Boolean deleteTrigger(final TriggerKey triggerKey);
 }

@@ -38,14 +38,6 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     }
 
     @Override
-    public List<MeasuredDataEntity> getByProcess(String identifier) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("identifier", identifier);
-
-        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class);
-    }
-
-    @Override
     public List<MeasuredDataEntity> getByWps(String identifier) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", identifier);
@@ -56,5 +48,14 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     @Override
     public List<MeasuredDataEntity> get(Integer start, Integer count) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<MeasuredDataEntity> getByProcess(String wpsIdentifier, String processIdentifier) {
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        parameter.put("identifier", processIdentifier);
+        parameter.put("wpsIdentifier", wpsIdentifier);
+
+        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class);
     }
 }

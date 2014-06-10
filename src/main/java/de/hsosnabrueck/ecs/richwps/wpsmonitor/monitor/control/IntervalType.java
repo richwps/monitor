@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 /**
  *

@@ -24,6 +24,6 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface QosDataAccess extends DataAccess<MeasuredDataEntity>  {
-    public List<MeasuredDataEntity> getByProcess(final String identifier);
+    public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier);
     public List<MeasuredDataEntity> getByWps(final String identifier);
 }

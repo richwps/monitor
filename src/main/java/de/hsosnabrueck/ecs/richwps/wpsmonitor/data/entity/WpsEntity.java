@@ -35,8 +35,9 @@ public class WpsEntity implements Serializable {
     public WpsEntity() {
     }
 
-    public WpsEntity(String identifier) {
+    public WpsEntity(String identifier, URI route) {
         this.identifier = identifier;
+        this.route = route;
     }
 
     public String getIdentifier() {

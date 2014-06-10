@@ -17,11 +17,12 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import java.util.List;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsDataAccess extends DataAccess<WpsEntity> {
-
+    public List<WpsEntity> getAll();
 }

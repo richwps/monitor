@@ -40,5 +40,10 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     public List<WpsEntity> get(Integer start, Integer count) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<WpsEntity> getAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

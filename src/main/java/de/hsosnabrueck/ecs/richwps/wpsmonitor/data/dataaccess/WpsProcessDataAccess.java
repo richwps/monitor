@@ -17,6 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import java.util.List;
 
 /**
  *
@@ -24,4 +25,5 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
  */
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier);
+    public List<WpsProcessEntity> getAlL(final String wpsIdentifier);
 }

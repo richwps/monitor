@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import org.quartz.SchedulerException;
@@ -28,16 +28,16 @@ public class Monitor {
     private SchedulerControl schedulerControl;
     
     public Monitor(final ProbeService probeService) throws SchedulerException {
-        this.monitorControl = initMonitorControl();
         this.schedulerControl = initSchedulerControl();
+        this.monitorControl = initMonitorFacad();
     }
     
     private SchedulerControl initSchedulerControl() throws SchedulerException {
         return new SchedulerControl(SchedulerFactory.getConfiguredScheduler());
     }
     
-    private MonitorControl initMonitorControl() {
-        return new MonitorControl(this);
+    private MonitorControl initMonitorFacad() {
+        return new MonitorControl(this.schedulerControl);
     }
 
     public MonitorControl getMonitorControl() {

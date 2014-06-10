@@ -26,5 +26,6 @@ public interface DataAccess<T> extends AutoCloseable {
     public T find(Object primaryKey);
     public Boolean persist(T entityObject);
     public T update(T entityObject);
+    public void remove(final T o);
     public List<T> get(final Integer start, final Integer count);
 }

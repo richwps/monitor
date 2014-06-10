@@ -67,6 +67,8 @@ public abstract class AbstractQosEntity implements Serializable {
         }
         return true;
     }
+    
+    public abstract String getDataAsString();
 
     @Override
     public String toString() {
