@@ -15,14 +15,17 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDao;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.spi.JobFactory;
 
 /**
  *
@@ -35,12 +38,17 @@ public class SchedulerFactory {
         this.probeService = Param.notNull(probeService, "probeService");
     }
 
-    public Scheduler getConfiguredScheduler() throws SchedulerException {        
+    public Scheduler getConfiguredScheduler() throws SchedulerException {    
         Scheduler result = StdSchedulerFactory.getDefaultScheduler();
-        MeasureJobFactory jobFactory = new MeasureJobFactory(probeService, new WpsProcessDao());
+        
+        WpsProcessDataAccess wpsProcessDao = WpsProcessDaoFactory.create();
+
+        JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao);
+        JobListener jobListener = new MeasureJobListener(wpsProcessDao);
 
         result.setJobFactory(jobFactory);
-        result.getListenerManager().addJobListener(new MeasureJobListener(new WpsProcessDao()));
+        result.getListenerManager()
+                .addJobListener(jobListener);
 
         return result;
     }

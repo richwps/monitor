@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 /**
@@ -29,35 +28,12 @@ import javax.persistence.TypedQuery;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class AbstractDataAccess<T>  {
-
-    private static String PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
-
     protected EntityManager em;
 
-    private final Object finalizerGuardian = new Object() {
-        @Override
-        protected void finalize() throws Throwable {
-            try {
-                close();
-            } finally {
-                super.finalize();
-            }
-        }
-    };
-
-    public AbstractDataAccess() {
-        em = AbstractDataAccess.emf.createEntityManager();
+    public AbstractDataAccess(EntityManager em) {
+        this.em = Param.notNull(em, "EntityManager em");
     }
-
-    public static void setPersistenceUnitName(String persistenceUnitName) {
-        AbstractDataAccess.PERSISTENCE_UNIT = persistenceUnitName;
-    }
-
-    public static String getPersistenceUnitName() {
-        return AbstractDataAccess.PERSISTENCE_UNIT;
-    }
-
+    
     public Boolean persist(T o) {
         beginTransaction();
 
@@ -130,14 +106,5 @@ public abstract class AbstractDataAccess<T>  {
         }
 
         return result;
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        try {
-            this.close();
-        } finally {
-            super.finalize();
-        }
     }
 }

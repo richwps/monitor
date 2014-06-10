@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl;
 
+
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
-
+    public QosDao(EntityManager em) {
+        super(em);
+    }
+    
     @Override
     public MeasuredDataEntity find(Object primaryKey) {
         return em.find(MeasuredDataEntity.class, primaryKey);
     }
 
+    @Override
     public List<MeasuredDataEntity> getByProcess(String identifier) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", identifier);
@@ -38,6 +45,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class);
     }
 
+    @Override
     public List<MeasuredDataEntity> getByWps(String identifier) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", identifier);

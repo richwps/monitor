@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDao;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -50,15 +50,10 @@ public class MeasureJobFactory implements JobFactory {
 
         try {
             if (jobDetail.getJobClass().equals(MeasureJob.class)) {
-                String jobNameAsProcess = jobDetail.getKey().getName();
-                String jobGroupAsWps = jobDetail.getKey().getGroup();
-
-                QosDataAccess dao = new QosDao();
-                WpsProcessEntity process = processDao.find(jobGroupAsWps, jobNameAsProcess);
-
-                job = new MeasureJob(probeService.probesFactory(), process, dao);
-
+                // create new MeasureJob
+                job = createNewMeasureJob(jobDetail.getKey().getName(), jobDetail.getKey().getGroup());
             } else {
+                // fallback to default instantiation of quartz
                 job = bundle.getJobDetail().getJobClass().newInstance();
             }
         } catch (IllegalAccessException ex) {
@@ -70,4 +65,14 @@ public class MeasureJobFactory implements JobFactory {
         return job;
     }
 
+    private Job createNewMeasureJob(String processAsJobName, String wpsAsGroupName) throws InstantiationException, IllegalAccessException {
+        // jobs are eventually threads - 
+        // EntityManager and Dao's are not Thread save! So give them an own EntityManager
+        QosDataAccess dao = QosDaoFactory.create();
+        
+        // for which WpsProcessEntity will this process created?
+        WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
+
+        return new MeasureJob(probeService.probesFactory(), process, dao);
+    }
 }

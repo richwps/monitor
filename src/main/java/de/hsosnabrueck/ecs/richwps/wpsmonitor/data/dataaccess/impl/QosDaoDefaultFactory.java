@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import java.util.List;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
+public class QosDaoDefaultFactory implements Factory<QosDataAccess> {
 
     @Override
-    public WpsEntity find(Object primaryKey) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public QosDataAccess create() {
+        EntityManager em = ConfiguredEntityManagerFactory.createEntityManager();
+        
+        return new QosDao(em);
     }
-
-    @Override
-    public List<WpsEntity> get(Integer start, Integer count) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
