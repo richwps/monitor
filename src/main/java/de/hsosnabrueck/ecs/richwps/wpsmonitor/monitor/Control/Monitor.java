@@ -17,7 +17,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import org.quartz.SchedulerException;
 
 /**
@@ -25,30 +24,20 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Monitor {
-    private ProbeService probeService;
     private MonitorControl monitorControl;
     private SchedulerControl schedulerControl;
     
     public Monitor(final ProbeService probeService) throws SchedulerException {
-        this.probeService = Param.notNull(probeService, "probeService");
         this.monitorControl = initMonitorControl();
         this.schedulerControl = initSchedulerControl();
     }
     
     private SchedulerControl initSchedulerControl() throws SchedulerException {
-        return new SchedulerControl(new SchedulerFactory(probeService).getConfiguredScheduler());
+        return new SchedulerControl(SchedulerFactory.getConfiguredScheduler());
     }
     
     private MonitorControl initMonitorControl() {
         return new MonitorControl(this);
-    }
-
-    public ProbeService getProbeService() {
-        return probeService;
-    }
-
-    public void setProbeService(ProbeService probeService) {
-        this.probeService = probeService;
     }
 
     public MonitorControl getMonitorControl() {

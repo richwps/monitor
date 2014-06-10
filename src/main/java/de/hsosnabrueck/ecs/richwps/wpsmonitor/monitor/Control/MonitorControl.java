@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import java.net.URI;
 import java.util.List;
 import org.quartz.TriggerKey;
@@ -26,6 +27,7 @@ import org.quartz.TriggerKey;
  */
 public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
     private Monitor monitorRef;
+    private QosDataAccess qosDao;
 
     MonitorControl(Monitor monitor) {
         this.monitorRef = monitor;

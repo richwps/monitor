@@ -13,34 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.quartz.SchedulerException;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Control;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class Application {
+public class MonitorControlFactory {
     
-    public static void main(String[] args) {
-        try {
-            new Application().run();
-        } catch (SchedulerException ex) {
-            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public Application() {
-    }
-    
-    public void run() throws SchedulerException {
-        
-        // add Probes
-        // SchedulerFactory.getProbeService().addProbeClass(Example.class).addProbeClass(..);
-        
-                
-    }
 }

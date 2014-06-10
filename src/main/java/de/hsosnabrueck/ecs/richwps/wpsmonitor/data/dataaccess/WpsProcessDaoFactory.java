@@ -37,4 +37,8 @@ public class WpsProcessDaoFactory {
     public static void setDefaultFactory(Factory<WpsProcessDataAccess> defaultFactory) {
         WpsProcessDaoFactory.defaultFactory = defaultFactory;
     }
+    
+    private WpsProcessDaoFactory() {
+        
+    }
 }

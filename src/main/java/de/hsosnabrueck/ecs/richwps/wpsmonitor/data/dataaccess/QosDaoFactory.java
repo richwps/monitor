@@ -37,4 +37,8 @@ public class QosDaoFactory {
     public static void setDefaultFactory(Factory<QosDataAccess> defaultFactory) {
         QosDaoFactory.defaultFactory = defaultFactory;
     }
+    
+    private QosDaoFactory() {
+        
+    }
 }

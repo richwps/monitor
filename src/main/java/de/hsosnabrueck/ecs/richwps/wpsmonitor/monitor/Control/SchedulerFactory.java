@@ -20,7 +20,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -32,13 +31,17 @@ import org.quartz.spi.JobFactory;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SchedulerFactory {
-    private ProbeService probeService;
-    
-    public SchedulerFactory(final ProbeService probeService) {
-        this.probeService = Param.notNull(probeService, "probeService");
+    private static ProbeService probeService = new ProbeService();
+
+    public static ProbeService getProbeService() {
+        return probeService;
     }
 
-    public Scheduler getConfiguredScheduler() throws SchedulerException {    
+    public static void setProbeService(ProbeService probeService) {
+        SchedulerFactory.probeService = probeService;
+    }
+
+    public static Scheduler getConfiguredScheduler() throws SchedulerException {    
         Scheduler result = StdSchedulerFactory.getDefaultScheduler();
         
         WpsProcessDataAccess wpsProcessDao = WpsProcessDaoFactory.create();

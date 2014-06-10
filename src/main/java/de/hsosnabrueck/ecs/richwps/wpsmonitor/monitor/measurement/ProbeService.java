@@ -26,16 +26,10 @@ import java.util.List;
 public class ProbeService {
     private List<Class<? extends QosProbe>> probeClasses;
 
-    public Integer addProbeClass(Class<? extends QosProbe> e) {
-        if(probeClasses.add(e)) {
-            return probeClasses.indexOf(e);
-        }
-        
-        return null;
-    }
+    public ProbeService addProbeClass(Class<? extends QosProbe> e) {
+        probeClasses.add(e);
 
-    public Class<? extends QosProbe> removeProbeClass(int index) {
-        return probeClasses.remove(index);
+        return this;
     }
 
     public boolean removeProbeClass(Class<? extends QosProbe> e) {
