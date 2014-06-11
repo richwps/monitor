@@ -16,17 +16,11 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
 
-import com.sun.jndi.toolkit.url.Uri;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JViewport;
 
 /**
  *
@@ -72,8 +66,10 @@ public class WpsPanel extends javax.swing.JPanel {
 
         wpsUriLabel.setText("<URI>");
 
+        editWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         editWpsButton.setText("Edit Wps");
 
+        deleteWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteWpsButton.setText("Delete WPS");
         deleteWpsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,6 +77,7 @@ public class WpsPanel extends javax.swing.JPanel {
             }
         });
 
+        addProcessToWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         addProcessToWpsButton.setText("Add Process");
         addProcessToWpsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,7 +97,7 @@ public class WpsPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(wpsNameLabel)
                             .addComponent(wpsUriLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 427, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 407, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(editWpsButton)
@@ -128,7 +125,8 @@ public class WpsPanel extends javax.swing.JPanel {
 
     private void deleteWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
         parentRef.remove(this);
-        parentRef.repaint();
+        parentRef.revalidate();
+        parentRef.repaint(); // repaint required, otherwise the last element will not disappear
     }//GEN-LAST:event_deleteWpsButtonActionPerformed
 
     private void addProcessToWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProcessToWpsButtonActionPerformed

@@ -57,10 +57,13 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         processIdentifierInput = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Create new Process");
+        setResizable(false);
 
         addProcessPane.setLayout(new javax.swing.BoxLayout(addProcessPane, javax.swing.BoxLayout.PAGE_AXIS));
         wpsProcessScrollPane.setViewportView(addProcessPane);
 
+        createNewProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         createNewProcessButton.setText("Create new Process");
         createNewProcessButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,7 +84,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(processIdentifierDecoText)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(processIdentifierInput, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
+                        .addComponent(processIdentifierInput, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(createNewProcessButton)))
                 .addContainerGap())
@@ -89,7 +92,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createNewProcessButton)
                     .addComponent(processIdentifierDecoText)

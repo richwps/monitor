@@ -122,6 +122,7 @@ public class WpsMonitorControl extends javax.swing.JFrame {
 
         addWpsDecoText.setText("Add WPS");
 
+        addWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         addWpsButton.setText("Create WPS");
         addWpsButton.setEnabled(false);
         addWpsButton.addActionListener(new java.awt.event.ActionListener() {

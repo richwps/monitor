@@ -29,7 +29,7 @@
                           </Group>
                           <Component id="testRequestDecoText" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="310" max="32767" attributes="0"/>
+                      <EmptySpace pref="318" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="showJobsButton" min="-2" max="-2" attributes="0"/>
@@ -50,19 +50,25 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="showMeasuredDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteProcessButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="showJobsButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="showMeasuredDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deleteProcessButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="showJobsButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="7" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="processNamedecoText" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="processNameText" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="processNamedecoText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="processNameText" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="saveProcessButton" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="testRequestDecoText" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -71,7 +77,6 @@
               <Component id="jScrollPane1" min="-2" pref="111" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -84,12 +89,18 @@
     </Component>
     <Component class="javax.swing.JButton" name="showMeasuredDataButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/performance.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Show Measuredata"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="deleteProcessButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/trash.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Delete"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -111,6 +122,9 @@
     </Container>
     <Component class="javax.swing.JButton" name="showJobsButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/clock.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Show Jobs"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
@@ -122,6 +136,9 @@
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="0" red="ff" type="rgb"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/save.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>

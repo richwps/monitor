@@ -25,7 +25,7 @@
                           <Component id="wpsNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="wpsUriLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="427" max="32767" attributes="0"/>
+                      <EmptySpace pref="407" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="editWpsButton" min="-2" max="-2" attributes="0"/>
@@ -73,11 +73,17 @@
     </Component>
     <Component class="javax.swing.JButton" name="editWpsButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/edit.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Edit Wps"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="deleteWpsButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/trash.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Delete WPS"/>
       </Properties>
       <Events>
@@ -86,6 +92,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="addProcessToWpsButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/add.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Add Process"/>
       </Properties>
       <Events>

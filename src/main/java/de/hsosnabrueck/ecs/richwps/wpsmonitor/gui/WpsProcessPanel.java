@@ -60,9 +60,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
         processNamedecoText.setText("Process Name:");
 
+        showMeasuredDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/performance.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measuredata");
         showMeasuredDataButton.setEnabled(false);
 
+        deleteProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteProcessButton.setText("Delete");
         deleteProcessButton.setEnabled(false);
 
@@ -70,6 +72,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         testRequestTextArea.setRows(5);
         jScrollPane1.setViewportView(testRequestTextArea);
 
+        showJobsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
         showJobsButton.setText("Show Jobs");
         showJobsButton.setEnabled(false);
         showJobsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -79,6 +82,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         });
 
         saveProcessButton.setBackground(new java.awt.Color(255, 0, 51));
+        saveProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveProcessButton.setText("Save");
         saveProcessButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,7 +109,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(processNameText))
                             .addComponent(testRequestDecoText))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(showJobsButton)
@@ -120,24 +124,27 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(showMeasuredDataButton)
-                        .addComponent(deleteProcessButton)
-                        .addComponent(showJobsButton))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(processNamedecoText)
-                        .addComponent(processNameText)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(showMeasuredDataButton)
+                            .addComponent(deleteProcessButton)
+                            .addComponent(showJobsButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(processNamedecoText)
+                            .addComponent(processNameText))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(saveProcessButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(testRequestDecoText, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
