@@ -16,6 +16,9 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
 import org.quartz.TriggerKey;
 
@@ -24,10 +27,10 @@ import org.quartz.TriggerKey;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorFacadeRead {
-    public List<String> getWpsList();
-    public List<String> getProcessesOfWps(final String identifier);
+    public List<WpsEntity> getWpsList();
+    public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
     public List<TriggerKey> getTriggers(final String wpsIdentifier, final String processIdentifier);
     public String getRequestString(final String wpsIdentifier, final String processIdentifier);
-    public List<String> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
+    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
     public TriggerConfig getTriggerConfig(final TriggerKey triggerKey);
 }

@@ -27,13 +27,14 @@ import javax.persistence.TypedQuery;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class AbstractDataAccess<T>  {
+public abstract class AbstractDataAccess<T> {
+
     protected EntityManager em;
 
     public AbstractDataAccess(EntityManager em) {
         this.em = Param.notNull(em, "EntityManager em");
     }
-    
+
     public Boolean persist(T o) {
         beginTransaction();
 
@@ -78,6 +79,10 @@ public abstract class AbstractDataAccess<T>  {
     protected List<T> getBy(final String queryName, final Class c) {
         return getBy(queryName, null, c);
     }
+    
+    protected List<T> getBy(final String queryName, final Class c, final Integer offset, final Integer maxResult) {
+        return getBy(queryName, null, c, offset, maxResult);
+    }
 
     protected List<T> getBy(final String queryName, final Map<String, Object> parameters, final Class c) {
         return getBy(queryName, parameters, c, null, null);
@@ -88,6 +93,7 @@ public abstract class AbstractDataAccess<T>  {
             final Class c,
             final Integer start,
             final Integer count) {
+
         List<T> result = null;
 
         TypedQuery<T> query = em
@@ -97,6 +103,14 @@ public abstract class AbstractDataAccess<T>  {
             for (Map.Entry<String, Object> e : parameters.entrySet()) {
                 query.setParameter(e.getKey(), e.getValue());
             }
+        }
+
+        if (start != null) {
+            query.setFirstResult(start);
+        }
+
+        if (count != null) {
+            query.setMaxResults(count);
         }
 
         try {

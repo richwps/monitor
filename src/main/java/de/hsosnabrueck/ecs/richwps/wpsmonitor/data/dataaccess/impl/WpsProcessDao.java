@@ -35,22 +35,19 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
     @Override
     public WpsProcessEntity find(Object primaryKey) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return em.find(WpsProcessEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
     public List<WpsProcessEntity> get(Integer start, Integer count) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getBy("wpsprocess.getAll", WpsProcessEntity.class, start, count);
     }
     
     @Override
     public WpsProcessEntity find(String wpsIdentifier, String processIdentifier) {
-        Param.notNull(wpsIdentifier, "wpsIdentifier");
-        Param.notNull(processIdentifier, "processIdentifier");
-
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("wpsidentifier", wpsIdentifier);
-        parameters.put("identifier", processIdentifier);
+        parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
 
         List<WpsProcessEntity> resultList = getBy("wpsprocess.get", parameters, WpsProcessEntity.class);
         WpsProcessEntity result = null;
@@ -62,19 +59,12 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
         return result;
     }
 
-    /*
-     public List<WpsProcessEntity> getAllOfWps(String identifier) {
-     Param.notNull(identifier, "identifier");
-    
-     Map<String, Object> parameters = new HashMap<String, Object>();
-     parameters.put("identifier", identifier);
-    
-     return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
-     }*/
-
     @Override
-    public List<WpsProcessEntity> getAlL(String wpsIdentifier) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<WpsProcessEntity> getAll(String wpsIdentifier) {
+       Map<String, Object> parameters = new HashMap<String, Object>();
+       parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+       
+       return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
     }
     
 }

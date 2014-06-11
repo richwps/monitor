@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +35,24 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     
     @Override
     public MeasuredDataEntity find(Object primaryKey) {
-        return em.find(MeasuredDataEntity.class, primaryKey);
+        return em.find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
-    public List<MeasuredDataEntity> getByWps(String identifier) {
+    public List<MeasuredDataEntity> getByWps(String identifier, Integer offset, Integer maxResult) {
         Map<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("identifier", identifier);
+        parameter.put("identifier", Param.notNull(identifier, "identifier"));
 
-        return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class);
+        return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class, offset, maxResult);
+    }
+
+    @Override
+    public List<MeasuredDataEntity> getByProcess(String wpsIdentifier, String processIdentifier, Integer offset, Integer maxResult) {
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        parameter.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
+        parameter.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+
+        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class, offset, maxResult);
     }
 
     @Override
@@ -52,10 +62,11 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public List<MeasuredDataEntity> getByProcess(String wpsIdentifier, String processIdentifier) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("identifier", processIdentifier);
-        parameter.put("wpsIdentifier", wpsIdentifier);
+        return getByProcess(wpsIdentifier, processIdentifier, null, null);
+    }
 
-        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class);
+    @Override
+    public List<MeasuredDataEntity> getByWps(String identifier) {
+        return getByWps(identifier, null, null);
     }
 }

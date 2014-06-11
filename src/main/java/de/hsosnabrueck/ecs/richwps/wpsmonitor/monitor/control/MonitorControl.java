@@ -152,29 +152,13 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
     }
 
     @Override
-    public List<String> getWpsList() {
-        List<String> wpsIdentifiers = new ArrayList<String>();
-
-        for (WpsEntity e : wpsDao.getAll()) {
-            wpsIdentifiers.add(e.getIdentifier());
-        }
-
-        return wpsIdentifiers;
+    public List<WpsEntity> getWpsList() {
+        return wpsDao.getAll();
     }
 
     @Override
-    public List<String> getProcessesOfWps(String identifier) {
-        List<String> processIdentifiers = null;
-        List<WpsProcessEntity> all = wpsProcessDao.getAlL(Param.notNull(identifier, "identifier"));
-
-        if (all != null) {
-            processIdentifiers = new ArrayList<String>();
-            for (WpsProcessEntity e : all) {
-                processIdentifiers.add(e.getIdentifier());
-            }
-        }
-
-        return processIdentifiers;
+    public List<WpsProcessEntity> getProcessesOfWps(String identifier) {
+        return wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
     }
 
     @Override
@@ -202,18 +186,8 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
     }
 
     @Override
-    public List<String> getMeasuredData(String wpsIdentifier, String processIdentifier) {
-        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-        List<String> measuredData = null;
-
-        if (byProcess != null) {
-            measuredData = new ArrayList<String>();
-            for (MeasuredDataEntity e : byProcess) {
-                measuredData.add(e.toString());
-            }
-        }
-
-        return measuredData;
+    public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
+        return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
     }
 
     @Override

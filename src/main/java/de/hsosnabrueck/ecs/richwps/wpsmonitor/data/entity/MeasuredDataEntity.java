@@ -40,8 +40,8 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredData t WHERE t.process.identifier = :identifier AND t.process.wps.identifier = :wpsIdentifier"),
-    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredData t WHERE t.process.wps.identifier = :identifier")
+    @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :identifier AND t.process.wps.identifier = :wpsIdentifier"),
+    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier")
 })
 public class MeasuredDataEntity implements Serializable {
     private static final long serialVersionUID = 1L;

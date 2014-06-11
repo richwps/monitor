@@ -25,5 +25,5 @@ import java.util.List;
  */
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier);
-    public List<WpsProcessEntity> getAlL(final String wpsIdentifier);
+    public List<WpsProcessEntity> getAll(final String wpsIdentifier);
 }

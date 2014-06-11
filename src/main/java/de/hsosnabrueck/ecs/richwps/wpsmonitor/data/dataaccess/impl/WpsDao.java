@@ -18,7 +18,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 
 /**
@@ -33,17 +35,17 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
     @Override
     public WpsEntity find(Object primaryKey) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return em.find(WpsEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
     public List<WpsEntity> get(Integer start, Integer count) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getBy("wps.getAll", WpsEntity.class, count, count);
     }
 
     @Override
     public List<WpsEntity> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return get(null, null);
     }
     
 }
