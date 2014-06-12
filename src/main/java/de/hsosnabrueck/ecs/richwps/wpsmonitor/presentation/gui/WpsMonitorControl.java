@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -114,6 +114,11 @@ public class WpsMonitorControl extends javax.swing.JFrame {
                 wpsCreateFieldsFocusLost(evt);
             }
         });
+        wpsToAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wpsToAddFieldActionPerformed(evt);
+            }
+        });
         wpsToAddField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 wpsCreateFieldsKeyPressed(evt);
@@ -140,6 +145,11 @@ public class WpsMonitorControl extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 wpsCreateFieldsFocusLost(evt);
+            }
+        });
+        wpsToAddUriField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wpsToAddUriFieldActionPerformed(evt);
             }
         });
         wpsToAddUriField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -178,14 +188,14 @@ public class WpsMonitorControl extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wpsAddErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                    .addComponent(wpsAddErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(wpsToAddField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(addWpsDecoText)
                         .addComponent(addWpsButton)
                         .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wpsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(wpsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -205,14 +215,20 @@ public class WpsMonitorControl extends javax.swing.JFrame {
     }//GEN-LAST:event_wpsCreateFieldsKeyPressed
 
     private void addWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addWpsButtonActionPerformed
-        if(true || isCreateFieldsValid()) {
+        if(isCreateFieldsValid()) {
             try {
                 URL urlCheck = new URL(getWpsToAddUriField().getText());
                 URI wpsUri = urlCheck.toURI();
 
                 JPanel wpsPanel = new WpsPanel(this, getWpsToAddField().getText(), wpsUri, wpsAddPanel);
-
+                
                 wpsAddPanel.add(wpsPanel, BorderLayout.PAGE_START);
+                
+                getWpsToAddField().setText("");
+                getWpsToAddUriField().setText("");
+                
+                getWpsToAddField().requestFocus();
+                
                 wpsAddPanel.revalidate();
             } catch (URISyntaxException ex) {
                 setErrorText("The entered URI is not valid!");
@@ -221,6 +237,14 @@ public class WpsMonitorControl extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
+
+    private void wpsToAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddFieldActionPerformed
+        addWpsButtonActionPerformed(evt);
+    }//GEN-LAST:event_wpsToAddFieldActionPerformed
+
+    private void wpsToAddUriFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddUriFieldActionPerformed
+        addWpsButtonActionPerformed(evt);
+    }//GEN-LAST:event_wpsToAddUriFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

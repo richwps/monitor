@@ -87,6 +87,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="processIdentifierInput">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="processIdentifierInputActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

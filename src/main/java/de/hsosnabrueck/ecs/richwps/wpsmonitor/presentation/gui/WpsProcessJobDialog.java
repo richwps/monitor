@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import javax.swing.JFrame;
@@ -56,7 +56,6 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add, remove or edit Process Job");
-        setPreferredSize(new java.awt.Dimension(852, 300));
         setResizable(false);
 
         newJobButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/time.png"))); // NOI18N

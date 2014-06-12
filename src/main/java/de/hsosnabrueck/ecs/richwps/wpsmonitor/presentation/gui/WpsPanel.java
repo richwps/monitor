@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Dimension;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -27,11 +33,12 @@ import javax.swing.JPanel;
  * @author FloH
  */
 public class WpsPanel extends javax.swing.JPanel {
+
     private URI wpsUri;
     private String wpsName;
     private JPanel parentRef;
     private JFrame mainFrame;
-
+    private JDialog wpsProcessDialog;
 
     WpsPanel(JFrame mainFrame, final String wpsName, final URI wpsUri, JPanel parent) {
         this.wpsName = Param.notNull(wpsName, "wpsName");
@@ -40,7 +47,9 @@ public class WpsPanel extends javax.swing.JPanel {
         this.mainFrame = Param.notNull(mainFrame, "mainFrame");
 
         initComponents();
-        
+
+        this.wpsProcessDialog = new WpsProcessDialog(mainFrame, true);
+
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
         wpsNameLabel.setText(this.wpsName);
         wpsUriLabel.setText(this.wpsUri.toString());
@@ -68,6 +77,11 @@ public class WpsPanel extends javax.swing.JPanel {
 
         editWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         editWpsButton.setText("Edit Wps");
+        editWpsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editWpsButtonActionPerformed(evt);
+            }
+        });
 
         deleteWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteWpsButton.setText("Delete WPS");
@@ -124,14 +138,66 @@ public class WpsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
-        parentRef.remove(this);
-        parentRef.revalidate();
-        parentRef.repaint(); // repaint required, otherwise the last element will not disappear
+        int option = JOptionPane.showConfirmDialog(parentRef,
+                "Are you sure you want to permanently delete this WPS out of the Monitor?",
+                "Delete WPS",
+                JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.YES_OPTION) {
+            parentRef.remove(this);
+            parentRef.revalidate();
+            parentRef.repaint(); // repaint required, otherwise the last element will not disappear
+        }
     }//GEN-LAST:event_deleteWpsButtonActionPerformed
 
     private void addProcessToWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProcessToWpsButtonActionPerformed
-        new WpsProcessDialog(mainFrame, true).setVisible(true);
+        wpsProcessDialog.setVisible(true);
     }//GEN-LAST:event_addProcessToWpsButtonActionPerformed
+
+    private void editWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
+        new WpsEditDialog(mainFrame, this, true).setVisible(true);
+    }//GEN-LAST:event_editWpsButtonActionPerformed
+
+    public URI getWpsUri() {
+        return wpsUri;
+    }
+
+    public void setWpsUri(URI wpsUri) {
+        if (!this.wpsUri.equals(Param.notNull(wpsUri, "wpsUri"))) {
+            this.wpsUri = wpsUri;
+            this.wpsUriLabel.setText(wpsUri.toString());
+        }
+    }
+
+    public void setWpsUri(String wpsUri) throws Exception {
+        try {
+            URL urlCheck = new URL(Param.notNull(wpsUri, "wpsUri"));
+            URI uri = new URI(urlCheck.toString());
+
+            this.setWpsUri(uri);
+        } catch (MalformedURLException ex) {
+            throw new Exception("The entered URÖ is not valid!");
+        } catch (URISyntaxException ex) {
+            throw new Exception("The entered URI is not valid!");
+        }
+    }
+
+    public String getWpsName() {
+        return wpsName;
+    }
+
+    public void setWpsName(String wpsName) throws Exception {
+        if(!Param.notNull(wpsName, "wpsName").equals(this.wpsName)) {
+        String tmpName = wpsName.trim();
+
+        if (!tmpName.equals("")) {
+            this.wpsName = tmpName;
+            this.wpsNameLabel.setText(wpsName);
+        } else {
+            throw new Exception("WPS name should not be empty!");
+        }
+        }
+    }
 
     @Override
     public int hashCode() {

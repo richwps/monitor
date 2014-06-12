@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.gui.GuiStarter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.SchedulerException;

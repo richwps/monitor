@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
 import java.awt.Dimension;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
@@ -27,13 +28,16 @@ import javax.swing.JFrame;
  */
 public class WpsProcessPanel extends javax.swing.JPanel {
     private JFrame mainFrame;
-    
+    private JDialog wpsProcessJobDialog;
     /**
      * Creates new form WpsProcessPanel
      */
     public WpsProcessPanel(JFrame mainFrame, final String processName) {
         this.mainFrame = mainFrame;
         initComponents();
+        
+        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, true);
+        
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
         processNameText.setText(Param.notNull(processName, "processName"));
     }
@@ -149,7 +153,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void showJobsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showJobsButtonActionPerformed
-        new WpsProcessJobDialog(mainFrame, true).setVisible(true);
+        wpsProcessJobDialog.setVisible(true);
     }//GEN-LAST:event_showJobsButtonActionPerformed
 
     private void saveProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProcessButtonActionPerformed

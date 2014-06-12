@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
@@ -73,6 +75,12 @@ public class WpsProcessDialog extends javax.swing.JDialog {
 
         processIdentifierDecoText.setText("Process Identifier");
 
+        processIdentifierInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processIdentifierInputActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,9 +118,15 @@ public class WpsProcessDialog extends javax.swing.JDialog {
             WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, processIdentifierInput.getText());
             
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
+            processIdentifierInput.setText("");
+            
             addProcessPane.revalidate(); 
         }
     }//GEN-LAST:event_createNewProcessButtonActionPerformed
+
+    private void processIdentifierInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processIdentifierInputActionPerformed
+        createNewProcessButtonActionPerformed(evt);
+    }//GEN-LAST:event_processIdentifierInputActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
