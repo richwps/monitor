@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
+ * Copyright 2014 FloH.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 /**
  *
- * @author Florian Vogelpohl <floriantobias@gmail.com>
+ * @author FloH
  */
-public class EntityDisassembler {
+public class MyConverterFactory implements ConverterFactory {
+ 
+    @Override
+    public EntityConverter create() {
+        return new MyConverter();
+    }
     
 }

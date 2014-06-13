@@ -38,7 +38,7 @@ public abstract class AbstractQosEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    
+    public abstract String getEntityName();
 
     public Long getId() {
         return id;
