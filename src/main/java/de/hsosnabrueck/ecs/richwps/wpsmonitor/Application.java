@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,25 +26,22 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Application {
-    
-    public static void main(String[] args) {
-        GuiStarter.start(null);
 
-        /*try {
-        new Application().run();
+    public static void main(String[] args) {
+
+        try {
+            new Application().run();
         } catch (SchedulerException ex) {
-        Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     public Application() {
     }
-    
+
     public void run() throws SchedulerException {
-        
-        // add Probes
-        // SchedulerFactory.getProbeService().addProbeClass(Example.class).addProbeClass(..);
-        
-                
+        Monitor m = null;
+        //m = new Builder().setupDefault().build();
+        GuiStarter.start(null);
     }
 }

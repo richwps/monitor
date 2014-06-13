@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
@@ -43,13 +42,17 @@ public class MeasureJob implements Job {
 
     protected final WpsProcessEntity processEntity;
     protected final QosDataAccess dao;
+    protected WpsClient wpsClient;
+    
     protected List<QosProbe> probes;
     protected Boolean error;
 
-    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao) {
+    public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao, final WpsClient wpsClient) {
         this.probes = Param.notNull(probes, "probeService");
         this.dao = Param.notNull(dao, "dao");
         this.processEntity = Param.notNull(entity, "entity");
+        this.wpsClient = Param.notNull(wpsClient, "wpsClient");
+        
         error = false;
     }
 
@@ -93,11 +96,10 @@ public class MeasureJob implements Job {
     }
 
     private Pair<WpsRequest, WpsResponse> callWps() {
-        WpsClient client = WpsClientFactory.createDefault();
         WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getRoute(), processEntity.getIdentifier());
 
         WpsRequest request = new WpsRequest(processEntity.getRawRequest(), info);
-        WpsResponse response = client.execute(request);
+        WpsResponse response = wpsClient.execute(request);
 
         return new Pair<WpsRequest, WpsResponse>(request, response);
     }

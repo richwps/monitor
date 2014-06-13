@@ -27,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -55,7 +56,7 @@ public class MeasuredDataEntity implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createTime;
     
-    @Column(nullable = false) 
+    @JoinColumn(nullable = false) 
     @OneToOne
     private WpsProcessEntity process;
     

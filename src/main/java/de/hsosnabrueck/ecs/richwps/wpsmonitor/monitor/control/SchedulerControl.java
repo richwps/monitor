@@ -189,45 +189,11 @@ public class SchedulerControl {
                     trigger.getStartTime(),
                     trigger.getEndTime(),
                     calendarTrigger.getRepeatInterval(),
-                    convertIntervalUnit(repeatIntervalUnit)
+                    repeatIntervalUnit
             );
         }
 
         return triggerConfig;
-    }
-
-    private IntervalType convertIntervalUnit(final DateBuilder.IntervalUnit iunit) {
-        // i was unsure if i schould use DataTypes of the scheduler library
-        // but i was used JobKey and TriggerKey too ..
-        IntervalType result = null;
-        switch (iunit) {
-            case MILLISECOND:
-                result = IntervalType.MILLISECOND;
-                break;
-            case SECOND:
-                result = IntervalType.SECOND;
-                break;
-            case MINUTE:
-                result = IntervalType.MINUTE;
-                break;
-            case HOUR:
-                result = IntervalType.HOUR;
-                break;
-            case DAY:
-                result = IntervalType.DAY;
-                break;
-            case WEEK:
-                result = IntervalType.WEEK;
-                break;
-            case MONTH:
-                result = IntervalType.MONTH;
-                break;
-            case YEAR:
-                result = IntervalType.YEAR;
-                break;
-        }
-
-        return result;
     }
 
     public Scheduler getScheduler() {

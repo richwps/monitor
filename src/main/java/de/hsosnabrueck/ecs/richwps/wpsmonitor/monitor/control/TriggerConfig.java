@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.Date;
+import org.quartz.DateBuilder;
 
 /**
  *
@@ -26,23 +27,23 @@ import java.util.Date;
 public class TriggerConfig {
     
     
-    private IntervalType intervalType;
+    private DateBuilder.IntervalUnit  intervalType;
     private Date start;
     private Date end;
     private Integer interval;
     
-    public TriggerConfig(final Date start, final Date end, final Integer interval, final IntervalType intervalType) {
+    public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType) {
         this.start = Param.notNull(start, "start");
         this.end = Param.notNull(end, "end");
         this.interval = Param.notNull(interval, "interval");
         this.intervalType = Param.notNull(intervalType, "intervalType");
     }
 
-    public IntervalType getIntervalType() {
+    public DateBuilder.IntervalUnit getIntervalType() {
         return intervalType;
     }
 
-    public void setIntervalType(IntervalType intervalType) {
+    public void setIntervalType(DateBuilder.IntervalUnit intervalType) {
         this.intervalType = intervalType;
     }
     

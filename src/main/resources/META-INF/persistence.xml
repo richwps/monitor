@@ -7,7 +7,7 @@
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity</class>
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:derby:MonitoredData"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby:MonitoredData;create=true"/>
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="javax.persistence.jdbc.user" value=""/>

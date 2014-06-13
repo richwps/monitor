@@ -16,15 +16,18 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl.QosDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl.WpsDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl.WpsProcessDaoDefaultFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
@@ -32,8 +35,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.util.HashMap;
-import java.util.Map;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
@@ -43,6 +44,7 @@ import org.quartz.SchedulerException;
  */
 public class Builder {
     private ProbeService probeService;
+    private WpsClientFactory wpsClientFactory;
     
     private QosDaoFactory qosDaoFactory;
     private WpsDaoFactory wpsDaoFactory;
@@ -89,6 +91,17 @@ public class Builder {
         
         return this;
     }
+    public Builder withWpsClientFactory(Factory<WpsClient> wpsClientFactory) {
+        this.wpsClientFactory = new WpsClientFactory(wpsClientFactory);
+        
+        return this;
+    }
+    
+    public Builder withWpsClientFactory(WpsClientFactory wpsClientFactory) {
+        this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
+        
+        return this;
+    }
     
     public Builder withDefaultProbeService() {
         return withProbeService(new ProbeService());
@@ -105,9 +118,14 @@ public class Builder {
     public Builder withDefaultWpsProcessDaoFactory() {
         return withWpsProcessDaoFactory(new WpsProcessDaoDefaultFactory());
     }
+    
+    public Builder withDefaultWpsClient() {
+        return withWpsClientFactory(new SimpleWpsClientFactory());
+    }
 
     public Builder setupDefault() {
         return withDefaultProbeService()
+                .withDefaultWpsClient()
                 .withDefaultQosDaoFactory()
                 .withDefaultWpsDaoFactory()
                 .withDefaultWpsProcessDaoFactory();
@@ -126,7 +144,11 @@ public class Builder {
             withDefaultQosDaoFactory();
         }
         
-        return new SchedulerFactory(probeService, wpsProcessDaoFactory, qosDaoFactory);
+        if(this.wpsClientFactory == null) {
+            withDefaultWpsClient();
+        }
+        
+        return new SchedulerFactory(probeService, wpsProcessDaoFactory, qosDaoFactory, wpsClientFactory);
     }
 
     public ProbeService getProbeService() {
@@ -146,7 +168,12 @@ public class Builder {
     }
     
     public Boolean isValid() {
-        return !(probeService == null || wpsDaoFactory == null || qosDaoFactory == null || wpsProcessDaoFactory == null);
+        return !(probeService == null 
+                || wpsDaoFactory == null 
+                || qosDaoFactory == null 
+                || wpsProcessDaoFactory == null 
+                || wpsClientFactory == null
+        );
     }
     
     public WpsDataAccess buildWpsDataAccess() {

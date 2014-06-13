@@ -16,33 +16,21 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.mok.WpsClientMok;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsClientFactory {
-    private static Class<? extends WpsClient> defaultClientImpl = WpsClientMok.class;
-    
-    public static void setDefaultClient(final Class<? extends WpsClient> defaultImplementation) {
-        defaultClientImpl = Param.notNull(defaultClientImpl, "defaultImplementation");
+    private final Factory<WpsClient> defaultClientImpl;
+
+    public WpsClientFactory(final Factory<WpsClient> defaultClient) {
+        this.defaultClientImpl = Param.notNull(defaultClient, "defaultClient");
     }
     
-    public static WpsClient createDefault() {
-        WpsClient client = null;
-        
-        try {
-            client = WpsClientFactory.defaultClientImpl.newInstance();
-        } catch (InstantiationException ex) {
-            Logger.getLogger(WpsClientFactory.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(WpsClientFactory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return client;
+    public WpsClient create() {
+        return defaultClientImpl.create();
     }
 }

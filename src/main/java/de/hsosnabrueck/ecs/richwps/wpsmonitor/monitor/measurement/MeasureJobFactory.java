@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
@@ -35,15 +36,17 @@ import org.quartz.spi.TriggerFiredBundle;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobFactory implements JobFactory {
-
-    private ProbeService probeService;
+    
+    private final ProbeService probeService;
+    private final WpsClientFactory wpsClientFactory;
     private WpsProcessDataAccess processDao;
     private QosDaoFactory qosDaoFactory;
-
-    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao, final QosDaoFactory qosDaoFactory) {
+    
+    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao, final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.processDao = Param.notNull(processDao, "processDao");
         this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
+        this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
     }
 
     @Override
@@ -76,6 +79,6 @@ public class MeasureJobFactory implements JobFactory {
         // for which WpsProcessEntity will this process created?
         WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
 
-        return new MeasureJob(probeService.buildProbes(), process, dao);
+        return new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
     }
 }

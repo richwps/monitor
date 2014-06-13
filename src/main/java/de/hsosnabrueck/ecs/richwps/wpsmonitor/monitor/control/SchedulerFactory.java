@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
@@ -36,11 +37,13 @@ public class SchedulerFactory {
     private ProbeService probeService;
     private WpsProcessDaoFactory wpsProcessDaoFactory;
     private QosDaoFactory qosDaoFactory;
+    private WpsClientFactory wpsClientFactory;
     
-    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory, QosDaoFactory qosDaoFactory) {
+    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory, QosDaoFactory qosDaoFactory, WpsClientFactory wpsClientFactory) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.wpsProcessDaoFactory = Param.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
         this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
+        this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
     }
 
     public Scheduler create() throws SchedulerException {    
@@ -48,7 +51,7 @@ public class SchedulerFactory {
         
         WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
-        JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory);
+        JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
         JobListener jobListener = new MeasureJobListener(wpsProcessDao);
 
         result.setJobFactory(jobFactory);
