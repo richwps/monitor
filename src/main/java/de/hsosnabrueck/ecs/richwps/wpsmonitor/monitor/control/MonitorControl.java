@@ -42,8 +42,11 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
     private WpsDataAccess wpsDao;
     private WpsProcessDataAccess wpsProcessDao;
 
-    MonitorControl(SchedulerControl scheduler) {
-        this.schedulerControl = scheduler;
+    public MonitorControl(SchedulerControl scheduler, QosDataAccess qosDao, WpsDataAccess wpsDao, WpsProcessDataAccess wpsProcessDao) {
+        this.schedulerControl = Param.notNull(scheduler, "scheduler");
+        this.qosDao = Param.notNull(qosDao, "qosDao");
+        this.wpsDao = Param.notNull(wpsDao, "wpsDao");
+        this.wpsProcessDao = Param.notNull(wpsProcessDao, "wpsProcessDao");
     }
 
     @Override
@@ -199,6 +202,38 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
         }
         
         return null;
+    }
+
+    public SchedulerControl getSchedulerControl() {
+        return schedulerControl;
+    }
+
+    public void setSchedulerControl(SchedulerControl schedulerControl) {
+        this.schedulerControl = schedulerControl;
+    }
+
+    public QosDataAccess getQosDao() {
+        return qosDao;
+    }
+
+    public void setQosDao(QosDataAccess qosDao) {
+        this.qosDao = qosDao;
+    }
+
+    public WpsDataAccess getWpsDao() {
+        return wpsDao;
+    }
+
+    public void setWpsDao(WpsDataAccess wpsDao) {
+        this.wpsDao = wpsDao;
+    }
+
+    public WpsProcessDataAccess getWpsProcessDao() {
+        return wpsProcessDao;
+    }
+
+    public void setWpsProcessDao(WpsProcessDataAccess wpsProcessDao) {
+        this.wpsProcessDao = wpsProcessDao;
     }
 
 }

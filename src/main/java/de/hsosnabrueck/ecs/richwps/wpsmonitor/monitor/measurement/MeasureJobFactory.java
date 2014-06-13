@@ -26,6 +26,7 @@ import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
@@ -35,12 +36,14 @@ import org.quartz.spi.TriggerFiredBundle;
  */
 public class MeasureJobFactory implements JobFactory {
 
-    private final ProbeService probeService;
-    private final WpsProcessDataAccess processDao;
+    private ProbeService probeService;
+    private WpsProcessDataAccess processDao;
+    private QosDaoFactory qosDaoFactory;
 
-    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao) {
+    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao, final QosDaoFactory qosDaoFactory) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.processDao = Param.notNull(processDao, "processDao");
+        this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
     }
 
     @Override
@@ -54,7 +57,7 @@ public class MeasureJobFactory implements JobFactory {
                 job = createNewMeasureJob(jobDetail.getKey().getName(), jobDetail.getKey().getGroup());
             } else {
                 // fallback to default instantiation of quartz
-                job = bundle.getJobDetail().getJobClass().newInstance();
+                job = new SimpleJobFactory().newJob(bundle, scheduler);
             }
         } catch (IllegalAccessException ex) {
             Logger.getLogger(MeasureJobFactory.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,11 +71,11 @@ public class MeasureJobFactory implements JobFactory {
     private Job createNewMeasureJob(String processAsJobName, String wpsAsGroupName) throws InstantiationException, IllegalAccessException {
         // jobs are eventually threads - 
         // EntityManager and Dao's are not Thread save! So give them an own EntityManager
-        QosDataAccess dao = QosDaoFactory.create();
+        QosDataAccess dao = qosDaoFactory.create();
         
         // for which WpsProcessEntity will this process created?
         WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
 
-        return new MeasureJob(probeService.probesFactory(), process, dao);
+        return new MeasureJob(probeService.buildProbes(), process, dao);
     }
 }

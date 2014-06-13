@@ -229,4 +229,8 @@ public class SchedulerControl {
 
         return result;
     }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
 }

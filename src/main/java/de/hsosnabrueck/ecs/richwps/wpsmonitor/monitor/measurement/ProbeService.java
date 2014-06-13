@@ -16,6 +16,8 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,24 +26,23 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ProbeService {
-    private List<Class<? extends QosProbe>> probeClasses;
+    private List<Factory<QosProbe>> probeFactories;
 
-    public ProbeService addProbeClass(Class<? extends QosProbe> e) {
-        probeClasses.add(e);
+    public ProbeService addProbeClass(final Factory<QosProbe> probeFactory) {
+        probeFactories.add(Param.notNull(probeFactory, "probeFactory"));
 
         return this;
     }
 
-    public boolean removeProbeClass(Class<? extends QosProbe> e) {
-        return probeClasses.remove(e);
+    public boolean removeProbeClass(final Factory<QosProbe> probeFactory) {
+        return probeFactories.remove(probeFactory);
     }
     
-    public List<QosProbe> probesFactory() throws InstantiationException, IllegalAccessException {
+    public List<QosProbe> buildProbes() {
         List<QosProbe> factoredObjects = new ArrayList<QosProbe>();
         
-        for(Class c : probeClasses) {
-            QosProbe add = (QosProbe)c.newInstance();
-            factoredObjects.add(add);
+        for(Factory<QosProbe> probeFactory : probeFactories) {
+            factoredObjects.add(probeFactory.create());
         }
         
         return factoredObjects;

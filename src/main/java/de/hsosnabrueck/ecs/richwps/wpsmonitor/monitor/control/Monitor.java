@@ -16,8 +16,9 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.Builder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
-import org.quartz.SchedulerException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
  *
@@ -25,34 +26,33 @@ import org.quartz.SchedulerException;
  */
 public class Monitor {
     private MonitorControl monitorControl;
-    private SchedulerControl schedulerControl;
+    private Builder builderInstance;
     
-    public Monitor(final ProbeService probeService) throws SchedulerException {
-        this.schedulerControl = initSchedulerControl();
-        this.monitorControl = initMonitorFacad();
-    }
-    
-    private SchedulerControl initSchedulerControl() throws SchedulerException {
-        return new SchedulerControl(SchedulerFactory.getConfiguredScheduler());
-    }
-    
-    private MonitorControl initMonitorFacad() {
-        return new MonitorControl(this.schedulerControl);
+    public Monitor(MonitorControl monitorControl, Builder builder) {
+        this.monitorControl = Param.notNull(monitorControl, "monitorControl");
     }
 
     public MonitorControl getMonitorControl() {
         return monitorControl;
     }
-
-    public void setMonitorControl(MonitorControl monitorControl) {
-        this.monitorControl = monitorControl;
+    
+    public MonitorFacadeCUD getMonitorFacadeCUD() {
+        return (MonitorFacadeCUD)monitorControl;
+    }
+    
+    public MonitorFacadeRead getMonitorFacadeRead() {
+        return (MonitorFacadeRead)monitorControl;
     }
 
     public SchedulerControl getSchedulerControl() {
-        return schedulerControl;
+        return monitorControl.getSchedulerControl();
     }
 
-    public void setSchedulerControl(SchedulerControl schedulerControl) {
-        this.schedulerControl = schedulerControl;
+    public Builder getBuilderInstance() {
+        return builderInstance;
+    }
+    
+    public ProbeService getProbeService() {
+        return builderInstance.getProbeService();
     }
 }

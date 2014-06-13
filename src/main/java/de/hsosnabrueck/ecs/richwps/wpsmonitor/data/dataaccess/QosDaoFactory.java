@@ -18,27 +18,20 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDaoFactory {
-    private static Factory<QosDataAccess> defaultFactory = new QosDaoDefaultFactory();
+    private Factory<QosDataAccess> defaultFactory;
 
-    public static QosDataAccess create() {
-        return QosDaoFactory.defaultFactory.create();
+    public QosDataAccess create() {
+        return defaultFactory.create();
     }
 
-    public static Factory<QosDataAccess> getDefaultFactory() {
-        return defaultFactory;
-    }
-
-    public static void setDefaultFactory(Factory<QosDataAccess> defaultFactory) {
-        QosDaoFactory.defaultFactory = defaultFactory;
-    }
-    
-    private QosDaoFactory() {
-        
+    public QosDaoFactory(Factory<QosDataAccess> defaultFactory) {
+        this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
     }
 }

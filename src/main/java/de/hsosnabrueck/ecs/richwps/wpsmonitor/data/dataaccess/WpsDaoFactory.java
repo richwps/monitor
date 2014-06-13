@@ -18,27 +18,20 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.impl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDaoFactory {
-    private static Factory<WpsDataAccess> defaultFactory = new WpsDaoDefaultFactory();
+    private Factory<WpsDataAccess> defaultFactory;
 
-    public static WpsDataAccess create() {
-        return WpsDaoFactory.defaultFactory.create();
+    public WpsDataAccess create() {
+        return this.defaultFactory.create();
     }
 
-    public static Factory<WpsDataAccess> getDefaultFactory() {
-        return WpsDaoFactory.defaultFactory;
-    }
-
-    public static void setDefaultFactory(Factory<WpsDataAccess> defaultFactory) {
-        WpsDaoFactory.defaultFactory = defaultFactory;
-    }
-    
-    private WpsDaoFactory() {
-        
+    public WpsDaoFactory(final Factory<WpsDataAccess> defaultFactory) {
+        this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
     }
 }
