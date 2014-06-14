@@ -36,13 +36,10 @@ public class Monitor {
         return monitorControl;
     }
     
-    public MonitorFacadeCUD getMonitorFacadeCUD() {
-        return (MonitorFacadeCUD)monitorControl;
+    public MonitorFacade getMonitorFacadeCUD() {
+        return (MonitorFacade)monitorControl;
     }
-    
-    public MonitorFacadeRead getMonitorFacadeRead() {
-        return (MonitorFacadeRead)monitorControl;
-    }
+
 
     public SchedulerControl getSchedulerControl() {
         return monitorControl.getSchedulerControl();

@@ -25,6 +25,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.JobKey;
@@ -35,150 +37,218 @@ import org.quartz.TriggerKey;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
+public class MonitorControl implements MonitorFacade {
 
     private SchedulerControl schedulerControl;
     private QosDataAccess qosDao;
     private WpsDataAccess wpsDao;
     private WpsProcessDataAccess wpsProcessDao;
 
+    private final Lock read;
+    private final Lock write;
+
     public MonitorControl(SchedulerControl scheduler, QosDataAccess qosDao, WpsDataAccess wpsDao, WpsProcessDataAccess wpsProcessDao) {
         this.schedulerControl = Param.notNull(scheduler, "scheduler");
         this.qosDao = Param.notNull(qosDao, "qosDao");
         this.wpsDao = Param.notNull(wpsDao, "wpsDao");
         this.wpsProcessDao = Param.notNull(wpsProcessDao, "wpsProcessDao");
+
+        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
+        read = reentrantReadWriteLock.readLock();
+        write = reentrantReadWriteLock.writeLock();
     }
 
     @Override
     public Boolean createWps(String wpdIdentifier, URI uri) {
-        WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
+        write.lock();
 
-        return wpsDao.persist(wps);
+        try {
+            WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
+
+            return wpsDao.persist(wps);
+        } finally {
+            write.unlock();
+        }
     }
 
     @Override
     public Boolean createProcess(String wpsIdentifier, String processIdentifier) {
-        WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        write.lock();
 
-        if (wps != null) {
-            WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
+        try {
+            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
 
-            try {
-                schedulerControl.addWpsAsJob(process);
+            if (wps != null) {
+                WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
 
-                return wpsProcessDao.persist(process);
-            } catch (SchedulerException ex) {
-                Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    schedulerControl.addWpsAsJob(process);
+
+                    return wpsProcessDao.persist(process);
+                } catch (SchedulerException ex) {
+                    Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
 
-        return false;
+            return false;
+        } finally {
+            write.unlock();
+        }
     }
 
     @Override
     public TriggerKey createTrigger(String wpsIdentifier, String processIdentifier, TriggerConfig config) {
-        TriggerKey result = null;
+        write.lock();
 
         try {
-            result = schedulerControl.addTriggerToJob(
-                    new JobKey(
-                            Param.notNull(wpsIdentifier, "wpsIdentifier"),
-                            Param.notNull(processIdentifier, "processIdentifier")), Param.notNull(config, "config"));
-        } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            TriggerKey result = null;
 
-        return result;
+            try {
+                result = schedulerControl.addTriggerToJob(
+                        new JobKey(
+                                Param.notNull(wpsIdentifier, "wpsIdentifier"),
+                                Param.notNull(processIdentifier, "processIdentifier")), Param.notNull(config, "config"));
+            } catch (SchedulerException ex) {
+                Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return result;
+        } finally {
+            write.unlock();
+        }
     }
 
     @Override
     public Boolean setTestRequest(String wpsIdentifier, String processIdentifier, String testRequest) {
-        WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-        Boolean exists = process != null;
+        write.lock();
+        try {
+            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+            Boolean exists = process != null;
 
-        if (exists) {
-            process.setRawRequest(testRequest);
+            if (exists) {
+                process.setRawRequest(testRequest);
 
-            wpsProcessDao.update(process);
+                wpsProcessDao.update(process);
+            }
+
+            return exists;
+        } finally {
+            write.unlock();
         }
-
-        return exists;
     }
 
     @Override
     public Boolean updateWpsUri(String wpsIdentifier, URI newUri) {
-        WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        Boolean updateable = (wps != null);
+        write.lock();
+        try {
+            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+            Boolean updateable = (wps != null);
 
-        if (updateable) {
-            wps.setRoute(newUri);
-            wpsDao.update(wps);
+            if (updateable) {
+                wps.setRoute(newUri);
+                wpsDao.update(wps);
+            }
+            return updateable;
+        } finally {
+            write.unlock();
         }
-        return updateable;
     }
 
     @Override
     public Boolean deleteWps(String wpsIdentifier) {
-        WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        Boolean deleteable = (wps != null);
+        write.lock();
+        try {
+            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+            Boolean deleteable = (wps != null);
 
-        if (deleteable) {
-            wpsDao.remove(wps);
+            if (deleteable) {
+                wpsDao.remove(wps);
+            }
+
+            return deleteable;
+        } finally {
+            write.unlock();
         }
-
-        return deleteable;
     }
 
     @Override
     public Boolean deleteProcess(String wpsIdentifier, String processIdentifier) {
-        WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-        Boolean deleteable = process != null;
+        write.lock();
 
-        if (deleteable) {
-            wpsProcessDao.remove(process);
+        try {
+            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+            Boolean deleteable = process != null;
+
+            if (deleteable) {
+                wpsProcessDao.remove(process);
+            }
+
+            return deleteable;
+        } finally {
+            write.unlock();
         }
-
-        return deleteable;
     }
 
     @Override
     public Boolean deleteTrigger(TriggerKey triggerKey) {
+        write.lock();
+
         try {
-            schedulerControl.removeTrigger(triggerKey);
-        } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                schedulerControl.removeTrigger(triggerKey);
+            } catch (SchedulerException ex) {
+                Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
 
-            return false;
+                return false;
+            }
+
+            return true;
+        } finally {
+            write.unlock();
         }
-
-        return true;
     }
 
     @Override
     public List<WpsEntity> getWpsList() {
-        return wpsDao.getAll();
+        read.lock();
+
+        try {
+            return wpsDao.getAll();
+        } finally {
+            read.unlock();
+        }
     }
 
     @Override
     public List<WpsProcessEntity> getProcessesOfWps(String identifier) {
-        return wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
+        read.lock();
+
+        try {
+            return wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
+        } finally {
+            read.unlock();
+        }
     }
 
     @Override
     public List<TriggerKey> getTriggers(String wpsIdentifier, String processIdentifier) {
         JobKey jobKey = new JobKey(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-
+        
+        read.lock();
         try {
             return schedulerControl.getTriggerKeysOfJob(jobKey);
         } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
-
             return null;
+        } finally {
+            read.unlock();
         }
     }
 
     @Override
     public String getRequestString(String wpsIdentifier, String processIdentifier) {
+        write.lock();
+        // unsure if i should use read.lock() for atomar operation or write.lock ... 
+        try {
         WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
 
         if (process != null) {
@@ -186,6 +256,9 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
         }
 
         return null;
+        } finally {
+            write.unlock();
+        }
     }
 
     @Override
@@ -200,7 +273,7 @@ public class MonitorControl implements MonitorFacadeCUD, MonitorFacadeRead {
         } catch (SchedulerException ex) {
             Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
