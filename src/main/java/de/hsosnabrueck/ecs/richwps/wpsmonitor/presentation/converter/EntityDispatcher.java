@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDispatcher {
-    private EntityDisassembler disassembler;
+    private final EntityDisassembler disassembler;
 
     public EntityDispatcher(EntityDisassembler disassembler) {
         this.disassembler = Param.notNull(disassembler, "disassembler");

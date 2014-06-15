@@ -30,16 +30,10 @@ import java.util.Set;
  */
 public class EntityDisassembler {
 
-    private Map<String, ConverterFactory> converterMap;
+    private final Map<String, ConverterFactory> converterMap;
 
-    public EntityDisassembler() {
-        converterMap = new HashMap<String, ConverterFactory>();
-    }
-
-    public void addConverter(final ConverterFactory converterFactory, final String qosAbstractEntityName) {
-        converterMap.put(Param.notNull(qosAbstractEntityName, "qosAbstractEntityName"),
-                Param.notNull(converterFactory, "converterFactory")
-        );
+    public EntityDisassembler(final Map<String, ConverterFactory> converterMap) {
+        this.converterMap = Param.notNull(converterMap, "converterMap");
     }
 
     /**
@@ -53,11 +47,10 @@ public class EntityDisassembler {
      */
     public Map<String, EntityConverter> disassemble(List<MeasuredDataEntity> dataList) {
         Map<String, EntityConverter> converters = createNewBunchOfConverters();
-        List<AbstractQosEntity> measureData;
         
         for (int j = 0; j < dataList.size(); j++) {
             MeasuredDataEntity measuredDataEntity = dataList.get(j);
-            measureData = measuredDataEntity.getData();
+            List<AbstractQosEntity> measureData = measuredDataEntity.getData();
 
             for (int i = 0; i < measureData.size(); i++) {
                 if (converterMap.containsKey(measureData.get(i).getEntityName())) {
