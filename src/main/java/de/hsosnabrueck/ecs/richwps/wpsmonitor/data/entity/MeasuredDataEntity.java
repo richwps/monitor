@@ -67,6 +67,11 @@ public class MeasuredDataEntity implements Serializable {
         this.data = new ArrayList<AbstractQosEntity>();
     }
 
+    public MeasuredDataEntity(List<AbstractQosEntity> qosEntities) {
+        this.data = qosEntities;
+        this.createTime = new Date();
+    }
+
     public Long getId() {
         return id;
     }
