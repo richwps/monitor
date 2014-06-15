@@ -15,18 +15,18 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.JobKey;
@@ -40,234 +40,236 @@ import org.quartz.TriggerKey;
 public class MonitorControl implements MonitorFacade {
 
     private SchedulerControl schedulerControl;
-    private QosDataAccess qosDao;
-    private WpsDataAccess wpsDao;
-    private WpsProcessDataAccess wpsProcessDao;
+    private final QosDaoFactory qosDaoFactory;
+    private final WpsDaoFactory wpsDaoFactory;
+    private final WpsProcessDaoFactory wpsProcessDaoFactory;
 
-    private final Lock read;
-    private final Lock write;
-
-    public MonitorControl(SchedulerControl scheduler, QosDataAccess qosDao, WpsDataAccess wpsDao, WpsProcessDataAccess wpsProcessDao) {
+    public MonitorControl(SchedulerControl scheduler, QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
         this.schedulerControl = Param.notNull(scheduler, "scheduler");
-        this.qosDao = Param.notNull(qosDao, "qosDao");
-        this.wpsDao = Param.notNull(wpsDao, "wpsDao");
-        this.wpsProcessDao = Param.notNull(wpsProcessDao, "wpsProcessDao");
-
-        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock(true);
-        read = reentrantReadWriteLock.readLock();
-        write = reentrantReadWriteLock.writeLock();
+        this.qosDaoFactory = Param.notNull(qosDao, "qosDao");
+        this.wpsDaoFactory = Param.notNull(wpsDao, "wpsDao");
+        this.wpsProcessDaoFactory = Param.notNull(wpsProcessDao, "wpsProcessDao");
     }
 
     @Override
-    public Boolean createWps(String wpdIdentifier, URI uri) {
-        write.lock();
+    public final synchronized TriggerKey createTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config) {
+        TriggerKey result = null;
 
         try {
-            WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
+            result = schedulerControl.addTriggerToJob(new JobKey(
+                    Param.notNull(wpsIdentifier, "wpsIdentifier"),
+                    Param.notNull(processIdentifier, "processIdentifier")
+            ), Param.notNull(config, "config"));
+        } catch (SchedulerException ex) {
+            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-            return wpsDao.persist(wps);
-        } finally {
-            write.unlock();
+        return result;
+    }
+
+    @Override
+    public final synchronized List<TriggerKey> getTriggers(String wpsIdentifier, String processIdentifier) {
+        JobKey jobKey = new JobKey(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+
+        try {
+            return schedulerControl.getTriggerKeysOfJob(jobKey);
+        } catch (SchedulerException ex) {
+            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+
+            return null;
         }
     }
 
     @Override
-    public Boolean createProcess(String wpsIdentifier, String processIdentifier) {
-        write.lock();
+    public final synchronized Boolean deleteTrigger(TriggerKey triggerKey) {
+        try {
+            schedulerControl.removeTrigger(triggerKey);
+        } catch (SchedulerException ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public Boolean createWps(final String wpdIdentifier, final URI uri) {
+        WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
+        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        Boolean result = false;
+
+        try {
+            result = wpsDao.persist(wps);
+        } finally {
+            wpsDao.close();
+        }
+
+        return result;
+    }
+
+    @Override
+    public Boolean createProcess(final String wpsIdentifier, final String processIdentifier) {
+        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = null;
 
         try {
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
 
             if (wps != null) {
                 WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
+                wpsProcessDao = wpsProcessDaoFactory.create();
 
                 try {
-                    schedulerControl.addWpsAsJob(process);
+                    synchronized (this) {
+                        schedulerControl.addWpsAsJob(process);
+                    }
 
                     return wpsProcessDao.persist(process);
                 } catch (SchedulerException ex) {
                     Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
-            return false;
         } finally {
-            write.unlock();
-        }
-    }
+            wpsDao.close();
 
-    @Override
-    public TriggerKey createTrigger(String wpsIdentifier, String processIdentifier, TriggerConfig config) {
-        write.lock();
-
-        try {
-            TriggerKey result = null;
-
-            try {
-                result = schedulerControl.addTriggerToJob(
-                        new JobKey(
-                                Param.notNull(wpsIdentifier, "wpsIdentifier"),
-                                Param.notNull(processIdentifier, "processIdentifier")), Param.notNull(config, "config"));
-            } catch (SchedulerException ex) {
-                Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
             }
-
-            return result;
-        } finally {
-            write.unlock();
         }
+
+        return false;
     }
 
     @Override
-    public Boolean setTestRequest(String wpsIdentifier, String processIdentifier, String testRequest) {
-        write.lock();
+    public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest) {
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        Boolean exists = false;
+
         try {
             WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-            Boolean exists = process != null;
+            exists = process != null;
 
             if (exists) {
                 process.setRawRequest(testRequest);
 
                 wpsProcessDao.update(process);
             }
-
-            return exists;
         } finally {
-            write.unlock();
+            wpsProcessDao.close();
         }
+
+        return exists;
     }
 
     @Override
-    public Boolean updateWpsUri(String wpsIdentifier, URI newUri) {
-        write.lock();
+    public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri) {
+        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        Boolean updateable = false;
+
         try {
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-            Boolean updateable = (wps != null);
+            updateable = (wps != null);
 
             if (updateable) {
                 wps.setRoute(newUri);
                 wpsDao.update(wps);
             }
-            return updateable;
         } finally {
-            write.unlock();
+            wpsDao.close();
         }
+
+        return updateable;
     }
 
     @Override
-    public Boolean deleteWps(String wpsIdentifier) {
-        write.lock();
+    public Boolean deleteWps(final String wpsIdentifier) {
+        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        Boolean deleteable = false;
+
         try {
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-            Boolean deleteable = (wps != null);
+            deleteable = (wps != null);
 
             if (deleteable) {
                 wpsDao.remove(wps);
             }
-
-            return deleteable;
         } finally {
-            write.unlock();
+            wpsDao.close();
         }
+
+        return deleteable;
     }
 
     @Override
     public Boolean deleteProcess(String wpsIdentifier, String processIdentifier) {
-        write.lock();
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        Boolean deleteable = false;
 
         try {
             WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-            Boolean deleteable = process != null;
+            deleteable = (process != null);
 
             if (deleteable) {
                 wpsProcessDao.remove(process);
             }
-
-            return deleteable;
         } finally {
-            write.unlock();
+            wpsProcessDao.close();
         }
-    }
 
-    @Override
-    public Boolean deleteTrigger(TriggerKey triggerKey) {
-        write.lock();
-
-        try {
-            try {
-                schedulerControl.removeTrigger(triggerKey);
-            } catch (SchedulerException ex) {
-                Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
-
-                return false;
-            }
-
-            return true;
-        } finally {
-            write.unlock();
-        }
+        return deleteable;
     }
 
     @Override
     public List<WpsEntity> getWpsList() {
-        read.lock();
+        WpsDataAccess wpsDao = wpsDaoFactory.create();
 
         try {
             return wpsDao.getAll();
         } finally {
-            read.unlock();
+            wpsDao.close();
         }
     }
 
     @Override
     public List<WpsProcessEntity> getProcessesOfWps(String identifier) {
-        read.lock();
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
         try {
             return wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
         } finally {
-            read.unlock();
-        }
-    }
-
-    @Override
-    public List<TriggerKey> getTriggers(String wpsIdentifier, String processIdentifier) {
-        JobKey jobKey = new JobKey(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-        
-        read.lock();
-        try {
-            return schedulerControl.getTriggerKeysOfJob(jobKey);
-        } catch (SchedulerException ex) {
-            return null;
-        } finally {
-            read.unlock();
+            wpsProcessDao.close();
         }
     }
 
     @Override
     public String getRequestString(String wpsIdentifier, String processIdentifier) {
-        write.lock();
-        // unsure if i should use read.lock() for atomar operation or write.lock ... 
-        try {
-        WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
-        if (process != null) {
-            return process.getRawRequest();
+        try {
+            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+
+            if (process != null) {
+                return process.getRawRequest();
+            }
+        } finally {
+            wpsProcessDao.close();
         }
 
         return null;
-        } finally {
-            write.unlock();
-        }
     }
 
     @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
-        return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+        QosDataAccess qosDao = qosDaoFactory.create();
+        
+        try {
+            return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+        } finally {
+            qosDao.close();
+        }
     }
 
     @Override
-    public TriggerConfig getTriggerConfig(TriggerKey triggerKey) {
+    public synchronized TriggerConfig getTriggerConfig(TriggerKey triggerKey) {
         try {
             return schedulerControl.getConfigOfTrigger(triggerKey);
         } catch (SchedulerException ex) {
@@ -286,27 +288,14 @@ public class MonitorControl implements MonitorFacade {
     }
 
     public QosDataAccess getQosDao() {
-        return qosDao;
-    }
-
-    public void setQosDao(QosDataAccess qosDao) {
-        this.qosDao = qosDao;
+        return qosDaoFactory.create();
     }
 
     public WpsDataAccess getWpsDao() {
-        return wpsDao;
-    }
-
-    public void setWpsDao(WpsDataAccess wpsDao) {
-        this.wpsDao = wpsDao;
+        return wpsDaoFactory.create();
     }
 
     public WpsProcessDataAccess getWpsProcessDao() {
-        return wpsProcessDao;
+        return wpsProcessDaoFactory.create();
     }
-
-    public void setWpsProcessDao(WpsProcessDataAccess wpsProcessDao) {
-        this.wpsProcessDao = wpsProcessDao;
-    }
-
 }

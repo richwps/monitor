@@ -16,9 +16,10 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.Builder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import org.quartz.SchedulerException;
 
 /**
  *
@@ -26,17 +27,25 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
  */
 public class Monitor {
     private MonitorControl monitorControl;
-    private Builder builderInstance;
+    private MonitorBuilder builderInstance;
     
-    public Monitor(MonitorControl monitorControl, Builder builder) {
+    public Monitor(MonitorControl monitorControl, MonitorBuilder builder) {
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
+    }
+    
+    public void start() throws SchedulerException {
+        monitorControl.getSchedulerControl().start();
+    }
+    
+    public void shutdown() throws SchedulerException {
+        monitorControl.getSchedulerControl().shutdown();
     }
 
     public MonitorControl getMonitorControl() {
         return monitorControl;
     }
     
-    public MonitorFacade getMonitorFacadeCUD() {
+    public MonitorFacade getMonitorFacade() {
         return (MonitorFacade)monitorControl;
     }
 
@@ -45,7 +54,7 @@ public class Monitor {
         return monitorControl.getSchedulerControl();
     }
 
-    public Builder getBuilderInstance() {
+    public MonitorBuilder getBuilderInstance() {
         return builderInstance;
     }
     

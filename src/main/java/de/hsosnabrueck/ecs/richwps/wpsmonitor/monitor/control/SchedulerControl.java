@@ -43,6 +43,14 @@ public class SchedulerControl {
     public SchedulerControl(Scheduler scheduler) {
         this.scheduler = Param.notNull(scheduler, "scheduler");
     }
+    
+    public void start() throws SchedulerException {
+        scheduler.start();
+    }
+    
+    public void shutdown() throws SchedulerException {
+        scheduler.shutdown(true);
+    }
 
     public JobKey addWpsAsJob(final WpsProcessEntity process) throws SchedulerException {
         JobDetail newWpsJob = org.quartz.JobBuilder.newJob(MeasureJob.class)
