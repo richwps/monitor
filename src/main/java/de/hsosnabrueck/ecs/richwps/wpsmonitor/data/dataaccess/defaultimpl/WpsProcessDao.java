@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -34,17 +35,17 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public WpsProcessEntity find(Object primaryKey) {
+    public WpsProcessEntity find(final Object primaryKey) {
         return em.find(WpsProcessEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
-    public List<WpsProcessEntity> get(Integer start, Integer count) {
-        return getBy("wpsprocess.getAll", WpsProcessEntity.class, start, count);
+    public List<WpsProcessEntity> get(final Range range) {
+        return getBy("wpsprocess.getAll", WpsProcessEntity.class, range);
     }
     
     @Override
-    public WpsProcessEntity find(String wpsIdentifier, String processIdentifier) {
+    public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
@@ -60,7 +61,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public List<WpsProcessEntity> getAll(String wpsIdentifier) {
+    public List<WpsProcessEntity> getAll(final String wpsIdentifier) {
        Map<String, Object> parameters = new HashMap<String, Object>();
        parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
        

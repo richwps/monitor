@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -38,13 +39,13 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     }
 
     @Override
-    public List<WpsEntity> get(Integer start, Integer count) {
-        return getBy("wps.getAll", WpsEntity.class, count, count);
+    public List<WpsEntity> get(Range range) {
+        return getBy("wps.getAll", WpsEntity.class, range);
     }
 
     @Override
     public List<WpsEntity> getAll() {
-        return get(null, null);
+        return get(null);
     }
     
 }

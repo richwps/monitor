@@ -26,6 +26,6 @@ import java.util.List;
 public interface QosDataAccess extends DataAccess<MeasuredDataEntity>  {
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier);
     public List<MeasuredDataEntity> getByWps(final String identifier);
-    public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Integer offset, final Integer maxResult);
-    public List<MeasuredDataEntity> getByWps(final String identifier, final Integer offset, final Integer maxResult);
+    public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range);
+    public List<MeasuredDataEntity> getByWps(final String identifier, final Range range);
 }

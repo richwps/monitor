@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
 import java.util.Map;
@@ -80,19 +81,18 @@ public abstract class AbstractDataAccess<T> {
         return getBy(queryName, null, c);
     }
     
-    protected List<T> getBy(final String queryName, final Class c, final Integer offset, final Integer maxResult) {
-        return getBy(queryName, null, c, offset, maxResult);
+    protected List<T> getBy(final String queryName, final Class c, final Range range) {
+        return getBy(queryName, null, c, range);
     }
 
     protected List<T> getBy(final String queryName, final Map<String, Object> parameters, final Class c) {
-        return getBy(queryName, parameters, c, null, null);
+        return getBy(queryName, parameters, c, null);
     }
 
     protected List<T> getBy(final String queryName,
             final Map<String, Object> parameters,
             final Class c,
-            final Integer start,
-            final Integer count) {
+            final Range range) {
 
         List<T> result = null;
 
@@ -104,13 +104,15 @@ public abstract class AbstractDataAccess<T> {
                 query.setParameter(e.getKey(), e.getValue());
             }
         }
+        
+        if(range != null) {
+            if (range.getOffset() != null) {
+                query.setFirstResult(range.getOffset());
+            }
 
-        if (start != null) {
-            query.setFirstResult(start);
-        }
-
-        if (count != null) {
-            query.setMaxResults(count);
+            if (range.getCount() != null) {
+                query.setMaxResults(range.getCount());
+            }
         }
 
         try {

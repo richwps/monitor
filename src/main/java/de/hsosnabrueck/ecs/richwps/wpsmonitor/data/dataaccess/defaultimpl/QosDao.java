@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
@@ -34,39 +35,39 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     }
     
     @Override
-    public MeasuredDataEntity find(Object primaryKey) {
+    public MeasuredDataEntity find(final Object primaryKey) {
         return em.find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
-    public List<MeasuredDataEntity> getByWps(String identifier, Integer offset, Integer maxResult) {
+    public List<MeasuredDataEntity> getByWps(final String identifier, final Range range) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", Param.notNull(identifier, "identifier"));
 
-        return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class, offset, maxResult);
+        return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class, range);
     }
 
     @Override
-    public List<MeasuredDataEntity> getByProcess(String wpsIdentifier, String processIdentifier, Integer offset, Integer maxResult) {
+    public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range) {
         Map<String, Object> parameter = new HashMap<String, Object>();
         parameter.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
         parameter.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
 
-        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class, offset, maxResult);
+        return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class, range);
     }
 
     @Override
-    public List<MeasuredDataEntity> get(Integer start, Integer count) {
+    public List<MeasuredDataEntity> get(final Range range) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<MeasuredDataEntity> getByProcess(String wpsIdentifier, String processIdentifier) {
-        return getByProcess(wpsIdentifier, processIdentifier, null, null);
+    public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier) {
+        return getByProcess(wpsIdentifier, processIdentifier, null);
     }
 
     @Override
-    public List<MeasuredDataEntity> getByWps(String identifier) {
-        return getByWps(identifier, null, null);
+    public List<MeasuredDataEntity> getByWps(final String identifier) {
+        return getByWps(identifier, null);
     }
 }

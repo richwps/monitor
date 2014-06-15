@@ -16,17 +16,24 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
-import java.util.List;
-
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface DataAccess<T> extends AutoCloseable {
-    public T find(Object primaryKey);
-    public Boolean persist(T entityObject);
-    public T update(T entityObject);
-    public void remove(final T o);
-    public List<T> get(final Range range);
-    public void close();
+public class Range {
+    private Integer offset;
+    private Integer count;
+
+    public Range(Integer offset, Integer count) {
+        this.offset = offset;
+        this.count = count;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
 }
