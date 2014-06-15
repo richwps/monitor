@@ -23,10 +23,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDaoFactory {
+public final class WpsDaoFactory {
     private Factory<WpsDataAccess> defaultFactory;
 
-    public WpsDataAccess create() {
+    public synchronized WpsDataAccess create() {
         return this.defaultFactory.create();
     }
 

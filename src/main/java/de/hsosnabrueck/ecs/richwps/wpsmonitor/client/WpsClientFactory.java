@@ -23,7 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsClientFactory {
+public final class WpsClientFactory {
     private final Factory<WpsClient> defaultClientImpl;
 
     public WpsClientFactory(final Factory<WpsClient> defaultClient) {
