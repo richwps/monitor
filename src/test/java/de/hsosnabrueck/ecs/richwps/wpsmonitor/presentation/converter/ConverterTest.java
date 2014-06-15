@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import com.google.gson.Gson;
@@ -25,6 +24,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStr
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -37,47 +37,50 @@ import org.junit.Test;
  *
  * @author FloH
  */
-public class ConverterTest {    
+public class ConverterTest {
+
     private EntityDispatcher dispatch;
     private List<MeasuredDataEntity> data;
-    
+
+    private static DispatcherFactory dispatchFactory;
+
     public ConverterTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
-        
+        Map<String, ConverterFactory> converterMap = new HashMap<String, ConverterFactory>();
+        converterMap.put("exampleMeasurement", new MyConverterFactory());
+
+        dispatchFactory = new DispatcherFactory(converterMap);
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
-        EntityDisassembler entityDisassembler = new EntityDisassembler();
 
-        entityDisassembler.addConverter(new MyConverterFactory(), "exampleMeasurement");
-        
-        dispatch = new EntityDispatcher(entityDisassembler);
+        dispatch = dispatchFactory.create();
         data = new ArrayList<MeasuredDataEntity>();
-                
+
         List<AbstractQosEntity> qosEntities = new ArrayList<AbstractQosEntity>();
-        
+
         qosEntities.add(new ExampleQos("muh", 22));
         qosEntities.add(new ExampleQos("buh", 11));
         qosEntities.add(new ExampleQos("valuhu", 9));
         data.add(new MeasuredDataEntity(qosEntities));
-        
+
         qosEntities = new ArrayList<AbstractQosEntity>();
-        
+
         qosEntities.add(new ExampleQos("muh", 22));
         qosEntities.add(new ExampleQos("buh", 11));
         qosEntities.add(new ExampleQos("valuhu", 9));
-        
+
         data.add(new MeasuredDataEntity(qosEntities));
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -86,40 +89,39 @@ public class ConverterTest {
     public void testDispatchResultIsNotNull() {
         Assert.assertTrue("check if the dispatch result is not null", dispatch.dispatch(data) != null);
     }
-    
+
     @Test
     public void testDispatchResult() {
-        Assert.assertTrue("check if the dispatch result is a List and the List is not empty", 
-                dispatch.dispatch(data).getClass().equals(HashMap.class) &&
-                        dispatch.dispatch(data).size() > 0);
+        Assert.assertTrue("check if the dispatch result is a List and the List is not empty",
+                dispatch.dispatch(data).getClass().equals(HashMap.class)
+                && dispatch.dispatch(data).size() > 0);
     }
-    
+
     @Test
     public void testJsonStrategyNoException() {
-        
+
         Boolean failed = false;
         String message = null;
-        
+
         try {
             PresentateStrategy json = new JsonPresentateStrategy();
             json.toPresentate(dispatch.dispatch(data));
-        } catch(Exception e) {
+        } catch (Exception e) {
             failed = true;
             message = e.getMessage();
         }
-        
+
         Assert.assertTrue(message, !failed);
     }
-    
+
     @Test
     public void testJsonStrategyOutput() {
         Assert.assertTrue(
-            new JsonPresentateStrategy().toPresentate(dispatch.dispatch(data))
-                    .equals("{\"exampleMeasurement\":{\"sum\":84}}")
+                new JsonPresentateStrategy().toPresentate(dispatch.dispatch(data))
+                .equals("{\"exampleMeasurement\":{\"sum\":84}}")
         );
     }
-    
-    
+
     public static void main(String[] args) {
         ConverterTest t = new ConverterTest();
         t.setUp();

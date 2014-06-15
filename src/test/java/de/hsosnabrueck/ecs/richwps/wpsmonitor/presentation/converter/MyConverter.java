@@ -30,10 +30,9 @@ public class MyConverter extends EntityConverter {
     public Object convert() {
         ExampleQos q;
         Integer sum = 0;
-        System.out.println("Size: " + getEntities().size());
+
         for(AbstractQosEntity e : getEntities()) {
             q = (ExampleQos)e;
-            System.out.println("sum + =" + q.getValue());
             sum += q.getValue();
         }
 
