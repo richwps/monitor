@@ -13,27 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.util.List;
+import com.google.gson.GsonBuilder;
 import java.util.Map;
+import javax.persistence.Version;
 
 /**
  *
  * @author FloH
  */
-public class JsonPresentateStrategy implements PresentateStrategy{
-    private Gson gson;
+public class JsonPresentateStrategy implements PresentateStrategy {
 
-    public JsonPresentateStrategy(final Gson gson) {
-        this.gson = Param.notNull(gson, "gson");
-    }
-   
     @Override
     public String toPresentate(Map<String, Object> presentateObjects) {
-       return gson.toJson(presentateObjects);
+        // make new gson object to support multithreading environment
+        Gson gson = new GsonBuilder().setExclusionStrategies(
+                new ExclusionStrategy() {
+                    // ignore fields with version annotation
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getAnnotation(Version.class) != null;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> arg0) {
+                        return false;
+                    }
+                }
+        ).create();
+
+        return gson.toJson(presentateObjects);
     }
 }
