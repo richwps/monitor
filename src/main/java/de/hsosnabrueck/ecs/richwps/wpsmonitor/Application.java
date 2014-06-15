@@ -17,6 +17,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.SchedulerException;
@@ -33,6 +36,8 @@ public class Application {
             new Application().run();
         } catch (SchedulerException ex) {
             Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -40,8 +45,18 @@ public class Application {
     }
 
     public void run() throws SchedulerException {
-        Monitor m = null;
-        //m = new Builder().setupDefault().build();
-        GuiStarter.start(null);
+        Monitor monitor = new MonitorBuilder()
+                .setupDefault()
+                .build();
+        
+        RestInterface rest = new RestInterfaceBuilder()
+                .withMonitorControl(monitor.getMonitorControl())
+                .withStrategy(new JsonPresentateStrategy())
+                .build();
+
+        monitor.start();
+        rest.start();
+
+        GuiStarter.start(monitor.getMonitorControl());
     }
 }
