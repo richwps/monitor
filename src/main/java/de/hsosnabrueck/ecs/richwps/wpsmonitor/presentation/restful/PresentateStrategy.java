@@ -24,5 +24,5 @@ import java.util.Map;
  * @author FloH
  */
 public interface PresentateStrategy {
-    public String toPresentate(Map<String, List<Object>> presentateObjects);
+    public String toPresentate(Map<String, Object> presentateObjects);
 }

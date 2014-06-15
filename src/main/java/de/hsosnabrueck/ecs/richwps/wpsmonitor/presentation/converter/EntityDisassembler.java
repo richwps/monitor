@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,38 +29,58 @@ import java.util.Set;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDisassembler {
+
     private Map<String, ConverterFactory> converterMap;
-    
+
     public EntityDisassembler() {
         converterMap = new HashMap<String, ConverterFactory>();
     }
-    
+
     public void addConverter(final ConverterFactory converterFactory, final String qosAbstractEntityName) {
-        converterMap.put(Param.notNull(qosAbstractEntityName, "qosAbstractEntityName"), 
+        converterMap.put(Param.notNull(qosAbstractEntityName, "qosAbstractEntityName"),
                 Param.notNull(converterFactory, "converterFactory")
         );
     }
-    
-    public Map<String, EntityConverter> disassemble(final List<AbstractQosEntity> dataList) {
-        
+
+    /**
+     * Removes the AbstractQosEntity Objects out of the dataList's MeasuredDataEntity
+     * Object, and assign the AbstractQosEntities to the specific Converter-Object
+     * 
+     * disassemble() modifieds the MeasuredDataEntity-Objects!
+     * 
+     * @param dataList
+     * @return 
+     */
+    public Map<String, EntityConverter> disassemble(List<MeasuredDataEntity> dataList) {
         Map<String, EntityConverter> converters = createNewBunchOfConverters();
+        List<AbstractQosEntity> measureData;
         
-        for(AbstractQosEntity e : Param.notNull(dataList, "dataList")) {
-            if(converterMap.containsKey(e.getEntityName())) {
-                converters.get(e.getEntityName()).add(e);
+        for (int j = 0; j < dataList.size(); j++) {
+            MeasuredDataEntity measuredDataEntity = dataList.get(j);
+            measureData = measuredDataEntity.getData();
+
+            for (int i = 0; i < measureData.size(); i++) {
+                if (converterMap.containsKey(measureData.get(i).getEntityName())) {
+                    converters.get(measureData.get(i).getEntityName()).add(measureData.remove(i--)); //decrement i; remove(int) shift all elements to left
+                }
+            }
+            
+            // if the dataList empty, then remove the object
+            if(measureData.isEmpty()) {
+                dataList.remove(j--); //decrement j; remove(int) shift all elements to left
             }
         }
-        
+
         return converters;
     }
-    
+
     private Map<String, EntityConverter> createNewBunchOfConverters() {
         Map<String, EntityConverter> entityConverters = new HashMap<String, EntityConverter>();
-        
-        for(Map.Entry e : converterMap.entrySet()) {
-            entityConverters.put((String)e.getKey(), ((ConverterFactory)e.getValue()).create());
+
+        for (Map.Entry e : converterMap.entrySet()) {
+            entityConverters.put((String) e.getKey(), ((ConverterFactory) e.getValue()).create());
         }
-        
+
         return entityConverters;
     }
 }

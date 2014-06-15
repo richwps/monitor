@@ -24,37 +24,21 @@ import java.util.List;
  *
  * @author FloH
  */
-public class MyConverter implements EntityConverter {
-    private List<AbstractQosEntity> datas;
-    
-    public MyConverter() {
-        datas = new ArrayList<AbstractQosEntity>();
-    }
+public class MyConverter extends EntityConverter {
 
     @Override
-    public void add(AbstractQosEntity data) {
-        datas.add(data);
-    }
-
-    @Override
-    public List<Object> getPresentateObject() {
+    public Object convert() {
         ExampleQos q;
         Integer sum = 0;
-        
-        List<Object> x = new ArrayList<Object>();
-        
-        for(AbstractQosEntity e : datas) {
+        System.out.println("Size: " + getEntities().size());
+        for(AbstractQosEntity e : getEntities()) {
             q = (ExampleQos)e;
-            
+            System.out.println("sum + =" + q.getValue());
             sum += q.getValue();
         }
+
         
-        x.add(new MyPresentate(sum));
-        x.add(new MyPresentate(sum));
-        x.add(new MyPresentate(sum));
-        x.add(new MyPresentate(sum));
-        
-        return x;
+        return new MyPresentate(sum);
     }
     
 }

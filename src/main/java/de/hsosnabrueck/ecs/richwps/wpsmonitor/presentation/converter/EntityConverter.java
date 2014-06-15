@@ -17,13 +17,27 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface EntityConverter {
-    public void add(final AbstractQosEntity data);
-    public List<Object> getPresentateObject();
+public abstract class EntityConverter {
+    private List<AbstractQosEntity> entities;
+    
+    public EntityConverter() {
+        entities = new ArrayList<AbstractQosEntity>();
+    }
+    
+    public void add(final AbstractQosEntity data) {
+        entities.add(data);
+    }
+
+    public List<AbstractQosEntity> getEntities() {
+        return entities;
+    }
+    
+    public abstract Object convert();
 }

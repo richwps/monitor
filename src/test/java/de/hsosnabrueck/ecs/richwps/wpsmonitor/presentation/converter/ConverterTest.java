@@ -17,10 +17,13 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStrategy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,8 +38,8 @@ import org.junit.Test;
  * @author FloH
  */
 public class ConverterTest {    
-    private Dispatcher dispatch;
-    private List<AbstractQosEntity> data;
+    private EntityDispatcher dispatch;
+    private List<MeasuredDataEntity> data;
     
     public ConverterTest() {
     }
@@ -56,12 +59,23 @@ public class ConverterTest {
 
         entityDisassembler.addConverter(new MyConverterFactory(), "exampleMeasurement");
         
-        dispatch = new Dispatcher(entityDisassembler);
-        data = new ArrayList<AbstractQosEntity>();
+        dispatch = new EntityDispatcher(entityDisassembler);
+        data = new ArrayList<MeasuredDataEntity>();
+                
+        List<AbstractQosEntity> qosEntities = new ArrayList<AbstractQosEntity>();
         
-        data.add(new ExampleQos("muh", 22));
-        data.add(new ExampleQos("buh", 11));
-        data.add(new ExampleQos("valuhu", 9));
+        qosEntities.add(new ExampleQos("muh", 22));
+        qosEntities.add(new ExampleQos("buh", 11));
+        qosEntities.add(new ExampleQos("valuhu", 9));
+        data.add(new MeasuredDataEntity(qosEntities));
+        
+        qosEntities = new ArrayList<AbstractQosEntity>();
+        
+        qosEntities.add(new ExampleQos("muh", 22));
+        qosEntities.add(new ExampleQos("buh", 11));
+        qosEntities.add(new ExampleQos("valuhu", 9));
+        
+        data.add(new MeasuredDataEntity(qosEntities));
     }
     
     @After
@@ -76,23 +90,18 @@ public class ConverterTest {
     @Test
     public void testDispatchResult() {
         Assert.assertTrue("check if the dispatch result is a List and the List is not empty", 
-                dispatch.dispatch(data).getClass().equals(ArrayList.class) &&
+                dispatch.dispatch(data).getClass().equals(HashMap.class) &&
                         dispatch.dispatch(data).size() > 0);
     }
     
     @Test
-    public void testResultIsValid() {
-        Assert.assertTrue(((MyPresentate)dispatch.dispatch(data).get(0).get(0)).getSum() == 42);
-    }
-    
-    @Test
-    public void testJsonStrategy() {
+    public void testJsonStrategyNoException() {
         
         Boolean failed = false;
         String message = null;
         
         try {
-            PresentateStrategy json = new JsonPresentateStrategy(new Gson());
+            PresentateStrategy json = new JsonPresentateStrategy(new GsonBuilder()..create());
             json.toPresentate(dispatch.dispatch(data));
         } catch(Exception e) {
             failed = true;
@@ -101,4 +110,21 @@ public class ConverterTest {
         
         Assert.assertTrue(message, !failed);
     }
+    
+    @Test
+    public void testJsonStrategyOutput() {
+        Assert.assertTrue(
+            new JsonPresentateStrategy(new Gson()).toPresentate(dispatch.dispatch(data))
+                    .equals("{\"exampleMeasurement\":{\"sum\":84}}")
+        );
+    }
+    
+    /*
+    public static void main(String[] args) {
+        ConverterTest t = new ConverterTest();
+        t.setUp();
+        PresentateStrategy json = new JsonPresentateStrategy(new Gson());
+
+        System.out.println(json.toPresentate(t.dispatch.dispatch(t.data)));
+    }*/
 }
