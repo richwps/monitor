@@ -21,12 +21,16 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -36,12 +40,18 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SimpleWpsClient implements WpsClient {
+
+    private String wpsExceptionMessage;
 
     @Override
     public WpsResponse execute(WpsRequest wpsRequest) {
@@ -50,8 +60,8 @@ public class SimpleWpsClient implements WpsClient {
         String responseBody = null;
         Date responseTime = null;
         WpsResponse response = null;
-        
-        if(wpsRequest != null) {
+
+        if (wpsRequest != null) {
             try {
                 // build http request
                 HttpPost httpRequest = buildRequest(wpsRequest);
@@ -61,7 +71,7 @@ public class SimpleWpsClient implements WpsClient {
                 wpsRequest.prepareRequest();
                 CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
                 responseTime = new Date();
-                
+
                 // get response body
                 HttpEntity responseEntity = httpResponse.getEntity();
                 responseBody = EntityUtils.toString(responseEntity);
@@ -78,10 +88,18 @@ public class SimpleWpsClient implements WpsClient {
             if (responseBody == null) {
                 response.setException(new ConnectionException());
             } else if (isWpsException(responseBody)) {
-                response.setException(new WpsException());
+                WpsException ex;
+                
+                if(wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
+                    ex = new WpsException();
+                } else {
+                    ex = new WpsException(wpsExceptionMessage);
+                }
+                
+                response.setException(ex);
             }
         }
-        
+
         return response;
     }
 
@@ -94,8 +112,39 @@ public class SimpleWpsClient implements WpsClient {
 
         return httpRequest;
     }
-    
-    private Boolean isWpsException(final String requestString) {
-        return false;
+
+    private Boolean isWpsException(final String responseBody) {
+        try {
+            Document doc = getDocumentBuilder().parse(new InputSource(new StringReader(responseBody)));
+            NodeList nl = doc.getElementsByTagNameNS("*", "ExceptionText");
+
+            if (nl.getLength() > 0) {
+                StringBuilder strBuilder = new StringBuilder();
+
+                for (int i = 0; i < nl.getLength(); i++) {
+                    strBuilder.append(nl.item(i).getTextContent());
+                    strBuilder.append("----");
+                }
+
+                wpsExceptionMessage = strBuilder.toString();
+            } else {
+                return false;
+            }
+        } catch (SAXException ex) {
+            Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return true;
+    }
+
+    private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        docBuilderFactory.setNamespaceAware(true);
+        
+        return docBuilderFactory.newDocumentBuilder();
     }
 }

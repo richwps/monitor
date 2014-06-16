@@ -21,7 +21,10 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsException extends Exception {
-
+    public WpsException(String message) {
+        super(message);
+    }
+    
     public WpsException() {
         super("The Request produced an Exception!");
     }
