@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiErrorException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 import java.util.logging.Level;
@@ -29,17 +31,17 @@ import javax.swing.JPanel;
 public class WpsEditDialog extends javax.swing.JDialog {
 
     private WpsPanel parent;
+    private WpsMonitorControl monitorMainFrame;
 
-    /**
-     * Creates new form WpsEditDialog
-     */
-    public WpsEditDialog(java.awt.Frame mainFrame, WpsPanel parent, boolean modal) {
-        super(mainFrame, modal);
+
+    public WpsEditDialog(WpsMonitorControl monitorMainFrame, WpsPanel parent, boolean modal) {
+        super(monitorMainFrame, modal);
         initComponents();
-
+        
+        this.monitorMainFrame = monitorMainFrame;
         this.parent = Param.notNull(parent, "parent");
-        this.newIdentifierTextField.setText(parent.getWpsName());
-        this.newUriTextField.setText(parent.getWpsUri().toString());
+        this.newIdentifierTextField.setText(parent.getWps().getIdentifier());
+        this.newUriTextField.setText(parent.getWps().getUri().toString());
     }
 
     /**
@@ -136,44 +138,19 @@ public class WpsEditDialog extends javax.swing.JDialog {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
 
-        String oldWpsName = parent.getWpsName();
-        URI oldUri = parent.getWpsUri();
+        String wpsIdentifier = newIdentifierTextField.getText();
+        String wpsUri = newUriTextField.getText();
         
-        // clear errors
         resetError();
-
+        
         try {
-            parent.setWpsName(newIdentifierTextField.getText());
-        } catch (Exception ex) {
-            appendErrorText(ex.getMessage());
-        }
-        try {
-            parent.setWpsUri(newUriTextField.getText());
-        } catch (Exception ex) {
-            appendErrorText(ex.getMessage());
-        }
-
-        // rollback if isError
-        if (isError()) {
-            try {
-                parent.setWpsName(oldWpsName);
-                parent.setWpsUri(oldUri);
-            } catch (Exception ex) {
-                Logger.getLogger(WpsEditDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
+            Wps addWps = new Wps(wpsIdentifier, wpsUri);
+            parent.setWps(addWps);
             dispose();
+        } catch (GuiErrorException ex) {
+            appendErrorText(ex.getMessage());
         }
-
     }//GEN-LAST:event_saveButtonActionPerformed
-
-    private Boolean isTheSame(final String wpsName, final String wpsUri) {
-        return wpsName.equals(parent.getWpsName()) && wpsUri.equals(parent.getWpsUri().toString());
-    }
-
-    private Boolean isError() {
-        return !errorLabel.getText().trim().equals("");
-    }
 
     private void resetError() {
         errorLabel.setText("");

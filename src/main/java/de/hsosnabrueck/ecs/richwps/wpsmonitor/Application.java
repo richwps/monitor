@@ -31,7 +31,6 @@ import org.quartz.SchedulerException;
 public class Application {
 
     public static void main(String[] args) {
-
         try {
             new Application().run();
         } catch (SchedulerException ex) {
@@ -57,6 +56,6 @@ public class Application {
         monitor.start();
         rest.start();
 
-        GuiStarter.start(monitor.getMonitorControl());
+        GuiStarter.start(monitor);
     }
 }

@@ -41,6 +41,7 @@ public class RestInterface {
         this.monitorControl = Param.notNull(control, "control");
         this.dispatchFactory = Param.notNull(dispatchFactory, "dispatchFactory");
         
+        routeMap = new EnumMap<HttpOperation, MonitorRoute>(HttpOperation.class);     
         routeRegister = new RouteRegister();
     }
 

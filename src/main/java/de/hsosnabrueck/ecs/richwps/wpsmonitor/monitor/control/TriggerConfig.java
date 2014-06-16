@@ -27,7 +27,7 @@ import org.quartz.DateBuilder;
 public class TriggerConfig {
     
     
-    private DateBuilder.IntervalUnit  intervalType;
+    private DateBuilder.IntervalUnit intervalType;
     private Date start;
     private Date end;
     private Integer interval;

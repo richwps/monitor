@@ -123,7 +123,7 @@ public class SimpleWpsClient implements WpsClient {
 
                 for (int i = 0; i < nl.getLength(); i++) {
                     strBuilder.append(nl.item(i).getTextContent());
-                    strBuilder.append("----");
+                    strBuilder.append("\n----\n");
                 }
 
                 wpsExceptionMessage = strBuilder.toString();

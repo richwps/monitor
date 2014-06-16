@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Dimension;
 import java.net.MalformedURLException;
@@ -33,26 +34,32 @@ import javax.swing.JPanel;
  * @author FloH
  */
 public class WpsPanel extends javax.swing.JPanel {
-
-    private URI wpsUri;
-    private String wpsName;
+    
     private JPanel parentRef;
-    private JFrame mainFrame;
+    private WpsMonitorControl mainFrame;
     private JDialog wpsProcessDialog;
+    private Wps wps;
 
-    WpsPanel(JFrame mainFrame, final String wpsName, final URI wpsUri, JPanel parent) {
-        this.wpsName = Param.notNull(wpsName, "wpsName");
-        this.wpsUri = Param.notNull(wpsUri, "wpsUri");
+    WpsPanel(WpsMonitorControl mainFrame, JPanel parent, final Wps wps) {
+        this.wps = Param.notNull(wps, "wps");
         this.parentRef = Param.notNull(parent, "parent");
         this.mainFrame = Param.notNull(mainFrame, "mainFrame");
 
         initComponents();
 
-        this.wpsProcessDialog = new WpsProcessDialog(mainFrame, true);
+        this.wpsProcessDialog = new WpsProcessDialog(mainFrame, wps, true);
 
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-        wpsNameLabel.setText(this.wpsName);
-        wpsUriLabel.setText(this.wpsUri.toString());
+        wpsNameLabel.setText(wps.getIdentifier());
+        wpsUriLabel.setText(wps.getUri().toString());
+    }
+
+    public Wps getWps() {
+        return wps;
+    }
+
+    public void setWps(Wps wps) {
+        this.wps = Param.notNull(wps, "wps");
     }
 
     /**
@@ -144,7 +151,9 @@ public class WpsPanel extends javax.swing.JPanel {
                 JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
+            mainFrame.getMonitorRef().getMonitorControl().deleteWps(wps.getIdentifier());
             parentRef.remove(this);
+            
             parentRef.revalidate();
             parentRef.repaint(); // repaint required, otherwise the last element will not disappear
         }
@@ -158,72 +167,7 @@ public class WpsPanel extends javax.swing.JPanel {
         new WpsEditDialog(mainFrame, this, true).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
 
-    public URI getWpsUri() {
-        return wpsUri;
-    }
 
-    public void setWpsUri(URI wpsUri) {
-        if (!this.wpsUri.equals(Param.notNull(wpsUri, "wpsUri"))) {
-            this.wpsUri = wpsUri;
-            this.wpsUriLabel.setText(wpsUri.toString());
-        }
-    }
-
-    public void setWpsUri(String wpsUri) throws Exception {
-        try {
-            URL urlCheck = new URL(Param.notNull(wpsUri, "wpsUri"));
-            URI uri = new URI(urlCheck.toString());
-
-            this.setWpsUri(uri);
-        } catch (MalformedURLException ex) {
-            throw new Exception("The entered URÖ is not valid!");
-        } catch (URISyntaxException ex) {
-            throw new Exception("The entered URI is not valid!");
-        }
-    }
-
-    public String getWpsName() {
-        return wpsName;
-    }
-
-    public void setWpsName(String wpsName) throws Exception {
-        if(!Param.notNull(wpsName, "wpsName").equals(this.wpsName)) {
-        String tmpName = wpsName.trim();
-
-        if (!tmpName.equals("")) {
-            this.wpsName = tmpName;
-            this.wpsNameLabel.setText(wpsName);
-        } else {
-            throw new Exception("WPS name should not be empty!");
-        }
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + (this.wpsUri != null ? this.wpsUri.hashCode() : 0);
-        hash = 97 * hash + (this.wpsName != null ? this.wpsName.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final WpsPanel other = (WpsPanel) obj;
-        if (this.wpsUri != other.wpsUri && (this.wpsUri == null || !this.wpsUri.equals(other.wpsUri))) {
-            return false;
-        }
-        if ((this.wpsName == null) ? (other.wpsName != null) : !this.wpsName.equals(other.wpsName)) {
-            return false;
-        }
-        return true;
-    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

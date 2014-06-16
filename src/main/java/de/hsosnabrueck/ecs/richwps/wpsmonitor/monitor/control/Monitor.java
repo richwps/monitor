@@ -27,10 +27,11 @@ import org.quartz.SchedulerException;
  */
 public class Monitor {
     private MonitorControl monitorControl;
-    private MonitorBuilder builderInstance;
+    private final MonitorBuilder builderInstance;
     
     public Monitor(MonitorControl monitorControl, MonitorBuilder builder) {
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
+        this.builderInstance = Param.notNull(builder, "builder");
     }
     
     public void start() throws SchedulerException {

@@ -166,6 +166,10 @@ public class MonitorBuilder {
     public WpsProcessDaoFactory getWpsProcessDaoFactory() {
         return wpsProcessDaoFactory;
     }
+
+    public WpsClientFactory getWpsClientFactory() {
+        return wpsClientFactory;
+    }
     
     public Boolean isValid() {
         return !(probeService == null 
@@ -178,6 +182,10 @@ public class MonitorBuilder {
     
     public WpsDataAccess buildWpsDataAccess() {
         return wpsDaoFactory.create();
+    }
+    
+    public WpsClient buildWpsClient() {
+        return wpsClientFactory.create();
     }
     
     public WpsProcessDataAccess buildWpsProcessDataAccess() {

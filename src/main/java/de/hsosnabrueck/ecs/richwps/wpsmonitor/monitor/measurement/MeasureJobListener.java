@@ -25,6 +25,7 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.quartz.JobListener;
 import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 
 /**
  *
@@ -71,8 +72,10 @@ public class MeasureJobListener implements JobListener {
                 dao.update(process);
                 
                 try {
-                    // delete Job! must be re-created if the problem is solved
-                    context.getScheduler().deleteJob(JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier()));
+                    // pause job if an error is triggered
+                    JobKey jobKey = JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier());
+                    
+                    context.getScheduler().pauseJob(jobKey);
                 } catch (SchedulerException ex) {
                     Logger.getLogger(MeasureJobListener.class.getName()).log(Level.SEVERE, null, ex);
                 }

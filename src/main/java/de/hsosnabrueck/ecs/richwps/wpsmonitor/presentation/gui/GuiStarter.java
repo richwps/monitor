@@ -16,6 +16,8 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +30,7 @@ import org.apache.derby.impl.tools.sysinfo.Main;
  * @author FloH
  */
 public class GuiStarter {
-    public static void start(final MonitorControl controlDependency) {
+    public static void start(final Monitor controlDependency) {
          /* Create and display the form */
         
         try {

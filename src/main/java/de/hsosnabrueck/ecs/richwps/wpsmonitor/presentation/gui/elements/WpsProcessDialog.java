@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.WpsProcess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -27,15 +29,15 @@ import javax.swing.JFrame;
  * @author FloH
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
-    private JFrame mainFrame;
+    private WpsMonitorControl mainFrame;
+    private Wps wps;
     
-    /**
-     * Creates new form ProcessDialog
-     */
-    public WpsProcessDialog(JFrame mainFrame, boolean modal) {
+
+    public WpsProcessDialog(WpsMonitorControl mainFrame, Wps wps, boolean modal) {
         super(mainFrame, modal);
         initComponents();
         
+        this.wps = wps;
         this.mainFrame = Param.notNull(mainFrame, "mainFrame");
     }
     
@@ -115,11 +117,13 @@ public class WpsProcessDialog extends javax.swing.JDialog {
 
     private void createNewProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewProcessButtonActionPerformed
         if(isNotEmptyProcessName()) {
-            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, processIdentifierInput.getText());
+            String wpsProcessIdentifier = processIdentifierInput.getText();
             
+            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, this, new WpsProcess(wps, wpsProcessIdentifier));
+
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");
-            
+
             addProcessPane.revalidate(); 
         }
     }//GEN-LAST:event_createNewProcessButtonActionPerformed

@@ -29,14 +29,17 @@
                           </Group>
                           <Component id="testRequestDecoText" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="318" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="318" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="showJobsButton" max="32767" attributes="0"/>
+                          <Component id="cancelWpsButton" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="showJobsButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="deleteProcessButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="showMeasuredDataButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="showMeasuredDataButton" max="32767" attributes="0"/>
                           </Group>
                           <Component id="saveProcessButton" max="32767" attributes="0"/>
                       </Group>
@@ -70,8 +73,11 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="saveProcessButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="testRequestDecoText" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="saveProcessButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="testRequestDecoText" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="cancelWpsButton" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="111" max="-2" attributes="0"/>
@@ -104,6 +110,9 @@
         <Property name="text" type="java.lang.String" value="Delete"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteProcessButtonActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -157,6 +166,17 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Component class="javax.swing.JButton" name="cancelWpsButton">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/cancel.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Cancel"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelWpsButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

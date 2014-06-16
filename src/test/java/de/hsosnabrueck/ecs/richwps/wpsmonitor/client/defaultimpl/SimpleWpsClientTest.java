@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,12 +132,33 @@ public class SimpleWpsClientTest {
      */
     @Test
     public void testValidExecute() {
-        System.out.println("execute");
-
-        WpsRequest request = new WpsRequest(rawRequest, info);
-        WpsResponse response = client.execute(request);
-
+        WpsResponse response = doDefaultRequest();
         Assert.assertTrue(!response.isException() && response.getResponseBody() != null && !response.getResponseBody().equals(""));
+    }
+    
+    private WpsResponse doDefaultRequest() {
+        WpsRequest request = new WpsRequest(rawRequest, info);
+        
+        return client.execute(request);
+    }
+    
+    @Test
+    public void testRequestDateIsSetFromClient() {
+        WpsRequest request = new WpsRequest(rawRequest, info);
+        request.prepareRequest();
+        
+        Date dateRef = request.getRequestTime();
+        
+        client.execute(request);
+        
+        Assert.assertTrue(!request.getRequestTime().equals(dateRef));
+    }
+    
+    @Test 
+    public void responseDateIsSet() {
+        WpsResponse response = doDefaultRequest();
+        
+        Assert.assertTrue(response.getResponseTime() != null);
     }
     
     @Test 
