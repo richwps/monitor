@@ -28,6 +28,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
@@ -45,6 +46,7 @@ import org.quartz.SchedulerException;
 public class MonitorBuilder {
     private ProbeService probeService;
     private WpsClientFactory wpsClientFactory;
+    private MonitorEventHandler eventHandler;
     
     private QosDaoFactory qosDaoFactory;
     private WpsDaoFactory wpsDaoFactory;
@@ -148,7 +150,7 @@ public class MonitorBuilder {
             withDefaultWpsClient();
         }
         
-        return new SchedulerFactory(probeService, wpsProcessDaoFactory, qosDaoFactory, wpsClientFactory);
+        return new SchedulerFactory(probeService, wpsProcessDaoFactory, qosDaoFactory, wpsClientFactory, eventHandler);
     }
 
     public ProbeService getProbeService() {
@@ -169,6 +171,10 @@ public class MonitorBuilder {
 
     public WpsClientFactory getWpsClientFactory() {
         return wpsClientFactory;
+    }
+
+    public MonitorEventHandler getEventHandler() {
+        return eventHandler;
     }
     
     public Boolean isValid() {
@@ -196,6 +202,10 @@ public class MonitorBuilder {
         return qosDaoFactory.create();
     }
     
+    public MonitorEventHandler buildEventHandler() {
+        return new MonitorEventHandler();
+    }
+    
     public Scheduler buildScheduler() throws SchedulerException {
         return setupSchedulerFactory().create();
     }
@@ -209,6 +219,8 @@ public class MonitorBuilder {
             setupDefault();
         }
         
+        setupEventHandler();
+        
         MonitorControl monitorControl = new MonitorControl(buildSchedulerControl(), 
                 qosDaoFactory, 
                 wpsDaoFactory, 
@@ -216,5 +228,12 @@ public class MonitorBuilder {
         );
         
         return new Monitor(monitorControl, this);
+    }
+    
+    private void setupEventHandler() {
+        this.eventHandler = buildEventHandler();
+        
+        this.eventHandler.registerEvent("scheduler.job.paused");
+        this.eventHandler.registerEvent("scheduler.job.wasexecuted");
     }
 }

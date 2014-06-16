@@ -19,10 +19,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.beans.EventHandler;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -38,12 +40,15 @@ public class SchedulerFactory {
     private WpsProcessDaoFactory wpsProcessDaoFactory;
     private QosDaoFactory qosDaoFactory;
     private WpsClientFactory wpsClientFactory;
+    private MonitorEventHandler eventHandler;
     
-    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory, QosDaoFactory qosDaoFactory, WpsClientFactory wpsClientFactory) {
+    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory, 
+            QosDaoFactory qosDaoFactory, WpsClientFactory wpsClientFactory, MonitorEventHandler eventHandler) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.wpsProcessDaoFactory = Param.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
         this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
         this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
+        this.eventHandler = Param.notNull(eventHandler, "eventHandler");
     }
 
     public Scheduler create() throws SchedulerException {    
@@ -52,7 +57,7 @@ public class SchedulerFactory {
         WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
         JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
-        JobListener jobListener = new MeasureJobListener(wpsProcessDao);
+        JobListener jobListener = new MeasureJobListener(wpsProcessDao, eventHandler);
 
         result.setJobFactory(jobFactory);
         result.getListenerManager()

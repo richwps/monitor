@@ -36,7 +36,7 @@ import org.quartz.TriggerKey;
  * @author FloH
  */
 public class WpsProcessJobEntry extends javax.swing.JPanel {
-    private WpsMonitorControl mainFrame;
+    private WpsMonitorGui mainFrame;
     private WpsProcess wpsProcess;
     private TriggerKey triggerKey;
     
@@ -44,7 +44,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     /**
      * Creates new form JobEntry
      */
-    public WpsProcessJobEntry(WpsMonitorControl mainFrame, WpsProcess wpsProcess) {
+    public WpsProcessJobEntry(WpsMonitorGui mainFrame, WpsProcess wpsProcess) {
         initComponents(); 
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
         

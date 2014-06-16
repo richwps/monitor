@@ -31,10 +31,10 @@ import javax.swing.JPanel;
 public class WpsEditDialog extends javax.swing.JDialog {
 
     private WpsPanel parent;
-    private WpsMonitorControl monitorMainFrame;
+    private WpsMonitorGui monitorMainFrame;
 
 
-    public WpsEditDialog(WpsMonitorControl monitorMainFrame, WpsPanel parent, boolean modal) {
+    public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel parent, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
         

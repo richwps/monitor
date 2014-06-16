@@ -39,14 +39,14 @@ import javax.swing.JTextField;
  *
  * @author FloH
  */
-public class WpsMonitorControl extends javax.swing.JFrame {
+public class WpsMonitorGui extends javax.swing.JFrame {
 
     private Monitor monitorRef;
 
     /**
      * Creates new form WpsMonitorControl
      */
-    public WpsMonitorControl(final Monitor monitor) {
+    public WpsMonitorGui(final Monitor monitor) {
         this.monitorRef = Param.notNull(monitor, "monitor");
         initComponents();
     }

@@ -27,13 +27,13 @@ import javax.swing.JPanel;
  * @author FloH
  */
 public class WpsProcessJobDialog extends javax.swing.JDialog {
-    private WpsMonitorControl mainframe;
+    private WpsMonitorGui mainframe;
     private WpsProcess wpsProcess;
     
     /**
      * Creates new form WpsProcessJobDialog
      */
-    public WpsProcessJobDialog(WpsMonitorControl mainFrame, WpsProcess wpsProcess, boolean modal) {
+    public WpsProcessJobDialog(WpsMonitorGui mainFrame, WpsProcess wpsProcess, boolean modal) {
         super(mainFrame, modal);
         initComponents();
         

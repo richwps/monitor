@@ -17,6 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import org.quartz.SchedulerException;
@@ -49,7 +50,10 @@ public class Monitor {
     public MonitorFacade getMonitorFacade() {
         return (MonitorFacade)monitorControl;
     }
-
+    
+    public MonitorEventHandler getEventHandler() {
+        return builderInstance.getEventHandler();
+    }
 
     public SchedulerControl getSchedulerControl() {
         return monitorControl.getSchedulerControl();

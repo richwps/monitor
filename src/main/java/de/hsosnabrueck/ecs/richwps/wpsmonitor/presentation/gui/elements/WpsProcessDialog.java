@@ -29,11 +29,11 @@ import javax.swing.JFrame;
  * @author FloH
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
-    private WpsMonitorControl mainFrame;
+    private WpsMonitorGui mainFrame;
     private Wps wps;
     
 
-    public WpsProcessDialog(WpsMonitorControl mainFrame, Wps wps, boolean modal) {
+    public WpsProcessDialog(WpsMonitorGui mainFrame, Wps wps, boolean modal) {
         super(mainFrame, modal);
         initComponents();
         

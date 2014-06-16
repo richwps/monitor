@@ -36,7 +36,7 @@ import javax.swing.JPanel;
  */
 public class WpsProcessPanel extends javax.swing.JPanel {
 
-    private WpsMonitorControl mainFrame;
+    private WpsMonitorGui mainFrame;
     private JDialog wpsProcessJobDialog;
     private JDialog parent;
 
@@ -46,11 +46,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     /**
      * Creates new form WpsProcessPanel
      */
-    public WpsProcessPanel(WpsMonitorControl mainFrame, JDialog parent, WpsProcess wpsProcess) {
+    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcess wpsProcess) {
         this(mainFrame, parent, wpsProcess, false);
     }
 
-    public WpsProcessPanel(WpsMonitorControl mainFrame, JDialog parent, WpsProcess wpsProcess, Boolean restored) {
+    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcess wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         initComponents();
 

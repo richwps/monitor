@@ -36,11 +36,11 @@ import javax.swing.JPanel;
 public class WpsPanel extends javax.swing.JPanel {
     
     private JPanel parentRef;
-    private WpsMonitorControl mainFrame;
+    private WpsMonitorGui mainFrame;
     private JDialog wpsProcessDialog;
     private Wps wps;
 
-    WpsPanel(WpsMonitorControl mainFrame, JPanel parent, final Wps wps) {
+    WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final Wps wps) {
         this.wps = Param.notNull(wps, "wps");
         this.parentRef = Param.notNull(parent, "parent");
         this.mainFrame = Param.notNull(mainFrame, "mainFrame");

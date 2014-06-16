@@ -19,12 +19,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
-import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,9 +29,6 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,13 +36,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import sun.security.x509.OIDMap;
 
 /**
  *

@@ -16,7 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import java.util.logging.Level;
@@ -64,7 +64,7 @@ public class GuiStarter {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new WpsMonitorControl(controlDependency).setVisible(true);
+                new WpsMonitorGui(controlDependency).setVisible(true);
             }
         });
     }
