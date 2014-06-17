@@ -20,6 +20,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.Map;
+import javax.persistence.Id;
 import javax.persistence.Version;
 
 /**
@@ -37,6 +38,18 @@ public class JsonPresentateStrategy implements PresentateStrategy {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
                         return f.getAnnotation(Version.class) != null;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> arg0) {
+                        return false;
+                    }
+                },
+                new ExclusionStrategy() {
+                    // ignore fields with version annotation
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getAnnotation(Id.class) != null;
                     }
 
                     @Override

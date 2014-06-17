@@ -32,7 +32,7 @@ public class ListWpsProcessRoute extends MonitorRoute {
     
     @Override
     public Object handle(Request request, Response response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Hello World :)";
     }
     
 }

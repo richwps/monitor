@@ -17,11 +17,17 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.HttpOperation;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
+import java.util.Enumeration;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.quartz.SchedulerException;
 
@@ -32,6 +38,7 @@ import org.quartz.SchedulerException;
 public class Application {
 
     public static void main(String[] args) {
+        
         try {
             new Application().run();
         } catch (SchedulerException ex) {
@@ -48,14 +55,17 @@ public class Application {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
-        
+
         // register default QoS-Probes
         monitor.getProbeService().addProbe(new ResponseFactory());
-        
+
         RestInterface rest = new RestInterfaceBuilder()
                 .withMonitorControl(monitor.getMonitorControl())
                 .withStrategy(new JsonPresentateStrategy())
                 .build();
+
+        rest.addRoute(HttpOperation.GET, new ListMeasurementRoute())
+                .addRoute(HttpOperation.GET, new ListWpsProcessRoute());
 
         monitor.start();
         rest.start();
