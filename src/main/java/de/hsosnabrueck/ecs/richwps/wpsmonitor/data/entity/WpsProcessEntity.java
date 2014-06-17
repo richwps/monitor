@@ -25,7 +25,8 @@ import javax.persistence.Version;
 @NamedQueries({
     @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier"),
     @NamedQuery(name = "wpsprocess.getAll", query = "SELECT t FROM WpsProcessEntity t"),
-    @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier")
+    @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier"),
+    @NamedQuery(name = "wpsprocess.deleteAllFromWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier")
 })
 public class WpsProcessEntity implements Serializable {
     private static final long serialVersionUID = 1L;

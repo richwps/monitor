@@ -27,8 +27,12 @@ import java.util.List;
  */
 public class ProbeService {
     private List<Factory<QosProbe>> probeFactories;
+    
+    public ProbeService() {
+        probeFactories = new ArrayList<Factory<QosProbe>>();
+    }
 
-    public ProbeService addProbeClass(final Factory<QosProbe> probeFactory) {
+    public ProbeService addProbe(final Factory<QosProbe> probeFactory) {
         probeFactories.add(Param.notNull(probeFactory, "probeFactory"));
 
         return this;

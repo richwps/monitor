@@ -22,9 +22,9 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "wps.getAllWps", query = "SELECT t FROM WpsEntity t")
+    @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t")
 })
-public final class WpsEntity implements Serializable {
+public class WpsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -60,9 +60,11 @@ public final class WpsEntity implements Serializable {
         this.route = route;
     }
 
-    public void setUri(String route) throws MalformedURLException, URISyntaxException {
+    public final void setUri(String route) throws MalformedURLException, URISyntaxException {
         URL url = new URL(route);
         URI uri = url.toURI();
+        
+        this.route = uri;
     }
 
     @Override

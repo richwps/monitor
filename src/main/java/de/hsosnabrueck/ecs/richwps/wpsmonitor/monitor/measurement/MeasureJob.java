@@ -43,7 +43,7 @@ public class MeasureJob implements Job {
     protected final WpsProcessEntity processEntity;
     protected final QosDataAccess dao;
     protected WpsClient wpsClient;
-    
+
     protected List<QosProbe> probes;
     protected Boolean error;
 
@@ -52,7 +52,7 @@ public class MeasureJob implements Job {
         this.dao = Param.notNull(dao, "dao");
         this.processEntity = Param.notNull(entity, "entity");
         this.wpsClient = Param.notNull(wpsClient, "wpsClient");
-        
+
         error = false;
     }
 
@@ -61,28 +61,24 @@ public class MeasureJob implements Job {
         try {
             Pair<WpsRequest, WpsResponse> pair = callWps();
 
-            // if no execption occurs, than call probes and persist Data 
+            // if no execption occurs (except Connection exception), than call probes and persist Data 
             if (!pair.getRight().isWpsException()) {
                 callProbes(pair.getLeft(), pair.getRight());
-                
+
                 MeasuredDataEntity toPersist = new MeasuredDataEntity();
-                
+
                 toPersist.setProcess(processEntity);
                 toPersist.setData(getMeasuredDatas());
                 toPersist.setCreateTime(new Date());
-                
+
                 dao.persist(toPersist);
-            } 
-            
+            }
+
             error = pair.getRight().isOtherException() || pair.getRight().isWpsException();
         } catch (Exception ex) {
             Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                dao.close();
-            } catch (Exception ex) {
-                //Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            dao.close();
         }
     }
 

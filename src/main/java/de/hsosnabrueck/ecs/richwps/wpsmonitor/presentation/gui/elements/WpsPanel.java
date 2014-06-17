@@ -96,7 +96,7 @@ public class WpsPanel extends javax.swing.JPanel {
         });
 
         addProcessToWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        addProcessToWpsButton.setText("Add Process");
+        addProcessToWpsButton.setText("Add or Edit Process");
         addProcessToWpsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addProcessToWpsButtonActionPerformed(evt);

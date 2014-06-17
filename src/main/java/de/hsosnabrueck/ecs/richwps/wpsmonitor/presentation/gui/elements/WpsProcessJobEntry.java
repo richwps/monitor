@@ -145,7 +145,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
         intervalTypeCombooBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
 
-        intervalField.setText("jTextField1");
         intervalField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 fieldFocusGained(evt);

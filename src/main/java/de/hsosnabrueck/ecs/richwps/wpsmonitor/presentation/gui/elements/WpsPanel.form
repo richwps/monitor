@@ -103,7 +103,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/add.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Add Process"/>
+        <Property name="text" type="java.lang.String" value="Add or Edit Process"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addProcessToWpsButtonActionPerformed"/>

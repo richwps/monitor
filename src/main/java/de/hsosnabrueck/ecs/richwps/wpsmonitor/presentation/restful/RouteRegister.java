@@ -47,22 +47,22 @@ public class RouteRegister {
     }
     
     public void get(final MonitorRoute routeObj) {
-        spark.Spark.get(routeObj.getRoute(), routeObj);
+        spark.Spark.get(routeObj);
     }
     
     public void post(final MonitorRoute routeObj) {
-        spark.Spark.post(routeObj.getRoute(), routeObj);
+        spark.Spark.post(routeObj);
     }
     
     public void delete(final MonitorRoute routeObj) {
-        spark.Spark.delete(routeObj.getRoute(), routeObj);
+        spark.Spark.delete(routeObj);
     }
     
     public void put(final MonitorRoute routeObj) {
-        spark.Spark.put(routeObj.getRoute(), routeObj);
+        spark.Spark.put(routeObj);
     }
     
     public void options(final MonitorRoute routeObj) {
-        spark.Spark.options(routeObj.getRoute(), routeObj);
+        spark.Spark.options(routeObj);
     }
 }

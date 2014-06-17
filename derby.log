@@ -1,7 +1,20 @@
 ----------------------------------------------------------------
-Mon Jun 16 21:38:38 CEST 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0146-a630-415b-000004c7d780 
-on database directory E:\Benutzer\Dokumente\NetBeansProjects\WPSMonitor\WPSMonitor\MonitoredData with class loader sun.misc.Launcher$AppClassLoader@33d626a4 
+Tue Jun 17 19:21:21 CEST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0146-aad8-ebcf-000004ba83d0 
+on database directory E:\Benutzer\Dokumente\NetBeansProjects\WPSMonitor\WPSMonitor\MonitoredData with class loader sun.misc.Launcher$AppClassLoader@3082f392 
+Loaded from file:/E:/Benutzer/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_60-b19
+user.dir=E:\Benutzer\Dokumente\NetBeansProjects\WPSMonitor\WPSMonitor
+os.name=Windows 8.1
+os.arch=amd64
+os.version=6.3
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Jun 17 19:21:22 CEST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 286cc01e-0146-aad8-ebcf-000004ba83d0 
+on database directory E:\Benutzer\Dokumente\NetBeansProjects\WPSMonitor\WPSMonitor\QuartzJobStore with class loader sun.misc.Launcher$AppClassLoader@3082f392 
 Loaded from file:/E:/Benutzer/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_60-b19

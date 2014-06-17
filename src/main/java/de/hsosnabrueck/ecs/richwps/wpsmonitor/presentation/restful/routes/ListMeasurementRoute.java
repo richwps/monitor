@@ -28,6 +28,10 @@ import spark.Response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListMeasurementRoute extends MonitorRoute {
+    
+    public ListMeasurementRoute() {
+        super("/measurement/wps/:wps/process/:process/count/:count");
+    }
     @Override
     public Object handle(Request request, Response response) {
         try {
@@ -44,9 +48,9 @@ public class ListMeasurementRoute extends MonitorRoute {
         
         return null;
     }    
-
+/* // removed; was used for spark 2.0 framework
     @Override
     public String getRoute() {
         return "/measurement/wps/:wps/process/:process/count/:count";
-    }
+    }*/
 }

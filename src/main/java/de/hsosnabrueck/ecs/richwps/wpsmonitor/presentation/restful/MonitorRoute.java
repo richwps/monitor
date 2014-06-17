@@ -23,11 +23,15 @@ import spark.Route;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class MonitorRoute implements Route {
+public abstract class MonitorRoute extends Route {
 
     private MonitorFacade monitorControl;
     private EntityDispatcher dispatch;
     private PresentateStrategy strategy;
+    
+    public MonitorRoute(String routeStr) {
+        super(routeStr);
+    }
 
     public void init(MonitorFacade monitorControl, EntityDispatcher dispatch, PresentateStrategy strategy) {
         this.monitorControl = monitorControl;
@@ -47,5 +51,8 @@ public abstract class MonitorRoute implements Route {
         return strategy;
     }
     
-    public abstract String getRoute();
+    /*
+       removed - was used for spark 2.0
+    */
+    //public abstract String getRoute();
 }

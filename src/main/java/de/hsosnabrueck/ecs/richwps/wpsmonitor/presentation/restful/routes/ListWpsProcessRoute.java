@@ -26,11 +26,10 @@ import spark.Response;
  */
 public class ListWpsProcessRoute extends MonitorRoute {
 
-    @Override
-    public String getRoute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ListWpsProcessRoute() {
+        super("/measurement/wps");
     }
-
+    
     @Override
     public Object handle(Request request, Response response) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

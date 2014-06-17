@@ -20,6 +20,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import org.quartz.CalendarIntervalScheduleBuilder;
 import org.quartz.CalendarIntervalTrigger;
 import org.quartz.DateBuilder;
@@ -31,6 +33,8 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
 
 /**
  *
@@ -43,11 +47,11 @@ public class SchedulerControl {
     public SchedulerControl(Scheduler scheduler) {
         this.scheduler = Param.notNull(scheduler, "scheduler");
     }
-    
+
     public void start() throws SchedulerException {
         scheduler.start();
     }
-    
+
     public void shutdown() throws SchedulerException {
         scheduler.shutdown(true);
     }
@@ -83,7 +87,7 @@ public class SchedulerControl {
                 .forJob(forJob)
                 .startAt(config.getStart())
                 .endAt(config.getEnd())
-                .withIdentity("", forJob.getKey().getGroup());
+                .withIdentity(UUID.randomUUID().toString(), forJob.getKey().getGroup());
 
         /**
          * enum IntervalType MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS,
@@ -144,6 +148,19 @@ public class SchedulerControl {
         scheduler.deleteJob(jobKey);
     }
 
+    public Boolean removeWpsJobs(final String wpsIdentifier) throws SchedulerException {
+        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsIdentifier));
+        Boolean result = false;
+        
+        if (jobKeys.size() > 0) {
+            List<JobKey> toDelete = new ArrayList<JobKey>(jobKeys);
+
+            result = scheduler.deleteJobs(toDelete);
+        }
+
+        return result;
+    }
+
     public void updateTrigger(final TriggerKey triggerKey, final TriggerConfig config) throws SchedulerException {
         JobDetail jobDetail = scheduler.getJobDetail(scheduler
                 .getTrigger(triggerKey)
@@ -180,15 +197,15 @@ public class SchedulerControl {
 
     public TriggerConfig getConfigOfTrigger(final TriggerKey triggerKey) throws SchedulerException {
         Trigger trigger = scheduler.getTrigger(triggerKey);
-        
+
         return getTriggerConfigOfTrigger(trigger);
     }
 
     private TriggerConfig getTriggerConfigOfTrigger(final Trigger trigger) {
         TriggerConfig triggerConfig = null;
-        
+
         // save cast!
-        if (trigger.getClass().equals(CalendarIntervalTrigger.class)) {
+        if (trigger.getClass().equals(CalendarIntervalTriggerImpl.class)) {
             CalendarIntervalTrigger calendarTrigger = (CalendarIntervalTrigger) trigger;
 
             DateBuilder.IntervalUnit repeatIntervalUnit = calendarTrigger.getRepeatIntervalUnit();

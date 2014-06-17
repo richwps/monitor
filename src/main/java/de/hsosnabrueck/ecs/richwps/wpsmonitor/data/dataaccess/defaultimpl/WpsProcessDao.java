@@ -63,9 +63,17 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     @Override
     public List<WpsProcessEntity> getAll(final String wpsIdentifier) {
        Map<String, Object> parameters = new HashMap<String, Object>();
-       parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+       parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsidentifier"));
        
        return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
+    }
+
+    @Override
+    public void deleteProcessesFromWps(String wpsIdentifier) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        
+        doNamedQuery("wpsprocess.deleteAllFromWps", parameters);
     }
     
 }

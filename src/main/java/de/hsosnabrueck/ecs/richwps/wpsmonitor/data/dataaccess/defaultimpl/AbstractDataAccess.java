@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -80,32 +81,28 @@ public abstract class AbstractDataAccess<T> {
     protected List<T> getBy(final String queryName, final Class c) {
         return getBy(queryName, null, c);
     }
-    
+
     protected List<T> getBy(final String queryName, final Class c, final Range range) {
         return getBy(queryName, null, c, range);
     }
 
-    protected List<T> getBy(final String queryName, final Map<String, Object> parameters, final Class c) {
-        return getBy(queryName, parameters, c, null);
+    protected List<T> getBy(final String namedQueryIdentifier, final Map<String, Object> parameters, final Class typeClass) {
+        return getBy(namedQueryIdentifier, parameters, typeClass, null);
     }
 
-    protected List<T> getBy(final String queryName,
+    protected List<T> getBy(final String namedQueryIdentifier,
             final Map<String, Object> parameters,
-            final Class c,
+            final Class typeClass,
             final Range range) {
 
         List<T> result = null;
 
         TypedQuery<T> query = em
-                .createNamedQuery(queryName, c);
+                .createNamedQuery(namedQueryIdentifier, typeClass);
 
-        if (parameters != null) {
-            for (Map.Entry<String, Object> e : parameters.entrySet()) {
-                query.setParameter(e.getKey(), e.getValue());
-            }
-        }
-        
-        if(range != null) {
+        assignParameters(query, parameters);
+
+        if (range != null) {
             if (range.getOffset() != null) {
                 query.setFirstResult(range.getOffset());
             }
@@ -122,5 +119,27 @@ public abstract class AbstractDataAccess<T> {
         }
 
         return result;
+    }
+
+    protected Integer doNamedQuery(final String namedQueryIdentifier, final Map<String, Object> parameters) {
+        beginTransaction();
+
+        Query query = em
+                .createNamedQuery(namedQueryIdentifier);
+
+        assignParameters(query, parameters);
+
+        Integer affectedRows = query.executeUpdate();
+        commit();
+        
+        return affectedRows;
+    }
+
+    private void assignParameters(Query query, final Map<String, Object> parameters) {
+        if (parameters != null) {
+            for (Map.Entry<String, Object> e : parameters.entrySet()) {
+                query.setParameter(e.getKey(), e.getValue());
+            }
+        }
     }
 }

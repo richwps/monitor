@@ -35,7 +35,7 @@ import org.apache.derby.impl.tools.sysinfo.Main;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class GuiStarter {
     public static void start(final Monitor controlDependency) {
@@ -72,12 +72,15 @@ public class GuiStarter {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new WpsMonitorGui(controlDependency).setVisible(true);
+                WpsMonitorGui wpsMonitorGui = new WpsMonitorGui(controlDependency);
+                restoreGui(controlDependency, wpsMonitorGui);
+                
+                wpsMonitorGui.setVisible(true);
             }
         });
     }
     
-    public static void restoreGui(Monitor monitor, WpsMonitorGui gui) throws GuiErrorException {
+    public static void restoreGui(Monitor monitor, WpsMonitorGui gui) {
         MonitorControl control = monitor.getMonitorControl();
         
         List<WpsEntity> wpsEntities = control.getWpsList();
@@ -92,7 +95,7 @@ public class GuiStarter {
             // add processes to wpsPanel's dialog
             for(WpsProcessEntity processEntity : wpsProcessEntities) {
                 JPanel addProcessPane = wpsPanel.getWpsProcessDialog().getAddProcessPane();
-                WpsProcessPanel wpsProcessPanel = new WpsProcessPanel(gui, wpsPanel.getWpsProcessDialog(), processEntity, true);
+                WpsProcessPanel wpsProcessPanel = new WpsProcessPanel(gui, addProcessPane, processEntity, true);
                 
                 //select trriggerconfig objects 
                 JPanel addJobEntryPanel = wpsProcessPanel.getWpsProcessJobDialog().getAddJobPane(); 
@@ -107,7 +110,7 @@ public class GuiStarter {
                 addProcessPane.add(wpsProcessPanel);
             }
             
-            gui.getWpsAddPanel().add(gui);
+            gui.getWpsAddPanel().add(wpsPanel);
         }
     }
     

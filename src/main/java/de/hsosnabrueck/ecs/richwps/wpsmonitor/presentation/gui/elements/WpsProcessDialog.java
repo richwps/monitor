@@ -120,7 +120,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         if(isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
             
-            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, this, new WpsProcessEntity(wpsProcessIdentifier, wps));
+            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, addProcessPane, new WpsProcessEntity(wpsProcessIdentifier, wps));
 
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");

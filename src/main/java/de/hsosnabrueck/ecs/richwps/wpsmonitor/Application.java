@@ -20,6 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.SchedulerException;
@@ -47,6 +48,9 @@ public class Application {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
+        
+        // register default QoS-Probes
+        monitor.getProbeService().addProbe(new ResponseFactory());
         
         RestInterface rest = new RestInterfaceBuilder()
                 .withMonitorControl(monitor.getMonitorControl())

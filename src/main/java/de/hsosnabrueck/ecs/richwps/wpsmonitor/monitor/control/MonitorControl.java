@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
 
 /**
  *
@@ -58,8 +59,8 @@ public class MonitorControl implements MonitorFacade {
 
         try {
             result = schedulerControl.addTriggerToJob(new JobKey(
-                    Param.notNull(wpsIdentifier, "wpsIdentifier"),
-                    Param.notNull(processIdentifier, "processIdentifier")
+                    Param.notNull(processIdentifier, "processIdentifier"),
+                    Param.notNull(wpsIdentifier, "wpsIdentifier")
             ), Param.notNull(config, "config"));
         } catch (SchedulerException ex) {
             Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,16 +71,16 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public final synchronized List<TriggerConfig> getTriggers(String wpsIdentifier, String processIdentifier) {
-        JobKey jobKey = new JobKey(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+        JobKey jobKey = new JobKey(Param.notNull(processIdentifier, "processIdentifier"), Param.notNull(wpsIdentifier, "wpsIdentifier"));
         List<TriggerConfig> result = new ArrayList<TriggerConfig>();
-        
+
         try {
             List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
-            
-            for(TriggerKey triggerKey : triggerKeysOfJob) {
+
+            for (TriggerKey triggerKey : triggerKeysOfJob) {
                 result.add(schedulerControl.getConfigOfTrigger(triggerKey));
             }
-            
+
             return result;
         } catch (SchedulerException ex) {
             Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,10 +122,10 @@ public class MonitorControl implements MonitorFacade {
 
         try {
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-
-            if (wps != null) {
+            wpsProcessDao = wpsProcessDaoFactory.create();
+            
+            if (wps != null && wpsProcessDao.find(wpsIdentifier, processIdentifier) == null) {
                 WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
-                wpsProcessDao = wpsProcessDaoFactory.create();
 
                 try {
                     synchronized (this) {
@@ -191,6 +192,8 @@ public class MonitorControl implements MonitorFacade {
     @Override
     public Boolean deleteWps(final String wpsIdentifier) {
         WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+                
         Boolean deleteable = false;
 
         try {
@@ -198,10 +201,19 @@ public class MonitorControl implements MonitorFacade {
             deleteable = (wps != null);
 
             if (deleteable) {
+                synchronized(this) {
+                    try {
+                        schedulerControl.removeWpsJobs(wpsIdentifier);
+                    } catch (SchedulerException ex) {
+                        Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                wpsProcessDao.deleteProcessesFromWps(wpsIdentifier);
                 wpsDao.remove(wps);
             }
         } finally {
             wpsDao.close();
+            wpsProcessDao.close();
         }
 
         return deleteable;
@@ -251,14 +263,14 @@ public class MonitorControl implements MonitorFacade {
     @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
         QosDataAccess qosDao = qosDaoFactory.create();
-        
+
         try {
             return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
         } finally {
             qosDao.close();
         }
     }
-    
+
     public SchedulerControl getSchedulerControl() {
         return schedulerControl;
     }
