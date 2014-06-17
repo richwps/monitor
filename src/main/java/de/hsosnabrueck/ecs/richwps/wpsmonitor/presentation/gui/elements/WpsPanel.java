@@ -54,7 +54,7 @@ public class WpsPanel extends javax.swing.JPanel {
         return wps;
     }
 
-    public void setWps(WpsEntity wps) {
+    public void updateWps(WpsEntity wps) {
         this.wps = Param.notNull(wps, "wps");
     }
 
@@ -67,23 +67,38 @@ public class WpsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         wpsNameLabel = new javax.swing.JLabel();
         wpsUriLabel = new javax.swing.JLabel();
-        editWpsButton = new javax.swing.JButton();
-        deleteWpsButton = new javax.swing.JButton();
-        addProcessToWpsButton = new javax.swing.JButton();
-        WpsHeadlineSeperator = new javax.swing.JSeparator();
         errorIcon = new javax.swing.JLabel();
+        editWpsButton = new javax.swing.JButton();
+        addProcessToWpsButton = new javax.swing.JButton();
+        deleteWpsButton = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        wpsNameLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         wpsNameLabel.setText("<Wps Name>");
 
         wpsUriLabel.setText("<URI>");
+
+        errorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel-round.png"))); // NOI18N
+        errorIcon.setToolTipText("One or more Processes encountered a Wps-Process Error");
+        errorIcon.setEnabled(false);
 
         editWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         editWpsButton.setText("Edit Wps");
         editWpsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editWpsButtonActionPerformed(evt);
+            }
+        });
+
+        addProcessToWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
+        addProcessToWpsButton.setText("Add or Edit Processes");
+        addProcessToWpsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProcessToWpsButtonActionPerformed(evt);
             }
         });
 
@@ -95,57 +110,61 @@ public class WpsPanel extends javax.swing.JPanel {
             }
         });
 
-        addProcessToWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        addProcessToWpsButton.setText("Add or Edit Process");
-        addProcessToWpsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addProcessToWpsButtonActionPerformed(evt);
-            }
-        });
-
-        errorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel-round.png"))); // NOI18N
-        errorIcon.setToolTipText("One or more Processes encountered a Wps-Process Error");
-        errorIcon.setEnabled(false);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(wpsNameLabel)
+                    .addComponent(wpsUriLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 173, Short.MAX_VALUE)
+                .addComponent(errorIcon)
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(editWpsButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deleteWpsButton))
+                    .addComponent(addProcessToWpsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(errorIcon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(deleteWpsButton)
+                                .addComponent(editWpsButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addProcessToWpsButton))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(wpsNameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpsUriLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(WpsHeadlineSeperator, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(wpsNameLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 381, Short.MAX_VALUE)
-                                .addComponent(errorIcon))
-                            .addComponent(wpsUriLabel))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(editWpsButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(deleteWpsButton))
-                            .addComponent(addProcessToWpsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wpsNameLabel)
-                    .addComponent(deleteWpsButton)
-                    .addComponent(editWpsButton)
-                    .addComponent(errorIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wpsUriLabel)
-                    .addComponent(addProcessToWpsButton))
-                .addGap(18, 18, 18)
-                .addComponent(WpsHeadlineSeperator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -204,7 +223,6 @@ public class WpsPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSeparator WpsHeadlineSeperator;
     private javax.swing.JButton addProcessToWpsButton;
     private javax.swing.JButton deleteWpsButton;
     private javax.swing.JButton editWpsButton;

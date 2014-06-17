@@ -16,12 +16,10 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiErrorException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -36,6 +34,8 @@ public class WpsEditDialog extends javax.swing.JDialog {
     public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel parent, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
+        
+        setLocationRelativeTo(monitorMainFrame);
         
         this.monitorMainFrame = monitorMainFrame;
         this.parent = Param.notNull(parent, "parent");
@@ -52,13 +52,12 @@ public class WpsEditDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        identifierDecoText = new javax.swing.JLabel();
+        javax.swing.JLabel identifierDecoText = new javax.swing.JLabel();
         newIdentifierTextField = new javax.swing.JTextField();
-        uriDecoText = new javax.swing.JLabel();
+        javax.swing.JLabel uriDecoText = new javax.swing.JLabel();
         newUriTextField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        errorLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit WPS");
@@ -83,15 +82,13 @@ public class WpsEditDialog extends javax.swing.JDialog {
             }
         });
 
-        errorLabel.setForeground(new java.awt.Color(204, 0, 51));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(identifierDecoText)
                         .addGap(18, 18, 18)
@@ -99,14 +96,13 @@ public class WpsEditDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(uriDecoText)
                         .addGap(44, 44, 44)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cancelButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(saveButton))
-                            .addComponent(newUriTextField)
-                            .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(newUriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cancelButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveButton)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,9 +115,7 @@ public class WpsEditDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(uriDecoText)
                     .addComponent(newUriTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(errorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(cancelButton))
@@ -140,42 +134,25 @@ public class WpsEditDialog extends javax.swing.JDialog {
         String wpsIdentifier = newIdentifierTextField.getText();
         String wpsUri = newUriTextField.getText();
         
-        resetError();
-        
         try {
             WpsEntity addWps = new WpsEntity(wpsIdentifier, wpsUri);
-            parent.setWps(addWps);
+            parent.updateWps(addWps);
             dispose();
         } catch (MalformedURLException ex) {
-            appendErrorText("URI is not valid!");
+            showUriErrorDialog();
         } catch (URISyntaxException ex) {
-            appendErrorText("URI is not valid!");
+            showUriErrorDialog();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
-
-    private void resetError() {
-        errorLabel.setText("");
-    }
-
-    private void appendErrorText(final String text) {
-        String errorText = errorLabel.getText() == null ? "" : errorLabel.getText();
-
-        if (!errorText.equals("")) {
-            errorText += " ";
-        }
-
-        errorText += text;
-
-        errorLabel.setText(errorText);
+    
+    private void showUriErrorDialog() {
+        MessageDialogs.showError(this, "Malformed URI", "The entered URI is not valid!");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel errorLabel;
-    private javax.swing.JLabel identifierDecoText;
     private javax.swing.JTextField newIdentifierTextField;
     private javax.swing.JTextField newUriTextField;
     private javax.swing.JButton saveButton;
-    private javax.swing.JLabel uriDecoText;
     // End of variables declaration//GEN-END:variables
 }

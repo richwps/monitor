@@ -21,7 +21,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiErrorException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -47,7 +46,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     public WpsMonitorGui(final Monitor monitor) {
         this.monitorRef = Param.notNull(monitor, "monitor");
         initComponents();
-
+        setLocationRelativeTo(null);
         registerMonitoringPausedEvent();
     }
 
@@ -126,17 +125,32 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        javax.swing.JLabel wpsIdentifierDecoText = new javax.swing.JLabel();
         wpsToAddField = new javax.swing.JTextField();
-        addWpsDecoText = new javax.swing.JLabel();
+        javax.swing.JLabel wpsUrlDecoText = new javax.swing.JLabel();
+        wpsToAddUriField = new javax.swing.JTextField();
         addWpsButton = new javax.swing.JButton();
+        javax.swing.JPanel decoPanelWpsScroll = new javax.swing.JPanel();
         wpsScrollPane = new javax.swing.JScrollPane();
         wpsAddPanel = new javax.swing.JPanel();
-        wpsToAddUriField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WPS-Monitor Control Interface");
+        setBackground(new java.awt.Color(255, 255, 255));
+        setName("wpsGui"); // NOI18N
         setResizable(false);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Register a WPS Server in the Monitor"));
+
+        wpsIdentifierDecoText.setText("WPS Identifier");
+
+        wpsToAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wpsToAddFieldActionPerformed(evt);
+            }
+        });
         wpsToAddField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 wpsCreateFieldsFocusGained(evt);
@@ -145,31 +159,19 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 wpsCreateFieldsFocusLost(evt);
             }
         });
-        wpsToAddField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                wpsToAddFieldActionPerformed(evt);
-            }
-        });
         wpsToAddField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 wpsCreateFieldsKeyPressed(evt);
             }
         });
 
-        addWpsDecoText.setText("Add WPS");
+        wpsUrlDecoText.setText("WPS URL");
 
-        addWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        addWpsButton.setText("Create WPS");
-        addWpsButton.setEnabled(false);
-        addWpsButton.addActionListener(new java.awt.event.ActionListener() {
+        wpsToAddUriField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addWpsButtonActionPerformed(evt);
+                wpsToAddUriFieldActionPerformed(evt);
             }
         });
-
-        wpsAddPanel.setLayout(new javax.swing.BoxLayout(wpsAddPanel, javax.swing.BoxLayout.PAGE_AXIS));
-        wpsScrollPane.setViewportView(wpsAddPanel);
-
         wpsToAddUriField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 wpsCreateFieldsFocusGained(evt);
@@ -178,50 +180,109 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 wpsCreateFieldsFocusLost(evt);
             }
         });
-        wpsToAddUriField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                wpsToAddUriFieldActionPerformed(evt);
-            }
-        });
         wpsToAddUriField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 wpsCreateFieldsKeyPressed(evt);
             }
         });
 
+        addWpsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
+        addWpsButton.setText("Add WPS");
+        addWpsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addWpsButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(wpsIdentifierDecoText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wpsToAddField, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(wpsUrlDecoText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addWpsButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wpsIdentifierDecoText)
+                    .addComponent(wpsToAddField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wpsUrlDecoText)
+                    .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addWpsButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        decoPanelWpsScroll.setBorder(javax.swing.BorderFactory.createTitledBorder("Registred WPS Server"));
+
+        wpsScrollPane.setBorder(null);
+        wpsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wpsScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        wpsAddPanel.setBackground(new java.awt.Color(255, 255, 255));
+        wpsAddPanel.setLayout(new javax.swing.BoxLayout(wpsAddPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        wpsScrollPane.setViewportView(wpsAddPanel);
+
+        javax.swing.GroupLayout decoPanelWpsScrollLayout = new javax.swing.GroupLayout(decoPanelWpsScroll);
+        decoPanelWpsScroll.setLayout(decoPanelWpsScrollLayout);
+        decoPanelWpsScrollLayout.setHorizontalGroup(
+            decoPanelWpsScrollLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(decoPanelWpsScrollLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(wpsScrollPane)
+                .addContainerGap())
+        );
+        decoPanelWpsScrollLayout.setVerticalGroup(
+            decoPanelWpsScrollLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(decoPanelWpsScrollLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(wpsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wpsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 832, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(addWpsDecoText)
-                        .addGap(18, 18, 18)
-                        .addComponent(wpsToAddField, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(addWpsButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {wpsToAddField, wpsToAddUriField});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wpsToAddField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addWpsDecoText)
-                    .addComponent(addWpsButton)
-                    .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(wpsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         pack();
@@ -287,7 +348,6 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
-    private javax.swing.JLabel addWpsDecoText;
     private javax.swing.JPanel wpsAddPanel;
     private javax.swing.JScrollPane wpsScrollPane;
     private javax.swing.JTextField wpsToAddField;

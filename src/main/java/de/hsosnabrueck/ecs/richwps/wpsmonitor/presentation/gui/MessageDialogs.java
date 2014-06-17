@@ -16,7 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
-import javax.swing.JFrame;
+import java.awt.Component;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MessageDialogs {
-    public static int showQuestionDialog(JFrame frame, String title, String question) {
+    public static int showQuestionDialog(Component frame, String title, String question) {
         return JOptionPane.showConfirmDialog(
                 frame,
                 question,
@@ -32,7 +32,7 @@ public class MessageDialogs {
                 JOptionPane.YES_NO_OPTION);
     }
 
-    public static void showError(JFrame frame, String title, String message) {
+    public static void showError(Component frame, String title, String message) {
         JOptionPane.showMessageDialog(frame,
                 message,
                 title,

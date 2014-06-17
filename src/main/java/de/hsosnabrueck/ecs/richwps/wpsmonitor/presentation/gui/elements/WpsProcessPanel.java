@@ -24,7 +24,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -41,9 +40,6 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
 
-    /**
-     * Creates new form WpsProcessPanel
-     */
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
         this(mainFrame, parent, wpsProcess, false);
     }
@@ -94,8 +90,10 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         if (response.isWpsException()) {
             MessageDialogs.showError(mainFrame,
                     "WPS Exception",
-                    "The testrequest proceed an Exception; do you want to proceed?");
-
+                    "The testrequest proceed an Exception! "
+                            + "I will use the previous Version of the Testrequest."
+                            + "But, i will the old request shown after a restart. This give you a chance to edit the errornous Request. :)");
+            
             n = JOptionPane.NO_OPTION;
         }
 
@@ -106,7 +104,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         this.saved = true;
         
         saveProcessButton.setEnabled(false);
-        saveProcessButton.setBackground(new Color(50));
+        saveProcessButton.setBackground(new Color(153,255,153));
         showJobsButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
     }
@@ -134,22 +132,36 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        processNamedecoText = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JToolBar jToolBar1 = new javax.swing.JToolBar();
+        showJobsButton = new javax.swing.JButton();
         showMeasuredDataButton = new javax.swing.JButton();
         deleteProcessButton = new javax.swing.JButton();
+        saveProcessButton = new javax.swing.JButton();
+        processNameText = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         testRequestTextArea = new javax.swing.JTextArea();
-        showJobsButton = new javax.swing.JButton();
-        saveProcessButton = new javax.swing.JButton();
-        testRequestDecoText = new javax.swing.JLabel();
-        processNameText = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
 
-        processNamedecoText.setText("Process Name:");
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        jToolBar1.setBorder(null);
+        jToolBar1.setRollover(true);
+
+        showJobsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
+        showJobsButton.setText("Show Jobs");
+        showJobsButton.setEnabled(false);
+        showJobsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showJobsButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(showJobsButton);
 
         showMeasuredDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/performance.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measuredata");
         showMeasuredDataButton.setEnabled(false);
+        jToolBar1.add(showMeasuredDataButton);
 
         deleteProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteProcessButton.setText("Delete");
@@ -158,6 +170,22 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                 deleteProcessButtonActionPerformed(evt);
             }
         });
+        jToolBar1.add(deleteProcessButton);
+
+        saveProcessButton.setBackground(new java.awt.Color(255, 188, 188));
+        saveProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
+        saveProcessButton.setText("Save");
+        saveProcessButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProcessButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(saveProcessButton);
+
+        processNameText.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        processNameText.setText("jLabel3");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Raw Request for testing"));
 
         testRequestTextArea.setColumns(20);
         testRequestTextArea.setRows(5);
@@ -168,27 +196,49 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(testRequestTextArea);
 
-        showJobsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
-        showJobsButton.setText("Show Jobs");
-        showJobsButton.setEnabled(false);
-        showJobsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showJobsButtonActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        saveProcessButton.setBackground(new java.awt.Color(255, 0, 51));
-        saveProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
-        saveProcessButton.setText("Save");
-        saveProcessButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveProcessButtonActionPerformed(evt);
-            }
-        });
-
-        testRequestDecoText.setText("Test Request:");
-
-        processNameText.setText("jLabel3");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(processNameText)
+                            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 452, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(processNameText, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -196,51 +246,15 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(testRequestDecoText)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(processNamedecoText)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(processNameText)))
-                        .addGap(415, 415, 415)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(showJobsButton)
-                            .addComponent(deleteProcessButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(saveProcessButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(showMeasuredDataButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jSeparator1))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(showMeasuredDataButton)
-                            .addComponent(showJobsButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(processNamedecoText)
-                            .addComponent(processNameText))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(saveProcessButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(testRequestDecoText, javax.swing.GroupLayout.Alignment.TRAILING))
-                    .addComponent(deleteProcessButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -277,7 +291,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         "Can't register Process to this WPS. Maybe the Process is already registred.",
                         "Error");
             }
-        }
+        } 
     }//GEN-LAST:event_saveProcessButtonActionPerformed
 
     private void deleteProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
@@ -301,14 +315,12 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteProcessButton;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel processNameText;
-    private javax.swing.JLabel processNamedecoText;
     private javax.swing.JButton saveProcessButton;
     private javax.swing.JButton showJobsButton;
     private javax.swing.JButton showMeasuredDataButton;
-    private javax.swing.JLabel testRequestDecoText;
     private javax.swing.JTextArea testRequestTextArea;
     // End of variables declaration//GEN-END:variables
 }

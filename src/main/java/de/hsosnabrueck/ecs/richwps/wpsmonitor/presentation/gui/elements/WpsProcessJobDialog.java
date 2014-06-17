@@ -18,8 +18,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -37,6 +35,8 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         super(mainFrame, modal);
         initComponents();
         
+        setLocationRelativeTo(mainFrame);
+        
         this.wpsProcess = wpsProcess;
         this.mainframe = Param.notNull(mainFrame, "mainFrame");
     }
@@ -53,10 +53,10 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         newJobButton = new javax.swing.JButton();
         jobScrollPane = new javax.swing.JScrollPane();
         addJobPane = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add, remove or edit Process Job");
@@ -69,6 +69,9 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
                 newJobButtonActionPerformed(evt);
             }
         });
+
+        jobScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jobScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         addJobPane.setLayout(new javax.swing.BoxLayout(addJobPane, javax.swing.BoxLayout.PAGE_AXIS));
         jobScrollPane.setViewportView(addJobPane);
@@ -97,11 +100,11 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addGap(66, 66, 66)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 426, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addGap(85, 85, 85)
                         .addComponent(jLabel3)
-                        .addGap(102, 102, 102)))
+                        .addGap(228, 228, 228)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -136,10 +139,6 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addJobPane;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jobScrollPane;
     private javax.swing.JButton newJobButton;
     // End of variables declaration//GEN-END:variables
