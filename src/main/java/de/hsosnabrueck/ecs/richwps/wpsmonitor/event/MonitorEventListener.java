@@ -21,5 +21,5 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorEventListener {
-    public void execute(Object eventData);
+    public void execute(MonitorEvent event);
 }

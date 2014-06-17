@@ -38,8 +38,6 @@ public interface MonitorFacade {
     public Boolean deleteTrigger(final TriggerKey triggerKey);
     public List<WpsEntity> getWpsList();
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
-    public List<TriggerKey> getTriggers(final String wpsIdentifier, final String processIdentifier);
-    public String getRequestString(final String wpsIdentifier, final String processIdentifier);
+    public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
-    public TriggerConfig getTriggerConfig(final TriggerKey triggerKey);
 }

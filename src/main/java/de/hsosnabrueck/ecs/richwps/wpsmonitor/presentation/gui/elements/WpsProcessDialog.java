@@ -16,13 +16,14 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.WpsProcess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -30,10 +31,10 @@ import javax.swing.JFrame;
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
     private WpsMonitorGui mainFrame;
-    private Wps wps;
+    private WpsEntity wps;
     
 
-    public WpsProcessDialog(WpsMonitorGui mainFrame, Wps wps, boolean modal) {
+    public WpsProcessDialog(WpsMonitorGui mainFrame, WpsEntity wps, boolean modal) {
         super(mainFrame, modal);
         initComponents();
         
@@ -119,7 +120,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         if(isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
             
-            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, this, new WpsProcess(wps, wpsProcessIdentifier));
+            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, this, new WpsProcessEntity(wpsProcessIdentifier, wps));
 
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");
@@ -132,6 +133,9 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         createNewProcessButtonActionPerformed(evt);
     }//GEN-LAST:event_processIdentifierInputActionPerformed
 
+    public JPanel getAddProcessPane() {
+        return addProcessPane;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addProcessPane;

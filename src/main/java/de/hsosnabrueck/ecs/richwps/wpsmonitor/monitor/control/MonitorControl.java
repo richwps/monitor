@@ -26,6 +26,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,11 +69,18 @@ public class MonitorControl implements MonitorFacade {
     }
 
     @Override
-    public final synchronized List<TriggerKey> getTriggers(String wpsIdentifier, String processIdentifier) {
+    public final synchronized List<TriggerConfig> getTriggers(String wpsIdentifier, String processIdentifier) {
         JobKey jobKey = new JobKey(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-
+        List<TriggerConfig> result = new ArrayList<TriggerConfig>();
+        
         try {
-            return schedulerControl.getTriggerKeysOfJob(jobKey);
+            List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
+            
+            for(TriggerKey triggerKey : triggerKeysOfJob) {
+                result.add(schedulerControl.getConfigOfTrigger(triggerKey));
+            }
+            
+            return result;
         } catch (SchedulerException ex) {
             Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -170,7 +178,7 @@ public class MonitorControl implements MonitorFacade {
             updateable = (wps != null);
 
             if (updateable) {
-                wps.setRoute(newUri);
+                wps.setUri(newUri);
                 wpsDao.update(wps);
             }
         } finally {
@@ -241,23 +249,6 @@ public class MonitorControl implements MonitorFacade {
     }
 
     @Override
-    public String getRequestString(String wpsIdentifier, String processIdentifier) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
-
-        try {
-            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-
-            if (process != null) {
-                return process.getRawRequest();
-            }
-        } finally {
-            wpsProcessDao.close();
-        }
-
-        return null;
-    }
-
-    @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
         QosDataAccess qosDao = qosDaoFactory.create();
         
@@ -267,18 +258,7 @@ public class MonitorControl implements MonitorFacade {
             qosDao.close();
         }
     }
-
-    @Override
-    public synchronized TriggerConfig getTriggerConfig(TriggerKey triggerKey) {
-        try {
-            return schedulerControl.getConfigOfTrigger(triggerKey);
-        } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
-    }
-
+    
     public SchedulerControl getSchedulerControl() {
         return schedulerControl;
     }

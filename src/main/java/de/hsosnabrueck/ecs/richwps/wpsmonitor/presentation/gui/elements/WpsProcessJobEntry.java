@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.IntervalComboBoxItem;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.WpsProcess;
 import java.awt.Dimension;
-import java.util.Date;
-import java.util.EnumMap;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
-import javax.swing.JSpinner;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
 import org.quartz.DateBuilder;
 import org.quartz.TriggerKey;
 
@@ -36,26 +31,44 @@ import org.quartz.TriggerKey;
  * @author FloH
  */
 public class WpsProcessJobEntry extends javax.swing.JPanel {
+
     private WpsMonitorGui mainFrame;
-    private WpsProcess wpsProcess;
+    private WpsProcessEntity wpsProcess;
     private TriggerKey triggerKey;
-    
-    
-    /**
-     * Creates new form JobEntry
-     */
-    public WpsProcessJobEntry(WpsMonitorGui mainFrame, WpsProcess wpsProcess) {
-        initComponents(); 
+    private JPanel parent;
+
+    public WpsProcessJobEntry(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
+        this(mainFrame, parent, wpsProcess, null);
+    }
+
+    public WpsProcessJobEntry(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, TriggerConfig triggerConfig) {
+        initComponents();
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-        
+
         initComboBox();
+        
+        if(triggerConfig != null) {
+            initWithTriggerConfig(triggerConfig);
+        }
         
         this.mainFrame = mainFrame;
         this.wpsProcess = wpsProcess;
+        this.parent = parent;
+        
+        
     }
     
+    private void initWithTriggerConfig(TriggerConfig triggerConfig) {
+        this.startDate.setDate(triggerConfig.getStart());
+        this.endDate.setDate(triggerConfig.getEnd());
+        this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem("fix this!", triggerConfig.getIntervalType()));
+        this.intervalField.setText(triggerConfig.getInterval().toString());
+        
+        this.triggerKey = triggerConfig.getTriggerKey();
+    }
+
     public final void initComboBox() {
-        IntervalComboBoxItem[] items = new IntervalComboBoxItem[] { 
+        IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
             new IntervalComboBoxItem("Millisecond", DateBuilder.IntervalUnit.MILLISECOND),
             new IntervalComboBoxItem("Second", DateBuilder.IntervalUnit.SECOND),
             new IntervalComboBoxItem("Minute", DateBuilder.IntervalUnit.MINUTE),
@@ -65,26 +78,27 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             new IntervalComboBoxItem("Month", DateBuilder.IntervalUnit.MONTH),
             new IntervalComboBoxItem("Year", DateBuilder.IntervalUnit.YEAR)
         };
-        
+
         intervalTypeCombooBox.setModel(new DefaultComboBoxModel(items));
     }
-    
+
     public Boolean isFieldsValid() {
-        return !isEmpty(intervalField) && 
-                startDate.getDate() != null && 
-                endDate.getDate() != null &&
-                startDate.getDate().before(endDate.getDate());
+        return !isEmpty(intervalField)
+                && startDate.getDate() != null
+                && endDate.getDate() != null
+                && startDate.getDate().before(endDate.getDate());
     }
-    
+
     public void checkSaveButtonState() {
-        if(isFieldsValid()) {
+        if (isFieldsValid()) {
             saveJob.setEnabled(true);
         }
     }
-    
+
     public Boolean isEmpty(JTextField validate) {
         return validate == null || validate.getText().trim().equals("");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,6 +113,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         intervalTypeCombooBox = new javax.swing.JComboBox();
         intervalField = new javax.swing.JTextField();
         saveJob = new javax.swing.JButton();
+        deleteJob = new javax.swing.JButton();
 
         startDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -154,6 +169,14 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             }
         });
 
+        deleteJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteJob.setText("Delete");
+        deleteJob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteJobActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,12 +186,14 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(intervalField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(intervalTypeCombooBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(intervalTypeCombooBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addComponent(saveJob)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deleteJob)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -179,7 +204,8 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(intervalTypeCombooBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(intervalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(saveJob))
+                        .addComponent(saveJob)
+                        .addComponent(deleteJob))
                     .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -199,31 +225,43 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldKeyReleased
 
     private void saveJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJobActionPerformed
-        if(isFieldsValid()) {
-            IntervalComboBoxItem selectedItem = (IntervalComboBoxItem)intervalTypeCombooBox.getSelectedItem();
+        if (isFieldsValid()) {
+            IntervalComboBoxItem selectedItem = (IntervalComboBoxItem) intervalTypeCombooBox.getSelectedItem();
             String intervalValue = intervalField.getText();
-            
+
             try {
                 Integer interval = Integer.parseInt(intervalValue);
-                
+
                 TriggerConfig tConfig = new TriggerConfig(startDate.getDate(), endDate.getDate(), interval, selectedItem.getFormatKey());
                 TriggerKey newTrigger = mainFrame.getMonitorRef()
                         .getMonitorControl()
                         .createTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
-                
-                if(newTrigger == null) {
+
+                if (newTrigger == null) {
                     MessageDialogs.showError(mainFrame, "Error", "Job was not created. Is Scheduler started? See the logs.");
                 } else {
                     this.triggerKey = newTrigger;
                 }
-            } catch(NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
                 MessageDialogs.showError(mainFrame, "Invalid Number Format", "\"" + intervalValue + "\" is not a valid Number format.");
             }
         }
     }//GEN-LAST:event_saveJobActionPerformed
 
+    private void deleteJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
+        if (triggerKey == null) { //if triggerkey null, then this job was not saved
+            mainFrame.getMonitorRef().getMonitorControl().deleteTrigger(triggerKey);
+        }
+
+        parent.remove(this);
+
+        parent.revalidate();
+        parent.repaint(); // repaint required, otherwise the last element will not disappear
+    }//GEN-LAST:event_deleteJobActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton deleteJob;
     private com.toedter.calendar.JDateChooser endDate;
     private javax.swing.JTextField intervalField;
     private javax.swing.JComboBox intervalTypeCombooBox;

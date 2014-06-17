@@ -41,14 +41,10 @@ public class MonitorEventHandler {
         }
     }
 
-    public void fireEvent(final String eventName) {
-        fireEvent(eventName, null);
-    }
-
-    public void fireEvent(final String eventName, Object eventData) {
-        if (events.containsKey(Param.notNull(eventName, "eventName"))) {
-            for (MonitorEventListener event : events.get(eventName)) {
-                event.execute(eventData);
+    public void fireEvent(final MonitorEvent event) {
+        if (events.containsKey(event.getEventName())) {
+            for (MonitorEventListener listener : events.get(event.getEventName())) {
+                listener.execute(event);
             }
         }
     }

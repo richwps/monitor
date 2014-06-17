@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -22,16 +24,17 @@ import javax.persistence.Version;
 @NamedQueries({
     @NamedQuery(name = "wps.getAllWps", query = "SELECT t FROM WpsEntity t")
 })
-public class WpsEntity implements Serializable {
+public final class WpsEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Version
     private long version;
-    
+
     @Id
     private String identifier;
     private URI route;
-    
+
     public WpsEntity() {
     }
 
@@ -39,17 +42,27 @@ public class WpsEntity implements Serializable {
         this.identifier = identifier;
         this.route = route;
     }
+    
+    public WpsEntity(String identifier, String route) throws MalformedURLException, URISyntaxException {
+        this.identifier = identifier;
+        this.setUri(route);
+    }
 
     public String getIdentifier() {
         return identifier;
     }
 
-    public URI getRoute() {
+    public URI getUri() {
         return route;
     }
 
-    public void setRoute(URI route) {
+    public void setUri(URI route) {
         this.route = route;
+    }
+
+    public void setUri(String route) throws MalformedURLException, URISyntaxException {
+        URL url = new URL(route);
+        URI uri = url.toURI();
     }
 
     @Override

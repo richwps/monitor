@@ -19,18 +19,19 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.Date;
 import org.quartz.DateBuilder;
+import org.quartz.TriggerKey;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class TriggerConfig {
-    
-    
+
     private DateBuilder.IntervalUnit intervalType;
     private Date start;
     private Date end;
     private Integer interval;
+    private TriggerKey triggerKey;
     
     public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType) {
         this.start = Param.notNull(start, "start");
@@ -42,17 +43,8 @@ public class TriggerConfig {
     public DateBuilder.IntervalUnit getIntervalType() {
         return intervalType;
     }
-
-    public void setIntervalType(DateBuilder.IntervalUnit intervalType) {
-        this.intervalType = intervalType;
-    }
-    
     public Date getStart() {
         return start;
-    }
-
-    public void setStart(Date start) {
-        this.start = start;
     }
 
     public Date getEnd() {
@@ -67,7 +59,11 @@ public class TriggerConfig {
         return interval;
     }
 
-    public void setInterval(Integer interval) {
-        this.interval = interval;
+    public TriggerKey getTriggerKey() {
+        return triggerKey;
+    }
+
+    public void setTriggerKey(TriggerKey triggerKey) {
+        this.triggerKey = triggerKey;
     }
 }

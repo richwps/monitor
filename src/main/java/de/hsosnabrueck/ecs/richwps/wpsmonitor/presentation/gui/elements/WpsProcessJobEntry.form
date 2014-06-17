@@ -21,12 +21,14 @@
               <Component id="startDate" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="endDate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="172" max="32767" attributes="0"/>
+              <EmptySpace pref="86" max="32767" attributes="0"/>
               <Component id="intervalField" min="-2" pref="128" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="intervalTypeCombooBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="intervalTypeCombooBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
               <Component id="saveJob" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="deleteJob" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -40,6 +42,7 @@
                       <Component id="intervalTypeCombooBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="intervalField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="saveJob" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteJob" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="endDate" min="-2" max="-2" attributes="0"/>
                   <Component id="startDate" min="-2" max="-2" attributes="0"/>
@@ -100,6 +103,17 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJobActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="deleteJob">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/trash.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Delete"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteJobActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

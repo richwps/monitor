@@ -15,20 +15,17 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.WpsProcess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  *
@@ -37,20 +34,20 @@ import javax.swing.JPanel;
 public class WpsProcessPanel extends javax.swing.JPanel {
 
     private WpsMonitorGui mainFrame;
-    private JDialog wpsProcessJobDialog;
+    private WpsProcessJobDialog wpsProcessJobDialog;
     private JDialog parent;
 
-    private WpsProcess wpsProcess;
+    private WpsProcessEntity wpsProcess;
     private Boolean saved;
 
     /**
      * Creates new form WpsProcessPanel
      */
-    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcess wpsProcess) {
+    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcessEntity wpsProcess) {
         this(mainFrame, parent, wpsProcess, false);
     }
 
-    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcess wpsProcess, Boolean restored) {
+    public WpsProcessPanel(WpsMonitorGui mainFrame, JDialog parent, WpsProcessEntity wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         initComponents();
 
@@ -107,6 +104,20 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         showJobsButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
         deleteProcessButton.setEnabled(true);
+    }
+    
+    public void processMonitoringPaused(WpsProcessEntity process) {
+        if(wpsProcess.getIdentifier().equals(process.getIdentifier())) {
+            indicateError();
+        }
+    }
+    
+    public void indicateError() {
+        this.setBackground(new Color(255,102,102));
+    }
+    
+    public void clearError() {
+        this.setBackground(new Color(240,240,240));
     }
 
     /**
@@ -249,7 +260,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
         if (evaluateTestRequest(testRequest)) {
             Boolean inserted = true;
-
+            clearError();
+            
             if (!saved) {
                 inserted = mainFrame.getMonitorRef()
                         .getMonitorControl()
@@ -272,10 +284,6 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_saveProcessButtonActionPerformed
 
-    private void cancelWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelWpsButtonActionPerformed
-        parent.remove(this);
-    }//GEN-LAST:event_cancelWpsButtonActionPerformed
-
     private void deleteProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
         mainFrame.getMonitorRef()
                 .getMonitorControl()
@@ -285,6 +293,16 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
         cancelWpsButtonActionPerformed(evt);
     }//GEN-LAST:event_deleteProcessButtonActionPerformed
+
+    private void cancelWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelWpsButtonActionPerformed
+        parent.remove(this);
+        parent.revalidate();
+        parent.repaint();
+    }//GEN-LAST:event_cancelWpsButtonActionPerformed
+
+    public WpsProcessJobDialog getWpsProcessJobDialog() {
+        return wpsProcessJobDialog;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

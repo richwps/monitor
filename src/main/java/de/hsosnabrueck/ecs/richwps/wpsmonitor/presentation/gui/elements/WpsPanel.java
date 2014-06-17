@@ -15,17 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -37,10 +31,12 @@ public class WpsPanel extends javax.swing.JPanel {
     
     private JPanel parentRef;
     private WpsMonitorGui mainFrame;
-    private JDialog wpsProcessDialog;
-    private Wps wps;
+    private WpsProcessDialog wpsProcessDialog;
+    private WpsEntity wps;
+    
+    private Boolean erroneous;
 
-    WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final Wps wps) {
+    public WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final WpsEntity wps) {
         this.wps = Param.notNull(wps, "wps");
         this.parentRef = Param.notNull(parent, "parent");
         this.mainFrame = Param.notNull(mainFrame, "mainFrame");
@@ -48,17 +44,17 @@ public class WpsPanel extends javax.swing.JPanel {
         initComponents();
 
         this.wpsProcessDialog = new WpsProcessDialog(mainFrame, wps, true);
-
+        this.erroneous = false;
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
         wpsNameLabel.setText(wps.getIdentifier());
         wpsUriLabel.setText(wps.getUri().toString());
     }
 
-    public Wps getWps() {
+    public WpsEntity getWps() {
         return wps;
     }
 
-    public void setWps(Wps wps) {
+    public void setWps(WpsEntity wps) {
         this.wps = Param.notNull(wps, "wps");
     }
 
@@ -77,6 +73,7 @@ public class WpsPanel extends javax.swing.JPanel {
         deleteWpsButton = new javax.swing.JButton();
         addProcessToWpsButton = new javax.swing.JButton();
         WpsHeadlineSeperator = new javax.swing.JSeparator();
+        errorIcon = new javax.swing.JLabel();
 
         wpsNameLabel.setText("<Wps Name>");
 
@@ -106,6 +103,10 @@ public class WpsPanel extends javax.swing.JPanel {
             }
         });
 
+        errorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel-round.png"))); // NOI18N
+        errorIcon.setToolTipText("One or more Processes encountered a Wps-Process Error");
+        errorIcon.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,9 +117,12 @@ public class WpsPanel extends javax.swing.JPanel {
                     .addComponent(WpsHeadlineSeperator, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(wpsNameLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(wpsNameLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 381, Short.MAX_VALUE)
+                                .addComponent(errorIcon))
                             .addComponent(wpsUriLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 407, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(editWpsButton)
@@ -134,7 +138,8 @@ public class WpsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(wpsNameLabel)
                     .addComponent(deleteWpsButton)
-                    .addComponent(editWpsButton))
+                    .addComponent(editWpsButton)
+                    .addComponent(errorIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(wpsUriLabel)
@@ -167,6 +172,34 @@ public class WpsPanel extends javax.swing.JPanel {
         new WpsEditDialog(mainFrame, this, true).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
 
+    public WpsProcessDialog getWpsProcessDialog() {
+        return wpsProcessDialog;
+    }
+
+    public void setWpsProcessDialog(WpsProcessDialog wpsProcessDialog) {
+        this.wpsProcessDialog = wpsProcessDialog;
+    }
+
+    public void processMonitoringPaused(WpsProcessEntity process) {
+        Component[] components = wpsProcessDialog.getAddProcessPane().getComponents();
+        
+        for(Component cmp : components) {
+            if(cmp instanceof WpsProcessPanel) {
+                WpsProcessPanel ref = (WpsProcessPanel)cmp;
+                
+                showErrorIndicator();
+                ref.processMonitoringPaused(process);
+            }
+        }
+    }
+    
+    public void hideErrorIndicator() {
+        errorIcon.setEnabled(false);
+    }
+    
+     public void showErrorIndicator() {
+        errorIcon.setEnabled(true);
+    }
 
 
 
@@ -175,6 +208,7 @@ public class WpsPanel extends javax.swing.JPanel {
     private javax.swing.JButton addProcessToWpsButton;
     private javax.swing.JButton deleteWpsButton;
     private javax.swing.JButton editWpsButton;
+    private javax.swing.JLabel errorIcon;
     private javax.swing.JLabel wpsNameLabel;
     private javax.swing.JLabel wpsUriLabel;
     // End of variables declaration//GEN-END:variables

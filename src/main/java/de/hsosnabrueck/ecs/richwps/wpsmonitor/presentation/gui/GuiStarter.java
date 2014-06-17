@@ -16,11 +16,19 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsPanel;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsProcessJobEntry;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsProcessPanel;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.derby.impl.tools.sysinfo.Main;
@@ -67,5 +75,43 @@ public class GuiStarter {
                 new WpsMonitorGui(controlDependency).setVisible(true);
             }
         });
+    }
+    
+    public static void restoreGui(Monitor monitor, WpsMonitorGui gui) throws GuiErrorException {
+        MonitorControl control = monitor.getMonitorControl();
+        
+        List<WpsEntity> wpsEntities = control.getWpsList();
+        
+        for(WpsEntity wpsEntity : wpsEntities) {
+            List<WpsProcessEntity> wpsProcessEntities = control.getProcessesOfWps(wpsEntity.getIdentifier());
+            
+            //WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final Wps wps)
+            WpsPanel wpsPanel = new WpsPanel(gui, gui.getWpsAddPanel(), wpsEntity);
+            
+            
+            // add processes to wpsPanel's dialog
+            for(WpsProcessEntity processEntity : wpsProcessEntities) {
+                JPanel addProcessPane = wpsPanel.getWpsProcessDialog().getAddProcessPane();
+                WpsProcessPanel wpsProcessPanel = new WpsProcessPanel(gui, wpsPanel.getWpsProcessDialog(), processEntity, true);
+                
+                //select trriggerconfig objects 
+                JPanel addJobEntryPanel = wpsProcessPanel.getWpsProcessJobDialog().getAddJobPane(); 
+                List<TriggerConfig> triggers = control.getTriggers(wpsEntity.getIdentifier(), processEntity.getIdentifier());
+                
+                // add WpsProcessJobEntries to addJobEntryPanel
+                for(TriggerConfig triggerConfig : triggers) {
+                    WpsProcessJobEntry jobEntry = new WpsProcessJobEntry(gui, addProcessPane, processEntity, triggerConfig);
+                    addJobEntryPanel.add(jobEntry);
+                }
+                
+                addProcessPane.add(wpsProcessPanel);
+            }
+            
+            gui.getWpsAddPanel().add(gui);
+        }
+    }
+    
+    private GuiStarter() {
+        
     }
 }

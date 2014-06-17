@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,9 +34,10 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobListener implements JobListener {
+
     private final WpsProcessDataAccess dao;
     private final MonitorEventHandler eventHandler;
-    
+
     public MeasureJobListener(final WpsProcessDataAccess dao, final MonitorEventHandler eventHandler) {
         this.dao = dao;
         this.eventHandler = eventHandler;
@@ -65,22 +67,22 @@ public class MeasureJobListener implements JobListener {
         Job generalJob = context.getJobInstance();
 
         if (generalJob instanceof MeasureJob) {
-            MeasureJob specificJob = (MeasureJob)generalJob;
-            
+            MeasureJob specificJob = (MeasureJob) generalJob;
+
             WpsProcessEntity process = specificJob.getProcessEntity();
             JobKey jobKey = JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier());
+
+            eventHandler.fireEvent(new MonitorEvent("scheduler.job.wasexecuted", process));
             
-            eventHandler.fireEvent("scheduler.job.wasexecuted", jobKey);
-            
-            if(specificJob.cantMeasure()) {
+            if (specificJob.cantMeasure()) {
                 // markiere & persistiere, dass ein problem aufgetreten ist
                 process.setWpsException(true);
                 dao.update(process);
-                
+
                 try {
                     // pause job if an error is triggered
                     context.getScheduler().pauseJob(jobKey);
-                    eventHandler.fireEvent("scheduler.job.paused", jobKey);
+                    eventHandler.fireEvent(new MonitorEvent("scheduler.job.paused",process));
                 } catch (SchedulerException ex) {
                     Logger.getLogger(MeasureJobListener.class.getName()).log(Level.SEVERE, null, ex);
                 }

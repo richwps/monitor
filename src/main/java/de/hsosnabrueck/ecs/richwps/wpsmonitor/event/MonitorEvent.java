@@ -14,36 +14,43 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.Date;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcess {
-    private Wps wps;
-    private String identifier;
+public class MonitorEvent {
+    private final String eventName;
+    private final Date triggerDate;
+    private Object msg;
 
-    public WpsProcess(Wps wps, String identifier) {
-        setIdentifier(identifier);
-        setWps(wps);
+    public MonitorEvent(String eventName) {
+        this.eventName = eventName;
+        this.triggerDate = initDate();
+    }
+    
+    private Date initDate() {
+        return new Date();
     }
 
-    public Wps getWps() {
-        return wps;
+    public MonitorEvent(String eventName, Object msg) {
+        this.eventName = eventName;
+        this.msg = msg;
+        this.triggerDate = initDate();
     }
 
-    public final void setWps(Wps wps) {
-        this.wps = Param.notNull(wps, "wps");
+    public String getEventName() {
+        return eventName;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public Date getTriggerDate() {
+        return triggerDate;
     }
 
-    public final void setIdentifier(String identifier) {
-        this.identifier = Param.notNull(identifier, "identifier");
+    public Object getMsg() {
+        return msg;
     }
 }

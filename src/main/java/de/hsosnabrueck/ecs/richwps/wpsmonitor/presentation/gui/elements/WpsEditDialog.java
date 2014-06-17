@@ -15,14 +15,13 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiErrorException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.Wps;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -144,11 +143,13 @@ public class WpsEditDialog extends javax.swing.JDialog {
         resetError();
         
         try {
-            Wps addWps = new Wps(wpsIdentifier, wpsUri);
+            WpsEntity addWps = new WpsEntity(wpsIdentifier, wpsUri);
             parent.setWps(addWps);
             dispose();
-        } catch (GuiErrorException ex) {
-            appendErrorText(ex.getMessage());
+        } catch (MalformedURLException ex) {
+            appendErrorText("URI is not valid!");
+        } catch (URISyntaxException ex) {
+            appendErrorText("URI is not valid!");
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
