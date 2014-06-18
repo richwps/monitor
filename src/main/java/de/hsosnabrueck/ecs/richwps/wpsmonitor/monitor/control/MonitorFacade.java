@@ -30,7 +30,7 @@ import org.quartz.TriggerKey;
 public interface MonitorFacade {
     public Boolean createWps(final String wpdIdentifier, final URI uri);
     public Boolean createProcess(final String wpsIdentifier, final String processIdentifier);
-    public TriggerKey createTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
+    public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
     public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri);
     public Boolean deleteWps(final String wpsIdentifier);

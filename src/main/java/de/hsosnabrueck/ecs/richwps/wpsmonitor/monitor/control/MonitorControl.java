@@ -54,14 +54,19 @@ public class MonitorControl implements MonitorFacade {
     }
 
     @Override
-    public final synchronized TriggerKey createTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config) {
+    public final synchronized TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config) {
         TriggerKey result = null;
 
         try {
-            result = schedulerControl.addTriggerToJob(new JobKey(
-                    Param.notNull(processIdentifier, "processIdentifier"),
-                    Param.notNull(wpsIdentifier, "wpsIdentifier")
-            ), Param.notNull(config, "config"));
+            if (config.getTriggerKey() == null) {
+                result = schedulerControl.addTriggerToJob(new JobKey(
+                        Param.notNull(processIdentifier, "processIdentifier"),
+                        Param.notNull(wpsIdentifier, "wpsIdentifier")
+                ), Param.notNull(config, "config"));
+            } else {
+                schedulerControl.updateTrigger(config);
+                result = config.getTriggerKey();
+            }
         } catch (SchedulerException ex) {
             Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,7 +128,7 @@ public class MonitorControl implements MonitorFacade {
         try {
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
             wpsProcessDao = wpsProcessDaoFactory.create();
-            
+
             if (wps != null && wpsProcessDao.find(wpsIdentifier, processIdentifier) == null) {
                 WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
 
@@ -193,7 +198,7 @@ public class MonitorControl implements MonitorFacade {
     public Boolean deleteWps(final String wpsIdentifier) {
         WpsDataAccess wpsDao = wpsDaoFactory.create();
         WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
-                
+
         Boolean deleteable = false;
 
         try {
@@ -201,7 +206,7 @@ public class MonitorControl implements MonitorFacade {
             deleteable = (wps != null);
 
             if (deleteable) {
-                synchronized(this) {
+                synchronized (this) {
                     try {
                         schedulerControl.removeWpsJobs(wpsIdentifier);
                     } catch (SchedulerException ex) {

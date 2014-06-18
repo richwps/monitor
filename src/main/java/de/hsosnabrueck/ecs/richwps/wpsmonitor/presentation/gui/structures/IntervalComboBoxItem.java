@@ -16,6 +16,8 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.EnumMap;
 import org.quartz.DateBuilder;
 
 /**
@@ -23,32 +25,49 @@ import org.quartz.DateBuilder;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class IntervalComboBoxItem {
-    private String label;
     private DateBuilder.IntervalUnit dateKey;
+    private static EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
 
-    public IntervalComboBoxItem(String label, DateBuilder.IntervalUnit dateKey) {
-        this.label = label;
-        this.dateKey = dateKey;
+    public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
+        this.dateKey = Param.notNull(dateKey, "dateKey");
+        
+        if(enumStringMap == null) {
+            initMap();
+        }
+    }
+    
+    private void initMap() {
+        enumStringMap = new EnumMap<DateBuilder.IntervalUnit, String>(DateBuilder.IntervalUnit.class);
+        
+        String[] fill = new String[] {
+            "Millisecond",
+            "Second",
+            "Minute",
+            "Hour",
+            "Day",
+            "Week",
+            "Month",
+            "Year"
+        };
+        
+        DateBuilder.IntervalUnit[] dateValues = DateBuilder.IntervalUnit.values();
+        
+        for(int i = 0; i < fill.length && i < dateValues.length; i++) {
+            enumStringMap.put(dateValues[i], fill[i]);
+        }
+        
     }
 
     public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+        return enumStringMap.get(dateKey);
     }
 
     public DateBuilder.IntervalUnit getFormatKey() {
         return dateKey;
     }
 
-    public void setDateKey(DateBuilder.IntervalUnit dateKey) {
-        this.dateKey = dateKey;
-    }
-    
     @Override
     public String toString() {
-        return label;
+        return getLabel();
     }
 }

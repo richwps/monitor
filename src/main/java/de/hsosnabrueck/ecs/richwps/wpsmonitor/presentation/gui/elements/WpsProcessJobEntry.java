@@ -61,7 +61,8 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     private void initWithTriggerConfig(TriggerConfig triggerConfig) {
         this.startDate.setDate(triggerConfig.getStart());
         this.endDate.setDate(triggerConfig.getEnd());
-        this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem("fix this!", triggerConfig.getIntervalType()));
+        this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
+        this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
         this.intervalField.setText(triggerConfig.getInterval().toString());
         
         this.triggerKey = triggerConfig.getTriggerKey();
@@ -69,14 +70,14 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
     public final void initComboBox() {
         IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
-            new IntervalComboBoxItem("Millisecond", DateBuilder.IntervalUnit.MILLISECOND),
-            new IntervalComboBoxItem("Second", DateBuilder.IntervalUnit.SECOND),
-            new IntervalComboBoxItem("Minute", DateBuilder.IntervalUnit.MINUTE),
-            new IntervalComboBoxItem("Hour", DateBuilder.IntervalUnit.HOUR),
-            new IntervalComboBoxItem("Day", DateBuilder.IntervalUnit.DAY),
-            new IntervalComboBoxItem("Week", DateBuilder.IntervalUnit.WEEK),
-            new IntervalComboBoxItem("Month", DateBuilder.IntervalUnit.MONTH),
-            new IntervalComboBoxItem("Year", DateBuilder.IntervalUnit.YEAR)
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MILLISECOND),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.SECOND),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MINUTE),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.HOUR),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.DAY),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.WEEK),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MONTH),
+            new IntervalComboBoxItem(DateBuilder.IntervalUnit.YEAR)
         };
 
         intervalTypeCombooBox.setModel(new DefaultComboBoxModel(items));
@@ -231,10 +232,17 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             try {
                 Integer interval = Integer.parseInt(intervalValue);
 
-                TriggerConfig tConfig = new TriggerConfig(startDate.getDate(), endDate.getDate(), interval, selectedItem.getFormatKey());
+                TriggerConfig tConfig = new TriggerConfig(startDate.getDate(), 
+                        endDate.getDate(), 
+                        interval, 
+                        selectedItem.getFormatKey(), 
+                        triggerKey
+                );
+                
+                
                 TriggerKey newTrigger = mainFrame.getMonitorRef()
                         .getMonitorControl()
-                        .createTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
+                        .saveTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
 
                 if (newTrigger == null) {
                     MessageDialogs.showError(mainFrame, "Error", "Job was not created. Is Scheduler started? See the logs.");

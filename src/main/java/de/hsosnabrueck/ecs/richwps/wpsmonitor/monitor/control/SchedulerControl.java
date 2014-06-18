@@ -161,14 +161,17 @@ public class SchedulerControl {
         return result;
     }
 
-    public void updateTrigger(final TriggerKey triggerKey, final TriggerConfig config) throws SchedulerException {
-        JobDetail jobDetail = scheduler.getJobDetail(scheduler
-                .getTrigger(triggerKey)
-                .getJobKey()
-        );
+    public void updateTrigger(final TriggerConfig config) throws SchedulerException {
+        
+        if(config.getTriggerKey() != null) {
+            JobDetail jobDetail = scheduler.getJobDetail(scheduler
+                    .getTrigger(config.getTriggerKey())
+                    .getJobKey()
+            );
 
-        // replace old trigger with a new one
-        scheduler.rescheduleJob(triggerKey, createTrigger(jobDetail, config));
+            // replace old trigger with a new one
+            scheduler.rescheduleJob(config.getTriggerKey(), createTrigger(jobDetail, config));
+        }
     }
 
     public List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
@@ -207,14 +210,15 @@ public class SchedulerControl {
         // save cast!
         if (trigger.getClass().equals(CalendarIntervalTriggerImpl.class)) {
             CalendarIntervalTrigger calendarTrigger = (CalendarIntervalTrigger) trigger;
-
+            
             DateBuilder.IntervalUnit repeatIntervalUnit = calendarTrigger.getRepeatIntervalUnit();
 
             triggerConfig = new TriggerConfig(
                     trigger.getStartTime(),
                     trigger.getEndTime(),
                     calendarTrigger.getRepeatInterval(),
-                    repeatIntervalUnit
+                    repeatIntervalUnit,
+                    trigger.getKey()
             );
         }
 

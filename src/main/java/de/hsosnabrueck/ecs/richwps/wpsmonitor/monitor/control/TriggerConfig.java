@@ -34,10 +34,15 @@ public class TriggerConfig {
     private TriggerKey triggerKey;
     
     public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType) {
+        this(start, end, interval, intervalType, null);
+    }
+    
+    public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType, final TriggerKey triggerKey) {
         this.start = Param.notNull(start, "start");
         this.end = Param.notNull(end, "end");
         this.interval = Param.notNull(interval, "interval");
         this.intervalType = Param.notNull(intervalType, "intervalType");
+        this.triggerKey = triggerKey;
     }
 
     public DateBuilder.IntervalUnit getIntervalType() {
