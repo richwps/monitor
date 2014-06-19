@@ -1,2 +1,6 @@
 /projectfiles/WPS Monitor.vpp~*
+/MonitoredData/*
+/QuartzJobStore/*
 /target/
+/derby.log
+/*lck

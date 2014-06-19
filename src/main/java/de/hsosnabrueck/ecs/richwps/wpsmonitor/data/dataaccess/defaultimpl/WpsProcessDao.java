@@ -33,6 +33,15 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     public WpsProcessDao(EntityManager em) {
         super(em);
     }
+    
+    @Override
+    public Boolean persist(WpsProcessEntity e) {
+        if(find(e.getWps().getIdentifier(), e.getIdentifier()) != null) {
+            return false;
+        } 
+        
+        return super.persist(e);
+    }
 
     @Override
     public WpsProcessEntity find(final Object primaryKey) {

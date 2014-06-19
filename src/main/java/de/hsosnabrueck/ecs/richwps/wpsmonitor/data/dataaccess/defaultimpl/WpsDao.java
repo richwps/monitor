@@ -19,8 +19,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 
 /**
@@ -32,10 +33,19 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     public WpsDao(EntityManager em) {
         super(em);
     }
-
+    
     @Override
     public WpsEntity find(Object primaryKey) {
-        return em.find(WpsEntity.class, Param.notNull(primaryKey, "primaryKey"));
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("identifier", primaryKey);
+        
+        List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
+        
+        if(wpsEntities != null && wpsEntities.size() > 0) {
+            return wpsEntities.get(0);
+        }
+        
+        return null;
     }
 
     @Override

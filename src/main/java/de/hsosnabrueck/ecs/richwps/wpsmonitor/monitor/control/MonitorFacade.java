@@ -37,6 +37,8 @@ public interface MonitorFacade {
     public Boolean deleteWps(final String wpsIdentifier);
     public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier);
     public Boolean deleteTrigger(final TriggerKey triggerKey);
+    public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier);
+    public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier);
     public List<WpsEntity> getWpsList();
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);

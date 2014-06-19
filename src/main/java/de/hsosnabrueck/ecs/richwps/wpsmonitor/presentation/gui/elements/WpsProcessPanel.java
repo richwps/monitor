@@ -20,16 +20,21 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessPanel extends javax.swing.JPanel {
 
@@ -59,9 +64,36 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             this.saved = false;
         }
         
+        if(wpsProcess.isWpsException()) {
+            indicateError();
+        }
+        
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+        
+        registerMonitoringPausedEvent();
+    }
+    
+    private void registerMonitoringPausedEvent() {
+        try {
+            mainFrame.getMonitorRef()
+                    .getEventHandler()
+                    .registerListener("scheduler.job.paused", new MonitorEventListener() {
+
+                        @Override
+                        public void execute(MonitorEvent event) {
+
+                            if (event.getMsg() instanceof WpsProcessEntity) {
+                                WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
+                                processMonitoringPaused(wpsProcess);
+                            }
+                        }
+
+                    });
+        } catch (EventNotFound ex) {
+            Logger.getLogger(WpsMonitorGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private WpsResponse doTestRequest(String testRequest) {
@@ -102,8 +134,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void triggerSaveState() {
         this.saved = true;
-        
-        saveProcessButton.setEnabled(false);
+
         saveProcessButton.setBackground(new Color(153,255,153));
         showJobsButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
@@ -115,11 +146,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         }
     }
     
-    public void indicateError() {
+    public final void indicateError() {
         this.setBackground(new Color(255,102,102));
     }
     
-    public void clearError() {
+    public final void clearError() {
         this.setBackground(new Color(240,240,240));
     }
 
@@ -225,7 +256,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(processNameText)
                             .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 452, Short.MAX_VALUE)))
+                        .addGap(0, 332, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -267,6 +298,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         String wpsIdentifier = wpsProcess.getWps().getIdentifier();
         String wpsProcessIdentifier = wpsProcess.getIdentifier();
         String testRequest = testRequestTextArea.getText();
+        
 
         if (evaluateTestRequest(testRequest)) {
             Boolean inserted = true;
@@ -279,17 +311,23 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             }
 
             if (inserted) {
-                inserted = inserted && mainFrame.getMonitorRef()
+                inserted = mainFrame.getMonitorRef()
                         .getMonitorControl()
                         .setTestRequest(wpsIdentifier, wpsProcessIdentifier, testRequest);
+            }
+            
+            if(wpsProcess.isWpsException()) {
+                mainFrame.getMonitorRef()
+                        .getMonitorControl()
+                        .resumeMonitoring(wpsIdentifier, wpsProcessIdentifier);
             }
 
             if (inserted) {
                 triggerSaveState();
             } else {
                 MessageDialogs.showError(mainFrame,
-                        "Can't register Process to this WPS. Maybe the Process is already registred.",
-                        "Error");
+                        "Error",
+                        "Can't register Process to this WPS. Maybe the Process is already registred.");
             }
         } 
     }//GEN-LAST:event_saveProcessButtonActionPerformed
@@ -302,6 +340,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         }
         
         parent.remove(this);
+        parent.revalidate();
+        parent.repaint();
     }//GEN-LAST:event_deleteProcessButtonActionPerformed
 
     private void testRequestTextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_testRequestTextAreaKeyReleased

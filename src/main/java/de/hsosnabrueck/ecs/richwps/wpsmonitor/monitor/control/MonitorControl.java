@@ -46,6 +46,8 @@ public class MonitorControl implements MonitorFacade {
     private final QosDaoFactory qosDaoFactory;
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
+    
+    private static Logger logger = Logger.getLogger(MonitorControl.class.getName());
 
     public MonitorControl(SchedulerControl scheduler, QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
         this.schedulerControl = Param.notNull(scheduler, "scheduler");
@@ -69,7 +71,7 @@ public class MonitorControl implements MonitorFacade {
                 result = config.getTriggerKey();
             }
         } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
 
         return result;
@@ -89,7 +91,7 @@ public class MonitorControl implements MonitorFacade {
 
             return result;
         } catch (SchedulerException ex) {
-            Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
 
             return null;
         }
@@ -140,7 +142,7 @@ public class MonitorControl implements MonitorFacade {
 
                     return wpsProcessDao.persist(process);
                 } catch (SchedulerException ex) {
-                    Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, null, ex);
                 }
             }
         } finally {
@@ -270,7 +272,7 @@ public class MonitorControl implements MonitorFacade {
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
         return getMeasuredData(wpsIdentifier, processIdentifier, null);
     }
-    
+
     @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier, Range range) {
         QosDataAccess qosDao = qosDaoFactory.create();
@@ -300,5 +302,54 @@ public class MonitorControl implements MonitorFacade {
 
     public WpsProcessDataAccess getWpsProcessDao() {
         return wpsProcessDaoFactory.create();
+    }
+
+    @Override
+    public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+
+        try {
+            WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+
+            if (find != null) {
+                synchronized (this) {
+                    JobKey jobKey = new JobKey(processIdentifier, wpsIdentifier);
+
+                    assert find.isWpsException() && schedulerControl.isPaused(jobKey)
+                            || !find.isWpsException() && !schedulerControl.isPaused(jobKey);
+
+                    return find.isWpsException();
+                }
+            }
+        } catch (SchedulerException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } finally {
+            wpsProcessDao.close();
+        }
+
+        return false;
+    }
+
+    @Override
+    public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
+        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        
+        try {
+            WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+            
+            if(find != null) {
+                synchronized(this) {
+                    schedulerControl.resume(new JobKey(processIdentifier, wpsIdentifier));
+                }
+                find.setWpsException(false);
+                
+                wpsProcessDao.update(find);
+            }
+            
+        } catch (SchedulerException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } finally {
+            wpsProcessDao.close();
+        }
     }
 }

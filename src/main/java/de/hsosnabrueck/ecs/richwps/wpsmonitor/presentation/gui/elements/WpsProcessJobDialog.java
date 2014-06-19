@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessJobDialog extends javax.swing.JDialog {
     private WpsMonitorGui mainframe;

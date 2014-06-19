@@ -17,23 +17,27 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsPanel extends javax.swing.JPanel {
-    
+
     private JPanel parentRef;
     private WpsMonitorGui mainFrame;
     private WpsProcessDialog wpsProcessDialog;
     private WpsEntity wps;
-    
+
     private Boolean erroneous;
 
     public WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final WpsEntity wps) {
@@ -44,10 +48,32 @@ public class WpsPanel extends javax.swing.JPanel {
         initComponents();
 
         this.wpsProcessDialog = new WpsProcessDialog(mainFrame, wps, true);
-        this.erroneous = false;
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
         wpsNameLabel.setText(wps.getIdentifier());
         wpsUriLabel.setText(wps.getUri().toString());
+        
+        registerMonitoringPausedEvent();
+    }
+
+    private void registerMonitoringPausedEvent() {
+        try {
+            mainFrame.getMonitorRef()
+                    .getEventHandler()
+                    .registerListener("scheduler.job.paused", new MonitorEventListener() {
+
+                        @Override
+                        public void execute(MonitorEvent event) {
+
+                            if (event.getMsg() instanceof WpsProcessEntity) {
+                                WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
+                                processMonitoringPaused(wpsProcess);
+                            }
+                        }
+
+                    });
+        } catch (EventNotFound ex) {
+            Logger.getLogger(WpsMonitorGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public WpsEntity getWps() {
@@ -175,9 +201,11 @@ public class WpsPanel extends javax.swing.JPanel {
                 JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
-            mainFrame.getMonitorRef().getMonitorControl().deleteWps(wps.getIdentifier());
+            mainFrame.getMonitorRef()
+                    .getMonitorControl()
+                    .deleteWps(wps.getIdentifier());
+
             parentRef.remove(this);
-            
             parentRef.revalidate();
             parentRef.repaint(); // repaint required, otherwise the last element will not disappear
         }
@@ -185,6 +213,7 @@ public class WpsPanel extends javax.swing.JPanel {
 
     private void addProcessToWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProcessToWpsButtonActionPerformed
         wpsProcessDialog.setVisible(true);
+        hideErrorIndicator();
     }//GEN-LAST:event_addProcessToWpsButtonActionPerformed
 
     private void editWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
@@ -200,26 +229,18 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     public void processMonitoringPaused(WpsProcessEntity process) {
-        Component[] components = wpsProcessDialog.getAddProcessPane().getComponents();
-        
-        for(Component cmp : components) {
-            if(cmp instanceof WpsProcessPanel) {
-                WpsProcessPanel ref = (WpsProcessPanel)cmp;
-                
-                showErrorIndicator();
-                ref.processMonitoringPaused(process);
-            }
+        if(process.getWps().getIdentifier().equals(wps.getIdentifier())) {
+            showErrorIndicator();
         }
     }
-    
+
     public void hideErrorIndicator() {
         errorIcon.setEnabled(false);
     }
-    
-     public void showErrorIndicator() {
+
+    public void showErrorIndicator() {
         errorIcon.setEnabled(true);
     }
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

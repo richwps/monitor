@@ -70,7 +70,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
     public final void initComboBox() {
         IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MILLISECOND),
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.SECOND),
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.MINUTE),
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.HOUR),

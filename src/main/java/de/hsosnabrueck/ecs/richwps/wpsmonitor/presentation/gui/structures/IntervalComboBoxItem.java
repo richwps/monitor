@@ -52,8 +52,7 @@ public class IntervalComboBoxItem {
         
         DateBuilder.IntervalUnit[] dateValues = DateBuilder.IntervalUnit.values();
         
-        // starting at 1 to skip millisecond entry!
-        for(int i = 1; i < fill.length && i < dateValues.length; i++) {
+        for(int i = 0; i < fill.length && i < dateValues.length; i++) {
             enumStringMap.put(dateValues[i], fill[i]);
         }
         

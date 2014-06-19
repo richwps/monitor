@@ -207,7 +207,7 @@ public class SchedulerControl {
             CalendarIntervalTrigger calendarTrigger = (CalendarIntervalTrigger) trigger;
             
             DateBuilder.IntervalUnit repeatIntervalUnit = calendarTrigger.getRepeatIntervalUnit();
-
+            
             triggerConfig = new TriggerConfig(
                     trigger.getStartTime(),
                     trigger.getEndTime(),
@@ -218,6 +218,26 @@ public class SchedulerControl {
         }
 
         return triggerConfig;
+    }
+
+    public Boolean isPaused(final JobKey jobKey) throws SchedulerException {
+        for(String triggerGroup : scheduler.getPausedTriggerGroups()) {
+            Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(triggerGroup));
+            
+            for(TriggerKey triggerKey : triggerKeys) {
+                Trigger trigger = scheduler.getTrigger(triggerKey);
+                
+                if(trigger.getJobKey().equals(jobKey)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public void resume(final JobKey jobKey) throws SchedulerException {
+        scheduler.resumeJob(jobKey);
     }
 
     public Scheduler getScheduler() {

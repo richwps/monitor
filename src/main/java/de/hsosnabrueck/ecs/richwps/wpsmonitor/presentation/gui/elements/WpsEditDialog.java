@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 
 /**
  *
- * @author Fruchuxs
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsEditDialog extends javax.swing.JDialog {
 

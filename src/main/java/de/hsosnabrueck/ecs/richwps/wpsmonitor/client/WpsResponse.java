@@ -62,15 +62,15 @@ public class WpsResponse {
     }
     
     public Boolean isWpsException() {
-        return exception instanceof WpsException;
+        return isException() && exception instanceof WpsException;
     }
     
     public Boolean isConnectionException() {
-        return exception instanceof ConnectionException;
+        return isException() && exception instanceof ConnectionException;
     }
     
     public Boolean isOtherException() {
-        return !(isWpsException() || isConnectionException());
+        return isException() && !(isWpsException() || isConnectionException());
     }
     
     public String getExceptionMessage() {

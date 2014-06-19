@@ -40,6 +40,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -135,6 +136,8 @@ public class SimpleWpsClient implements WpsClient {
         } catch (IOException ex) {
             Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(DOMException ex) {
             Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 

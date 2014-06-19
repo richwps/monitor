@@ -16,25 +16,18 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsMonitorGui extends javax.swing.JFrame {
 
@@ -47,26 +40,6 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         this.monitorRef = Param.notNull(monitor, "monitor");
         initComponents();
         setLocationRelativeTo(null);
-        registerMonitoringPausedEvent();
-    }
-
-    private void registerMonitoringPausedEvent() {
-        try {
-            monitorRef.getEventHandler().registerListener("scheduler.job.paused", new MonitorEventListener() {
-
-                @Override
-                public void execute(MonitorEvent event) {
-
-                    if (event.getMsg() instanceof WpsProcessEntity) {
-                        WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
-                        processMonitoringPaused(wpsProcess);
-                    }
-                }
-
-            });
-        } catch (EventNotFound ex) {
-            Logger.getLogger(WpsMonitorGui.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private Boolean isCreateFieldsValid() {
@@ -104,17 +77,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         getWpsToAddField().requestFocus();
     }
 
-    public void processMonitoringPaused(WpsProcessEntity process) {
-        for (Component cmp : getComponents()) {
-            if (cmp instanceof WpsPanel) {
-                WpsPanel ref = (WpsPanel) cmp;
 
-                if (ref.getWps().getIdentifier().equals(process.getWps().getIdentifier())) {
-                    ref.processMonitoringPaused(process);
-                }
-            }
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityExistsException;
@@ -38,16 +39,19 @@ public abstract class AbstractDataAccess<T> {
     }
 
     public Boolean persist(T o) {
+        Boolean result;
         beginTransaction();
 
         try {
             em.persist(o);
+            
+            result = commit();
         } catch (EntityExistsException e) {
-            return false;
-        }
-        commit();
+            result = false;
+        } 
+        
 
-        return true;
+        return result;
     }
 
     public T update(T t) {
@@ -68,8 +72,18 @@ public abstract class AbstractDataAccess<T> {
         em.getTransaction().begin();
     }
 
-    protected void commit() {
-        em.getTransaction().commit();
+    protected Boolean commit() {
+        try {
+            em.getTransaction().commit();
+        } catch(Exception ex) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    protected void rollback() {
+        em.getTransaction().rollback();
     }
 
     public void close() {

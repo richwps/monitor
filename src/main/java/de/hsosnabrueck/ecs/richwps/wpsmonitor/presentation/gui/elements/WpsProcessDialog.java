@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
     private WpsMonitorGui mainFrame;

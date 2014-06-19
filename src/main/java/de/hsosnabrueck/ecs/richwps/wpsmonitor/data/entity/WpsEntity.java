@@ -10,7 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,7 +25,8 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t")
+    @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t"),
+    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier")
 })
 public class WpsEntity implements Serializable {
 
@@ -32,7 +36,12 @@ public class WpsEntity implements Serializable {
     private long version;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @Column(unique = true)
     private String identifier;
+    
     private URI route;
 
     public WpsEntity() {
@@ -70,7 +79,7 @@ public class WpsEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + (this.identifier != null ? this.identifier.hashCode() : 0);
+        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
 
@@ -83,11 +92,20 @@ public class WpsEntity implements Serializable {
             return false;
         }
         final WpsEntity other = (WpsEntity) obj;
-        if ((this.identifier == null) ? (other.identifier != null) : !this.identifier.equals(other.identifier)) {
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     @Override
     public String toString() {
