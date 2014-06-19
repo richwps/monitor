@@ -47,7 +47,7 @@ public class MeasuredDataPane extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         measuredText.setColumns(20);
-        measuredText.setRows(5);
+        measuredText.setRows(3);
         jScrollPane1.setViewportView(measuredText);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
