@@ -16,10 +16,27 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
+import java.util.List;
+import spark.Request;
+import spark.Response;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ListWpsRoute {
+public class ListWpsRoute extends MonitorRoute {
+
+    public ListWpsRoute() {
+        super("/measurment/wps");
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+        List<WpsEntity> wpsList = getMonitorControl().getWpsList();
+        
+        return getStrategy().presentate(wpsList);
+    }
     
 }

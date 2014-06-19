@@ -23,6 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsProcessRoute;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
 import java.util.Enumeration;
 import java.util.logging.Handler;
@@ -65,7 +66,8 @@ public class Application {
                 .build();
 
         rest.addRoute(HttpOperation.GET, new ListMeasurementRoute())
-                .addRoute(HttpOperation.GET, new ListWpsProcessRoute());
+                .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
+                .addRoute(HttpOperation.GET, new ListWpsRoute());
 
         monitor.start();
         rest.start();

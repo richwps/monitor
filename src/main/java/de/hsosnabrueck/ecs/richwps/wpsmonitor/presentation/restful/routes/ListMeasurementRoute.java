@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -28,30 +28,46 @@ import spark.Response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListMeasurementRoute extends MonitorRoute {
-    
+
     public ListMeasurementRoute() {
         super("/measurement/wps/:wps/process/:process/count/:count");
     }
-    
+
     @Override
     public Object handle(Request request, Response response) {
         try {
             String wpsIdentifier = Param.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Param.notNull(request.params(":process"), "Process parameter");
-            String count = Param.notNull(request.params(":count"), "Count parameter");
-            
-            List<MeasuredDataEntity> measuredData = getMonitorControl().getMeasuredData(wpsIdentifier, processIdentifier);
-            
-            return getStrategy().toPresentate(getDispatch().dispatch(measuredData));
-        } catch(IllegalArgumentException exception) {
+            String count = request.params(":count");
+
+            List<MeasuredDataEntity> measuredData = getMonitorControl()
+                    .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
+
+            return getStrategy().presentate(getDispatch().dispatch(measuredData));
+        } catch (IllegalArgumentException exception) {
             response.status(404);
         }
-        
+
         return null;
-    }    
-/* // removed; was used for spark 2.0 framework
-    @Override
-    public String getRoute() {
-        return "/measurement/wps/:wps/process/:process/count/:count";
-    }*/
+    }
+
+    private Range getRange(String countValue) {
+        Range range = null;
+        
+        if (countValue != null) {
+            try {
+                Integer countInt = Integer.parseInt(countValue);
+                range = new Range(null, countInt);
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        
+        return range;
+    }
+    /* // removed; was used for spark 2.0 framework
+     @Override
+     public String getRoute() {
+     return "/measurement/wps/:wps/process/:process/count/:count";
+     }*/
 }

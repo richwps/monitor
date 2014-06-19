@@ -66,7 +66,7 @@ public class WpsResponse {
     }
     
     public Boolean isConnectionException() {
-        return isException() && exception instanceof ConnectionException;
+        return isException() && exception instanceof WpsConnectionException;
     }
     
     public Boolean isOtherException() {

@@ -30,7 +30,7 @@ import javax.persistence.Version;
 public class JsonPresentateStrategy implements PresentateStrategy {
 
     @Override
-    public String toPresentate(Map<String, Object> presentateObjects) {
+    public String presentate(Object presentateObjects) {
         // make new gson object to support multithreading environment
         Gson gson = new GsonBuilder().setExclusionStrategies(
                 new ExclusionStrategy() {
@@ -57,7 +57,9 @@ public class JsonPresentateStrategy implements PresentateStrategy {
                         return false;
                     }
                 }
-        ).create();
+        ).setPrettyPrinting()
+                .serializeNulls()
+                .create();
 
         return gson.toJson(presentateObjects);
     }

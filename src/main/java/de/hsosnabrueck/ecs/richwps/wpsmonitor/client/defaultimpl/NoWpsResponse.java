@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 FloH.
+ * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,14 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class SimpleWpsClientFactory implements Factory<WpsClient> {
+public class NoWpsResponse extends Exception{
 
-    @Override
-    public WpsClient create() {
-        return new SimpleWpsClient();
+    public NoWpsResponse() {
+        super("Can't interprete the server respond.");
     }
     
 }

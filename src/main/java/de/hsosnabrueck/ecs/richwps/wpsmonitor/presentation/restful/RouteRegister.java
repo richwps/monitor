@@ -17,7 +17,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import spark.Route;
 
 /**
  *

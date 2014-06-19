@@ -16,13 +16,10 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author FloH
  */
 public interface PresentateStrategy {
-    public String toPresentate(Map<String, Object> presentateObjects);
+    public String presentate(Object presentate);
 }

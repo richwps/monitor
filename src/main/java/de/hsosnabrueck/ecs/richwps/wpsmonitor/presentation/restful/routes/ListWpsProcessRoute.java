@@ -27,12 +27,11 @@ import spark.Response;
 public class ListWpsProcessRoute extends MonitorRoute {
 
     public ListWpsProcessRoute() {
-        super("/measurement/wps");
+        super("/measurement/wps/:wpsidentifier/processes");
     }
     
     @Override
     public Object handle(Request request, Response response) {
-        return "Hello World :)";
+        return "Hello World!";
     }
-    
 }

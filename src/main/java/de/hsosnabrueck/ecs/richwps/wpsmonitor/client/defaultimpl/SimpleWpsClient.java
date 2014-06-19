@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.ConnectionException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsConnectionException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
@@ -57,7 +57,7 @@ public class SimpleWpsClient implements WpsClient {
     @Override
     public WpsResponse execute(WpsRequest wpsRequest) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-
+        
         String responseBody = null;
         Date responseTime = null;
         WpsResponse response = null;
@@ -87,34 +87,38 @@ public class SimpleWpsClient implements WpsClient {
 
             // set exception if necessary
             if (responseBody == null) {
-                response.setException(new ConnectionException());
-            } else if (isWpsException(responseBody)) {
-                WpsException ex;
-                
-                if(wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
-                    ex = new WpsException();
-                } else {
-                    ex = new WpsException(wpsExceptionMessage);
+                response.setException(new WpsConnectionException());
+            } else try {
+                if (isWpsException(responseBody)) {
+                    WpsException ex;
+                    
+                    if(wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
+                        ex = new WpsException();
+                    } else {
+                        ex = new WpsException(wpsExceptionMessage);
+                    }
+                    
+                    response.setException(ex);
                 }
-                
-                response.setException(ex);
+            } catch (NoWpsResponse ex) {
+                response.setException(new WpsConnectionException());
             }
         }
 
         return response;
     }
 
-    private HttpPost buildRequest(final WpsRequest request) throws UnsupportedEncodingException {
-        HttpPost httpRequest = new HttpPost(request.getProcessInfo().getWpsUri());
+    private HttpPost buildRequest(final WpsRequest wpsRequest) throws UnsupportedEncodingException {
+        HttpPost httpRequest = new HttpPost(wpsRequest.getProcessInfo().getWpsUri());
         List<NameValuePair> body = new ArrayList<NameValuePair>();
-        body.add(new BasicNameValuePair("request", request.getRawRequest()));
+        body.add(new BasicNameValuePair("request", wpsRequest.getRawRequest()));
 
         httpRequest.setEntity(new UrlEncodedFormEntity(body));
-
+       
         return httpRequest;
     }
 
-    private Boolean isWpsException(final String responseBody) {
+    private Boolean isWpsException(final String responseBody) throws NoWpsResponse {
         try {
             Document doc = getDocumentBuilder().parse(new InputSource(new StringReader(responseBody)));
             NodeList nl = doc.getElementsByTagNameNS("*", "ExceptionText");
@@ -128,6 +132,8 @@ public class SimpleWpsClient implements WpsClient {
                 }
 
                 wpsExceptionMessage = strBuilder.toString();
+                
+                return true;
             } else {
                 return false;
             }
@@ -141,7 +147,7 @@ public class SimpleWpsClient implements WpsClient {
             Logger.getLogger(SimpleWpsClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return true;
+        throw new NoWpsResponse();
     }
 
     private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {

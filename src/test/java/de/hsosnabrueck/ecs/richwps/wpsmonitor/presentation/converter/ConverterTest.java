@@ -105,7 +105,7 @@ public class ConverterTest {
 
         try {
             PresentateStrategy json = new JsonPresentateStrategy();
-            json.toPresentate(dispatch.dispatch(data));
+            json.presentate(dispatch.dispatch(data));
         } catch (Exception e) {
             failed = true;
             message = e.getMessage();
@@ -117,7 +117,7 @@ public class ConverterTest {
     @Test
     public void testJsonStrategyOutput() {
         Assert.assertTrue(
-                new JsonPresentateStrategy().toPresentate(dispatch.dispatch(data))
+                new JsonPresentateStrategy().presentate(dispatch.dispatch(data))
                 .equals("{\"exampleMeasurement\":{\"sum\":84}}")
         );
     }
@@ -127,6 +127,6 @@ public class ConverterTest {
         t.setUp();
         PresentateStrategy json = new JsonPresentateStrategy();
 
-        System.out.println(json.toPresentate(t.dispatch.dispatch(t.data)));
+        System.out.println(json.presentate(t.dispatch.dispatch(t.data)));
     }
 }
