@@ -132,6 +132,7 @@ public class MeasuredDataEntity implements Serializable {
         
         for(AbstractQosEntity e : data) {
             builder.append(e.getDataAsString());
+            builder.append("\n");
         }
         
         return builder.toString();

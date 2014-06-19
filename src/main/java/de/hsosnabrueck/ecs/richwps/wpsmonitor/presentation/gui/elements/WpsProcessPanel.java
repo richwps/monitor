@@ -41,6 +41,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private WpsMonitorGui mainFrame;
     private WpsProcessJobDialog wpsProcessJobDialog;
     private JPanel parent;
+    private ShowMeasuredData measuredDataDialog;
 
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
@@ -71,6 +72,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+        
+        this.measuredDataDialog = new ShowMeasuredData(mainFrame, wpsProcess, true);
         
         registerMonitoringPausedEvent();
     }
@@ -192,6 +195,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         showMeasuredDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/performance.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measuredata");
         showMeasuredDataButton.setEnabled(false);
+        showMeasuredDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMeasuredDataButtonActionPerformed(evt);
+            }
+        });
         jToolBar1.add(showMeasuredDataButton);
 
         deleteProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
@@ -347,6 +355,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private void testRequestTextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_testRequestTextAreaKeyReleased
         this.saveProcessButton.setEnabled(true);
     }//GEN-LAST:event_testRequestTextAreaKeyReleased
+
+    private void showMeasuredDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMeasuredDataButtonActionPerformed
+        this.measuredDataDialog.recaptureData();
+        this.measuredDataDialog.setVisible(true);
+    }//GEN-LAST:event_showMeasuredDataButtonActionPerformed
 
     public WpsProcessJobDialog getWpsProcessJobDialog() {
         return wpsProcessJobDialog;
