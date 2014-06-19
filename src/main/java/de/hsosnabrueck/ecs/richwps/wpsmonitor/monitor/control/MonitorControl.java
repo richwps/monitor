@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
@@ -267,10 +268,15 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier) {
+        return getMeasuredData(wpsIdentifier, processIdentifier, null);
+    }
+    
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier, Range range) {
         QosDataAccess qosDao = qosDaoFactory.create();
 
         try {
-            return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
+            return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"), range);
         } finally {
             qosDao.close();
         }

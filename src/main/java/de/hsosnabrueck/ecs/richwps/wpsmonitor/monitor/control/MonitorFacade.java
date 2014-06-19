@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -40,4 +41,5 @@ public interface MonitorFacade {
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
+    public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier, Range range);
 }

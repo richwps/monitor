@@ -54,18 +54,8 @@
   </Layout>
   <SubComponents>
     <Component class="com.toedter.calendar.JDateChooser" name="startDate">
-      <Events>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusGained"/>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusLost"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="endDate">
-      <Events>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusGained"/>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusLost"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="intervalTypeCombooBox">
       <Properties>
@@ -84,11 +74,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="intervalField">
-      <Events>
-        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusGained"/>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="fieldFocusLost"/>
-        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fieldKeyReleased"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="saveJob">
       <Properties>
@@ -96,7 +81,6 @@
           <Image iconType="3" name="/icons/save.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Save"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJobActionPerformed"/>

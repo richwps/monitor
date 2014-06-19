@@ -28,9 +28,12 @@ public abstract class MonitorRoute extends Route {
     private MonitorFacade monitorControl;
     private EntityDispatcher dispatch;
     private PresentateStrategy strategy;
+    protected final String route;
     
     public MonitorRoute(String routeStr) {
         super(routeStr);
+        
+        this.route = routeStr;
     }
 
     public void init(MonitorFacade monitorControl, EntityDispatcher dispatch, PresentateStrategy strategy) {
@@ -51,8 +54,32 @@ public abstract class MonitorRoute extends Route {
         return strategy;
     }
     
-    /*
-       removed - was used for spark 2.0
-    */
+    // was used for spark 2.0 wrapper implementation
     //public abstract String getRoute();
+    
+    public String getRoute() {
+        return route;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + (this.route != null ? this.route.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MonitorRoute other = (MonitorRoute) obj;
+        if ((this.route == null) ? (other.route != null) : !this.route.equals(other.route)) {
+            return false;
+        }
+        return true;
+    }
 }

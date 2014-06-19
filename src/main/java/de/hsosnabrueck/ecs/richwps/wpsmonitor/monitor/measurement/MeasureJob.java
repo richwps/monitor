@@ -60,7 +60,7 @@ public class MeasureJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             Pair<WpsRequest, WpsResponse> pair = callWps();
-
+            
             // if no execption occurs (except Connection exception), than call probes and persist Data 
             if (!pair.getRight().isWpsException()) {
                 callProbes(pair.getLeft(), pair.getRight());
@@ -75,6 +75,8 @@ public class MeasureJob implements Job {
             }
 
             error = pair.getRight().isOtherException() || pair.getRight().isWpsException();
+            
+            Logger.getLogger(MeasureJob.class.getName()).log(Level.INFO, "Execute Job: {0} isWpsException: {1} isConnectionException{2}", new Object[]{context.getJobDetail(), pair.getRight().isWpsException() ? "true" : "false", pair.getRight().isConnectionException()? "true" : "false"});
         } catch (Exception ex) {
             Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

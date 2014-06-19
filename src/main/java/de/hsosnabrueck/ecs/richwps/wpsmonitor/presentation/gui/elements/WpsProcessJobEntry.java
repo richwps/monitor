@@ -90,12 +90,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 && startDate.getDate().before(endDate.getDate());
     }
 
-    public void checkSaveButtonState() {
-        if (isFieldsValid()) {
-            saveJob.setEnabled(true);
-        }
-    }
-
     public Boolean isEmpty(JTextField validate) {
         return validate == null || validate.getText().trim().equals("");
     }
@@ -116,53 +110,10 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         saveJob = new javax.swing.JButton();
         deleteJob = new javax.swing.JButton();
 
-        startDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                fieldFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fieldFocusLost(evt);
-            }
-        });
-        startDate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                fieldKeyReleased(evt);
-            }
-        });
-
-        endDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                fieldFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fieldFocusLost(evt);
-            }
-        });
-        endDate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                fieldKeyReleased(evt);
-            }
-        });
-
         intervalTypeCombooBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
-
-        intervalField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                fieldFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                fieldFocusLost(evt);
-            }
-        });
-        intervalField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                fieldKeyReleased(evt);
-            }
-        });
 
         saveJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveJob.setText("Save");
-        saveJob.setEnabled(false);
         saveJob.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveJobActionPerformed(evt);
@@ -211,18 +162,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fieldFocusGained
-        checkSaveButtonState();
-    }//GEN-LAST:event_fieldFocusGained
-
-    private void fieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fieldFocusLost
-        checkSaveButtonState();
-    }//GEN-LAST:event_fieldFocusLost
-
-    private void fieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldKeyReleased
-        checkSaveButtonState();
-    }//GEN-LAST:event_fieldKeyReleased
 
     private void saveJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJobActionPerformed
         if (isFieldsValid()) {

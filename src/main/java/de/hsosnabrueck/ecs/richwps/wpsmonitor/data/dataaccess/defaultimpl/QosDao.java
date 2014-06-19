@@ -58,7 +58,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public List<MeasuredDataEntity> get(final Range range) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null; // not needed here yet
     }
 
     @Override

@@ -96,11 +96,6 @@ public class SchedulerControl {
         Integer interval = config.getInterval();
 
         switch (Param.notNull(config, "config").getIntervalType()) {
-            case MILLISECOND:
-                scheduleBuilder = CalendarIntervalScheduleBuilder
-                        .calendarIntervalSchedule()
-                        .withInterval(interval, DateBuilder.IntervalUnit.MILLISECOND);
-                break;
             case SECOND:
                 scheduleBuilder = CalendarIntervalScheduleBuilder
                         .calendarIntervalSchedule()
@@ -192,7 +187,7 @@ public class SchedulerControl {
         List<TriggerConfig> result = new ArrayList<TriggerConfig>();
 
         for (Trigger t : getTriggers(jobKey)) {
-            result.add(getTriggerConfigOfTrigger(t));
+            result.add(getConfigOfTrigger(t));
         }
 
         return result;
@@ -201,10 +196,10 @@ public class SchedulerControl {
     public TriggerConfig getConfigOfTrigger(final TriggerKey triggerKey) throws SchedulerException {
         Trigger trigger = scheduler.getTrigger(triggerKey);
 
-        return getTriggerConfigOfTrigger(trigger);
+        return getConfigOfTrigger(trigger);
     }
 
-    private TriggerConfig getTriggerConfigOfTrigger(final Trigger trigger) {
+    private TriggerConfig getConfigOfTrigger(final Trigger trigger) {
         TriggerConfig triggerConfig = null;
 
         // save cast!

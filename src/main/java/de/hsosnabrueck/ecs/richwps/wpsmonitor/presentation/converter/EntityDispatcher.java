@@ -43,9 +43,15 @@ public class EntityDispatcher {
             merged.put((String)e.getKey(), ((EntityConverter)e.getValue()).convert());
         }
         
-        // put the rest into the map, if data not empty
+        // put the last entities into the map, if data not empty
         if(!data.isEmpty()) {
-            merged.put("MeasuredData", data);
+            List<DefaultMeasuredDataPresentation> theLast = new ArrayList<DefaultMeasuredDataPresentation>();
+            
+            for(MeasuredDataEntity mData : data) {
+                theLast.add(new DefaultMeasuredDataPresentation(mData));
+            }
+            
+            merged.put("MeasuredData", theLast);
         }
         
         return merged;
