@@ -48,7 +48,7 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         
         for(MeasuredDataEntity e : measuredData) {
             measuredDataAddPanel.add(
-                    new MeasuredDataPane(e.toString())
+                    new MeasuredDataPane(e.getCreateTime() + ": " + e.toString())
             );
         }
     }
