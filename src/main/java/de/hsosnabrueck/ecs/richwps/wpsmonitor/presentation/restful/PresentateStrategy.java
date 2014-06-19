@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface PresentateStrategy {
     public String presentate(Object presentate);

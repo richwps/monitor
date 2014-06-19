@@ -28,8 +28,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -47,6 +47,8 @@ public class MeasureJob implements Job {
     protected List<QosProbe> probes;
     protected Boolean error;
 
+    private final static Logger log = LogManager.getLogger();
+
     public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao, final WpsClient wpsClient) {
         this.probes = Param.notNull(probes, "probeService");
         this.dao = Param.notNull(dao, "dao");
@@ -60,28 +62,39 @@ public class MeasureJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             Pair<WpsRequest, WpsResponse> pair = callWps();
-            
+            WpsRequest request = pair.getLeft();
+            WpsResponse response = pair.getRight();
+
             // if no execption occurs (except Connection exception), than call probes and persist Data 
-            if (!pair.getRight().isWpsException()) {
-                callProbes(pair.getLeft(), pair.getRight());
-
-                MeasuredDataEntity toPersist = new MeasuredDataEntity();
-
-                toPersist.setProcess(processEntity);
-                toPersist.setData(getMeasuredDatas());
-                toPersist.setCreateTime(new Date());
-
-                dao.persist(toPersist);
+            error = response.isOtherException() || response.isWpsException();
+            
+            if (!error) {
+                callProbes(request, response);
+                persistMeasuredData(getMeasuredDatas());
             }
 
-            error = pair.getRight().isOtherException() || pair.getRight().isWpsException();
-            
-            Logger.getLogger(MeasureJob.class.getName()).log(Level.INFO, "Execute Job: {0} isWpsException: {1} isConnectionException{2}", new Object[]{context.getJobDetail(), pair.getRight().isWpsException() ? "true" : "false", pair.getRight().isConnectionException()? "true" : "false"});
+
+            log.debug("MeasureJob of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
+                    processEntity,
+                    response.isWpsException() ? "true" : "false",
+                    response.isConnectionException() ? "true" : "false",
+                    response.isOtherException() ? "true" : "false"
+            );
         } catch (Exception ex) {
-            Logger.getLogger(MeasureJob.class.getName()).log(Level.SEVERE, null, ex);
+            log.warn(ex);
         } finally {
             dao.close();
         }
+    }
+
+    private void persistMeasuredData(final List<AbstractQosEntity> measuredData) {
+        MeasuredDataEntity toPersist = new MeasuredDataEntity();
+        toPersist.setProcess(processEntity);
+        toPersist.setData(measuredData);
+        toPersist.setCreateTime(new Date());
+
+        log.debug("MeasureJob: persist {}", toPersist.getClass().getName());
+        dao.persist(toPersist);
     }
 
     /**
@@ -93,6 +106,11 @@ public class MeasureJob implements Job {
         }
     }
 
+    /**
+     * Calls the WPS Server with the specified WPS Client
+     *
+     * @return a pair consisting of WpsRequest and WpsResponse
+     */
     private Pair<WpsRequest, WpsResponse> callWps() {
         WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getUri(), processEntity.getIdentifier());
 
@@ -102,6 +120,11 @@ public class MeasureJob implements Job {
         return new Pair<WpsRequest, WpsResponse>(request, response);
     }
 
+    /**
+     * Extracts the Entities out of the probes
+     *
+     * @return List with the Entities
+     */
     public List<AbstractQosEntity> getMeasuredDatas() {
         List<AbstractQosEntity> measuredDatas = new ArrayList<AbstractQosEntity>();
 
@@ -112,10 +135,22 @@ public class MeasureJob implements Job {
         return measuredDatas;
     }
 
+    /**
+     * Indicates, that this Job can't measure the speicified Wps Process because
+     * of a WpsException or an other Exception
+     *
+     * @return true if the job can't measure the Wps Process
+     */
     public Boolean cantMeasure() {
         return error;
     }
 
+    /**
+     * Returns the Process Entity. This is the entity of the process which
+     * should be monitored by the specific job.
+     *
+     * @return The specified Process Entity
+     */
     public WpsProcessEntity getProcessEntity() {
         return processEntity;
     }

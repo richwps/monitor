@@ -29,8 +29,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
@@ -47,7 +47,7 @@ public class MonitorControl implements MonitorFacade {
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
     
-    private static Logger logger = Logger.getLogger(MonitorControl.class.getName());
+    private static Logger log = LogManager.getLogger();
 
     public MonitorControl(SchedulerControl scheduler, QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
         this.schedulerControl = Param.notNull(scheduler, "scheduler");
@@ -71,7 +71,7 @@ public class MonitorControl implements MonitorFacade {
                 result = config.getTriggerKey();
             }
         } catch (SchedulerException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log.warn("MonitorControl: {}", ex);
         }
 
         return result;
@@ -91,7 +91,7 @@ public class MonitorControl implements MonitorFacade {
 
             return result;
         } catch (SchedulerException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log.warn("MonitorControl: {}", ex);
 
             return null;
         }
@@ -142,7 +142,7 @@ public class MonitorControl implements MonitorFacade {
 
                     return wpsProcessDao.persist(process);
                 } catch (SchedulerException ex) {
-                    logger.log(Level.SEVERE, null, ex);
+                    log.warn("MonitorControl: {}", ex);
                 }
             }
         } finally {
@@ -213,7 +213,7 @@ public class MonitorControl implements MonitorFacade {
                     try {
                         schedulerControl.removeWpsJobs(wpsIdentifier);
                     } catch (SchedulerException ex) {
-                        Logger.getLogger(MonitorControl.class.getName()).log(Level.SEVERE, null, ex);
+                        log.warn("MonitorControl: {}", ex);
                     }
                 }
                 wpsProcessDao.deleteProcessesFromWps(wpsIdentifier);
@@ -322,7 +322,7 @@ public class MonitorControl implements MonitorFacade {
                 }
             }
         } catch (SchedulerException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log.warn("MonitorControl: {}", ex);
         } finally {
             wpsProcessDao.close();
         }
@@ -344,10 +344,12 @@ public class MonitorControl implements MonitorFacade {
                 find.setWpsException(false);
                 
                 wpsProcessDao.update(find);
+                
+                log.debug("MonitorControl: resuming monitoring of WPS Process {}.{}", wpsIdentifier, processIdentifier);
             }
             
         } catch (SchedulerException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log.warn("MonitorControl: {}", ex);
         } finally {
             wpsProcessDao.close();
         }

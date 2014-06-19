@@ -26,18 +26,20 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsPanel
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsProcessJobEntry;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsProcessPanel;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.derby.impl.tools.sysinfo.Main;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class GuiStarter {
+    private final static Logger log = LogManager.getLogger();
+    
     public static void start(final Monitor controlDependency) {
          /* Create and display the form */
         
@@ -48,25 +50,26 @@ public class GuiStarter {
         } 
         catch (UnsupportedLookAndFeelException e) {
             try {
+                log.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); // Fallback
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(GuiStarter.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex);
             } catch (InstantiationException ex) {
-                Logger.getLogger(GuiStarter.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(GuiStarter.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex);
             } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(GuiStarter.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex);
             }
         }
-        catch (ClassNotFoundException e) {
-           Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+        catch (ClassNotFoundException ex) {
+           log.error(ex);
         }
-        catch (InstantiationException e) {
-           Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+        catch (InstantiationException ex) {
+           log.error(ex);
         }
-        catch (IllegalAccessException e) {
-           Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+        catch (IllegalAccessException ex) {
+           log.error(ex);
         }
         
         java.awt.EventQueue.invokeLater(new Runnable() {

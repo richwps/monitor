@@ -19,8 +19,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -36,6 +36,8 @@ public class MeasureJobListener implements JobListener {
 
     private final WpsProcessDataAccess dao;
     private final MonitorEventHandler eventHandler;
+    
+    private final static Logger log = LogManager.getLogger();
 
     public MeasureJobListener(final WpsProcessDataAccess dao, final MonitorEventHandler eventHandler) {
         this.dao = dao;
@@ -70,20 +72,25 @@ public class MeasureJobListener implements JobListener {
 
             WpsProcessEntity process = specificJob.getProcessEntity();
             JobKey jobKey = JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier());
-
+            
+            log.debug("MeasureJobListener: Fire job was executed Event!");
             eventHandler.fireEvent(new MonitorEvent("scheduler.job.wasexecuted", process));
             
             if (specificJob.cantMeasure()) {
+                
                 // markiere & persistiere, dass ein problem aufgetreten ist
                 process.setWpsException(true);
                 dao.update(process);
-
+                
+                log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
+                        + " try to pause this job.", process);
+                
                 try {
                     // pause job if an error is triggered
                     context.getScheduler().pauseJob(jobKey);
                     eventHandler.fireEvent(new MonitorEvent("scheduler.job.paused",process));
                 } catch (SchedulerException ex) {
-                    Logger.getLogger(MeasureJobListener.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error(ex);
                 }
             }
         }

@@ -16,7 +16,6 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;

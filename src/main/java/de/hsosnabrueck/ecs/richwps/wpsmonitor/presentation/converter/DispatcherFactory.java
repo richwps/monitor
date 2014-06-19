@@ -16,9 +16,6 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDisassembler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispatcher;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.Map;
 

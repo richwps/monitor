@@ -17,7 +17,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityExistsException;
@@ -25,6 +24,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.persistence.TypedQuery;
 public abstract class AbstractDataAccess<T> {
 
     protected EntityManager em;
+    private final static Logger log = LogManager.getLogger();
 
     public AbstractDataAccess(EntityManager em) {
         this.em = Param.notNull(em, "EntityManager em");
@@ -47,6 +49,8 @@ public abstract class AbstractDataAccess<T> {
             
             result = commit();
         } catch (EntityExistsException e) {
+            log.debug(e);
+            
             result = false;
         } 
         
@@ -76,6 +80,8 @@ public abstract class AbstractDataAccess<T> {
         try {
             em.getTransaction().commit();
         } catch(Exception ex) {
+            log.debug(ex);
+            
             return false;
         }
         

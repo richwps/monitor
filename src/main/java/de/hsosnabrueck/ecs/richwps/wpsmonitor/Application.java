@@ -16,6 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.HttpOperation;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
@@ -25,10 +26,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMe
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
-import java.util.Enumeration;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.quartz.SchedulerException;
 
