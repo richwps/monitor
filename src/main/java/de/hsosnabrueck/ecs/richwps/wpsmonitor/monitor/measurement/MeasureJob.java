@@ -82,9 +82,7 @@ public class MeasureJob implements Job {
             );
         } catch (Exception ex) {
             log.warn(ex);
-        } finally {
-            dao.close();
-        }
+        } 
     }
 
     private void persistMeasuredData(final List<AbstractQosEntity> measuredData) {
