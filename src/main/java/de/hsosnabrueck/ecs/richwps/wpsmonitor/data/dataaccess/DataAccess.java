@@ -28,5 +28,6 @@ public interface DataAccess<T> extends AutoCloseable {
     public T update(T entityObject);
     public void remove(final T o);
     public List<T> get(final Range range);
+    @Override
     public void close();
 }

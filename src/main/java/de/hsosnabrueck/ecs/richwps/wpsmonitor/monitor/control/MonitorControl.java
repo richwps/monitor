@@ -25,10 +25,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -46,7 +48,7 @@ public class MonitorControl implements MonitorFacade {
     private final QosDaoFactory qosDaoFactory;
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
-    
+
     private static Logger log = LogManager.getLogger();
 
     public MonitorControl(SchedulerControl scheduler, QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
@@ -111,13 +113,18 @@ public class MonitorControl implements MonitorFacade {
     @Override
     public Boolean createWps(final String wpdIdentifier, final URI uri) {
         WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
-        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsDataAccess wpsDao = null;
         Boolean result = false;
 
         try {
+            wpsDao = wpsDaoFactory.create();
             result = wpsDao.persist(wps);
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsDao.close();
+            if(wpsDao != null) {
+                wpsDao.close();
+            }
         }
 
         return result;
@@ -125,12 +132,14 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public Boolean createProcess(final String wpsIdentifier, final String processIdentifier) {
-        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsDataAccess wpsDao = null;
         WpsProcessDataAccess wpsProcessDao = null;
 
         try {
-            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+            wpsDao = wpsDaoFactory.create();
             wpsProcessDao = wpsProcessDaoFactory.create();
+            
+            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
 
             if (wps != null && wpsProcessDao.find(wpsIdentifier, processIdentifier) == null) {
                 WpsProcessEntity process = new WpsProcessEntity(Param.notNull(processIdentifier, "processIdentifier"), wps);
@@ -145,8 +154,12 @@ public class MonitorControl implements MonitorFacade {
                     log.warn("MonitorControl: {}", ex);
                 }
             }
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsDao.close();
+            if(wpsDao != null) {
+                wpsDao.close();
+            }
 
             if (wpsProcessDao != null) {
                 wpsProcessDao.close();
@@ -158,20 +171,27 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = null;
         Boolean exists = false;
 
         try {
-            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-            exists = process != null;
+            wpsProcessDao = wpsProcessDaoFactory.create();
+            
+            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"),
+                    Param.notNull(processIdentifier, "processIdentifier")
+            );
 
-            if (exists) {
+            if (exists = (process != null)) {
                 process.setRawRequest(testRequest);
 
                 wpsProcessDao.update(process);
             }
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsProcessDao.close();
+            if(wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
 
         return exists;
@@ -179,19 +199,24 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri) {
-        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsDataAccess wpsDao = null;
         Boolean updateable = false;
 
         try {
+            wpsDao = wpsDaoFactory.create();
+            
             WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-            updateable = (wps != null);
 
-            if (updateable) {
+            if (updateable = (wps != null)) {
                 wps.setUri(newUri);
                 wpsDao.update(wps);
             }
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsDao.close();
+            if (wpsDao != null) {
+                wpsDao.close();
+            }
         }
 
         return updateable;
@@ -199,29 +224,39 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public Boolean deleteWps(final String wpsIdentifier) {
-        WpsDataAccess wpsDao = wpsDaoFactory.create();
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        WpsDataAccess wpsDao = null;
+        WpsProcessDataAccess wpsProcessDao = null;
 
         Boolean deleteable = false;
 
         try {
-            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
-            deleteable = (wps != null);
+            wpsDao = wpsDaoFactory.create();
+            wpsProcessDao = wpsProcessDaoFactory.create();
 
-            if (deleteable) {
-                synchronized (this) {
-                    try {
+            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+
+            if (deleteable = (wps != null)) {
+                try {
+                    synchronized (this) {
                         schedulerControl.removeWpsJobs(wpsIdentifier);
-                    } catch (SchedulerException ex) {
-                        log.warn("MonitorControl: {}", ex);
                     }
+                    
+                    wpsProcessDao.deleteProcessesFromWps(wpsIdentifier);
+                    wpsDao.remove(wps);
+                } catch (SchedulerException ex) {
+                    log.error("MonitorControl: {}", ex);
                 }
-                wpsProcessDao.deleteProcessesFromWps(wpsIdentifier);
-                wpsDao.remove(wps);
             }
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsDao.close();
-            wpsProcessDao.close();
+            if (wpsDao != null) {
+                wpsDao.close();
+            }
+
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
 
         return deleteable;
@@ -229,18 +264,25 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public Boolean deleteProcess(String wpsIdentifier, String processIdentifier) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = null;
         Boolean deleteable = false;
 
         try {
-            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"));
-            deleteable = (process != null);
+            wpsProcessDao = wpsProcessDaoFactory.create();
 
-            if (deleteable) {
+            WpsProcessEntity process = wpsProcessDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"),
+                    Param.notNull(processIdentifier, "processIdentifier")
+            );
+
+            if (deleteable = (process != null)) {
                 wpsProcessDao.remove(process);
             }
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsProcessDao.close();
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
 
         return deleteable;
@@ -248,24 +290,40 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public List<WpsEntity> getWpsList() {
-        WpsDataAccess wpsDao = wpsDaoFactory.create();
+        WpsDataAccess wpsDao = null;
+        List<WpsEntity> wpsList = null;
 
         try {
-            return wpsDao.getAll();
+            wpsDao = wpsDaoFactory.create();
+            wpsList = wpsDao.getAll();
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsDao.close();
+            if (wpsDao != null) {
+                wpsDao.close();
+            }
         }
+
+        return wpsList;
     }
 
     @Override
     public List<WpsProcessEntity> getProcessesOfWps(String identifier) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = null;
+        List<WpsProcessEntity> processes = null;
 
         try {
-            return wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
+            wpsProcessDao = wpsProcessDaoFactory.create();
+            processes = wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsProcessDao.close();
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
+
+        return processes;
     }
 
     @Override
@@ -275,13 +333,25 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier, Range range) {
-        QosDataAccess qosDao = qosDaoFactory.create();
+        QosDataAccess qosDao = null;
+        List<MeasuredDataEntity> measuredData = null;
 
         try {
-            return qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(processIdentifier, "processIdentifier"), range);
+            qosDao = qosDaoFactory.create();
+
+            measuredData = qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"),
+                    Param.notNull(processIdentifier, "processIdentifier"),
+                    range
+            );
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            qosDao.close();
+            if (qosDao != null) {
+                qosDao.close();
+            }
         }
+
+        return measuredData;
     }
 
     public SchedulerControl getSchedulerControl() {
@@ -291,24 +361,51 @@ public class MonitorControl implements MonitorFacade {
     public void setSchedulerControl(SchedulerControl schedulerControl) {
         this.schedulerControl = schedulerControl;
     }
+    /*
+     // not necessary and should not used. Because if other classes need a DAO,
+     // than theses should be injected
+     public QosDataAccess getQosDao() {
+     QosDataAccess instance = null;
+        
+     try {
+     instance = qosDaoFactory.create();
+     } catch (CreateException ex) {
+     log.error(ex);
+     }
+        
+     return instance;
+     }
 
-    public QosDataAccess getQosDao() {
-        return qosDaoFactory.create();
-    }
+     public WpsDataAccess getWpsDao() {
+     WpsDataAccess instance = null;
+        
+     try {
+     instance = wpsDaoFactory.create();
+     } catch (CreateException ex) {
+     log.error(ex);
+     }
+        
+     return instance;
+     }
 
-    public WpsDataAccess getWpsDao() {
-        return wpsDaoFactory.create();
-    }
-
-    public WpsProcessDataAccess getWpsProcessDao() {
-        return wpsProcessDaoFactory.create();
-    }
+     public WpsProcessDataAccess getWpsProcessDao() {
+     WpsProcessDataAccess instance = null;
+        
+     try {
+     instance = wpsProcessDaoFactory.create();
+     } catch (CreateException ex) {
+     log.error(ex);
+     }
+        
+     return instance;
+     }*/
 
     @Override
     public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+        WpsProcessDataAccess wpsProcessDao = null;
 
         try {
+            wpsProcessDao = wpsProcessDaoFactory.create();
             WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
 
             if (find != null) {
@@ -323,8 +420,12 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (SchedulerException ex) {
             log.warn("MonitorControl: {}", ex);
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsProcessDao.close();
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
 
         return false;
@@ -332,26 +433,32 @@ public class MonitorControl implements MonitorFacade {
 
     @Override
     public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
-        
+        WpsProcessDataAccess wpsProcessDao = null;
+
         try {
+            wpsProcessDao = wpsProcessDaoFactory.create();
             WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
-            
-            if(find != null) {
-                synchronized(this) {
+
+            if (find != null) {
+                synchronized (this) {
                     schedulerControl.resume(new JobKey(processIdentifier, wpsIdentifier));
                 }
                 find.setWpsException(false);
-                
+
                 wpsProcessDao.update(find);
-                
+
                 log.debug("MonitorControl: resuming monitoring of WPS Process {}.{}", wpsIdentifier, processIdentifier);
             }
-            
+
         } catch (SchedulerException ex) {
             log.warn("MonitorControl: {}", ex);
+        } catch (CreateException ex) {
+            log.error(ex);
         } finally {
-            wpsProcessDao.close();
+            if (wpsProcessDao != null) {
+                wpsProcessDao.close();
+            }
         }
+
     }
 }

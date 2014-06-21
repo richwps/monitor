@@ -17,9 +17,15 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
 
 /**
- *
+ * Factory Interface for Factories.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface Factory<T> {
-    public T create();
+    /**
+     * Create an instance of type &lt;T>
+     * @return The new instance of &lt;T>
+     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException
+     */
+    public T create() throws CreateException;
 }

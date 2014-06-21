@@ -20,11 +20,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.beans.EventHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -35,14 +38,15 @@ import org.quartz.spi.JobFactory;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class SchedulerFactory {
+public class SchedulerFactory implements Factory<Scheduler> {
+
     private ProbeService probeService;
     private WpsProcessDaoFactory wpsProcessDaoFactory;
     private QosDaoFactory qosDaoFactory;
     private WpsClientFactory wpsClientFactory;
     private MonitorEventHandler eventHandler;
-    
-    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory, 
+
+    public SchedulerFactory(ProbeService probeService, WpsProcessDaoFactory wpsProcessDaoFactory,
             QosDaoFactory qosDaoFactory, WpsClientFactory wpsClientFactory, MonitorEventHandler eventHandler) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.wpsProcessDaoFactory = Param.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
@@ -51,18 +55,23 @@ public class SchedulerFactory {
         this.eventHandler = Param.notNull(eventHandler, "eventHandler");
     }
 
-    public Scheduler create() throws SchedulerException {    
-        Scheduler result = StdSchedulerFactory.getDefaultScheduler();
-        
-        WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
+    @Override
+    public Scheduler create() throws CreateException {
+        try {
+            Scheduler result = StdSchedulerFactory.getDefaultScheduler();
 
-        JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
-        JobListener jobListener = new MeasureJobListener(wpsProcessDao, eventHandler);
+            WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
-        result.setJobFactory(jobFactory);
-        result.getListenerManager()
-                .addJobListener(jobListener);
+            JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
+            JobListener jobListener = new MeasureJobListener(wpsProcessDao, eventHandler);
 
-        return result;
+            result.setJobFactory(jobFactory);
+            result.getListenerManager()
+                    .addJobListener(jobListener);
+
+            return result;
+        } catch (SchedulerException ex) {
+            throw new CreateException(ex);
+        }
     }
 }

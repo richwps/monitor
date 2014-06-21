@@ -17,10 +17,13 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -29,6 +32,7 @@ import java.util.Map;
 public class EntityDisassembler {
 
     private final Map<String, ConverterFactory> converterMap;
+    private final static Logger log = LogManager.getLogger();
 
     public EntityDisassembler(final Map<String, ConverterFactory> converterMap) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
@@ -51,7 +55,7 @@ public class EntityDisassembler {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
 
             for (int i = 0; i < measureData.size(); i++) {
-                if (converterMap.containsKey(measureData.get(i).getEntityName())) {
+                if (converters.containsKey(measureData.get(i).getEntityName())) {
                     converters.get(measureData.get(i).getEntityName()).add(measureData.remove(i--)); //decrement i; remove(int) shift all elements to left
                 }
             }
@@ -69,7 +73,11 @@ public class EntityDisassembler {
         Map<String, EntityConverter> entityConverters = new HashMap<String, EntityConverter>();
 
         for (Map.Entry e : converterMap.entrySet()) {
-            entityConverters.put((String) e.getKey(), ((ConverterFactory) e.getValue()).create());
+            try {
+                entityConverters.put((String) e.getKey(), ((ConverterFactory) e.getValue()).create());
+            } catch (CreateException ex) {
+                log.warn(ex);
+            }
         }
 
         return entityConverters;

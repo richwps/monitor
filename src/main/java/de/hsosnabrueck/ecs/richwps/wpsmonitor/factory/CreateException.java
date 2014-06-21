@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
 
 /**
- * This Exception should be thrown if the wps server are offline, or if the 
- * answer not of type XML.
- * 
- * Normally this Exception is never thrown, but used from a WPS Client. Instances
- * of this Class will be created if the WPS-Client detects that the server is offline
- * or the response is not of type xml.
- * 
- * @see WpsResponse
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsConnectionException extends Exception{
+public class CreateException extends Exception{
 
-    public WpsConnectionException() {
-        super("Can't connect to the server.");
+    public CreateException(Exception e) {
+        super(e);
     }
+    
 }

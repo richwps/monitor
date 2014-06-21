@@ -17,9 +17,33 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
 /**
- *
+ * Interface for WpsClients.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsClient {
+    /**
+     * Invoke the WpsClient to execute the given wpsRequest.
+     * The WpsClient should call WpsRequest.prepareRequest() at real execute Time.
+     * WpsRequest.prepareRequest() sets the now-time as a new Date() Object.
+     * 
+     * e.g.
+     * <code>
+     *     public void execute(final WpsRequest request) {
+     *          // prepare client 
+     *          // do some stuff
+     *          request.prepareRequest();
+     *          HttpResponse response = specificCode.executeRequest(niceThingsToDo);
+     *          WpsResponse response = new WpsResponse ..
+     *     }
+     * </code>
+     * 
+     * The return value WpsResponse should also contains the accurate response-Time.
+     * Accurate response-time means the response time of the Server and not the
+     * time after the WpsClient has succesfully processed the execute-Method.
+     * 
+     * @param wpsRequest WpsRequest instance that contains all necessary informations to call a server
+     * @return The Answer from the called server
+     */
     public WpsResponse execute(final WpsRequest wpsRequest);
 }

@@ -19,12 +19,26 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 import java.util.Date;
 
 /**
- *
+ * Presentate the response of a wps server. Contains the full response in responseBody
+ * and the response Time. In addtion it contains possbile Exceptions at execute Time
+ * of the specific request.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsResponse {
+    /**
+     * Exception Object, can be null
+     */
     private Exception exception;
+    
+    /**
+     * Response time of the wps server
+     */
     private Date responseTime;
+    
+    /**
+     * Raw answer of the wps server
+     */
     private String responseBody;
 
     public WpsResponse(final Exception exception, final String responseBody, final Date responseTime) {
@@ -61,18 +75,38 @@ public class WpsResponse {
         return exception != null;
     }
     
+    /**
+     * Indicates if WpsException is occourred
+     * 
+     * @return true if WpsException happened
+     */
     public Boolean isWpsException() {
         return isException() && exception instanceof WpsException;
     }
     
+    /**
+     * Indicates if ConnectionException is occourred
+     * 
+     * @return true if ConnectionException happened
+     */
     public Boolean isConnectionException() {
         return isException() && exception instanceof WpsConnectionException;
     }
     
+    /**
+     * Indicates if an other Exceptions is occourred
+     * 
+     * @return true if other Exception type as WpsEception or ConnectionException happened
+     */
     public Boolean isOtherException() {
         return isException() && !(isWpsException() || isConnectionException());
     }
     
+    /**
+     * Returns the exception Message, if an exception occourred
+     * 
+     * @return The Exception Message
+     */
     public String getExceptionMessage() {
         String message = null;
         

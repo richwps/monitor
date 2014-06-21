@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class WpsProcessDaoFactory implements Factory<WpsProcessDataAccess> {
-
-    private final Factory<WpsProcessDataAccess> defaultFactory;
-
-    public WpsProcessDaoFactory(final Factory<WpsProcessDataAccess> defaultFactory) {
-        this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
-    }
+public class XmlPresentateStategy implements PresentateStrategy{
 
     @Override
-    public synchronized WpsProcessDataAccess create() throws CreateException {
-        return this.defaultFactory.create();
+    public String presentate(Object presentate) {
+        XStream xStream = new XStream(new DomDriver());
+        
+        return xStream.toXML(presentate);
     }
+    
 }

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
@@ -23,14 +23,16 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class QosDaoFactory {
-    private Factory<QosDataAccess> defaultFactory;
+public final class QosDaoFactory implements Factory<QosDataAccess> {
 
-    public synchronized QosDataAccess create() {
-        return defaultFactory.create();
-    }
+    private final Factory<QosDataAccess> defaultFactory;
 
     public QosDaoFactory(Factory<QosDataAccess> defaultFactory) {
         this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
+    }
+
+    @Override
+    public synchronized QosDataAccess create() throws CreateException {
+        return defaultFactory.create();
     }
 }

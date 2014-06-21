@@ -20,13 +20,28 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 
 /**
- *
+ * Contains all necessary data to call a Wps-Process.
+ * 
+ * @see WpsRequest
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessInfo {
+    /**
+     * URI of the WPS-Server
+     */
     private URI wpsUri;
+    
+    /**
+     * Identifier of the Process
+     */
     private String processIdentifier;
 
+    /**
+     * Constructor.
+     * 
+     * @param wpsUri URI of the WPS-Server
+     * @param processIdentifier Identifier of the Process
+     */
     public WpsProcessInfo(final URI wpsUri, final String processIdentifier) {
         this.wpsUri = Param.notNull(wpsUri, "wpsUri");
         this.processIdentifier = Param.notNull(processIdentifier, "processIdentifier");

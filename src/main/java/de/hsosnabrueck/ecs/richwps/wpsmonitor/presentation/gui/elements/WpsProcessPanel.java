@@ -23,14 +23,15 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -46,6 +47,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
 
+    private static Logger log = LogManager.getLogger();
+
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
         this(mainFrame, parent, wpsProcess, false);
     }
@@ -53,31 +56,31 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         this.parent = parent;
-        
+
         initComponents();
 
         this.wpsProcess = Param.notNull(wpsProcess, "wpsProcess");
         this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess, true);
-        
-        if(restored) {
+
+        if (restored) {
             triggerSaveState();
         } else {
             this.saved = false;
         }
-        
-        if(wpsProcess.isWpsException()) {
+
+        if (wpsProcess.isWpsException()) {
             indicateError();
         }
-        
+
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-        
+
         this.measuredDataDialog = new ShowMeasuredData(mainFrame, wpsProcess, true);
-        
+
         registerMonitoringPausedEvent();
     }
-    
+
     private void registerMonitoringPausedEvent() {
         try {
             mainFrame.getMonitorRef()
@@ -95,19 +98,27 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
                     });
         } catch (EventNotFound ex) {
-            Logger.getLogger(WpsMonitorGui.class.getName()).log(Level.SEVERE, null, ex);
+            log.warn(ex);
         }
     }
 
     private WpsResponse doTestRequest(String testRequest) {
-        WpsClient wpsClient = mainFrame.getMonitorRef()
-                .getBuilderInstance()
-                .buildWpsClient();
+        WpsResponse response = null;
 
-        WpsProcessInfo info = new WpsProcessInfo(wpsProcess.getWps().getUri(), wpsProcess.getIdentifier());
-        WpsRequest request = new WpsRequest(testRequest, info);
+        try {
+            WpsClient wpsClient = mainFrame.getMonitorRef()
+                    .getBuilderInstance()
+                    .buildWpsClient();
 
-        WpsResponse response = wpsClient.execute(request);
+            WpsProcessInfo info = new WpsProcessInfo(wpsProcess.getWps().getUri(), wpsProcess.getIdentifier());
+            WpsRequest request = new WpsRequest(testRequest, info);
+
+            response = wpsClient.execute(request);
+
+            return response;
+        } catch (CreateException ex) {
+            log.error(ex);
+        }
 
         return response;
     }
@@ -116,45 +127,48 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         WpsResponse response = doTestRequest(testRequest);
         int n = JOptionPane.YES_OPTION;
 
-        if (response.isConnectionException()) {
-            n = MessageDialogs.showQuestionDialog(mainFrame,
-                    "Not reachable",
-                    "The specified WPS is not reachable; do you want to proceed?");
-        }
+        if (response != null) {
 
-        if (response.isWpsException()) {
-            MessageDialogs.showError(mainFrame,
-                    "WPS Exception",
-                    "The testrequest proceed an Exception! "
-                            + "I will use the previous Version of the Testrequest."
-                            + "But, i will the old request shown after a restart. This give you a chance to edit the errornous Request. :)");
-            
-            n = JOptionPane.NO_OPTION;
-        }
+            if (response.isConnectionException()) {
+                n = MessageDialogs.showQuestionDialog(mainFrame,
+                        "Not reachable",
+                        "The specified WPS is not reachable; do you want to proceed?");
+            }
 
+            if (response.isWpsException()) {
+                MessageDialogs.showError(mainFrame,
+                        "WPS Exception",
+                        "The testrequest proceed an Exception! "
+                        + "I will use the previous Version of the Testrequest."
+                        + "But, i will the old request shown after a restart. This give you a chance to edit the errornous Request. :)");
+
+                n = JOptionPane.NO_OPTION;
+            }
+        }
+        
         return n == JOptionPane.YES_OPTION;
     }
 
     private void triggerSaveState() {
         this.saved = true;
 
-        saveProcessButton.setBackground(new Color(153,255,153));
+        saveProcessButton.setBackground(new Color(153, 255, 153));
         showJobsButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
     }
-    
+
     public void processMonitoringPaused(WpsProcessEntity process) {
-        if(wpsProcess.getIdentifier().equals(process.getIdentifier())) {
+        if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
         }
     }
-    
+
     public final void indicateError() {
-        this.setBackground(new Color(255,102,102));
+        this.setBackground(new Color(255, 102, 102));
     }
-    
+
     public final void clearError() {
-        this.setBackground(new Color(240,240,240));
+        this.setBackground(new Color(240, 240, 240));
     }
 
     /**
@@ -306,12 +320,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         String wpsIdentifier = wpsProcess.getWps().getIdentifier();
         String wpsProcessIdentifier = wpsProcess.getIdentifier();
         String testRequest = testRequestTextArea.getText();
-        
 
         if (evaluateTestRequest(testRequest)) {
             Boolean inserted = true;
             clearError();
-            
+
             if (!saved) {
                 inserted = mainFrame.getMonitorRef()
                         .getMonitorControl()
@@ -323,8 +336,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         .getMonitorControl()
                         .setTestRequest(wpsIdentifier, wpsProcessIdentifier, testRequest);
             }
-            
-            if(wpsProcess.isWpsException()) {
+
+            if (wpsProcess.isWpsException()) {
                 mainFrame.getMonitorRef()
                         .getMonitorControl()
                         .resumeMonitoring(wpsIdentifier, wpsProcessIdentifier);
@@ -337,16 +350,16 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         "Error",
                         "Can't register Process to this WPS. Maybe the Process is already registred.");
             }
-        } 
+        }
     }//GEN-LAST:event_saveProcessButtonActionPerformed
 
     private void deleteProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
-        if(saved) {
+        if (saved) {
             mainFrame.getMonitorRef()
                     .getMonitorControl()
                     .deleteProcess(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
         }
-        
+
         parent.remove(this);
         parent.revalidate();
         parent.repaint();

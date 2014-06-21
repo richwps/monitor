@@ -20,9 +20,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -36,12 +37,14 @@ import org.quartz.spi.TriggerFiredBundle;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobFactory implements JobFactory {
-    
+
     private final ProbeService probeService;
     private final WpsClientFactory wpsClientFactory;
     private WpsProcessDataAccess processDao;
     private QosDaoFactory qosDaoFactory;
     
+    private final static Logger log = LogManager.getLogger();
+
     public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao, final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
         this.probeService = Param.notNull(probeService, "probeService");
         this.processDao = Param.notNull(processDao, "processDao");
@@ -51,34 +54,36 @@ public class MeasureJobFactory implements JobFactory {
 
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
-        Job job = null;
+        Job job;
         JobDetail jobDetail = bundle.getJobDetail();
 
-        try {
-            if (jobDetail.getJobClass().equals(MeasureJob.class)) {
-                // create new MeasureJob
-                job = createNewMeasureJob(jobDetail.getKey().getName(), jobDetail.getKey().getGroup());
-            } else {
-                // fallback to default instantiation of quartz
-                job = new SimpleJobFactory().newJob(bundle, scheduler);
-            }
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MeasureJobFactory.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(MeasureJobFactory.class.getName()).log(Level.SEVERE, null, ex);
+        if (jobDetail.getJobClass().equals(MeasureJob.class)) {
+            // create new MeasureJob
+            job = createNewMeasureJob(jobDetail.getKey().getName(), jobDetail.getKey().getGroup());
+        } else {
+            // fallback to default instantiation of quartz
+            job = new SimpleJobFactory().newJob(bundle, scheduler);
         }
 
         return job;
     }
 
-    private Job createNewMeasureJob(String processAsJobName, String wpsAsGroupName) throws InstantiationException, IllegalAccessException {
-        // jobs are eventually threads - 
-        // EntityManager and Dao's are not Thread save! So give them an own EntityManager
-        QosDataAccess dao = qosDaoFactory.create();
+    private Job createNewMeasureJob(String processAsJobName, String wpsAsGroupName) {
+        Job measureJob = null;
         
-        // for which WpsProcessEntity will this process created?
-        WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
-
-        return new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
+        try {
+            // jobs are eventually threads -
+            // EntityManager and Dao's are not Thread save! So give them an own EntityManager
+            QosDataAccess dao = qosDaoFactory.create();
+            
+            // for which WpsProcessEntity will this process created?
+            WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
+            
+            measureJob = new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
+        } catch (CreateException ex) {
+            log.fatal(ex);
+        }
+        
+        return measureJob;
     }
 }

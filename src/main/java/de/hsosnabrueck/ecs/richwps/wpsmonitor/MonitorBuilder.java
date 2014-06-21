@@ -29,6 +29,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDao
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
@@ -36,6 +37,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
@@ -186,19 +189,19 @@ public class MonitorBuilder {
         );
     }
     
-    public WpsDataAccess buildWpsDataAccess() {
+    public WpsDataAccess buildWpsDataAccess() throws CreateException {
         return wpsDaoFactory.create();
     }
     
-    public WpsClient buildWpsClient() {
+    public WpsClient buildWpsClient() throws CreateException {
         return wpsClientFactory.create();
     }
     
-    public WpsProcessDataAccess buildWpsProcessDataAccess() {
+    public WpsProcessDataAccess buildWpsProcessDataAccess() throws CreateException {
         return wpsProcessDaoFactory.create();
     }
     
-    public QosDataAccess buildQosDataAccess() {
+    public QosDataAccess buildQosDataAccess() throws CreateException {
         return qosDaoFactory.create();
     }
     
@@ -206,28 +209,39 @@ public class MonitorBuilder {
         return new MonitorEventHandler();
     }
     
-    public Scheduler buildScheduler() throws SchedulerException {
+    public Scheduler buildScheduler() throws SchedulerException, CreateException {
         return setupSchedulerFactory().create();
     }
     
-    public SchedulerControl buildSchedulerControl() throws SchedulerException {
+    public SchedulerControl buildSchedulerControl() throws SchedulerException, CreateException {
         return new SchedulerControl(buildScheduler());
     }
     
-    public Monitor build() throws SchedulerException {
-        if(!isValid()) {
-            setupDefault();
+    public Monitor build() throws Exception{
+        
+        Monitor builded = null;
+        
+        try {
+            if(!isValid()) {
+                setupDefault();
+            }
+            
+            setupEventHandler();
+            
+            MonitorControl monitorControl = new MonitorControl(buildSchedulerControl(),
+                    qosDaoFactory,
+                    wpsDaoFactory,
+                    wpsProcessDaoFactory
+            );
+            
+            builded = new Monitor(monitorControl, this);
+        } catch (CreateException ex) {
+            throw new Exception(ex);
+        } catch (SchedulerException ex) {
+            throw new Exception(ex);
         }
         
-        setupEventHandler();
-        
-        MonitorControl monitorControl = new MonitorControl(buildSchedulerControl(), 
-                qosDaoFactory, 
-                wpsDaoFactory, 
-                wpsProcessDaoFactory        
-        );
-        
-        return new Monitor(monitorControl, this);
+        return builded;
     }
     
     private void setupEventHandler() {

@@ -16,10 +16,13 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -27,6 +30,7 @@ import java.util.List;
  */
 public class ProbeService {
     private List<Factory<QosProbe>> probeFactories;
+    private final static Logger log = LogManager.getLogger();
     
     public ProbeService() {
         probeFactories = new ArrayList<Factory<QosProbe>>();
@@ -46,7 +50,11 @@ public class ProbeService {
         List<QosProbe> factoredObjects = new ArrayList<QosProbe>();
         
         for(Factory<QosProbe> probeFactory : probeFactories) {
-            factoredObjects.add(probeFactory.create());
+            try {
+                factoredObjects.add(probeFactory.create());
+            } catch (CreateException ex) {
+                log.warn(ex);
+            }
         }
         
         return factoredObjects;
