@@ -30,8 +30,7 @@ import javax.persistence.EntityManager;
  */
 public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
 
-    public WpsDao(EntityManager em) {
-        super(em);
+    public WpsDao() {
     }
     
     @Override

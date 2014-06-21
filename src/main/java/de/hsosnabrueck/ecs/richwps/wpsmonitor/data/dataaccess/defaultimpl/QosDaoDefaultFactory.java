@@ -18,7 +18,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -28,8 +27,6 @@ public class QosDaoDefaultFactory implements Factory<QosDataAccess> {
 
     @Override
     public QosDataAccess create() {
-        EntityManager em = ConfiguredEntityManagerFactory.createEntityManager();
-        
-        return new QosDao(em);
+        return new QosDao();
     }
 }

@@ -25,9 +25,17 @@ import javax.persistence.Persistence;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class ConfiguredEntityManagerFactory {
-    private static String PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
-
+    private static String PERSISTENCE_UNIT;
+    private static final EntityManagerFactory emf;
+    
+    private static ThreadLocal<EntityManager> entityStorage;
+    
+    static {
+        PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
+        emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+        entityStorage = new ThreadLocal<EntityManager>();
+    }
+    
     private final Object finalizerGuardian = new Object() {
         @Override
         protected void finalize() throws Throwable {
@@ -54,6 +62,17 @@ public abstract class ConfiguredEntityManagerFactory {
         }
     }
 
+    public static EntityManager getThreadEntityManager() {
+        EntityManager em = entityStorage.get();
+        
+        if(em == null || !em.isOpen()) {
+            em = createEntityManager();
+            entityStorage.set(em);
+        }
+        
+        return em;
+    }
+    
     public static EntityManager createEntityManager() {
         return emf.createEntityManager();
     }

@@ -22,7 +22,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -30,8 +29,7 @@ import javax.persistence.EntityManager;
  */
 public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implements WpsProcessDataAccess {
 
-    public WpsProcessDao(EntityManager em) {
-        super(em);
+    public WpsProcessDao() {
     }
     
     @Override
@@ -45,7 +43,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
     @Override
     public WpsProcessEntity find(final Object primaryKey) {
-        return em.find(WpsProcessEntity.class, Param.notNull(primaryKey, "primaryKey"));
+        return getEntityManager().find(WpsProcessEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override

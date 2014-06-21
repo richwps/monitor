@@ -18,7 +18,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -28,9 +27,7 @@ public class WpsProcessDaoDefaultFactory implements Factory<WpsProcessDataAccess
 
     @Override
     public WpsProcessDataAccess create() {
-        EntityManager em = ConfiguredEntityManagerFactory.createEntityManager();
-        
-        return new WpsProcessDao(em);
+        return new WpsProcessDao();
     }
     
 }

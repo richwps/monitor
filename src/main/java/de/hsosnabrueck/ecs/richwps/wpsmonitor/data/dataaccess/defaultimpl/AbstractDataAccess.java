@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityExistsException;
@@ -32,22 +31,27 @@ import org.apache.logging.log4j.Logger;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class AbstractDataAccess<T> {
-
-    protected EntityManager em;
+    protected Boolean autoCommit;
     private final static Logger log = LogManager.getLogger();
 
-    public AbstractDataAccess(EntityManager em) {
-        this.em = Param.notNull(em, "EntityManager em");
+    public AbstractDataAccess() {
+        this.autoCommit = true;
+    }
+    
+    protected EntityManager getEntityManager() {
+        return ConfiguredEntityManagerFactory
+                .getThreadEntityManager();
     }
 
     public Boolean persist(T o) {
-        Boolean result;
+        Boolean result = true;
         beginTransaction();
 
         try {
-            em.persist(o);
+            getEntityManager()
+                    .persist(o);
             
-            result = commit();
+            requestCommit();
         } catch (EntityExistsException e) {
             log.debug(e);
             
@@ -60,25 +64,37 @@ public abstract class AbstractDataAccess<T> {
 
     public T update(T t) {
         beginTransaction();
-        T merged = em.merge(t);
-        commit();
+        T merged = getEntityManager()
+                .merge(t);
+        
+        requestCommit();
 
         return merged;
     }
 
     public void remove(final T o) {
         beginTransaction();
-        em.remove(o);
-        commit();
+        getEntityManager()
+                .remove(o);
+        
+        requestCommit();
     }
 
     protected void beginTransaction() {
-        em.getTransaction().begin();
+        if(!getEntityManager().getTransaction().isActive()) {
+            getEntityManager()
+                    .getTransaction()
+                    .begin();
+        }
     }
 
-    protected Boolean commit() {
+    public Boolean commit() {
         try {
-            em.getTransaction().commit();
+            if(getEntityManager().getTransaction().isActive()) {
+                getEntityManager()
+                        .getTransaction()
+                        .commit();
+            }
         } catch(Exception ex) {
             log.debug(ex);
             
@@ -88,14 +104,24 @@ public abstract class AbstractDataAccess<T> {
         return true;
     }
     
-    protected void rollback() {
-        em.getTransaction().rollback();
-    }
-
-    public void close() {
-        if (em.isOpen()) {
-            em.close();
+    protected Boolean requestCommit() {
+        if(autoCommit) {
+            return commit();
         }
+        
+        return null;
+    }
+    
+    public void rollback() {
+        if(getEntityManager().getTransaction().isActive()) {
+            getEntityManager()
+                    .getTransaction()
+                    .rollback();
+        }
+    }
+    
+    public void setAutoCommit(Boolean value) {
+        autoCommit = value;
     }
 
     protected List<T> getBy(final String queryName, final Class c) {
@@ -117,7 +143,7 @@ public abstract class AbstractDataAccess<T> {
 
         List<T> result = null;
 
-        TypedQuery<T> query = em
+        TypedQuery<T> query = getEntityManager()
                 .createNamedQuery(namedQueryIdentifier, typeClass);
 
         assignParameters(query, parameters);
@@ -144,13 +170,13 @@ public abstract class AbstractDataAccess<T> {
     protected Integer doNamedQuery(final String namedQueryIdentifier, final Map<String, Object> parameters) {
         beginTransaction();
 
-        Query query = em
+        Query query = getEntityManager()
                 .createNamedQuery(namedQueryIdentifier);
 
         assignParameters(query, parameters);
 
         Integer affectedRows = query.executeUpdate();
-        commit();
+        requestCommit();
         
         return affectedRows;
     }

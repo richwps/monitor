@@ -30,13 +30,12 @@ import javax.persistence.EntityManager;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
-    public QosDao(EntityManager em) {
-        super(em);
+    public QosDao() {
     }
     
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {
-        return em.find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));
+        return getEntityManager().find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));
     }
 
     @Override

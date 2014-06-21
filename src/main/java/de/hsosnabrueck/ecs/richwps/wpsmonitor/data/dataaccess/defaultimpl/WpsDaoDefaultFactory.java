@@ -28,8 +28,6 @@ public class WpsDaoDefaultFactory implements Factory<WpsDataAccess> {
 
     @Override
     public WpsDataAccess create() {
-        EntityManager em = ConfiguredEntityManagerFactory.createEntityManager();
-        
-        return new WpsDao(em);
+        return new WpsDao();
     }
 }
