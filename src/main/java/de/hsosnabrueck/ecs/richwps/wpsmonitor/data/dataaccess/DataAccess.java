@@ -22,12 +22,13 @@ import java.util.List;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface DataAccess<T> extends AutoCloseable {
+public interface DataAccess<T> {
     public T find(Object primaryKey);
     public Boolean persist(T entityObject);
     public T update(T entityObject);
     public void remove(final T o);
     public List<T> get(final Range range);
-    @Override
-    public void close();
+    public Boolean commit();
+    public void rollback();
+    public void setAutoCommit(Boolean value);
 }
