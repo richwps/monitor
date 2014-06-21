@@ -121,11 +121,7 @@ public class MonitorControl implements MonitorFacade {
             result = wpsDao.persist(wps);
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if(wpsDao != null) {
-                wpsDao.close();
-            }
-        }
+        } 
 
         return result;
     }
@@ -156,15 +152,7 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if(wpsDao != null) {
-                wpsDao.close();
-            }
-
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
+        } 
 
         return false;
     }
@@ -188,10 +176,6 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if(wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
         }
 
         return exists;
@@ -213,11 +197,7 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
-        }
+        } 
 
         return updateable;
     }
@@ -249,15 +229,7 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
-
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
+        } 
 
         return deleteable;
     }
@@ -279,12 +251,8 @@ public class MonitorControl implements MonitorFacade {
             }
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
-
+        } 
+        
         return deleteable;
     }
 
@@ -298,12 +266,8 @@ public class MonitorControl implements MonitorFacade {
             wpsList = wpsDao.getAll();
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
-        }
-
+        } 
+        
         return wpsList;
     }
 
@@ -317,12 +281,8 @@ public class MonitorControl implements MonitorFacade {
             processes = wpsProcessDao.getAll(Param.notNull(identifier, "identifier"));
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
-
+        } 
+        
         return processes;
     }
 
@@ -345,12 +305,8 @@ public class MonitorControl implements MonitorFacade {
             );
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (qosDao != null) {
-                qosDao.close();
-            }
         }
-
+        
         return measuredData;
     }
 
@@ -422,11 +378,7 @@ public class MonitorControl implements MonitorFacade {
             log.warn("MonitorControl: {}", ex);
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
+        } 
 
         return false;
     }
@@ -454,11 +406,6 @@ public class MonitorControl implements MonitorFacade {
             log.warn("MonitorControl: {}", ex);
         } catch (CreateException ex) {
             log.error(ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
-        }
-
+        } 
     }
 }
