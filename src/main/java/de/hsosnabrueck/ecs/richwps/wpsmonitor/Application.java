@@ -15,6 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.ConfiguredEntityManagerFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.HttpOperation;
@@ -36,11 +39,9 @@ import org.quartz.SchedulerException;
 public class Application {
     private final static Logger log = LogManager.getLogger();
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try {            
             new Application().run();
-        } catch (SchedulerException ex) {
-            log.fatal(ex);
         } catch (Exception ex) {
             log.fatal(ex);
         }
@@ -53,7 +54,15 @@ public class Application {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
+        
+        // register JPA Shutdown thinks
+        monitor.getEventHandler().registerListener("monitor.shutdown", new MonitorEventListener() {
 
+            @Override
+            public void execute(MonitorEvent event) {
+                ConfiguredEntityManagerFactory.close();
+            }
+        });
         // register default QoS-Probes
         monitor.getProbeService().addProbe(new ResponseFactory());
 

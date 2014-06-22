@@ -16,6 +16,10 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,11 +33,13 @@ public abstract class ConfiguredEntityManagerFactory {
     private static final EntityManagerFactory emf;
     
     private static ThreadLocal<EntityManager> entityStorage;
+    private static List<EntityManager> entityManagerList;
     
     static {
         PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
         emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
         entityStorage = new ThreadLocal<EntityManager>();
+        entityManagerList = new ArrayList<EntityManager>();
     }
     
     private final Object finalizerGuardian = new Object() {
@@ -48,6 +54,12 @@ public abstract class ConfiguredEntityManagerFactory {
     };
     
     public static void close() {
+        for(EntityManager e : entityManagerList) {
+            if(e.isOpen()) {
+                e.close();
+            }
+        }
+        
         if(emf.isOpen()) {
             emf.close();
         }
@@ -68,6 +80,7 @@ public abstract class ConfiguredEntityManagerFactory {
         if(em == null || !em.isOpen()) {
             em = createEntityManager();
             entityStorage.set(em);
+            entityManagerList.add(em);
         }
         
         return em;

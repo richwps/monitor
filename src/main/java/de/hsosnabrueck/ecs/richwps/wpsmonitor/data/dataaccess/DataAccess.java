@@ -22,20 +22,20 @@ import java.util.List;
  * Primary Interface for DataAccess-Objects
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
- * @param <T> Type of Entity which should the dataaccess implementation take care
+ * @param <T> Type of Entity which the dataaccess implementation should take care of
  */
 public interface DataAccess<T> {
     /**
-     * Trys to find an Object in the Database with the given PrimaryKey.
+     * Tries to find an Object in the Database with the given primary key.
      * Otherwhise null will be returned.
      * 
-     * @param primaryKey The Primarykey of the Object. Typically a Long value.
-     * @return The Object that match the given primarykey. Otherwise null will be returned if no result is founded.
+     * @param primaryKey The primary key of the Object. Typically a Long value.
+     * @return The Object that match the given primarykey. Otherwise null is returned if no result is found.
      */
     public T find(Object primaryKey);
     
     /**
-     * Trys to persist the given object.
+     * Tries to persist the given object.
      * 
      * @param entityObject Entity instance
      * @return True if the object is sucessfully persisted, otherwise false will be returned
@@ -58,10 +58,10 @@ public interface DataAccess<T> {
     public void remove(final T o);
     
     /**
-     * Selects all Elements in range of range of [offset, count]
+     * Selects all elements in the given range [offset, count]
      * @see Range
      * @param range Range instance
-     * @return All founded elements, otherwise null or a empty list
+     * @return All found elements, otherwise null or an empty list
      */
     public List<T> get(final Range range);
     
@@ -70,7 +70,7 @@ public interface DataAccess<T> {
      * If an exception occours, then commit will return false. An Exception
      * can occour if a primary key violation is happened or something else
      * 
-     * @return false if an exception is happened.
+     * @return If an exception has been thrown
      */
     public Boolean commit();
     
@@ -80,9 +80,9 @@ public interface DataAccess<T> {
     public void rollback();
     
     /**
-     * Per default, alle actions will be autocommited. 
+     * By default all actions will be autocommited.
      * 
-     * @param value false for deactivate autocommit, otherwise true
+     * @param value false to deactivate autocommit, otherwise true
      */
     public void setAutoCommit(Boolean value);
 }

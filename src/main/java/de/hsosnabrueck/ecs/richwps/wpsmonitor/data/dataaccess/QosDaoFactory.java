@@ -20,13 +20,19 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
- *
+ * Factory for QosDataAccess-Objects.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public final class QosDaoFactory implements Factory<QosDataAccess> {
 
     private final Factory<QosDataAccess> defaultFactory;
 
+    /**
+     * Constructor.
+     * 
+     * @param defaultFactory Default Factory-instance
+     */
     public QosDaoFactory(Factory<QosDataAccess> defaultFactory) {
         this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
     }

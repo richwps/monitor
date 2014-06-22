@@ -41,12 +41,25 @@ public class WpsResponse {
      */
     private String responseBody;
 
+    /**
+     * Constructor.
+     * 
+     * @param exception Exception Object, if an exception happened
+     * @param responseBody The Response of wps server whitout header
+     * @param responseTime The Response-Time
+     */
     public WpsResponse(final Exception exception, final String responseBody, final Date responseTime) {
         this.exception = exception;
         this.responseBody = responseBody;
         this.responseTime = responseTime;
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param responseBody The Response of wps server whitout header
+     * @param responseTime The Response-Time
+     */
     public WpsResponse(final String responseBody, final Date responseTime) {
         this(null, responseBody, responseTime);
     }

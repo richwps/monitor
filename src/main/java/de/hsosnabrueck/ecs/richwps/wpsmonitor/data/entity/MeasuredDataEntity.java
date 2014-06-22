@@ -74,6 +74,10 @@ public class MeasuredDataEntity implements Serializable {
         this.createTime = new Date();
     }
 
+    public boolean add(AbstractQosEntity e) {
+        return data.add(e);
+    }
+
     public Long getId() {
         return id;
     }

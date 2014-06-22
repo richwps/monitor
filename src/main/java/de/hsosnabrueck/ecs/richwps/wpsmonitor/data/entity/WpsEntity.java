@@ -41,7 +41,7 @@ public class WpsEntity implements Serializable {
     
     @Column(unique = true)
     private String identifier;
-    
+
     private URI route;
 
     public WpsEntity() {

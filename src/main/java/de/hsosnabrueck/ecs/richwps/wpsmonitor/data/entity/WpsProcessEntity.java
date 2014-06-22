@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,7 +22,7 @@ import javax.persistence.Version;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
 @NamedQueries({
@@ -30,6 +31,10 @@ import javax.persistence.Version;
     @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier"),
     @NamedQuery(name = "wpsprocess.deleteAllFromWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier")
 })
+
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"identifier", "wps_id"})
+)
 public class WpsProcessEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Version
@@ -46,6 +51,7 @@ public class WpsProcessEntity implements Serializable {
     
 
     @OneToOne
+    @JoinColumn(name = "wps_id")
     private WpsEntity wps;
 
     public WpsProcessEntity() {

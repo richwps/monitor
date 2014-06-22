@@ -17,7 +17,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
 /**
- *
+ * Exception which will be thrown if the given Response was not an valid 
+ * WPS-Server respond. (e.g. wrong format; xml excepted)
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class NoWpsResponse extends Exception{

@@ -20,12 +20,49 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import java.util.List;
 
 /**
- *
+ * QosDataAccess supports access to MeasuredDataEntity-Objects.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface QosDataAccess extends DataAccess<MeasuredDataEntity>  {
+    /**
+     * Get all MeasuredDataEntity-Objects that matches the given 
+     * (wpsIdentifier, processIdentifier) combination
+     * 
+     * @param wpsIdentifier Wps Entity identifier
+     * @param processIdentifier Process Entity identifier
+     * @return List of MeasuredDataEntity-Objects; null if no result found
+     */
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier);
-    public List<MeasuredDataEntity> getByWps(final String identifier);
+    
+    /**
+     * Get all MeasuredDataEntity-Objects that matches the given 
+     * wpsIdentifier
+     * 
+     * @param wpsIdentifier Wps Entity identifier
+     * @return List of MeasuredDataEntity-Objects
+     */
+    public List<MeasuredDataEntity> getByWps(final String wpsIdentifier);
+    
+    /**
+     * Get all MeasuredDataEntity-Objects in the specific range which is described
+     * by the given range object.
+     * 
+     * @param wpsIdentifier Wps Entity identifier
+     * @param processIdentifier Process Entity identifier
+     * @param range Range Instance
+     * @return List of MeasuredDataEntity-Objects
+     */
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range);
+    
+    /**
+     * Get all MeasuredDataEntity-Objects that matches the given 
+     * wpsIdentifier in the specific range which is described
+     * by the given range object.
+     * 
+     * @param identifier Wps Entity Identifier
+     * @param range Range Instance
+     * @return List of MeasuredDataEntity-Objects
+     */
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range);
 }
