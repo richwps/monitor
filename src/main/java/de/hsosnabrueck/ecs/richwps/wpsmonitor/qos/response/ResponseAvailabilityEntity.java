@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -23,12 +22,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseAvailabilityEntity extends AbstractQosEntity {
+
     private Integer responseTime;
 
     public ResponseAvailabilityEntity() {
         responseTime = null;
     }
-    
+
     @Override
     public String getEntityName() {
         return "ResponseAvailabilityEntity";
@@ -46,7 +46,7 @@ public class ResponseAvailabilityEntity extends AbstractQosEntity {
     public void setResponseTime(Integer responseTime) {
         this.responseTime = responseTime;
     }
-    
+
     public Boolean wasAvailable() {
         return responseTime != null;
     }

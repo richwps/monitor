@@ -29,16 +29,34 @@ import org.quartz.JobListener;
 import org.quartz.SchedulerException;
 
 /**
+ * Evaluates if a job cant measure because of an exception. In addition the
+ * listener fire its own event over the MonitorEventHandler:
+ * scheduler.job.wasexecuted with the process entity as message if an job was
+ * executed and scheduler.job.paused with the process entity as message if 
+ * a job cant measure a wps process.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobListener implements JobListener {
 
+    /**
+     * WpsProcessDataAccess instance
+     */
     private final WpsProcessDataAccess dao;
-    private final MonitorEventHandler eventHandler;
     
+    /**
+     * MonitorEventHandler instance
+     */
+    private final MonitorEventHandler eventHandler;
+
     private final static Logger log = LogManager.getLogger();
 
+    /**
+     * Constructor.
+     * 
+     * @param dao WpsProcessDataAccess instance
+     * @param eventHandler MonitorEventHandler instance
+     */
     public MeasureJobListener(final WpsProcessDataAccess dao, final MonitorEventHandler eventHandler) {
         this.dao = dao;
         this.eventHandler = eventHandler;
@@ -72,23 +90,23 @@ public class MeasureJobListener implements JobListener {
 
             WpsProcessEntity process = specificJob.getProcessEntity();
             JobKey jobKey = JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier());
-            
+
             log.debug("MeasureJobListener: Fire job was executed Event!");
             eventHandler.fireEvent(new MonitorEvent("scheduler.job.wasexecuted", process));
-            
+
             if (specificJob.cantMeasure()) {
-                
+
                 // markiere & persistiere, dass ein problem aufgetreten ist
                 process.setWpsException(true);
                 dao.update(process);
-                
+
                 log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
                         + " try to pause this job.", process);
-                
+
                 try {
                     // pause job if an error is triggered
                     context.getScheduler().pauseJob(jobKey);
-                    eventHandler.fireEvent(new MonitorEvent("scheduler.job.paused",process));
+                    eventHandler.fireEvent(new MonitorEvent("scheduler.job.paused", process));
                 } catch (SchedulerException ex) {
                     log.error(ex);
                 }

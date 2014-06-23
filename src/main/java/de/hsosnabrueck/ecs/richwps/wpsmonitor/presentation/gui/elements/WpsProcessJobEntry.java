@@ -46,25 +46,24 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
 
         initComboBox();
-        
-        if(triggerConfig != null) {
+
+        if (triggerConfig != null) {
             initWithTriggerConfig(triggerConfig);
         }
-        
+
         this.mainFrame = mainFrame;
         this.wpsProcess = wpsProcess;
         this.parent = parent;
-        
-        
+
     }
-    
+
     private void initWithTriggerConfig(TriggerConfig triggerConfig) {
         this.startDate.setDate(triggerConfig.getStart());
         this.endDate.setDate(triggerConfig.getEnd());
         this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
         this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
         this.intervalField.setText(triggerConfig.getInterval().toString());
-        
+
         this.triggerKey = triggerConfig.getTriggerKey();
     }
 
@@ -170,29 +169,28 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             try {
                 Integer interval = Integer.parseInt(intervalValue);
 
-                TriggerConfig tConfig = new TriggerConfig(startDate.getDate(), 
-                        endDate.getDate(), 
-                        interval, 
-                        selectedItem.getFormatKey(), 
+                TriggerConfig tConfig = new TriggerConfig(startDate.getDate(),
+                        endDate.getDate(),
+                        interval,
+                        selectedItem.getFormatKey(),
                         triggerKey
                 );
-                
-                
+
                 TriggerKey newTrigger = mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .saveTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
 
                 if (newTrigger == null) {
-                    MessageDialogs.showError(mainFrame, 
-                            "Error", 
+                    MessageDialogs.showError(mainFrame,
+                            "Error",
                             "Job was not created. Is Scheduler started? See the logs."
                     );
                 } else {
                     this.triggerKey = newTrigger;
                 }
             } catch (NumberFormatException ex) {
-                MessageDialogs.showError(mainFrame, 
-                        "Invalid Number Format", 
+                MessageDialogs.showError(mainFrame,
+                        "Invalid Number Format",
                         "\"" + intervalValue + "\" is not a valid Number format."
                 );
             }

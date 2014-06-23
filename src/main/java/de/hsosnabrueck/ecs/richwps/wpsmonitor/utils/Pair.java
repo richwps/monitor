@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 /**
@@ -21,18 +20,19 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Pair<A, B> {
+
     private final A a;
     private final B b;
-    
+
     public Pair(final A left, final B right) {
         this.a = Param.notNull(left, "left");
         this.b = Param.notNull(right, "right");
     }
-    
+
     public A getLeft() {
         return a;
     }
-    
+
     public B getRight() {
         return b;
     }

@@ -145,7 +145,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                 n = JOptionPane.NO_OPTION;
             }
         }
-        
+
         return n == JOptionPane.YES_OPTION;
     }
 

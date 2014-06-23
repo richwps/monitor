@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
@@ -27,20 +26,20 @@ import javax.swing.JPanel;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
-    private WpsMonitorGui monitorMainFrame;
-    private WpsEntity wps;
-    
+
+    private final WpsMonitorGui monitorMainFrame;
+    private final WpsEntity wps;
 
     public WpsProcessDialog(WpsMonitorGui monitorMainFrame, WpsEntity wps, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
-        
+
         setLocationRelativeTo(monitorMainFrame);
-        
+
         this.wps = wps;
         this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
     }
-    
+
     private Boolean isNotEmptyProcessName() {
         return !processIdentifierInput.getText().trim().equalsIgnoreCase("");
     }
@@ -158,16 +157,16 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createNewProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewProcessButtonActionPerformed
-        if(isNotEmptyProcessName()) {
+        if (isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
-            
+
             WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
             WpsProcessPanel processPanel = new WpsProcessPanel(monitorMainFrame, addProcessPane, wpsProcessEntity);
 
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");
 
-            addProcessPane.revalidate(); 
+            addProcessPane.revalidate();
         }
     }//GEN-LAST:event_createNewProcessButtonActionPerformed
 

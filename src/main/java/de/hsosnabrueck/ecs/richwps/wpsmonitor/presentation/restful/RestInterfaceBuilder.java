@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
@@ -29,6 +28,7 @@ import java.util.Map;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RestInterfaceBuilder {
+
     private PresentateStrategy strategy;
     private MonitorControl monitorControl;
     private Map<String, ConverterFactory> converterMap;
@@ -36,29 +36,29 @@ public class RestInterfaceBuilder {
     public RestInterfaceBuilder() {
         this.converterMap = new HashMap<String, ConverterFactory>();
     }
-    
+
     public RestInterfaceBuilder withStrategy(final PresentateStrategy strategy) {
         this.strategy = Param.notNull(strategy, "strategy");
-        
+
         return this;
     }
-    
+
     public RestInterfaceBuilder withMonitorControl(final MonitorControl monitorControl) {
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
-        
+
         return this;
     }
-    
+
     public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final ConverterFactory converterFactory) {
         converterMap.put(Param.notNull(abstractQosEntityName, "abstractQosEntityName"), Param.notNull(converterFactory, "converterFactory"));
-        
+
         return this;
     }
-    
+
     public RestInterface build() {
         DispatcherFactory dispatchFactory = new DispatcherFactory(converterMap);
         RestInterface rest = new RestInterface(strategy, monitorControl, dispatchFactory);
-        
+
         return rest;
     }
 }

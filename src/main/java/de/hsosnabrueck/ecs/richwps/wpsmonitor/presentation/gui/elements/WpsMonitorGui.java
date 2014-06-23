@@ -31,24 +31,25 @@ import javax.swing.JTextField;
  */
 public class WpsMonitorGui extends javax.swing.JFrame {
 
-    private Monitor monitor;
+    private final Monitor monitor;
 
     /**
      * Creates new form WpsMonitorControl
+     *
      * @param monitor
      */
     public WpsMonitorGui(final Monitor monitor) {
         this.monitor = Param.notNull(monitor, "monitor");
-        
+
         initComponents();
         setLocationRelativeTo(null);
     }
 
     private Boolean isCreateFieldsNotEmpty() {
-        return !(wpsToAddField.getText().trim().equalsIgnoreCase("") 
+        return !(wpsToAddField.getText().trim().equalsIgnoreCase("")
                 || wpsToAddUriField.getText().trim().equalsIgnoreCase(""));
     }
-    
+
     public JTextField getWpsToAddField() {
         return wpsToAddField;
     }
@@ -232,15 +233,15 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                         getWpsToAddUriField().getText()
                 );
 
-                if (monitor.getMonitorControl().createWps(wps.getIdentifier(), wps.getUri())) {                  
+                if (monitor.getMonitorControl().createWps(wps.getIdentifier(), wps.getUri())) {
                     resetAddWpsFields();
-                    
+
                     JPanel wpsPanel = new WpsPanel(this, wpsAddPanel, wps);
                     wpsAddPanel.add(wpsPanel, BorderLayout.PAGE_START);
                     wpsAddPanel.revalidate();
                 } else {
-                    MessageDialogs.showError(this, 
-                            "Error", 
+                    MessageDialogs.showError(this,
+                            "Error",
                             "Can't register Wps. Maybe the Wps is already registred."
                     );
                 }
@@ -250,16 +251,16 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 showUriConvertError();
             }
         } else {
-            MessageDialogs.showError(this, 
-                    "Error", 
+            MessageDialogs.showError(this,
+                    "Error",
                     "One of the fields is empty!"
             );
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
 
     private void showUriConvertError() {
-        MessageDialogs.showError(this, 
-                "Error", 
+        MessageDialogs.showError(this,
+                "Error",
                 "The entered URI is not valid!"
         );
     }

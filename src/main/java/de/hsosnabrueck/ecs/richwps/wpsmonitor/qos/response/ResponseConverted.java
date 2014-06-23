@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 /**
@@ -21,6 +20,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseConverted {
+
     private Integer best;
     private Integer worst;
     private Integer average;
@@ -36,8 +36,6 @@ public class ResponseConverted {
         this.availability = availability;
     }
 
-    
-    
     public Integer getBest() {
         return best;
     }
@@ -61,5 +59,5 @@ public class ResponseConverted {
     public void setAverage(Integer average) {
         this.average = average;
     }
-    
+
 }

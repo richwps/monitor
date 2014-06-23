@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import com.thoughtworks.xstream.XStream;
@@ -23,13 +22,13 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class XmlPresentateStategy implements PresentateStrategy{
+public class XmlPresentateStategy implements PresentateStrategy {
 
     @Override
     public String presentate(Object presentate) {
         XStream xStream = new XStream(new DomDriver());
-        
+
         return xStream.toXML(presentate);
     }
-    
+
 }

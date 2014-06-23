@@ -30,11 +30,12 @@ import spark.Response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListMeasurementRoute extends MonitorRoute {
+
     public static final Logger log = LogManager.getLogger();
-    
+
     public ListMeasurementRoute() {
         super("/measurement/wps/:wps/process/:process/count/:count");
-        
+
         log.debug("ListMeasurementRoute instantiated");
     }
 
@@ -44,14 +45,14 @@ public class ListMeasurementRoute extends MonitorRoute {
             String wpsIdentifier = Param.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Param.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
-            
+
             List<MeasuredDataEntity> measuredData = getMonitorControl()
                     .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
-            
-            log.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}", 
+
+            log.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}",
                     wpsIdentifier, processIdentifier, count
             );
-            
+
             return getStrategy().presentate(getDispatch().dispatch(measuredData));
         } catch (IllegalArgumentException exception) {
             response.status(404);
@@ -62,7 +63,7 @@ public class ListMeasurementRoute extends MonitorRoute {
 
     private Range getRange(String countValue) {
         Range range = null;
-        
+
         if (countValue != null) {
             try {
                 Integer countInt = Integer.parseInt(countValue);
@@ -71,7 +72,7 @@ public class ListMeasurementRoute extends MonitorRoute {
 
             }
         }
-        
+
         return range;
     }
     /* // removed; was used for spark 2.0 framework

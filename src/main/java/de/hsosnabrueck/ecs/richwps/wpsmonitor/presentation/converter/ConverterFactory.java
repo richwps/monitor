@@ -22,6 +22,4 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
  * Alias for Factory&lt;EntityConverter>
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface ConverterFactory extends Factory<EntityConverter> {
-
-}
+public interface ConverterFactory extends Factory<EntityConverter> {}

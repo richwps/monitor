@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
@@ -35,8 +34,8 @@ public class ListWpsRoute extends MonitorRoute {
     @Override
     public Object handle(Request request, Response response) {
         List<WpsEntity> wpsList = getMonitorControl().getWpsList();
-        
+
         return getStrategy().presentate(wpsList);
     }
-    
+
 }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -25,21 +24,22 @@ import org.quartz.DateBuilder;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class IntervalComboBoxItem {
+
     private DateBuilder.IntervalUnit dateKey;
     private static EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
 
     public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
         this.dateKey = Param.notNull(dateKey, "dateKey");
-        
-        if(enumStringMap == null) {
+
+        if (enumStringMap == null) {
             initMap();
         }
     }
-    
+
     private void initMap() {
         enumStringMap = new EnumMap<DateBuilder.IntervalUnit, String>(DateBuilder.IntervalUnit.class);
-        
-        String[] fill = new String[] {
+
+        String[] fill = new String[]{
             "Millisecond",
             "Second",
             "Minute",
@@ -49,13 +49,13 @@ public class IntervalComboBoxItem {
             "Month",
             "Year"
         };
-        
+
         DateBuilder.IntervalUnit[] dateValues = DateBuilder.IntervalUnit.values();
-        
-        for(int i = 0; i < fill.length && i < dateValues.length; i++) {
+
+        for (int i = 0; i < fill.length && i < dateValues.length; i++) {
             enumStringMap.put(dateValues[i], fill[i]);
         }
-        
+
     }
 
     public String getLabel() {

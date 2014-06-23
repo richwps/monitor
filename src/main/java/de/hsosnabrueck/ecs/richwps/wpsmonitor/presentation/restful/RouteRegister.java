@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -23,8 +22,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RouteRegister {
+
     public void register(final HttpOperation operation, final MonitorRoute routeObj) {
-        switch(Param.notNull(operation, "operation")) {
+        switch (Param.notNull(operation, "operation")) {
             case GET:
                 get(routeObj);
                 break;
@@ -41,26 +41,26 @@ public class RouteRegister {
                 options(routeObj);
                 break;
             default:
-                
+
         }
     }
-    
+
     public void get(final MonitorRoute routeObj) {
         spark.Spark.get(routeObj);
     }
-    
+
     public void post(final MonitorRoute routeObj) {
         spark.Spark.post(routeObj);
     }
-    
+
     public void delete(final MonitorRoute routeObj) {
         spark.Spark.delete(routeObj);
     }
-    
+
     public void put(final MonitorRoute routeObj) {
         spark.Spark.put(routeObj);
     }
-    
+
     public void options(final MonitorRoute routeObj) {
         spark.Spark.options(routeObj);
     }

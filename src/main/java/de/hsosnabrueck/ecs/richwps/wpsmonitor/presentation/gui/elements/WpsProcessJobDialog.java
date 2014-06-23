@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -25,11 +24,13 @@ import javax.swing.JPanel;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessJobDialog extends javax.swing.JDialog {
-    private WpsMonitorGui mainframe;
-    private WpsProcessEntity wpsProcess;
-    
+
+    private final WpsMonitorGui mainframe;
+    private final WpsProcessEntity wpsProcess;
+
     /**
      * Creates new form WpsProcessJobDialog
+     *
      * @param mainFrame
      * @param wpsProcess
      * @param modal
@@ -37,9 +38,9 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     public WpsProcessJobDialog(WpsMonitorGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
         super(mainFrame, modal);
         initComponents();
-        
+
         setLocationRelativeTo(mainFrame);
-        
+
         this.wpsProcess = wpsProcess;
         this.mainframe = Param.notNull(mainFrame, "mainFrame");
     }
@@ -131,7 +132,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
     private void newJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
         WpsProcessJobEntry newJobEntry = new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
-        
+
         addJobPane.add(newJobEntry);
         addJobPane.revalidate();
     }//GEN-LAST:event_newJobButtonActionPerformed

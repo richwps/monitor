@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
@@ -29,5 +28,5 @@ public class ResponseFactory implements Factory<QosProbe> {
     public QosProbe create() {
         return new ResponseAvailabilityProbe();
     }
-    
+
 }

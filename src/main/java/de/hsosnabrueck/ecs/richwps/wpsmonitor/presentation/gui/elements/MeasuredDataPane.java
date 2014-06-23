@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 /**
  * Panel which representate one entry of the measured data.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasuredDataPane extends javax.swing.JPanel {
@@ -28,7 +27,7 @@ public class MeasuredDataPane extends javax.swing.JPanel {
      */
     public MeasuredDataPane(final String measurementText) {
         initComponents();
-        
+
         measuredText.setText(measurementText);
     }
 

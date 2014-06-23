@@ -55,9 +55,7 @@ public class ResponseConverter extends EntityConverter {
             average = average / getEntities().size();
             availability = 100. * notAvailableCounter / getEntities().size();
         }
-        
-        
-        
+
         return new ResponseConverted(best, worst, average, availability);
     }
 

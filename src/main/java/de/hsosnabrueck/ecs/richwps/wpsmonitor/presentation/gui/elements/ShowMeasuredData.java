@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
@@ -26,29 +25,29 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ShowMeasuredData extends javax.swing.JDialog {
-    private WpsMonitorGui monitorMainFrame;
-    private WpsProcessEntity wpsProcess;
-    
 
-    public ShowMeasuredData(WpsMonitorGui monitorMainFrame,  WpsProcessEntity process, boolean modal) {
+    private final WpsMonitorGui monitorMainFrame;
+    private final WpsProcessEntity wpsProcess;
+
+    public ShowMeasuredData(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
-        
+
         this.monitorMainFrame = monitorMainFrame;
         this.wpsProcess = process;
     }
-    
+
     public void recaptureData() {
         Range range = new Range(null, 100);
         String wpsIdentifier = wpsProcess.getWps().getIdentifier();
         String processIdentifier = wpsProcess.getIdentifier();
-        
+
         List<MeasuredDataEntity> measuredData = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
                 .getMeasuredData(wpsIdentifier, processIdentifier, range);
-        
-        for(MeasuredDataEntity e : measuredData) {
+
+        for (MeasuredDataEntity e : measuredData) {
             measuredDataAddPanel.add(
                     new MeasuredDataPane(e.getCreateTime() + ": " + e.toString())
             );

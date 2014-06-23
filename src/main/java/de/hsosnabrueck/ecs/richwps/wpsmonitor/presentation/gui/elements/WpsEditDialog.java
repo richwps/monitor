@@ -27,8 +27,8 @@ import java.net.URISyntaxException;
  */
 public class WpsEditDialog extends javax.swing.JDialog {
 
-    private WpsPanel addParentPanel;
-    private WpsMonitorGui monitorMainFrame;
+    private final WpsPanel addParentPanel;
+    private final WpsMonitorGui monitorMainFrame;
 
 
     public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel addParentPanel, boolean modal) {

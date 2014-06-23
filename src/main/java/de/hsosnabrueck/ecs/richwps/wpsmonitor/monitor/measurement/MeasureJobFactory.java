@@ -33,19 +33,46 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**
- *
+ * Create a new MeasureJob instance if the quartz scheduler starts a specific
+ * job.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobFactory implements JobFactory {
 
+    /**
+     * Probeservice instance
+     */
     private final ProbeService probeService;
-    private final WpsClientFactory wpsClientFactory;
-    private WpsProcessDataAccess processDao;
-    private QosDaoFactory qosDaoFactory;
     
+    /**
+     * Wps client factory - each job needs its own wps client
+     */
+    private final WpsClientFactory wpsClientFactory;
+    
+    /**
+     * WpsProcessDataAccess instance
+     */
+    private WpsProcessDataAccess processDao;
+    
+    /**
+     * QosDaoFactory instance to create a new data access for a new job
+     */
+    private QosDaoFactory qosDaoFactory;
+
     private final static Logger log = LogManager.getLogger();
 
-    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao, final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
+    /**
+     * Constructor.
+     * 
+     * @param probeService Probeservice instance
+     * @param processDao WpsProcessDataAccess instance
+     * @param qosDaoFactory QosDaoFactory instance to create a new data access for a new job
+     * @param wpsClientFactory Wps client factory - each job should have its own WPS client instance
+     */
+    public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao,
+            final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
+        
         this.probeService = Param.notNull(probeService, "probeService");
         this.processDao = Param.notNull(processDao, "processDao");
         this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
@@ -70,20 +97,20 @@ public class MeasureJobFactory implements JobFactory {
 
     private Job createNewMeasureJob(String processAsJobName, String wpsAsGroupName) {
         Job measureJob = null;
-        
+
         try {
             // jobs are eventually threads -
             // EntityManager and Dao's are not Thread save! So give them an own EntityManager
             QosDataAccess dao = qosDaoFactory.create();
-            
+
             // for which WpsProcessEntity will this process created?
             WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
-            
+
             measureJob = new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
         } catch (CreateException ex) {
             log.fatal(ex);
         }
-        
+
         return measureJob;
     }
 }

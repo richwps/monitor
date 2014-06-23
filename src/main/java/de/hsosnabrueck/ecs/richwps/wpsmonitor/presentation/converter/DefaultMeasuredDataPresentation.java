@@ -27,8 +27,8 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DefaultMeasuredDataPresentation {
-    private List<AbstractQosEntity> measuredData;
-    private Date time;
+    private final List<AbstractQosEntity> measuredData;
+    private final Date time;
 
     public DefaultMeasuredDataPresentation(MeasuredDataEntity lastEntities) {
         this.measuredData = Param.notNull(lastEntities, "lastEntities").getData();
@@ -37,5 +37,9 @@ public class DefaultMeasuredDataPresentation {
 
     public List<AbstractQosEntity> getMeasuredData() {
         return measuredData;
+    }
+
+    public Date getTime() {
+        return time;
     }
 }

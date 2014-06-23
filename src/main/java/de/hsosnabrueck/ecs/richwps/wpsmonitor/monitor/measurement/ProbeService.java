@@ -25,27 +25,52 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * In the probeservice can register multiple factories of type 
+ * Factory&lt;QosProbe> which can create various types of objects which extends
+ * the QosProbe interface. The idea behind this service is, that everyone can
+ * register his own QosProbe instance which is to be executed which each 
+ * measurement process.
+ * 
+ * However, jobs can be threads. To minimize siteeffects, the probeservice 
+ * uses the factories to create a list of new QosProbe instances.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ProbeService {
-    private List<Factory<QosProbe>> probeFactories;
+    private final List<Factory<QosProbe>> probeFactories;
     private final static Logger log = LogManager.getLogger();
     
     public ProbeService() {
         probeFactories = new ArrayList<Factory<QosProbe>>();
     }
 
+    /**
+     * Add a probe factory.
+     * 
+     * @param probeFactory Factory&lt;QosProbe> instance
+     * @return this for method chaining
+     */
     public ProbeService addProbe(final Factory<QosProbe> probeFactory) {
         probeFactories.add(Param.notNull(probeFactory, "probeFactory"));
 
         return this;
     }
 
+    /**
+     * Removes a probe factory.
+     * 
+     * @param probeFactory Probe factory to rmove
+     * @return True if sucessfully removed
+     */
     public boolean removeProbeClass(final Factory<QosProbe> probeFactory) {
         return probeFactories.remove(probeFactory);
     }
     
+    /**
+     * Creae a new list of QosProbes.
+     * 
+     * @return list of QosProbes 
+     */
     public List<QosProbe> buildProbes() {
         List<QosProbe> factoredObjects = new ArrayList<QosProbe>();
         

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -29,17 +28,18 @@ import javax.persistence.Id;
  */
 @Entity
 public class ResponseEntity extends AbstractQosEntity {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     private Integer responseTime;
 
     public ResponseEntity() {
         responseTime = null;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -47,7 +47,7 @@ public class ResponseEntity extends AbstractQosEntity {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     @Override
     public String getEntityName() {
         return "ResponseAvailabilityEntity";
@@ -65,7 +65,7 @@ public class ResponseEntity extends AbstractQosEntity {
     public void setResponseTime(Integer responseTime) {
         this.responseTime = responseTime;
     }
-    
+
     public Boolean wasAvailable() {
         return responseTime != null;
     }
@@ -94,5 +94,5 @@ public class ResponseEntity extends AbstractQosEntity {
     public String toString() {
         return "de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseEntity[ id=" + id + " ]";
     }
-    
+
 }

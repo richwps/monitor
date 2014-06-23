@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
@@ -21,10 +20,16 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**
+ * QosProbes are designed to be executed by a measurejob. A QosProbe
+ * implementation ca do calculations or other measurement operationes. The
+ * result should be saved in a entity which extends the AbstractQosEntity-class.
+ * 
+ * The Job-instance extract and persist the measured datas.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class QosProbe {
+
     private AbstractQosEntity measuredData;
 
     public AbstractQosEntity getMeasuredData() {
@@ -34,6 +39,6 @@ public abstract class QosProbe {
     public void setMeasuredData(AbstractQosEntity measuredData) {
         this.measuredData = measuredData;
     }
-    
+
     public abstract void execute(WpsRequest request, WpsResponse response);
 }

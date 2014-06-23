@@ -35,7 +35,20 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * Job class which calls a wps client with a request, which is stored in the
+ * WpsProcessEntity object. The WpsProcessEntity object is injected by the
+ * MeasureJobFactory.
  *
+ * If occours no wps exception, then the registred QosProbe instances are
+ * called. Otherwise a error flag is set, which is evaluated by
+ * MeasureJobListener.
+ *
+ * The dependencies should be thread save or new instantiated by the
+ * MeasureJobFactory.
+ *
+ * @see WpsProcessEntity
+ * @see MeasureJobListener
+ * @see MeasureJobFactory
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJob implements Job {
@@ -49,6 +62,14 @@ public class MeasureJob implements Job {
 
     private final static Logger log = LogManager.getLogger();
 
+    /**
+     * Constructor.
+     * 
+     * @param probes List of QosProbe instances
+     * @param entity WpsProcessEntity which the specific job take care of
+     * @param dao QosDataAcces instance
+     * @param wpsClient WpsClient instance
+     */
     public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao, final WpsClient wpsClient) {
         this.probes = Param.notNull(probes, "probeService");
         this.dao = Param.notNull(dao, "dao");
@@ -67,12 +88,11 @@ public class MeasureJob implements Job {
 
             // if no execption occurs (except Connection exception), than call probes and persist Data 
             error = response.isOtherException() || response.isWpsException();
-            
+
             if (!error) {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
             }
-
 
             log.debug("MeasureJob of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     processEntity,
@@ -82,7 +102,7 @@ public class MeasureJob implements Job {
             );
         } catch (Exception ex) {
             log.warn(ex);
-        } 
+        }
     }
 
     private void persistMeasuredData(final List<AbstractQosEntity> measuredData) {
@@ -105,7 +125,7 @@ public class MeasureJob implements Job {
     }
 
     /**
-     * Calls the WPS Server with the specified WPS Client
+     * Calls the WPS Server with the specified WPS client
      *
      * @return a pair consisting of WpsRequest and WpsResponse
      */

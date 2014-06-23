@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import java.io.StringWriter;
@@ -29,12 +28,13 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class JaxbPresentateStrategy implements PresentateStrategy{
+public class JaxbPresentateStrategy implements PresentateStrategy {
+
     private JAXBContext xmlContext;
-    
+
     final static Logger log = LogManager.getLogger();
 
-    public JaxbPresentateStrategy(Class[] classes)  {
+    public JaxbPresentateStrategy(Class[] classes) {
         try {
             xmlContext = JAXBContext.newInstance(classes);
         } catch (JAXBException ex) {
@@ -47,17 +47,17 @@ public class JaxbPresentateStrategy implements PresentateStrategy{
         try {
             StringWriter writer = new StringWriter();
             Marshaller m = xmlContext.createMarshaller();
-            
+
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             m.marshal(presentate, writer);
-            
+
             return writer.toString();
         } catch (PropertyException ex) {
             log.error(ex);
         } catch (JAXBException ex) {
             java.util.logging.Logger.getLogger(JaxbPresentateStrategy.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 }

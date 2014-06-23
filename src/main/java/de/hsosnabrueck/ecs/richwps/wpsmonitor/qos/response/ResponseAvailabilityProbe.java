@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
@@ -29,14 +28,14 @@ public class ResponseAvailabilityProbe extends QosProbe {
     @Override
     public void execute(WpsRequest request, WpsResponse response) {
         ResponseEntity entity = new ResponseEntity();
-        
-        if(!response.isConnectionException()) {
+
+        if (!response.isConnectionException()) {
             Long responseTime = response.getResponseTime().getTime() - request.getRequestTime().getTime();
-            
+
             entity.setResponseTime(responseTime.intValue());
         }
-        
+
         setMeasuredData(entity);
     }
-    
+
 }

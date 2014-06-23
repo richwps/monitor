@@ -29,10 +29,10 @@ public abstract class MonitorRoute extends Route {
     private EntityDispatcher dispatch;
     private PresentateStrategy strategy;
     protected final String route;
-    
+
     public MonitorRoute(String routeStr) {
         super(routeStr);
-        
+
         this.route = routeStr;
     }
 
@@ -53,10 +53,9 @@ public abstract class MonitorRoute extends Route {
     public PresentateStrategy getStrategy() {
         return strategy;
     }
-    
+
     // was used for spark 2.0 wrapper implementation
     //public abstract String getRoute();
-    
     public String getRoute() {
         return route;
     }

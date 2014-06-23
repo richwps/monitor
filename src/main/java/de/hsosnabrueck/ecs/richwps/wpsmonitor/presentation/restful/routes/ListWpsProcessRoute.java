@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
@@ -29,7 +28,7 @@ public class ListWpsProcessRoute extends MonitorRoute {
     public ListWpsProcessRoute() {
         super("/measurement/wps/:wpsidentifier/processes");
     }
-    
+
     @Override
     public Object handle(Request request, Response response) {
         return "Hello World!";

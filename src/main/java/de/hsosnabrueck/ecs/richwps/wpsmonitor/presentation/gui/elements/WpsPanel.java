@@ -34,8 +34,8 @@ import javax.swing.JPanel;
  */
 public class WpsPanel extends javax.swing.JPanel {
 
-    private JPanel addPanelParent;
-    private WpsMonitorGui monitorMainFrame;
+    private final JPanel addPanelParent;
+    private final WpsMonitorGui monitorMainFrame;
     private WpsProcessDialog wpsProcessDialog;
     private WpsEntity wps;
 
@@ -48,7 +48,7 @@ public class WpsPanel extends javax.swing.JPanel {
 
         this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps, true);
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-        
+
         wpsNameLabel.setText(wps.getIdentifier());
         wpsUriLabel.setText(wps.getUri().toString());
 
@@ -196,8 +196,8 @@ public class WpsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
-        int option = MessageDialogs.showQuestionDialog(this, 
-                "Delete WPS", 
+        int option = MessageDialogs.showQuestionDialog(this,
+                "Delete WPS",
                 "Are you sure you want to permanently delete this WPS out of the Monitor?"
         );
 
