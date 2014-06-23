@@ -19,8 +19,8 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 
 /**
- *
- * @author FloH
+ * Alias for Factory&lt;EntityConverter>
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface ConverterFactory extends Factory<EntityConverter> {
 
