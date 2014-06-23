@@ -178,24 +178,32 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 );
                 
                 
-                TriggerKey newTrigger = mainFrame.getMonitorRef()
+                TriggerKey newTrigger = mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .saveTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
 
                 if (newTrigger == null) {
-                    MessageDialogs.showError(mainFrame, "Error", "Job was not created. Is Scheduler started? See the logs.");
+                    MessageDialogs.showError(mainFrame, 
+                            "Error", 
+                            "Job was not created. Is Scheduler started? See the logs."
+                    );
                 } else {
                     this.triggerKey = newTrigger;
                 }
             } catch (NumberFormatException ex) {
-                MessageDialogs.showError(mainFrame, "Invalid Number Format", "\"" + intervalValue + "\" is not a valid Number format.");
+                MessageDialogs.showError(mainFrame, 
+                        "Invalid Number Format", 
+                        "\"" + intervalValue + "\" is not a valid Number format."
+                );
             }
         }
     }//GEN-LAST:event_saveJobActionPerformed
 
     private void deleteJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
-        if (triggerKey == null) { //if triggerkey null, then this job was not saved
-            mainFrame.getMonitorRef().getMonitorControl().deleteTrigger(triggerKey);
+        if (triggerKey != null) { //if triggerkey null, then this job was not saved
+            mainFrame.getMonitorReference()
+                    .getMonitorControl()
+                    .deleteTrigger(triggerKey);
         }
 
         parent.remove(this);

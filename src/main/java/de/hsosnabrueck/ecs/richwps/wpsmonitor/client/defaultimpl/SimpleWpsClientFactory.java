@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
@@ -22,7 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 /**
  * Factory which will be registred in WpsClientFactory. This Factory describes
  * how the SimpleWpsClient should be build.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SimpleWpsClientFactory implements Factory<WpsClient> {
@@ -31,5 +30,5 @@ public class SimpleWpsClientFactory implements Factory<WpsClient> {
     public WpsClient create() {
         return new SimpleWpsClient();
     }
-    
+
 }

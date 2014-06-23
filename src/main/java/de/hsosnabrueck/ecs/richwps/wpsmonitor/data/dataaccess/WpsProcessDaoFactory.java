@@ -20,6 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
+ * Factory for WpsProcessDataAccess-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -27,6 +28,12 @@ public final class WpsProcessDaoFactory implements Factory<WpsProcessDataAccess>
 
     private final Factory<WpsProcessDataAccess> defaultFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param defaultFactory Default Factory-instance which will be used in
+     * create()-Method
+     */
     public WpsProcessDaoFactory(final Factory<WpsProcessDataAccess> defaultFactory) {
         this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
     }

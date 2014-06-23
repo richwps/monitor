@@ -20,12 +20,20 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 
 /**
+ * Entity for WPS
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
 @NamedQueries({
+    /**
+     * Selects all wps entities
+     */
     @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t"),
+
+    /**
+     * Selects a specific wps that matchtes the given identifier
+     */
     @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier")
 })
 public class WpsEntity implements Serializable {
@@ -38,7 +46,7 @@ public class WpsEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Column(unique = true)
     private String identifier;
 
@@ -51,7 +59,7 @@ public class WpsEntity implements Serializable {
         this.identifier = identifier;
         this.route = route;
     }
-    
+
     public WpsEntity(String identifier, String route) throws MalformedURLException, URISyntaxException {
         this.identifier = identifier;
         this.setUri(route);
@@ -72,7 +80,7 @@ public class WpsEntity implements Serializable {
     public final void setUri(String route) throws MalformedURLException, URISyntaxException {
         URL url = new URL(route);
         URI uri = url.toURI();
-        
+
         this.route = uri;
     }
 
@@ -105,7 +113,6 @@ public class WpsEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     @Override
     public String toString() {

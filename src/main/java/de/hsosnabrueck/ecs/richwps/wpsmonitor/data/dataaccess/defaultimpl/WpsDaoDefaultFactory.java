@@ -18,10 +18,10 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import javax.persistence.EntityManager;
 
 /**
- *
+ * Default factory for a WpsDataAccess
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDaoDefaultFactory implements Factory<WpsDataAccess> {

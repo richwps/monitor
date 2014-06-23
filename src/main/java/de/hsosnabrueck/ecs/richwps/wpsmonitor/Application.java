@@ -37,10 +37,11 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Application {
+
     private final static Logger log = LogManager.getLogger();
-    
+
     public static void main(String[] args) throws Exception {
-        try {            
+        try {
             new Application().run();
         } catch (Exception ex) {
             log.fatal(ex);
@@ -54,7 +55,7 @@ public class Application {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
-        
+
         // register JPA Shutdown thinks
         monitor.getEventHandler().registerListener("monitor.shutdown", new MonitorEventListener() {
 
@@ -75,13 +76,13 @@ public class Application {
         rest.addRoute(HttpOperation.GET, new ListMeasurementRoute())
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
-        
+
         log.trace("WpsMonitor is starting up ...");
         monitor.start();
-        
+
         log.trace("Start REST Interface ...");
         rest.start();
-        
+
         log.trace("Start GUI ...");
         GuiStarter.start(monitor);
     }

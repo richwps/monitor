@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -21,16 +20,17 @@ import java.net.URI;
 
 /**
  * Contains all necessary data to call a Wps-Process.
- * 
+ *
  * @see WpsRequest
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessInfo {
+
     /**
      * URI of the WPS-Server
      */
     private URI wpsUri;
-    
+
     /**
      * Identifier of the Process
      */
@@ -38,7 +38,7 @@ public class WpsProcessInfo {
 
     /**
      * Constructor.
-     * 
+     *
      * @param wpsUri URI of the WPS-Server
      * @param processIdentifier Identifier of the Process
      */

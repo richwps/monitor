@@ -26,23 +26,27 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ShowMeasuredData extends javax.swing.JDialog {
-    private WpsMonitorGui mainFrame;
-    private WpsProcessEntity process;
+    private WpsMonitorGui monitorMainFrame;
+    private WpsProcessEntity wpsProcess;
     
 
-    public ShowMeasuredData(WpsMonitorGui mainFrame,  WpsProcessEntity process, boolean modal) {
-        super(mainFrame, modal);
+    public ShowMeasuredData(WpsMonitorGui monitorMainFrame,  WpsProcessEntity process, boolean modal) {
+        super(monitorMainFrame, modal);
         initComponents();
-        setLocationRelativeTo(mainFrame);
+        setLocationRelativeTo(monitorMainFrame);
         
-        this.mainFrame = mainFrame;
-        this.process = process;
+        this.monitorMainFrame = monitorMainFrame;
+        this.wpsProcess = process;
     }
     
     public void recaptureData() {
-        List<MeasuredDataEntity> measuredData = mainFrame.getMonitorRef()
+        Range range = new Range(null, 100);
+        String wpsIdentifier = wpsProcess.getWps().getIdentifier();
+        String processIdentifier = wpsProcess.getIdentifier();
+        
+        List<MeasuredDataEntity> measuredData = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
-                .getMeasuredData(process.getWps().getIdentifier(), process.getIdentifier(), new Range(null, 100));
+                .getMeasuredData(wpsIdentifier, processIdentifier, range);
         
         for(MeasuredDataEntity e : measuredData) {
             measuredDataAddPanel.add(

@@ -134,9 +134,6 @@
             <Component class="javax.swing.JTextField" name="wpsToAddField">
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wpsToAddFieldActionPerformed"/>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="wpsCreateFieldsFocusGained"/>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="wpsCreateFieldsFocusLost"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="wpsCreateFieldsKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="wpsUrlDecoText">
@@ -151,9 +148,6 @@
             <Component class="javax.swing.JTextField" name="wpsToAddUriField">
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wpsToAddUriFieldActionPerformed"/>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="wpsCreateFieldsFocusGained"/>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="wpsCreateFieldsFocusLost"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="wpsCreateFieldsKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addWpsButton">

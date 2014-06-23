@@ -83,7 +83,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void registerMonitoringPausedEvent() {
         try {
-            mainFrame.getMonitorRef()
+            mainFrame.getMonitorReference()
                     .getEventHandler()
                     .registerListener("scheduler.job.paused", new MonitorEventListener() {
 
@@ -106,7 +106,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         WpsResponse response = null;
 
         try {
-            WpsClient wpsClient = mainFrame.getMonitorRef()
+            WpsClient wpsClient = mainFrame.getMonitorReference()
                     .getBuilderInstance()
                     .buildWpsClient();
 
@@ -326,19 +326,19 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             clearError();
 
             if (!saved) {
-                inserted = mainFrame.getMonitorRef()
+                inserted = mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .createProcess(wpsIdentifier, wpsProcessIdentifier);
             }
 
             if (inserted) {
-                inserted = mainFrame.getMonitorRef()
+                inserted = mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .setTestRequest(wpsIdentifier, wpsProcessIdentifier, testRequest);
             }
 
             if (wpsProcess.isWpsException()) {
-                mainFrame.getMonitorRef()
+                mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .resumeMonitoring(wpsIdentifier, wpsProcessIdentifier);
             }
@@ -355,7 +355,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void deleteProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
         if (saved) {
-            mainFrame.getMonitorRef()
+            mainFrame.getMonitorReference()
                     .getMonitorControl()
                     .deleteProcess(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
         }

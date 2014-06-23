@@ -24,7 +24,9 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 /**
- *
+ * General entity for qos-measurements. All qos entity musst extends this 
+ * entity. Otherwise they can't persisted in the database
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
@@ -38,6 +40,11 @@ public abstract class AbstractQosEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    /**
+     * Important method to indicate which entity-type it is
+     * 
+     * @return Name of the extended entity
+     */
     public abstract String getEntityName();
 
     public Long getId() {

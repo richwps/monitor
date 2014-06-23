@@ -48,17 +48,17 @@ import org.xml.sax.SAXException;
 
 /**
  * A very simple WpsClient Implementation based on Apache HTTP Componenty Lib.
- * This WPS Client is developed to send a raw request over http-post method to 
- * a wps server. After the request is executed, the client awaits a response.
- * 
+ * This WPS Client is developed to send a raw request over http-post method to a
+ * wps server. After the request is executed, the client awaits a response.
+ *
  * This implementation has no timeout and waits as long as possible. This is a
  * little bit problematic, because the scheduler can fail its fire time.
- * 
- * This simple wps client can check the response for WPS-Errors. If the WpsResponse
- * not a valid XML String, then the client will interprete this as connection error,
- * because the wps server seems to be unreachable (or no wps server runs at this
- * server)
- * 
+ *
+ * This simple wps client can check the response for WPS-Errors. If the
+ * WpsResponse not a valid XML String, then the client will interprete this as
+ * connection error, because the wps server seems to be unreachable (or no wps
+ * server runs at this server)
+ *
  * @see WpsClient
  * @see WpsResponse
  * @see WpsRequest
@@ -72,7 +72,7 @@ public class SimpleWpsClient implements WpsClient {
     @Override
     public WpsResponse execute(WpsRequest wpsRequest) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        
+
         String responseBody = null;
         Date responseTime = null;
         WpsResponse response = null;
@@ -85,13 +85,13 @@ public class SimpleWpsClient implements WpsClient {
                 // prepare request (init requestTime)
                 // and do request 
                 wpsRequest.prepareRequest();
-                
+
                 log.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
-                
+
                 CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
-                
+
                 log.debug("Response received.");
-                
+
                 responseTime = new Date();
 
                 // get response body
@@ -109,20 +109,22 @@ public class SimpleWpsClient implements WpsClient {
             // set exception if necessary
             if (responseBody == null) {
                 response.setException(new WpsConnectionException());
-            } else try {
-                if (isWpsException(responseBody)) {
-                    WpsException ex;
-                    
-                    if(wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
-                        ex = new WpsException();
-                    } else {
-                        ex = new WpsException(wpsExceptionMessage);
+            } else {
+                try {
+                    if (isWpsException(responseBody)) {
+                        WpsException ex;
+
+                        if (wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
+                            ex = new WpsException();
+                        } else {
+                            ex = new WpsException(wpsExceptionMessage);
+                        }
+
+                        response.setException(ex);
                     }
-                    
-                    response.setException(ex);
+                } catch (NoWpsResponse ex) {
+                    response.setException(new WpsConnectionException());
                 }
-            } catch (NoWpsResponse ex) {
-                response.setException(new WpsConnectionException());
             }
         }
 
@@ -135,7 +137,7 @@ public class SimpleWpsClient implements WpsClient {
         body.add(new BasicNameValuePair("request", wpsRequest.getRawRequest()));
 
         httpRequest.setEntity(new UrlEncodedFormEntity(body));
-       
+
         return httpRequest;
     }
 
@@ -153,7 +155,7 @@ public class SimpleWpsClient implements WpsClient {
                 }
 
                 wpsExceptionMessage = strBuilder.toString();
-                
+
                 return true;
             } else {
                 return false;
@@ -164,11 +166,10 @@ public class SimpleWpsClient implements WpsClient {
             log.debug(ex);
         } catch (ParserConfigurationException ex) {
             log.debug(ex);
-        } catch(DOMException ex) {
+        } catch (DOMException ex) {
             log.debug(ex);
         }
-        
-        
+
         log.debug("Exception occours because of parsing the WpsResponse body. Interprete as ConnectionError.");
         throw new NoWpsResponse();
     }
@@ -176,7 +177,7 @@ public class SimpleWpsClient implements WpsClient {
     private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         docBuilderFactory.setNamespaceAware(true);
-        
+
         return docBuilderFactory.newDocumentBuilder();
     }
 }

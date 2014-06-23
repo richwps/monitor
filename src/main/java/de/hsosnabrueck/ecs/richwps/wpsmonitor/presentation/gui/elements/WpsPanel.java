@@ -20,6 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Dimension;
 import java.util.logging.Level;
@@ -33,31 +34,31 @@ import javax.swing.JPanel;
  */
 public class WpsPanel extends javax.swing.JPanel {
 
-    private JPanel parentRef;
-    private WpsMonitorGui mainFrame;
+    private JPanel addPanelParent;
+    private WpsMonitorGui monitorMainFrame;
     private WpsProcessDialog wpsProcessDialog;
     private WpsEntity wps;
 
-    private Boolean erroneous;
-
-    public WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final WpsEntity wps) {
+    public WpsPanel(WpsMonitorGui monitorMainFrame, JPanel addPanelParent, final WpsEntity wps) {
         this.wps = Param.notNull(wps, "wps");
-        this.parentRef = Param.notNull(parent, "parent");
-        this.mainFrame = Param.notNull(mainFrame, "mainFrame");
+        this.addPanelParent = Param.notNull(addPanelParent, "parent");
+        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
 
-        this.wpsProcessDialog = new WpsProcessDialog(mainFrame, wps, true);
+        this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps, true);
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+        
         wpsNameLabel.setText(wps.getIdentifier());
         wpsUriLabel.setText(wps.getUri().toString());
-        
+
         registerMonitoringPausedEvent();
     }
 
     private void registerMonitoringPausedEvent() {
         try {
-            mainFrame.getMonitorRef()
+            monitorMainFrame
+                    .getMonitorReference()
                     .getEventHandler()
                     .registerListener("scheduler.job.paused", new MonitorEventListener() {
 
@@ -195,19 +196,19 @@ public class WpsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
-        int option = JOptionPane.showConfirmDialog(parentRef,
-                "Are you sure you want to permanently delete this WPS out of the Monitor?",
-                "Delete WPS",
-                JOptionPane.YES_NO_OPTION);
+        int option = MessageDialogs.showQuestionDialog(this, 
+                "Delete WPS", 
+                "Are you sure you want to permanently delete this WPS out of the Monitor?"
+        );
 
         if (option == JOptionPane.YES_OPTION) {
-            mainFrame.getMonitorRef()
+            monitorMainFrame.getMonitorReference()
                     .getMonitorControl()
                     .deleteWps(wps.getIdentifier());
 
-            parentRef.remove(this);
-            parentRef.revalidate();
-            parentRef.repaint(); // repaint required, otherwise the last element will not disappear
+            addPanelParent.remove(this);
+            addPanelParent.revalidate();
+            addPanelParent.repaint(); // repaint required, otherwise the last element will not disappear
         }
     }//GEN-LAST:event_deleteWpsButtonActionPerformed
 
@@ -217,7 +218,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addProcessToWpsButtonActionPerformed
 
     private void editWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
-        new WpsEditDialog(mainFrame, this, true).setVisible(true);
+        new WpsEditDialog(monitorMainFrame, this, true).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
 
     public WpsProcessDialog getWpsProcessDialog() {
@@ -229,7 +230,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     public void processMonitoringPaused(WpsProcessEntity process) {
-        if(process.getWps().getIdentifier().equals(wps.getIdentifier())) {
+        if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
             showErrorIndicator();
         }
     }

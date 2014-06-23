@@ -24,20 +24,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Default implementation of a WpsProcessDataAccess interface
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implements WpsProcessDataAccess {
 
-    public WpsProcessDao() {
-    }
-    
     @Override
     public Boolean persist(WpsProcessEntity e) {
-        if(find(e.getWps().getIdentifier(), e.getIdentifier()) != null) {
+        if (find(e.getWps().getIdentifier(), e.getIdentifier()) != null) {
             return false;
-        } 
-        
+        }
+
         return super.persist(e);
     }
 
@@ -50,7 +48,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     public List<WpsProcessEntity> get(final Range range) {
         return getBy("wpsprocess.getAll", WpsProcessEntity.class, range);
     }
-    
+
     @Override
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -69,18 +67,18 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
     @Override
     public List<WpsProcessEntity> getAll(final String wpsIdentifier) {
-       Map<String, Object> parameters = new HashMap<String, Object>();
-       parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsidentifier"));
-       
-       return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsidentifier"));
+
+        return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
     }
 
     @Override
     public void deleteProcessesFromWps(String wpsIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        
+
         doNamedQuery("wpsprocess.deleteAllFromWps", parameters);
     }
-    
+
 }

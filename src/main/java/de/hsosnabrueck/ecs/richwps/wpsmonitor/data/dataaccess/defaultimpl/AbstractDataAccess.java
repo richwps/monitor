@@ -27,22 +27,44 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Implementation of some default operations with an EntityManager instance.
  *
+ * @see EntityManager
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class AbstractDataAccess<T> {
+
+    /**
+     * Indicates if auto commit is active By default, all operations starts a
+     * transaction and commit the transaction after all actions are down
+     */
     protected Boolean autoCommit;
     private final static Logger log = LogManager.getLogger();
 
+    /**
+     * Default constructor
+     */
     public AbstractDataAccess() {
         this.autoCommit = true;
     }
-    
+
+    /**
+     * Gets an EntityManager instance. The ConfiguredEntityManagerFactory take
+     * cares of that every thread get its own EntityManager instance
+     *
+     * @return EntityManager instance
+     */
     protected EntityManager getEntityManager() {
         return ConfiguredEntityManagerFactory
                 .getThreadEntityManager();
     }
 
+    /**
+     * Persist an object.
+     *
+     * @param o Entity instance to persist
+     * @return True is successfully persisted, otherwise false
+     */
     public Boolean persist(T o) {
         Boolean result = true;
         beginTransaction();
@@ -50,101 +72,172 @@ public abstract class AbstractDataAccess<T> {
         try {
             getEntityManager()
                     .persist(o);
-            
+
             requestCommit();
         } catch (EntityExistsException e) {
             log.debug(e);
-            
+
             result = false;
-        } 
-        
+        }
 
         return result;
     }
 
+    /**
+     * Merges/updates an object
+     *
+     * @param t Entity instance to update/merge
+     * @return The updated Entity-instance
+     */
     public T update(T t) {
         beginTransaction();
         T merged = getEntityManager()
                 .merge(t);
-        
+
         requestCommit();
 
         return merged;
     }
 
+    /**
+     * Removes the given entity instance
+     *
+     * @param o Entity instance to remove
+     */
     public void remove(final T o) {
         beginTransaction();
         getEntityManager()
                 .remove(o);
-        
+
         requestCommit();
     }
 
+    /**
+     * Starts a transaction if no current transaction is active
+     */
     protected void beginTransaction() {
-        if(!getEntityManager().getTransaction().isActive()) {
+        if (!getEntityManager().getTransaction().isActive()) {
             getEntityManager()
                     .getTransaction()
                     .begin();
         }
     }
 
+    /**
+     * Commits a transaction
+     *
+     * @return Schould be alway true, if an exception is occourd, false is
+     * returned
+     */
     public Boolean commit() {
         try {
-            if(getEntityManager().getTransaction().isActive()) {
+            if (getEntityManager().getTransaction().isActive()) {
                 getEntityManager()
                         .getTransaction()
                         .commit();
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             log.debug(ex);
-            
+
             return false;
         }
-        
+
         return true;
     }
-    
+
+    /**
+     * Requests a commit; if autoCommit is activ, then it will be commited
+     *
+     * @return true or false, depended on commit return, or null if autocommit
+     * is disabled
+     */
     protected Boolean requestCommit() {
-        if(autoCommit) {
+        if (autoCommit) {
             return commit();
         }
-        
+
         return null;
     }
-    
+
+    /**
+     * If a transaction is activ, the result will reseted
+     */
     public void rollback() {
-        if(getEntityManager().getTransaction().isActive()) {
+        if (getEntityManager().getTransaction().isActive()) {
             getEntityManager()
                     .getTransaction()
                     .rollback();
         }
     }
-    
+
+    /**
+     * Sets autoCommit on or off.
+     *
+     * @param value true or fals for enable or disable autoCommit behavior
+     */
     public void setAutoCommit(Boolean value) {
+        if (value == null) {
+            value = false;
+        }
+
         autoCommit = value;
     }
 
-    protected List<T> getBy(final String queryName, final Class c) {
-        return getBy(queryName, null, c);
+    /**
+     * Helper method to execute a named query.
+     *
+     * @param queryName Name of the named query
+     * @param returnTypeClass Result class datatype
+     * @return List of entity instances results
+     */
+    protected List<T> getBy(final String queryName, final Class returnTypeClass) {
+        return getBy(queryName, null, returnTypeClass);
     }
 
-    protected List<T> getBy(final String queryName, final Class c, final Range range) {
-        return getBy(queryName, null, c, range);
+    /**
+     * Helper Method to execute a named query.
+     *
+     * @param queryName Name of the named query
+     * @param returnTypeClass Result class datatype
+     * @param range Range instance
+     * @return List of entity instances results
+     */
+    protected List<T> getBy(final String queryName, final Class returnTypeClass, final Range range) {
+        return getBy(queryName, null, returnTypeClass, range);
     }
 
-    protected List<T> getBy(final String namedQueryIdentifier, final Map<String, Object> parameters, final Class typeClass) {
-        return getBy(namedQueryIdentifier, parameters, typeClass, null);
+    /**
+     * Helper Method to execute a named query.
+     *
+     * @param queryName Name of the named query
+     * @param parameters Parameter Map with &lt;ParameterNameInNamedQuery,
+     * Parameter>
+     * @param returnTypeClass Result class datatype
+     * @return List of entity instances results
+     */
+    protected List<T> getBy(final String queryName, final Map<String, Object> parameters, final Class returnTypeClass) {
+        return getBy(queryName, parameters, returnTypeClass, null);
     }
 
-    protected List<T> getBy(final String namedQueryIdentifier,
+    /**
+     * Helper Method to execute a named query.
+     *
+     * @param queryName Name of the named query
+     * @param parameters Parameter Map with &lt;ParameterNameInNamedQuery,
+     * Parameter>
+     * @param returnTypeClass Result class datatype
+     * @param range Range instance
+     * @return List of entity instances results
+     */
+    protected List<T> getBy(final String queryName,
             final Map<String, Object> parameters,
-            final Class typeClass,
+            final Class returnTypeClass,
             final Range range) {
 
         List<T> result = null;
 
         TypedQuery<T> query = getEntityManager()
-                .createNamedQuery(namedQueryIdentifier, typeClass);
+                .createNamedQuery(queryName, returnTypeClass);
 
         assignParameters(query, parameters);
 
@@ -167,20 +260,35 @@ public abstract class AbstractDataAccess<T> {
         return result;
     }
 
-    protected Integer doNamedQuery(final String namedQueryIdentifier, final Map<String, Object> parameters) {
+    /**
+     * Helper Method to do a named query operation like update or delete.
+     *
+     * @param queryName Name of the named query
+     * @param parameters Parameter Map with &lt;ParameterNameInNamedQuery,
+     * Parameter>
+     * @return Number of effected rows
+     */
+    protected Integer doNamedQuery(final String queryName, final Map<String, Object> parameters) {
         beginTransaction();
 
         Query query = getEntityManager()
-                .createNamedQuery(namedQueryIdentifier);
+                .createNamedQuery(queryName);
 
         assignParameters(query, parameters);
 
         Integer affectedRows = query.executeUpdate();
         requestCommit();
-        
+
         return affectedRows;
     }
 
+    /**
+     * Helper method to assign the parameter map to a query.
+     *
+     * @param queryName Name of the named query
+     * @param parameters Parameter Map with &lt;ParameterNameInNamedQuery,
+     * Parameter>
+     */
     private void assignParameters(Query query, final Map<String, Object> parameters) {
         if (parameters != null) {
             for (Map.Entry<String, Object> e : parameters.entrySet()) {

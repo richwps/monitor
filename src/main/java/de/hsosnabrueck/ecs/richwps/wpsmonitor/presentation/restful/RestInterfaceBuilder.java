@@ -17,6 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import java.util.ArrayList;
@@ -23,25 +22,30 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class ConfiguredEntityManagerFactory {
+
     private static String PERSISTENCE_UNIT;
     private static final EntityManagerFactory emf;
-    
+
     private static ThreadLocal<EntityManager> entityStorage;
     private static List<EntityManager> entityManagerList;
-    
+
+    private static Logger log = LogManager.getLogger();
+
     static {
         PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
         emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
         entityStorage = new ThreadLocal<EntityManager>();
         entityManagerList = new ArrayList<EntityManager>();
     }
-    
+
     private final Object finalizerGuardian = new Object() {
         @Override
         protected void finalize() throws Throwable {
@@ -52,19 +56,21 @@ public abstract class ConfiguredEntityManagerFactory {
             }
         }
     };
-    
+
     public static void close() {
-        for(EntityManager e : entityManagerList) {
-            if(e.isOpen()) {
+        for (EntityManager e : entityManagerList) {
+            if (e.isOpen()) {
+                log.debug("Close EntityManager...");
                 e.close();
             }
         }
-        
-        if(emf.isOpen()) {
+
+        if (emf.isOpen()) {
+            log.debug("Close EntityManager Factory...");
             emf.close();
         }
     }
-    
+
     @Override
     public void finalize() throws Throwable {
         try {
@@ -76,16 +82,16 @@ public abstract class ConfiguredEntityManagerFactory {
 
     public static EntityManager getThreadEntityManager() {
         EntityManager em = entityStorage.get();
-        
-        if(em == null || !em.isOpen()) {
+
+        if (em == null || !em.isOpen()) {
             em = createEntityManager();
             entityStorage.set(em);
             entityManagerList.add(em);
         }
-        
+
         return em;
     }
-    
+
     public static EntityManager createEntityManager() {
         return emf.createEntityManager();
     }

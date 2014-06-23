@@ -13,18 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
 
 /**
+ * DataAccess for WpsProcessEntity-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
+
+    /**
+     * Find a WpsProcessEntity-object that matches the given wpsIdentifier &&
+     * processIdentifier.
+     *
+     * @param wpsIdentifier Identifier of wps-entity
+     * @param processIdentifier Identifier of wpsProcess-entity
+     * @return WpsProcessEntity instance; null if not exists
+     */
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier);
+
+    /**
+     * Gets all WpsProcessEntity-objects.
+     *
+     * @param wpsIdentifier Identifier of wps-entity
+     * @return List of all WpsProcessEntity-objects; null if no result is found
+     */
     public List<WpsProcessEntity> getAll(final String wpsIdentifier);
+
+    /**
+     * Deletes all processes from the wps that machtes the given wpsIdentifier.
+     *
+     * @param wpsIdentifier Identifier of wps-entity.
+     */
     public void deleteProcessesFromWps(final String wpsIdentifier);
 }

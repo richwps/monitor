@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsPanel;
@@ -38,17 +38,17 @@ import org.apache.logging.log4j.Logger;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class GuiStarter {
+
     private final static Logger log = LogManager.getLogger();
-    
+
     public static void start(final Monitor controlDependency) {
-         /* Create and display the form */
-        
+        /* Create and display the form */
+
         try {
             // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
-                UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (UnsupportedLookAndFeelException e) {
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException e) {
             try {
                 log.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); // Fallback
@@ -61,63 +61,59 @@ public class GuiStarter {
             } catch (UnsupportedLookAndFeelException ex) {
                 log.error(ex);
             }
+        } catch (ClassNotFoundException ex) {
+            log.error(ex);
+        } catch (InstantiationException ex) {
+            log.error(ex);
+        } catch (IllegalAccessException ex) {
+            log.error(ex);
         }
-        catch (ClassNotFoundException ex) {
-           log.error(ex);
-        }
-        catch (InstantiationException ex) {
-           log.error(ex);
-        }
-        catch (IllegalAccessException ex) {
-           log.error(ex);
-        }
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 WpsMonitorGui wpsMonitorGui = new WpsMonitorGui(controlDependency);
                 restoreGui(controlDependency, wpsMonitorGui);
-                
+
                 wpsMonitorGui.setVisible(true);
             }
         });
     }
-    
+
     public static void restoreGui(Monitor monitor, WpsMonitorGui gui) {
         MonitorControl control = monitor.getMonitorControl();
-        
+
         List<WpsEntity> wpsEntities = control.getWpsList();
-        
-        for(WpsEntity wpsEntity : wpsEntities) {
+
+        for (WpsEntity wpsEntity : wpsEntities) {
             List<WpsProcessEntity> wpsProcessEntities = control.getProcessesOfWps(wpsEntity.getIdentifier());
-            
+
             //WpsPanel(WpsMonitorGui mainFrame, JPanel parent, final Wps wps)
             WpsPanel wpsPanel = new WpsPanel(gui, gui.getWpsAddPanel(), wpsEntity);
-            
-            
+
             // add processes to wpsPanel's dialog
-            for(WpsProcessEntity processEntity : wpsProcessEntities) {
+            for (WpsProcessEntity processEntity : wpsProcessEntities) {
                 JPanel addProcessPane = wpsPanel.getWpsProcessDialog().getAddProcessPane();
                 WpsProcessPanel wpsProcessPanel = new WpsProcessPanel(gui, addProcessPane, processEntity, true);
-                
+
                 //select trriggerconfig objects 
-                JPanel addJobEntryPanel = wpsProcessPanel.getWpsProcessJobDialog().getAddJobPane(); 
+                JPanel addJobEntryPanel = wpsProcessPanel.getWpsProcessJobDialog().getAddJobPane();
                 List<TriggerConfig> triggers = control.getTriggers(wpsEntity.getIdentifier(), processEntity.getIdentifier());
-                
+
                 // add WpsProcessJobEntries to addJobEntryPanel
-                for(TriggerConfig triggerConfig : triggers) {
+                for (TriggerConfig triggerConfig : triggers) {
                     WpsProcessJobEntry jobEntry = new WpsProcessJobEntry(gui, addProcessPane, processEntity, triggerConfig);
                     addJobEntryPanel.add(jobEntry);
                 }
-                
+
                 addProcessPane.add(wpsProcessPanel);
             }
-            
+
             gui.getWpsAddPanel().add(wpsPanel);
         }
     }
-    
+
     private GuiStarter() {
-        
+
     }
 }

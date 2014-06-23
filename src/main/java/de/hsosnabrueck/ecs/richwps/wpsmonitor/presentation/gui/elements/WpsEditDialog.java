@@ -27,20 +27,25 @@ import java.net.URISyntaxException;
  */
 public class WpsEditDialog extends javax.swing.JDialog {
 
-    private WpsPanel parent;
+    private WpsPanel addParentPanel;
     private WpsMonitorGui monitorMainFrame;
 
 
-    public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel parent, boolean modal) {
+    public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel addParentPanel, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
         
         setLocationRelativeTo(monitorMainFrame);
         
         this.monitorMainFrame = monitorMainFrame;
-        this.parent = Param.notNull(parent, "parent");
-        this.newIdentifierTextField.setText(parent.getWps().getIdentifier());
-        this.newUriTextField.setText(parent.getWps().getUri().toString());
+        this.addParentPanel = Param.notNull(addParentPanel, "parent");
+        this.newIdentifierTextField.setText(addParentPanel.getWps()
+                .getIdentifier()
+        );
+        this.newUriTextField.setText(addParentPanel.getWps()
+                .getUri()
+                .toString()
+        );
     }
 
     /**
@@ -136,7 +141,8 @@ public class WpsEditDialog extends javax.swing.JDialog {
         
         try {
             WpsEntity addWps = new WpsEntity(wpsIdentifier, wpsUri);
-            parent.updateWps(addWps);
+            
+            addParentPanel.updateWps(addWps);
             dispose();
         } catch (MalformedURLException ex) {
             showUriErrorDialog();

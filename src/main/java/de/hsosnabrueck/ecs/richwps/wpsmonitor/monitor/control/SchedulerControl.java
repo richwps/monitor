@@ -40,7 +40,7 @@ import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class SchedulerControl {
+public final class SchedulerControl {
 
     protected Scheduler scheduler;
 
@@ -48,15 +48,15 @@ public class SchedulerControl {
         this.scheduler = Param.notNull(scheduler, "scheduler");
     }
 
-    public void start() throws SchedulerException {
+    public synchronized void start() throws SchedulerException {
         scheduler.start();
     }
 
-    public void shutdown() throws SchedulerException {
+    public synchronized void shutdown() throws SchedulerException {
         scheduler.shutdown(true);
     }
 
-    public JobKey addWpsAsJob(final WpsProcessEntity process) throws SchedulerException {
+    public synchronized JobKey addWpsAsJob(final WpsProcessEntity process) throws SchedulerException {
         JobDetail newWpsJob = org.quartz.JobBuilder.newJob(MeasureJob.class)
                 .storeDurably()
                 .withIdentity(process.getIdentifier(), process.getWps().getIdentifier())
@@ -67,7 +67,7 @@ public class SchedulerControl {
         return newWpsJob.getKey();
     }
 
-    public TriggerKey addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
+    public synchronized TriggerKey addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
         // Get JobDetail
         JobDetail forJob = scheduler.getJobDetail(Param.notNull(jobKey, "jobKey"));
 
@@ -78,7 +78,7 @@ public class SchedulerControl {
         return newTrigger.getKey();
     }
 
-    private Trigger createTrigger(final JobDetail forJob, final TriggerConfig config) {
+    private synchronized Trigger createTrigger(final JobDetail forJob, final TriggerConfig config) {
         Trigger newTrigger;
         ScheduleBuilder scheduleBuilder = null;
 
@@ -135,15 +135,15 @@ public class SchedulerControl {
         return newTrigger;
     }
 
-    public void removeTrigger(final TriggerKey triggerKey) throws SchedulerException {
+    public synchronized void removeTrigger(final TriggerKey triggerKey) throws SchedulerException {
         scheduler.unscheduleJob(triggerKey);
     }
 
-    public void removeWpsJob(final JobKey jobKey) throws SchedulerException {
+    public synchronized void removeWpsJob(final JobKey jobKey) throws SchedulerException {
         scheduler.deleteJob(jobKey);
     }
 
-    public Boolean removeWpsJobs(final String wpsIdentifier) throws SchedulerException {
+    public synchronized Boolean removeWpsJobs(final String wpsIdentifier) throws SchedulerException {
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsIdentifier));
         Boolean result = false;
         
@@ -156,7 +156,7 @@ public class SchedulerControl {
         return result;
     }
 
-    public void updateTrigger(final TriggerConfig config) throws SchedulerException {
+    public synchronized void updateTrigger(final TriggerConfig config) throws SchedulerException {
         
         if(config.getTriggerKey() != null) {
             JobDetail jobDetail = scheduler.getJobDetail(scheduler
@@ -169,7 +169,7 @@ public class SchedulerControl {
         }
     }
 
-    public List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
+    public synchronized List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
         List<TriggerKey> result = new ArrayList<TriggerKey>();
 
         for (Trigger t : getTriggers(jobKey)) {
@@ -179,7 +179,7 @@ public class SchedulerControl {
         return result;
     }
 
-    private List<? extends Trigger> getTriggers(final JobKey jobKey) throws SchedulerException {
+    private synchronized List<? extends Trigger> getTriggers(final JobKey jobKey) throws SchedulerException {
         return scheduler.getTriggersOfJob(jobKey);
     }
 
@@ -193,13 +193,13 @@ public class SchedulerControl {
         return result;
     }
 
-    public TriggerConfig getConfigOfTrigger(final TriggerKey triggerKey) throws SchedulerException {
+    public synchronized TriggerConfig getConfigOfTrigger(final TriggerKey triggerKey) throws SchedulerException {
         Trigger trigger = scheduler.getTrigger(triggerKey);
 
         return getConfigOfTrigger(trigger);
     }
 
-    private TriggerConfig getConfigOfTrigger(final Trigger trigger) {
+    private synchronized TriggerConfig getConfigOfTrigger(final Trigger trigger) {
         TriggerConfig triggerConfig = null;
 
         // save cast!
@@ -220,7 +220,7 @@ public class SchedulerControl {
         return triggerConfig;
     }
 
-    public Boolean isPaused(final JobKey jobKey) throws SchedulerException {
+    public synchronized Boolean isPaused(final JobKey jobKey) throws SchedulerException {
         for(String triggerGroup : scheduler.getPausedTriggerGroups()) {
             Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(triggerGroup));
             
@@ -236,7 +236,7 @@ public class SchedulerControl {
         return false;
     }
     
-    public void resume(final JobKey jobKey) throws SchedulerException {
+    public synchronized void resume(final JobKey jobKey) throws SchedulerException {
         scheduler.resumeJob(jobKey);
     }
 

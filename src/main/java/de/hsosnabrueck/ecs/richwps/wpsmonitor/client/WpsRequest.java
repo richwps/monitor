@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
 import java.util.Date;
 
 /**
  * Class which contains all necessary datas to request a wps server.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsRequest {
+
     /**
      * raw xml request
      */
     private final String rawRequest;
-    
+
     /**
      * informations to call the wps server
      */
     private final WpsProcessInfo processInfo;
-    
+
     /**
      * time which the request was executed
      */
@@ -41,7 +41,7 @@ public class WpsRequest {
 
     /**
      * Constructor.
-     * 
+     *
      * @param rawRequest Raw XML Request. WPS execute-command String.
      * @param processInfo Information to call the WPS Server.
      */
@@ -56,11 +56,11 @@ public class WpsRequest {
     public void prepareRequest() {
         requestTime = new Date();
     }
-    
+
     /**
      * Indicates if this request was executed
-     * 
-     * @return true if already executed, otherwise false 
+     *
+     * @return true if already executed, otherwise false
      */
     public Boolean isExecuted() {
         return requestTime != null;
@@ -77,7 +77,7 @@ public class WpsRequest {
     public WpsProcessInfo getProcessInfo() {
         return processInfo;
     }
-    
+
     @Override
     public String toString() {
         return rawRequest;

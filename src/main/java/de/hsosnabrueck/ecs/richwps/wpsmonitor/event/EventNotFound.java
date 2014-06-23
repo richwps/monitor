@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 
 /**
+ * Will be thrown if the given eventName not matched any registred eventName
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -25,5 +25,5 @@ public class EventNotFound extends Exception {
     public EventNotFound(final String eventName) {
         super("Eventname " + eventName + " could not resolved.");
     }
-    
+
 }

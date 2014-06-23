@@ -17,7 +17,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 /**
- *
+ * Panel which representate one entry of the measured data.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasuredDataPane extends javax.swing.JPanel {
@@ -25,10 +26,10 @@ public class MeasuredDataPane extends javax.swing.JPanel {
     /**
      * Creates new form MeasuredDataPane
      */
-    public MeasuredDataPane(String text) {
+    public MeasuredDataPane(final String measurementText) {
         initComponents();
         
-        measuredText.setText(text);
+        measuredText.setText(measurementText);
     }
 
     /**

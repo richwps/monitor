@@ -24,24 +24,36 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * EventHandler system for monitor events like shutdown
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorEventHandler {
 
+    /**
+     * Map that maps eventlistener to the specific eventname
+     */
     private Map<String, List<MonitorEventListener>> events;
-    
+
     private final static Logger log = LogManager.getLogger();
 
+    /**
+     * Default constructor
+     */
     public MonitorEventHandler() {
         events = new HashMap<String, List<MonitorEventListener>>();
     }
 
+    /**
+     * Registers an eventname; does nothing if the eventname is allready exists
+     *
+     * @param eventName Event Name which should be registred
+     */
     public void registerEvent(final String eventName) {
         if (eventName != null) {
             if (!events.containsKey(eventName)) {
                 events.put(eventName, new ArrayList<MonitorEventListener>());
-                
+
                 log.debug("EventHandler: Register new Event {}", eventName);
             } else {
                 log.debug("EventHandler: This EventManager already contains this Event with name {}.", eventName);
@@ -51,11 +63,16 @@ public class MonitorEventHandler {
         }
     }
 
+    /**
+     * Fires an event
+     *
+     * @param event MonitorEvent-instance
+     */
     public void fireEvent(final MonitorEvent event) {
         if (events.containsKey(event.getEventName())) {
             for (MonitorEventListener listener : events.get(event.getEventName())) {
                 listener.execute(event);
-                
+
                 log.debug("EventHandler: Event {} fired! Execute: {}", event.getEventName(), listener.getClass().getName());
             }
         } else {
@@ -63,30 +80,43 @@ public class MonitorEventHandler {
         }
     }
 
+    /**
+     * Registers a listener for a specific event
+     *
+     * @param eventName name of the event which the listener should listen
+     * @param eventToRegister EventListener instance
+     * @throws EventNotFound If the event is not found
+     */
     public void registerListener(final String eventName, final MonitorEventListener eventToRegister) throws EventNotFound {
         if (!events.containsKey(Param.notNull(eventName, "eventName"))) {
             log.debug("EventHandler: registerListener: Event {} not found!", eventName);
-            
+
             throw new EventNotFound(eventName);
         }
 
         events.get(eventName)
                 .add(Param.notNull(eventToRegister, "eventToRegister"));
-        
+
         log.debug("EventHandler: Register new Listener: {}", eventToRegister.getClass().getName());
     }
 
+    /**
+     * Removes a given listener from the eventname
+     *
+     * @param eventName name of the event
+     * @param eventToRemove Eventlistener object which should be removed
+     * @throws EventNotFound If the event is not found
+     */
     public void removeListener(final String eventName, final MonitorEventListener eventToRemove) throws EventNotFound {
         if (!events.containsKey(Param.notNull(eventName, "eventName"))) {
             log.debug("EventHandler: removeListener: Event {} not found!", eventName);
-            
+
             throw new EventNotFound(eventName);
         }
 
-        
         events.get(eventName)
                 .remove(Param.notNull(eventToRemove, "eventToRemove"));
-        
+
         log.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
     }
 }

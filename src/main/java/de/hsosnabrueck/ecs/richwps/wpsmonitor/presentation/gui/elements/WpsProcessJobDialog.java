@@ -30,6 +30,9 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     
     /**
      * Creates new form WpsProcessJobDialog
+     * @param mainFrame
+     * @param wpsProcess
+     * @param modal
      */
     public WpsProcessJobDialog(WpsMonitorGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
         super(mainFrame, modal);
@@ -128,6 +131,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
     private void newJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
         WpsProcessJobEntry newJobEntry = new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
+        
         addJobPane.add(newJobEntry);
         addJobPane.revalidate();
     }//GEN-LAST:event_newJobButtonActionPerformed

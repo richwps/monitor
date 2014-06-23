@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 
 /**
+ * Interface that need to be implement by eventlisteners
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorEventListener {
+
+    /**
+     * Execute method which handel the listener behavior
+     *
+     * @param event MonitorEvent-instance
+     */
     public void execute(MonitorEvent event);
 }

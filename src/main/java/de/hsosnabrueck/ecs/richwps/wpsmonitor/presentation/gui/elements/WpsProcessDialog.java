@@ -27,18 +27,18 @@ import javax.swing.JPanel;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDialog extends javax.swing.JDialog {
-    private WpsMonitorGui mainFrame;
+    private WpsMonitorGui monitorMainFrame;
     private WpsEntity wps;
     
 
-    public WpsProcessDialog(WpsMonitorGui mainFrame, WpsEntity wps, boolean modal) {
-        super(mainFrame, modal);
+    public WpsProcessDialog(WpsMonitorGui monitorMainFrame, WpsEntity wps, boolean modal) {
+        super(monitorMainFrame, modal);
         initComponents();
         
-        setLocationRelativeTo(mainFrame);
+        setLocationRelativeTo(monitorMainFrame);
         
         this.wps = wps;
-        this.mainFrame = Param.notNull(mainFrame, "mainFrame");
+        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
     }
     
     private Boolean isNotEmptyProcessName() {
@@ -161,7 +161,8 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         if(isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
             
-            WpsProcessPanel processPanel = new WpsProcessPanel(mainFrame, addProcessPane, new WpsProcessEntity(wpsProcessIdentifier, wps));
+            WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
+            WpsProcessPanel processPanel = new WpsProcessPanel(monitorMainFrame, addProcessPane, wpsProcessEntity);
 
             addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");

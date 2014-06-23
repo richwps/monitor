@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import java.util.List;
 
 /**
+ * DataAcces for WpsEntity-objects
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsDataAccess extends DataAccess<WpsEntity> {
+
+    /**
+     * Gets all WpsEntity-objects
+     *
+     * @return List of WpsEntity objects
+     */
     public List<WpsEntity> getAll();
 }

@@ -15,7 +15,6 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
-
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
@@ -23,16 +22,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 /**
+ * Default implementation of a QosDataAccess-interface
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
-    public QosDao() {
-    }
-    
+
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {
         return getEntityManager().find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));

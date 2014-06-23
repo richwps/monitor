@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
@@ -36,35 +35,44 @@ import javax.persistence.Temporal;
 import javax.persistence.Version;
 
 /**
+ * Entity that group up various AbstractQosEntity objects by measurement
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
 @NamedQueries({
+    /**
+     * Selects all MeasuredDataEntity objects be process
+     */
     @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :identifier AND "
             + "t.process.wps.identifier = :wpsIdentifier "
             + "ORDER BY t.createTime"),
+
+    /**
+     * Select all MeasuredDataEntity objects by wps
+     */
     @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier")
 })
 public class MeasuredDataEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Version
     private long version;
-    
+
     @Column(nullable = false, updatable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createTime;
-    
-    @JoinColumn(nullable = false) 
+
+    @JoinColumn(nullable = false)
     @OneToOne
     private WpsProcessEntity process;
-    
-    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<AbstractQosEntity> data;
-    
+
     public MeasuredDataEntity() {
         this.data = new ArrayList<AbstractQosEntity>();
     }
@@ -85,7 +93,7 @@ public class MeasuredDataEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -133,13 +141,13 @@ public class MeasuredDataEntity implements Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        
-        for(AbstractQosEntity e : data) {
+
+        for (AbstractQosEntity e : data) {
             builder.append(e.getDataAsString());
             builder.append("\n");
         }
-        
+
         return builder.toString();
     }
-    
+
 }

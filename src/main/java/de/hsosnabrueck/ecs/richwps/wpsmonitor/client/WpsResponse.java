@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
 
 import java.util.Date;
 
 /**
- * Presentate the response of a wps server. Contains the full response in responseBody
- * and the response Time. In addtion it contains possbile Exceptions at execute Time
- * of the specific request.
- * 
+ * Presentate the response of a wps server. Contains the full response in
+ * responseBody and the response Time. In addtion it contains possbile
+ * Exceptions at execute Time of the specific request.
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsResponse {
+
     /**
      * Exception Object, can be null
      */
     private Exception exception;
-    
+
     /**
      * Response time of the wps server
      */
     private Date responseTime;
-    
+
     /**
      * Raw answer of the wps server
      */
@@ -43,7 +43,7 @@ public class WpsResponse {
 
     /**
      * Constructor.
-     * 
+     *
      * @param exception Exception Object, if an exception happened
      * @param responseBody The Response of wps server whitout header
      * @param responseTime The Response-Time
@@ -56,7 +56,7 @@ public class WpsResponse {
 
     /**
      * Constructor.
-     * 
+     *
      * @param responseBody The Response of wps server whitout header
      * @param responseTime The Response-Time
      */
@@ -71,7 +71,7 @@ public class WpsResponse {
     public void setResponseTime(Date responseTime) {
         this.responseTime = responseTime;
     }
-    
+
     public void setException(Exception exception) {
         this.exception = exception;
     }
@@ -83,50 +83,51 @@ public class WpsResponse {
     public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
     }
-    
+
     public Boolean isException() {
         return exception != null;
     }
-    
+
     /**
      * Indicates if WpsException is occourred
-     * 
+     *
      * @return true if WpsException happened
      */
     public Boolean isWpsException() {
         return isException() && exception instanceof WpsException;
     }
-    
+
     /**
      * Indicates if ConnectionException is occourred
-     * 
+     *
      * @return true if ConnectionException happened
      */
     public Boolean isConnectionException() {
         return isException() && exception instanceof WpsConnectionException;
     }
-    
+
     /**
      * Indicates if an other Exceptions is occourred
-     * 
-     * @return true if other Exception type as WpsEception or ConnectionException happened
+     *
+     * @return true if other Exception type as WpsEception or
+     * ConnectionException happened
      */
     public Boolean isOtherException() {
         return isException() && !(isWpsException() || isConnectionException());
     }
-    
+
     /**
      * Returns the exception Message, if an exception occourred
-     * 
+     *
      * @return The Exception Message
      */
     public String getExceptionMessage() {
         String message = null;
-        
-        if(exception != null) {
+
+        if (exception != null) {
             message = exception.getMessage();
         }
-        
+
         return message;
     }
 }

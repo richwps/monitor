@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorFacade;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispatcher;
 import spark.Route;
 
@@ -25,7 +25,7 @@ import spark.Route;
  */
 public abstract class MonitorRoute extends Route {
 
-    private MonitorFacade monitorControl;
+    private MonitorControl monitorControl;
     private EntityDispatcher dispatch;
     private PresentateStrategy strategy;
     protected final String route;
@@ -36,13 +36,13 @@ public abstract class MonitorRoute extends Route {
         this.route = routeStr;
     }
 
-    public void init(MonitorFacade monitorControl, EntityDispatcher dispatch, PresentateStrategy strategy) {
+    public void init(MonitorControl monitorControl, EntityDispatcher dispatch, PresentateStrategy strategy) {
         this.monitorControl = monitorControl;
         this.dispatch = dispatch;
         this.strategy = strategy;
     }
 
-    public MonitorFacade getMonitorControl() {
+    public MonitorControl getMonitorControl() {
         return monitorControl;
     }
 

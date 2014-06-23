@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
@@ -22,28 +21,25 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 
 /**
+ * Defgault implementation of a WpsDataAccess interface
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
 
-    public WpsDao() {
-    }
-    
     @Override
     public WpsEntity find(Object primaryKey) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("identifier", primaryKey);
-        
+
         List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
-        
-        if(wpsEntities != null && wpsEntities.size() > 0) {
+
+        if (wpsEntities != null && wpsEntities.size() > 0) {
             return wpsEntities.get(0);
         }
-        
+
         return null;
     }
 
@@ -56,5 +52,5 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     public List<WpsEntity> getAll() {
         return get(null);
     }
-    
+
 }

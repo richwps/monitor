@@ -13,17 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 /**
+ * Class to define a Range between offset and count; offset presentate the start
+ * value and count the total value of elements.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Range {
-    private Integer offset;
-    private Integer count;
 
+    /**
+     * Start value
+     */
+    private final Integer offset;
+
+    /**
+     * Total number of elements
+     */
+    private final Integer count;
+
+    /**
+     * Constructor.
+     *
+     * @param offset Startvalue
+     * @param count Total number of elements
+     */
     public Range(Integer offset, Integer count) {
         this.offset = offset;
         this.count = count;

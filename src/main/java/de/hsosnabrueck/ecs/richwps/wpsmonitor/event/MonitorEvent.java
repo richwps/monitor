@@ -13,25 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 
 import java.util.Date;
 
 /**
- *
+ * MonitorEvent instances is used to fire specific events
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorEvent {
+
+    /**
+     * Name of the fired event
+     */
     private final String eventName;
+    
+    /**
+     * Date as the event is fired
+     */
     private final Date triggerDate;
+    
+    /**
+     * Message for the listeners; the listener must know which type the message
+     * is
+     */
     private Object msg;
 
     public MonitorEvent(String eventName) {
         this.eventName = eventName;
         this.triggerDate = initDate();
     }
-    
+
     private Date initDate() {
         return new Date();
     }

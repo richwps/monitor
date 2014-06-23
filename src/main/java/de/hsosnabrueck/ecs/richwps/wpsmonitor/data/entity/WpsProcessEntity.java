@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
@@ -26,9 +25,24 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
+    /**
+     * Gets all WpsProcess-entities by wps identifier
+     */
     @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier"),
+
+    /**
+     * Gets all WpsProcess-entities
+     */
     @NamedQuery(name = "wpsprocess.getAll", query = "SELECT t FROM WpsProcessEntity t"),
+
+    /**
+     * Gets a specific process entity by wps.identifier and process.identifier
+     */
     @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier"),
+
+    /**
+     * Deletes all process entities that matches the given wps identifier
+     */
     @NamedQuery(name = "wpsprocess.deleteAllFromWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier")
 })
 
@@ -36,19 +50,19 @@ import javax.persistence.Version;
         uniqueConstraints = @UniqueConstraint(columnNames = {"identifier", "wps_id"})
 )
 public class WpsProcessEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Version
     private long version;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     private String identifier;
     private boolean wpsException;
-    
+
     @Lob
     private String rawRequest;
-    
 
     @OneToOne
     @JoinColumn(name = "wps_id")
@@ -57,11 +71,11 @@ public class WpsProcessEntity implements Serializable {
     public WpsProcessEntity() {
         this(null, null);
     }
-    
+
     public WpsProcessEntity(String identifier) {
         this(identifier, null);
     }
-    
+
     public WpsProcessEntity(String identifier, WpsEntity wps) {
         this.identifier = identifier;
         this.wps = wps;

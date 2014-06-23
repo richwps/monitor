@@ -17,11 +17,11 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -31,25 +31,24 @@ import javax.swing.JTextField;
  */
 public class WpsMonitorGui extends javax.swing.JFrame {
 
-    private Monitor monitorRef;
+    private Monitor monitor;
 
     /**
      * Creates new form WpsMonitorControl
+     * @param monitor
      */
     public WpsMonitorGui(final Monitor monitor) {
-        this.monitorRef = Param.notNull(monitor, "monitor");
+        this.monitor = Param.notNull(monitor, "monitor");
+        
         initComponents();
         setLocationRelativeTo(null);
     }
 
-    private Boolean isCreateFieldsValid() {
-        return !(wpsToAddField.getText().trim().equalsIgnoreCase("") || wpsToAddUriField.getText().trim().equalsIgnoreCase(""));
+    private Boolean isCreateFieldsNotEmpty() {
+        return !(wpsToAddField.getText().trim().equalsIgnoreCase("") 
+                || wpsToAddUriField.getText().trim().equalsIgnoreCase(""));
     }
-
-    private void performInput() {
-        addWpsButton.setEnabled(isCreateFieldsValid());
-    }
-
+    
     public JTextField getWpsToAddField() {
         return wpsToAddField;
     }
@@ -66,18 +65,19 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         this.wpsToAddUriField = wpsToAddUriField;
     }
 
-    public Monitor getMonitorRef() {
-        return monitorRef;
+    public Monitor getMonitorReference() {
+        return monitor;
     }
 
     private void resetAddWpsFields() {
-        getWpsToAddField().setText("");
-        getWpsToAddUriField().setText("");
+        getWpsToAddField()
+                .setText("");
+        getWpsToAddUriField()
+                .setText("");
 
-        getWpsToAddField().requestFocus();
+        getWpsToAddField()
+                .requestFocus();
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,38 +114,12 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 wpsToAddFieldActionPerformed(evt);
             }
         });
-        wpsToAddField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                wpsCreateFieldsFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                wpsCreateFieldsFocusLost(evt);
-            }
-        });
-        wpsToAddField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                wpsCreateFieldsKeyPressed(evt);
-            }
-        });
 
         wpsUrlDecoText.setText("WPS URL");
 
         wpsToAddUriField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 wpsToAddUriFieldActionPerformed(evt);
-            }
-        });
-        wpsToAddUriField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                wpsCreateFieldsFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                wpsCreateFieldsFocusLost(evt);
-            }
-        });
-        wpsToAddUriField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                wpsCreateFieldsKeyPressed(evt);
             }
         });
 
@@ -251,49 +225,43 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void wpsCreateFieldsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_wpsCreateFieldsFocusGained
-        performInput();
-    }//GEN-LAST:event_wpsCreateFieldsFocusGained
-
-    private void wpsCreateFieldsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_wpsCreateFieldsFocusLost
-        performInput();
-    }//GEN-LAST:event_wpsCreateFieldsFocusLost
-
-    private void wpsCreateFieldsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_wpsCreateFieldsKeyPressed
-        performInput();
-    }//GEN-LAST:event_wpsCreateFieldsKeyPressed
-
     private void addWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addWpsButtonActionPerformed
-        if (isCreateFieldsValid()) {
+        if (isCreateFieldsNotEmpty()) {
             try {
                 WpsEntity wps = new WpsEntity(getWpsToAddField().getText(),
-                        getWpsToAddUriField().getText());
+                        getWpsToAddUriField().getText()
+                );
 
-                JPanel wpsPanel = new WpsPanel(this, wpsAddPanel, wps);
-
-                if (monitorRef.getMonitorControl().createWps(wps.getIdentifier(), wps.getUri())) {
-                    wpsAddPanel.add(wpsPanel, BorderLayout.PAGE_START);
+                if (monitor.getMonitorControl().createWps(wps.getIdentifier(), wps.getUri())) {                  
                     resetAddWpsFields();
+                    
+                    JPanel wpsPanel = new WpsPanel(this, wpsAddPanel, wps);
+                    wpsAddPanel.add(wpsPanel, BorderLayout.PAGE_START);
                     wpsAddPanel.revalidate();
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Can't register Wps. Maybe the Wps is already registred.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    MessageDialogs.showError(this, 
+                            "Error", 
+                            "Can't register Wps. Maybe the Wps is already registred."
+                    );
                 }
             } catch (MalformedURLException ex) {
                 showUriConvertError();
             } catch (URISyntaxException ex) {
                 showUriConvertError();
             }
+        } else {
+            MessageDialogs.showError(this, 
+                    "Error", 
+                    "One of the fields is empty!"
+            );
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
 
     private void showUriConvertError() {
-        JOptionPane.showMessageDialog(this,
-                "The entered URI is not valid!",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        MessageDialogs.showError(this, 
+                "Error", 
+                "The entered URI is not valid!"
+        );
     }
 
     private void wpsToAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddFieldActionPerformed

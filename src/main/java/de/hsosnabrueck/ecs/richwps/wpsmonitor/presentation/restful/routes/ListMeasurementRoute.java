@@ -20,6 +20,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import spark.Request;
 import spark.Response;
 
@@ -28,9 +30,12 @@ import spark.Response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListMeasurementRoute extends MonitorRoute {
-
+    public static final Logger log = LogManager.getLogger();
+    
     public ListMeasurementRoute() {
         super("/measurement/wps/:wps/process/:process/count/:count");
+        
+        log.debug("ListMeasurementRoute instantiated");
     }
 
     @Override
@@ -39,10 +44,14 @@ public class ListMeasurementRoute extends MonitorRoute {
             String wpsIdentifier = Param.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Param.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
-
+            
             List<MeasuredDataEntity> measuredData = getMonitorControl()
                     .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
-
+            
+            log.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}", 
+                    wpsIdentifier, processIdentifier, count
+            );
+            
             return getStrategy().presentate(getDispatch().dispatch(measuredData));
         } catch (IllegalArgumentException exception) {
             response.status(404);

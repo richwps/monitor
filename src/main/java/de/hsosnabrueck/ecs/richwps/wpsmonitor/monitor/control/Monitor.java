@@ -30,12 +30,12 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Monitor {
-    private MonitorControl monitorControl;
+    private MonitorControlImpl monitorControl;
     private final MonitorBuilder builderInstance;
     
     private final static Logger log = LogManager.getLogger();
     
-    public Monitor(MonitorControl monitorControl, MonitorBuilder builder) {
+    public Monitor(MonitorControlImpl monitorControl, MonitorBuilder builder) {
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
         this.builderInstance = Param.notNull(builder, "builder");
         
@@ -55,7 +55,8 @@ public class Monitor {
                 } catch(Exception ex) {
                     // catch all exceptions, because this is 
                     // a criticall point in the shutdown process of the JVM
-                    log.fatal(ex);
+                    log.error(ex);
+                    System.out.println(ex.getStackTrace());
                 }
             }
         });
@@ -77,11 +78,8 @@ public class Monitor {
     }
 
     public MonitorControl getMonitorControl() {
+        log.debug("getMonitorControl called by {}", Thread.currentThread().getName());
         return monitorControl;
-    }
-    
-    public MonitorFacade getMonitorFacade() {
-        return (MonitorFacade)monitorControl;
     }
     
     public MonitorEventHandler getEventHandler() {
