@@ -19,27 +19,40 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Default presentation of a MeasuredDataEntity (whitout id & co)
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DefaultMeasuredDataPresentation {
     private final List<AbstractQosEntity> measuredData;
-    private final Date time;
+    private Date time;
 
     public DefaultMeasuredDataPresentation(MeasuredDataEntity lastEntities) {
         this.measuredData = Param.notNull(lastEntities, "lastEntities").getData();
         this.time = lastEntities.getCreateTime();
     }
 
+    DefaultMeasuredDataPresentation() {
+        measuredData = new ArrayList<AbstractQosEntity>();
+    }
+
     public List<AbstractQosEntity> getMeasuredData() {
         return measuredData;
     }
 
+    public boolean add(AbstractQosEntity e) {
+        return measuredData.add(e);
+    }
+
     public Date getTime() {
         return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

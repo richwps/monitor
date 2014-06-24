@@ -19,6 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Disassemble the bulk of MeasuredDataEntity objects and assigns the objects
+ * to the specific converters 
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDisassembler {
@@ -39,8 +42,8 @@ public class EntityDisassembler {
     }
 
     /**
-     * Removes the AbstractQosEntity Objects out of the dataList's MeasuredDataEntity
-     * Object, and assign the AbstractQosEntities to the specific Converter-Object
+     * Removes the AbstractQosEntity Objects out of the MeasuredDataEntity
+     * List and assign the AbstractQosEntities to the specific Converter-Object
      * 
      * disassemble() modifieds the MeasuredDataEntity-Objects!
      * 
@@ -50,25 +53,25 @@ public class EntityDisassembler {
     public Map<String, EntityConverter> disassemble(List<MeasuredDataEntity> dataList) {
         Map<String, EntityConverter> converters = createNewBunchOfConverters();
         
-        for (int j = 0; j < dataList.size(); j++) {
-            MeasuredDataEntity measuredDataEntity = dataList.get(j);
+        for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
-
-            for (int i = 0; i < measureData.size(); i++) {
-                if (converters.containsKey(measureData.get(i).getEntityName())) {
-                    converters.get(measureData.get(i).getEntityName()).add(measureData.remove(i--)); //decrement i; remove(int) shift all elements to left
-                }
-            }
             
-            // if the dataList empty, then remove the object
-            if(measureData.isEmpty()) {
-                dataList.remove(j--); //decrement j; remove(int) shift all elements to left
+            
+            for (AbstractQosEntity abstractQosEntity : measureData) {
+                if (converters.containsKey(abstractQosEntity.getEntityName())) {
+                    converters.get(abstractQosEntity.getEntityName()).add(abstractQosEntity); 
+                } 
             }
         }
 
         return converters;
     }
 
+    /**
+     * Creates new instances of the entity converters
+     * 
+     * @return Map of entity converters
+     */
     private Map<String, EntityConverter> createNewBunchOfConverters() {
         Map<String, EntityConverter> entityConverters = new HashMap<String, EntityConverter>();
 

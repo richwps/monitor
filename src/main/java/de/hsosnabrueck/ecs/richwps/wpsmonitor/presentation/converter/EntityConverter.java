@@ -21,23 +21,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Absract EntityConverter which is fill up with AbstractQosEntity for which
+ * this converter is registred.
+ * 
+ * The assignation is evaluated over AbstractQosEntity's  getEntityName-method
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class EntityConverter {
-    private List<AbstractQosEntity> entities;
+    private final List<AbstractQosEntity> entities;
     
     public EntityConverter() {
         entities = new ArrayList<AbstractQosEntity>();
     }
     
+    /**
+     * Adds an abstractQosEntity instance to the converter
+     * 
+     * @param data AbstractQosEntity instance
+     */
     public void add(final AbstractQosEntity data) {
         entities.add(data);
     }
 
+    /**
+     * Gets all added entities
+     * 
+     * @return List of AbstractQosEntity instances
+     */
     public List<AbstractQosEntity> getEntities() {
         return entities;
     }
     
+    /**
+     * Execute the convert process
+     * 
+     * @return Object which will be outputet over toString or JAXB or JSON ..
+     */
     public abstract Object convert();
 }

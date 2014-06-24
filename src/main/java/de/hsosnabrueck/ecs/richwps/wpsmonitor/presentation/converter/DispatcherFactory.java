@@ -20,7 +20,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.Map;
 
 /**
- *
+ * Setups a EntityDispatcher with the configured converterMap in the 
+ * MonitorBuilder instance
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DispatcherFactory {

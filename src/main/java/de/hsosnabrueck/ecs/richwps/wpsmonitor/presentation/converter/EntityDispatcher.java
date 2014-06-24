@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
@@ -24,33 +24,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Calls the convert method on the converter objects and dispatchtes the result
+ * in a Map
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDispatcher {
+
     private final EntityDisassembler disassembler;
 
+    /**
+     * Constructor.
+     *
+     * @param disassembler EntityDisassembler instance
+     */
     public EntityDispatcher(EntityDisassembler disassembler) {
         this.disassembler = Param.notNull(disassembler, "disassembler");
     }
-    
+
+    /**
+     * Dispatches the converters into a Map. Entities which have no converter
+     * would be registred under the "MeasuredData"-key.
+     *
+     * @param data
+     * @return
+     */
     public Map<String, Object> dispatch(List<MeasuredDataEntity> data) {
         Map<String, EntityConverter> disassemble = disassembler.disassemble(data);
         Map<String, Object> merged = new HashMap<String, Object>();
-        
-        for(Map.Entry e : disassemble.entrySet()) {
-            merged.put((String)e.getKey(), ((EntityConverter)e.getValue()).convert());
-        }
-        
-        // put the last entities into the map, if data not empty
-        if(!data.isEmpty()) {
-            List<DefaultMeasuredDataPresentation> theLast = new ArrayList<DefaultMeasuredDataPresentation>();
-            
-            for(MeasuredDataEntity mData : data) {
-                theLast.add(new DefaultMeasuredDataPresentation(mData));
-            }
-            
-            merged.put("MeasuredData", theLast);
+
+        for (Map.Entry e : disassemble.entrySet()) {
+            merged.put((String) e.getKey(), ((EntityConverter) e.getValue()).convert());
         }
         
         return merged;

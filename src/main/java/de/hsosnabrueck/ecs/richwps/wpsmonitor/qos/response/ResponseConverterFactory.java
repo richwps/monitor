@@ -15,7 +15,6 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityConverter;

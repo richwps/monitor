@@ -56,7 +56,6 @@ public class Monitor {
                     // catch all exceptions, because this is 
                     // a criticall point in the shutdown process of the JVM
                     log.error(ex);
-                    System.out.println(ex.getStackTrace());
                 }
             }
         });
@@ -68,7 +67,7 @@ public class Monitor {
     }
     
     public void shutdown() throws SchedulerException {
-        log.debug("Fire Shutdown Signal!");
+        log.debug("Monitor shutdown.");
         
         getEventHandler()
                 .fireEvent(new MonitorEvent("monitor.shutdown"));

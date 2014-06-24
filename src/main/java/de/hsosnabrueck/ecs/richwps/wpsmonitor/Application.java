@@ -19,6 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.Config
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.HttpOperation;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
@@ -53,23 +54,44 @@ public class Application {
     }
 
     public void run() throws SchedulerException, Exception {
+        Monitor monitor = setupMonitor();
+
+        // register JPA Shutdown
+        monitor.getEventHandler()
+                .registerListener("monitor.shutdown", new MonitorEventListener() {
+
+                    @Override
+                    public void execute(MonitorEvent event) {
+                        ConfiguredEntityManagerFactory.close();
+                    }
+                }
+        );
+
+        log.trace("WpsMonitor is starting up ...");
+        monitor.start();
+
+        log.trace("Start REST Interface ...");
+        RestInterface rest = setupRest(monitor.getMonitorControl());
+        rest.start();
+
+        log.trace("Start GUI ...");
+        GuiStarter.start(monitor);
+    }
+    
+    public Monitor setupMonitor() throws Exception {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
+        
+        monitor.getProbeService()
+                .addProbe(new ResponseFactory());
+        
+        return monitor;
+    }
 
-        // register JPA Shutdown thinks
-        monitor.getEventHandler().registerListener("monitor.shutdown", new MonitorEventListener() {
-
-            @Override
-            public void execute(MonitorEvent event) {
-                ConfiguredEntityManagerFactory.close();
-            }
-        });
-        // register default QoS-Probes
-        monitor.getProbeService().addProbe(new ResponseFactory());
-
+    public RestInterface setupRest(MonitorControl monitor) {
         RestInterface rest = new RestInterfaceBuilder()
-                .withMonitorControl(monitor.getMonitorControl())
+                .withMonitorControl(monitor)
                 .withStrategy(new JsonPresentateStrategy())
                 .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
                 .build();
@@ -78,13 +100,6 @@ public class Application {
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 
-        log.trace("WpsMonitor is starting up ...");
-        monitor.start();
-
-        log.trace("Start REST Interface ...");
-        rest.start();
-
-        log.trace("Start GUI ...");
-        GuiStarter.start(monitor);
+        return rest;
     }
 }
