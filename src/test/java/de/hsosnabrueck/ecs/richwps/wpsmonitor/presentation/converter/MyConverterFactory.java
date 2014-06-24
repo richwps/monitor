@@ -16,11 +16,13 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+
 /**
  *
  * @author FloH
  */
-public class MyConverterFactory implements ConverterFactory {
+public class MyConverterFactory implements Factory<EntityConverter> {
  
     @Override
     public EntityConverter create() {

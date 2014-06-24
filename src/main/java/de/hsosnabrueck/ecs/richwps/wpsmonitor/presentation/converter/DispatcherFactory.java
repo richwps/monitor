@@ -17,6 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import java.util.Map;
 
 /**
@@ -26,9 +27,9 @@ import java.util.Map;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DispatcherFactory {
-    private final Map<String, ConverterFactory> converterMap;
+    private final Map<String, Factory<EntityConverter>> converterMap;
     
-    public DispatcherFactory(final Map<String, ConverterFactory> converterMap) {
+    public DispatcherFactory(final Map<String, Factory<EntityConverter>> converterMap) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
     }
     

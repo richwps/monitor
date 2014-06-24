@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +35,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class EntityDisassembler {
 
-    private final Map<String, ConverterFactory> converterMap;
+    private final Map<String, Factory<EntityConverter>> converterMap;
     private final static Logger log = LogManager.getLogger();
 
-    public EntityDisassembler(final Map<String, ConverterFactory> converterMap) {
+    public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
     }
 
@@ -77,7 +78,7 @@ public class EntityDisassembler {
 
         for (Map.Entry e : converterMap.entrySet()) {
             try {
-                entityConverters.put((String) e.getKey(), ((ConverterFactory) e.getValue()).create());
+                entityConverters.put((String) e.getKey(), ((Factory<EntityConverter>) e.getValue()).create());
             } catch (CreateException ex) {
                 log.warn(ex);
             }

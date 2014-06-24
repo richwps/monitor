@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityConverter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +31,10 @@ public class RestInterfaceBuilder {
 
     private PresentateStrategy strategy;
     private MonitorControl monitorControl;
-    private Map<String, ConverterFactory> converterMap;
+    private Map<String, Factory<EntityConverter>> converterMap;
 
     public RestInterfaceBuilder() {
-        this.converterMap = new HashMap<String, ConverterFactory>();
+        this.converterMap = new HashMap<String, Factory<EntityConverter>>();
     }
 
     public RestInterfaceBuilder withStrategy(final PresentateStrategy strategy) {
@@ -49,7 +49,7 @@ public class RestInterfaceBuilder {
         return this;
     }
 
-    public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final ConverterFactory converterFactory) {
+    public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final Factory<EntityConverter> converterFactory) {
         converterMap.put(Param.notNull(abstractQosEntityName, "abstractQosEntityName"), Param.notNull(converterFactory, "converterFactory"));
 
         return this;

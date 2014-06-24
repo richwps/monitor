@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStrategy;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class ConverterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        Map<String, ConverterFactory> converterMap = new HashMap<String, ConverterFactory>();
+        Map<String, Factory<EntityConverter>> converterMap = new HashMap<String, Factory<EntityConverter>>();
         converterMap.put("exampleMeasurement", new MyConverterFactory());
 
         dispatchFactory = new DispatcherFactory(converterMap);

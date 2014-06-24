@@ -16,14 +16,14 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityConverter;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ResponseConverterFactory implements ConverterFactory {
+public class ResponseConverterFactory implements Factory<EntityConverter> {
 
     @Override
     public EntityConverter create() throws CreateException {
