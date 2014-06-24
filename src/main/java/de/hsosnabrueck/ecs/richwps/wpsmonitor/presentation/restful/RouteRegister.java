@@ -72,48 +72,4 @@ public class RouteRegister {
     public void options(final MonitorRoute routeObj) {
         spark.Spark.options(routeObj);
     }
-    
-    public void statelessGet(final Factory<MonitorRoute> routeFactoryObj) throws CreateException {
-        Route embeddedRoute = getEmbeddedRoute(routeFactoryObj);
-        spark.Spark.get(embeddedRoute);
-    }
-
-    public void statelessPost(final Factory<MonitorRoute> routeFactoryObj) throws CreateException {
-        Route embeddedRoute = getEmbeddedRoute(routeFactoryObj);
-        spark.Spark.post(embeddedRoute);
-    }
-
-    public void statelessDelete(final Factory<MonitorRoute> routeFactoryObj) throws CreateException {
-        Route embeddedRoute = getEmbeddedRoute(routeFactoryObj);
-        spark.Spark.delete(embeddedRoute);
-    }
-
-    public void statelessPut(final Factory<MonitorRoute> routeFactoryObj) throws CreateException {
-        Route embeddedRoute = getEmbeddedRoute(routeFactoryObj);
-        spark.Spark.put(embeddedRoute);
-    }
-
-    public void statelessOptions(final Factory<MonitorRoute> routeFactoryObj) throws CreateException {
-        Route embeddedRoute = getEmbeddedRoute(routeFactoryObj);
-        spark.Spark.options(embeddedRoute);
-    }
-    
-    private Route getEmbeddedRoute(final Factory<MonitorRoute> factory) throws CreateException {
-        return new Route(factory.create().getRoute()) {
-            
-            @Override
-            public Object handle(Request request, Response response) {
-                Object result = null;
-                
-                try {
-                    result = factory.create().handle(request, response);
-                } catch (CreateException ex) {
-                    log.error(ex); // should never happend
-                    response.status(500);
-                }
-                
-                return result;
-            }
-        };
-    }
 }

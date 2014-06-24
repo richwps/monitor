@@ -15,16 +15,19 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispatcher;
+import static de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute.log;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import spark.Request;
+import spark.Response;
 
 /**
  *
@@ -59,6 +62,29 @@ public class RestInterface {
 
     public RestInterface addRoute(HttpOperation operation, MonitorRoute RouteObj) {
         routeMap.get(Param.notNull(operation, "operation")).add(Param.notNull(RouteObj, "RouteObj"));
+
+        return this;
+    }
+    
+    public RestInterface addStatelessRoute(HttpOperation operation, final Factory<MonitorRoute> monitorRouteFactory) throws CreateException {
+        MonitorRoute route = new MonitorRoute(monitorRouteFactory.create().getRoute()) {
+            
+            @Override
+            public Object handle(Request request, Response response) {
+                Object result = null;
+                
+                try {
+                    result = monitorRouteFactory.create().handle(request, response);
+                } catch (CreateException ex) {
+                    log.error(ex); // should never happend
+                    response.status(500);
+                }
+                
+                return result;
+            }
+        };
+        
+        routeMap.get(Param.notNull(operation, "operation")).add(Param.notNull(route, "RouteObj"));
 
         return this;
     }
