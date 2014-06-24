@@ -43,7 +43,7 @@ import javax.persistence.Version;
     /**
      * Deletes all process entities that matches the given wps identifier
      */
-    @NamedQuery(name = "wpsprocess.deleteAllFromWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier")
+    @NamedQuery(name = "wpsprocess.deleteByWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsIdentifier")
 })
 
 @Table(

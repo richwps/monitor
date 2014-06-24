@@ -31,4 +31,6 @@ public interface WpsDataAccess extends DataAccess<WpsEntity> {
      * @return List of WpsEntity objects
      */
     public List<WpsEntity> getAll();
+    
+    public void remove(final String wpsIdentifier);
 }

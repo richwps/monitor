@@ -34,7 +34,7 @@ import javax.persistence.Version;
     /**
      * Selects a specific wps that matchtes the given identifier
      */
-    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier")
+    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier"),
 })
 public class WpsEntity implements Serializable {
 

@@ -167,11 +167,11 @@ public class WpsProcessDaoTest {
     }
 
     /**
-     * Test of deleteProcessesFromWps method, of class WpsProcessDao.
+     * Test of deleteProcessesOfWps method, of class WpsProcessDao.
      */
     @Test
     public void testDeleteProcessesFromWps() {
-        wpsProcessDao.deleteProcessesFromWps(wpsIdentifier);
+        wpsProcessDao.deleteProcessesOfWps(wpsIdentifier);
         
         List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsIdentifier);
         

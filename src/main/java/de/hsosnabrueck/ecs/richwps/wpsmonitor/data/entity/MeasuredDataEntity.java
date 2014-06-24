@@ -51,7 +51,9 @@ import javax.persistence.Version;
     /**
      * Select all MeasuredDataEntity objects by wps
      */
-    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier")
+    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier"),
+    @NamedQuery(name = "qos.deleteByWps", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :wpsIdentifier"),
+    @NamedQuery(name = "qos.deleteByWpsProcess", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier")
 })
 public class MeasuredDataEntity implements Serializable {
 

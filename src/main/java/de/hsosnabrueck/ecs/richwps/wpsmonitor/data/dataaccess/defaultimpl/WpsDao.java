@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     }
 
     @Override
-    public List<WpsEntity> get(Range range) {
+    public List<WpsEntity> get(final Range range) {
         return getBy("wps.getAll", WpsEntity.class, range);
     }
 
@@ -53,4 +54,33 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
         return get(null);
     }
 
+    @Override
+    public void remove(final String wpsIdentifier) {
+        WpsEntity find = find(wpsIdentifier);
+    
+        remove(find);
+    }
+
+    @Override
+    public void remove(final WpsEntity o) {
+        beginTransaction();
+        
+        Param.notNull(o, "WpsEntity");
+        Param.notNull(o.getIdentifier(), "WpsEntity Identifier");
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("wpsIdentifier", o.getIdentifier());
+
+        // first remove from AbstractQosEntity
+        doNamedQuery("abstractQos.deleteByWps", parameters);
+
+        // remove from MeasuredDataEntity
+        doNamedQuery("qos.deleteByWps", parameters);
+
+        // delete all processes of wps
+        doNamedQuery("wpsprocess.deleteByWps", parameters);
+        
+        super.remove(o);
+        requestCommit();
+    }
 }
