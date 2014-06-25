@@ -16,8 +16,12 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.List;
 import javax.swing.JPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -27,6 +31,8 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
     private final WpsMonitorGui mainframe;
     private final WpsProcessEntity wpsProcess;
+    
+    private final static Logger log = LogManager.getLogger();
 
     /**
      * Creates new form WpsProcessJobDialog
@@ -43,6 +49,24 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
         this.wpsProcess = wpsProcess;
         this.mainframe = Param.notNull(mainFrame, "mainFrame");
+        
+        init();
+    }
+    
+    private void init() {
+        List<TriggerConfig> triggers = mainframe.getMonitorReference()
+                .getMonitorControl()
+                .getTriggers(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+        
+        log.debug("init WpsProcessJobDialog");
+        for(TriggerConfig config : triggers) {
+            WpsProcessJobEntry jobEntryPane = createNewJobEntryPane();
+            jobEntryPane.reInit(config);
+            
+            log.debug("reInit jobEntryPane with {}", config.toString());
+            
+            addJobEntryPane(jobEntryPane);
+        }
     }
 
     /**
@@ -131,14 +155,17 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
-        WpsProcessJobEntry newJobEntry = new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
-
-        addJobPane.add(newJobEntry);
-        addJobPane.revalidate();
+        WpsProcessJobEntry newJobEntry = createNewJobEntryPane();
+        addJobEntryPane(newJobEntry);
     }//GEN-LAST:event_newJobButtonActionPerformed
-
-    public JPanel getAddJobPane() {
-        return addJobPane;
+    
+    private WpsProcessJobEntry createNewJobEntryPane() {
+        return new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
+    }
+    
+    private void addJobEntryPane(WpsProcessJobEntry pane) {
+        addJobPane.add(pane);
+        addJobPane.revalidate();
     }
 
 

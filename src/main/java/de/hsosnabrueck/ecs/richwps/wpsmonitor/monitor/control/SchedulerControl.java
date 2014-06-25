@@ -57,9 +57,13 @@ public final class SchedulerControl {
     }
 
     public synchronized JobKey addWpsAsJob(final WpsProcessEntity process) throws SchedulerException {
+        return addWpsAsJob(process.getWps().getIdentifier(), process.getIdentifier());
+    }
+    
+    public synchronized JobKey addWpsAsJob(final String wpsIdentifier, final String processIdentifier) throws SchedulerException {
         JobDetail newWpsJob = org.quartz.JobBuilder.newJob(MeasureJob.class)
                 .storeDurably()
-                .withIdentity(process.getIdentifier(), process.getWps().getIdentifier())
+                .withIdentity(processIdentifier, wpsIdentifier)
                 .build();
 
         scheduler.addJob(newWpsJob, true);
@@ -70,12 +74,27 @@ public final class SchedulerControl {
     public synchronized TriggerKey addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
         // Get JobDetail
         JobDetail forJob = scheduler.getJobDetail(Param.notNull(jobKey, "jobKey"));
-
         Trigger newTrigger = createTrigger(forJob, config);
 
         scheduler.scheduleJob(newTrigger);
 
         return newTrigger.getKey();
+    }
+
+    public synchronized void updateJobs(final String oldWpsIdentifier, final String newWpsIdentifier) throws SchedulerException {
+        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(oldWpsIdentifier));
+
+        for (JobKey k : jobKeys) {
+            List<TriggerConfig> triggerConfigsOfJob = getTriggerConfigsOfJob(k);
+            
+            JobKey newJobKey = addWpsAsJob(newWpsIdentifier, k.getName());
+            
+            for(TriggerConfig triggerConfig : triggerConfigsOfJob) {                
+                addTriggerToJob(newJobKey, triggerConfig);
+            }
+            
+            removeWpsJob(k);
+        }
     }
 
     private synchronized Trigger createTrigger(final JobDetail forJob, final TriggerConfig config) {
@@ -146,7 +165,7 @@ public final class SchedulerControl {
     public synchronized Boolean removeWpsJobs(final String wpsIdentifier) throws SchedulerException {
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsIdentifier));
         Boolean result = false;
-        
+
         if (jobKeys.size() > 0) {
             List<JobKey> toDelete = new ArrayList<JobKey>(jobKeys);
 
@@ -157,8 +176,8 @@ public final class SchedulerControl {
     }
 
     public synchronized void updateTrigger(final TriggerConfig config) throws SchedulerException {
-        
-        if(config.getTriggerKey() != null) {
+
+        if (config.getTriggerKey() != null) {
             JobDetail jobDetail = scheduler.getJobDetail(scheduler
                     .getTrigger(config.getTriggerKey())
                     .getJobKey()
@@ -205,9 +224,9 @@ public final class SchedulerControl {
         // save cast!
         if (trigger.getClass().equals(CalendarIntervalTriggerImpl.class)) {
             CalendarIntervalTrigger calendarTrigger = (CalendarIntervalTrigger) trigger;
-            
+
             DateBuilder.IntervalUnit repeatIntervalUnit = calendarTrigger.getRepeatIntervalUnit();
-            
+
             triggerConfig = new TriggerConfig(
                     trigger.getStartTime(),
                     trigger.getEndTime(),
@@ -221,21 +240,21 @@ public final class SchedulerControl {
     }
 
     public synchronized Boolean isPaused(final JobKey jobKey) throws SchedulerException {
-        for(String triggerGroup : scheduler.getPausedTriggerGroups()) {
+        for (String triggerGroup : scheduler.getPausedTriggerGroups()) {
             Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(triggerGroup));
-            
-            for(TriggerKey triggerKey : triggerKeys) {
+
+            for (TriggerKey triggerKey : triggerKeys) {
                 Trigger trigger = scheduler.getTrigger(triggerKey);
-                
-                if(trigger.getJobKey().equals(jobKey)) {
+
+                if (trigger.getJobKey().equals(jobKey)) {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     public synchronized void resume(final JobKey jobKey) throws SchedulerException {
         scheduler.resumeJob(jobKey);
     }

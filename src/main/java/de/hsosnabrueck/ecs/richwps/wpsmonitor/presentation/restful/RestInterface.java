@@ -20,12 +20,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispatcher;
-import static de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute.log;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import spark.Request;
 import spark.Response;
 
@@ -41,6 +43,8 @@ public class RestInterface {
     private final DispatcherFactory dispatchFactory;
 
     private EnumMap<HttpOperation, Set<MonitorRoute>> routeMap;
+    
+    private static final Logger log = LogManager.getLogger();
 
     public RestInterface(final PresentateStrategy strategy, final MonitorControl control, final DispatcherFactory dispatchFactory) {
         this.strategy = Param.notNull(strategy, "strategy");
@@ -61,30 +65,43 @@ public class RestInterface {
     }
 
     public RestInterface addRoute(HttpOperation operation, MonitorRoute RouteObj) {
-        routeMap.get(Param.notNull(operation, "operation")).add(Param.notNull(RouteObj, "RouteObj"));
+        routeMap.get(Param.notNull(operation, "operation"))
+                .add(Param.notNull(RouteObj, "RouteObj"));
 
         return this;
     }
     
-    public RestInterface addStatelessRoute(HttpOperation operation, final Factory<MonitorRoute> monitorRouteFactory) throws CreateException {
-        MonitorRoute route = new MonitorRoute(monitorRouteFactory.create().getRoute()) {
-            
-            @Override
-            public Object handle(Request request, Response response) {
-                Object result = null;
-                
-                try {
-                    result = monitorRouteFactory.create().handle(request, response);
-                } catch (CreateException ex) {
-                    log.error(ex); // should never happend
-                    response.status(500);
-                }
-                
-                return result;
-            }
-        };
+    public RestInterface addStatelessRoute(HttpOperation operation, final Factory<MonitorRoute> monitorRouteFactory) {
+        MonitorRoute route;
         
-        routeMap.get(Param.notNull(operation, "operation")).add(Param.notNull(route, "RouteObj"));
+        try {
+            route = new MonitorRoute(monitorRouteFactory.create().getRoute()) {
+                
+                @Override
+                public Object handle(Request request, Response response) {
+                    Object result = null;
+                    
+                    try {
+                        // create new route object
+                        MonitorRoute newRoute = monitorRouteFactory
+                                .create();
+                        
+                        // init route at every request
+                        initRoute(newRoute)
+                                .handle(request, response);
+                    } catch (CreateException ex) {
+                        log.error(ex); // should never happened
+                        response.status(500);
+                    }
+                    
+                    return result;
+                }
+            };
+            
+            addRoute(operation, route);
+        } catch (CreateException ex) {
+            log.error(ex);
+        }
 
         return this;
     }
@@ -98,13 +115,16 @@ public class RestInterface {
             HttpOperation op = (HttpOperation) routeMapEntry.getKey();
             Set<MonitorRoute> routeSet = (Set<MonitorRoute>) routeMapEntry.getValue();
 
-            EntityDispatcher dispatcher = dispatchFactory.create();
-
             for (MonitorRoute routeObj : routeSet) {
-                routeObj.init(monitorControl, dispatcher, strategy);
-                routeRegister.register(op, routeObj);
+                routeRegister.register(op, initRoute(routeObj));
             }
-
         }
+    }
+    
+    private MonitorRoute initRoute(MonitorRoute toInit) {
+        EntityDispatcher dispatcher = dispatchFactory.create();
+        toInit.init(monitorControl, dispatcher, strategy);
+        
+        return toInit;
     }
 }

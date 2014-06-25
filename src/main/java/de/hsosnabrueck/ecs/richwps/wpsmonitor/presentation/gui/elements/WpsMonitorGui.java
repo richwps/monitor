@@ -22,6 +22,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -40,9 +41,20 @@ public class WpsMonitorGui extends javax.swing.JFrame {
      */
     public WpsMonitorGui(final Monitor monitor) {
         this.monitor = Param.notNull(monitor, "monitor");
-
+        
         initComponents();
+        init();
+        
         setLocationRelativeTo(null);
+    }
+
+    private void init() {
+        List<WpsEntity> wpsList = monitor.getMonitorControl()
+                .getWpsList();
+        
+        for(WpsEntity wps : wpsList) {
+            createAndAddWpsPanel(wps);
+        }
     }
 
     private Boolean isCreateFieldsNotEmpty() {
@@ -233,12 +245,13 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                         getWpsToAddUriField().getText()
                 );
 
-                if (monitor.getMonitorControl().createWps(wps.getIdentifier(), wps.getUri())) {
-                    resetAddWpsFields();
+                Boolean isWpsCreated = monitor
+                        .getMonitorControl()
+                        .createWps(wps.getIdentifier(), wps.getUri());
 
-                    JPanel wpsPanel = new WpsPanel(this, wpsAddPanel, wps);
-                    wpsAddPanel.add(wpsPanel, BorderLayout.PAGE_START);
-                    wpsAddPanel.revalidate();
+                if (isWpsCreated) {
+                    resetAddWpsFields();
+                    createAndAddWpsPanel(wps);
                 } else {
                     MessageDialogs.showError(this,
                             "Error",
@@ -258,11 +271,29 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
 
+    private void createAndAddWpsPanel(WpsEntity wps) {
+        WpsPanel panel = createWpsPanel(wps);
+        addWpsPanel(panel);
+    }
+    
+    private WpsPanel createWpsPanel(WpsEntity wps) {
+        return new WpsPanel(this, wpsAddPanel, wps);
+    }
+
+    private void addWpsPanel(WpsPanel panel) {
+        wpsAddPanel.add(panel, BorderLayout.PAGE_START);
+        wpsAddPanel.revalidate();
+    }
+
     private void showUriConvertError() {
         MessageDialogs.showError(this,
                 "Error",
                 "The entered URI is not valid!"
         );
+    }
+
+    public void reInit() {
+        init();
     }
 
     private void wpsToAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddFieldActionPerformed
@@ -272,11 +303,6 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     private void wpsToAddUriFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddUriFieldActionPerformed
         addWpsButtonActionPerformed(evt);
     }//GEN-LAST:event_wpsToAddUriFieldActionPerformed
-
-    public JPanel getWpsAddPanel() {
-        return wpsAddPanel;
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;

@@ -18,11 +18,14 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.ConfiguredEntityManagerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.GuiStarter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.HttpOperation;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute;
@@ -49,7 +52,7 @@ public class Application {
             log.fatal(ex);
         }
     }
- 
+
     public Application() {
     }
 
@@ -65,7 +68,7 @@ public class Application {
                         ConfiguredEntityManagerFactory.close();
                     }
                 }
-        );
+                );
 
         log.trace("WpsMonitor is starting up ...");
         monitor.start();
@@ -77,29 +80,35 @@ public class Application {
         log.trace("Start GUI ...");
         GuiStarter.start(monitor);
     }
-    
+
     public Monitor setupMonitor() throws Exception {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
-        
+
         monitor.getProbeService()
                 .addProbe(new ResponseFactory());
-        
+
         return monitor;
     }
 
     public RestInterface setupRest(MonitorControl monitor) {
-        RestInterface rest = new RestInterfaceBuilder()
+        RestInterface restInterface = new RestInterfaceBuilder()
                 .withMonitorControl(monitor)
                 .withStrategy(new JsonPresentateStrategy())
                 .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
                 .build();
 
-        rest.addRoute(HttpOperation.GET, new ListMeasurementRoute())
+        restInterface
+                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                    @Override
+                    public MonitorRoute create() throws CreateException {
+                        return new ListMeasurementRoute();
+                    }
+                })
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 
-        return rest;
+        return restInterface;
     }
 }

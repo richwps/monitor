@@ -23,6 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Dimension;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -45,14 +46,20 @@ public class WpsPanel extends javax.swing.JPanel {
         this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
-
-        this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps, true);
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-
-        wpsNameLabel.setText(wps.getIdentifier());
-        wpsUriLabel.setText(wps.getUri().toString());
+        
+        init();
+    }
+    
+    private void init() {
+        this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps, true);
+        setWpsTextLabels(wps);
 
         registerMonitoringPausedEvent();
+    }
+    
+    public void reInit() {
+        init();
     }
 
     private void registerMonitoringPausedEvent() {
@@ -82,7 +89,20 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     public void updateWps(WpsEntity wps) {
-        this.wps = Param.notNull(wps, "wps");
+        String oldIdentifier = this.wps.getIdentifier();
+
+        this.wps = this.monitorMainFrame
+                .getMonitorReference()
+                .getMonitorControl()
+                .updateWps(oldIdentifier, wps.getIdentifier(), wps.getUri());
+        
+        setWpsTextLabels(wps);
+        revalidate();
+    }
+    
+    private void setWpsTextLabels(final WpsEntity wps) {
+        this.wpsNameLabel.setText(wps.getIdentifier());
+        this.wpsUriLabel.setText(wps.getUri().toString());
     }
 
     /**

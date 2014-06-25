@@ -30,13 +30,12 @@ public class WpsEditDialog extends javax.swing.JDialog {
     private final WpsPanel addParentPanel;
     private final WpsMonitorGui monitorMainFrame;
 
-
     public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel addParentPanel, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
-        
+
         setLocationRelativeTo(monitorMainFrame);
-        
+
         this.monitorMainFrame = monitorMainFrame;
         this.addParentPanel = Param.notNull(addParentPanel, "parent");
         this.newIdentifierTextField.setText(addParentPanel.getWps()
@@ -69,7 +68,19 @@ public class WpsEditDialog extends javax.swing.JDialog {
 
         identifierDecoText.setText("Identifier");
 
+        newIdentifierTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newIdentifierTextFieldActionPerformed(evt);
+            }
+        });
+
         uriDecoText.setText("URI");
+
+        newUriTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newUriTextFieldActionPerformed(evt);
+            }
+        });
 
         saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveButton.setText("Save");
@@ -138,11 +149,13 @@ public class WpsEditDialog extends javax.swing.JDialog {
 
         String wpsIdentifier = newIdentifierTextField.getText();
         String wpsUri = newUriTextField.getText();
-        
+
         try {
             WpsEntity addWps = new WpsEntity(wpsIdentifier, wpsUri);
-            
+
             addParentPanel.updateWps(addWps);
+            addParentPanel.reInit();
+            
             dispose();
         } catch (MalformedURLException ex) {
             showUriErrorDialog();
@@ -150,7 +163,15 @@ public class WpsEditDialog extends javax.swing.JDialog {
             showUriErrorDialog();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
-    
+
+    private void newIdentifierTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newIdentifierTextFieldActionPerformed
+        newUriTextField.requestFocus();
+    }//GEN-LAST:event_newIdentifierTextFieldActionPerformed
+
+    private void newUriTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUriTextFieldActionPerformed
+        saveButtonActionPerformed(evt);
+    }//GEN-LAST:event_newUriTextFieldActionPerformed
+
     private void showUriErrorDialog() {
         MessageDialogs.showError(this, "Malformed URI", "The entered URI is not valid!");
     }

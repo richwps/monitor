@@ -19,6 +19,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -28,6 +30,8 @@ public class ShowMeasuredData extends javax.swing.JDialog {
 
     private final WpsMonitorGui monitorMainFrame;
     private final WpsProcessEntity wpsProcess;
+    
+    private final static Logger log = LogManager.getLogger();
 
     public ShowMeasuredData(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
         super(monitorMainFrame, modal);
@@ -40,6 +44,7 @@ public class ShowMeasuredData extends javax.swing.JDialog {
 
     public void recaptureData() {
         Range range = new Range(null, 100);
+        log.debug("Recapture Data from process {}", wpsProcess);
         String wpsIdentifier = wpsProcess.getWps().getIdentifier();
         String processIdentifier = wpsProcess.getIdentifier();
 

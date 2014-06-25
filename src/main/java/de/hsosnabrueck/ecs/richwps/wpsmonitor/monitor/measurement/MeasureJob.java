@@ -93,9 +93,11 @@ public class MeasureJob implements Job {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
             }
-
-            log.debug("MeasureJob of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
-                    processEntity,
+            
+            log.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
+                    context.getJobDetail().getKey(),
+                    context.getTrigger().getKey(),
+                    processEntity.toString(),
                     response.isWpsException() ? "true" : "false",
                     response.isConnectionException() ? "true" : "false",
                     response.isOtherException() ? "true" : "false"

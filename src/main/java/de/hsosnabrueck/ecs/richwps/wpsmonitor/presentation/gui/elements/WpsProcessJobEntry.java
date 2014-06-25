@@ -43,31 +43,34 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
     public WpsProcessJobEntry(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, TriggerConfig triggerConfig) {
         initComponents();
+
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-
-        initComboBox();
-
-        if (triggerConfig != null) {
-            initWithTriggerConfig(triggerConfig);
-        }
-
         this.mainFrame = mainFrame;
         this.wpsProcess = wpsProcess;
         this.parent = parent;
 
+        init(triggerConfig);
     }
 
-    private void initWithTriggerConfig(TriggerConfig triggerConfig) {
-        this.startDate.setDate(triggerConfig.getStart());
-        this.endDate.setDate(triggerConfig.getEnd());
-        this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
-        this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
-        this.intervalField.setText(triggerConfig.getInterval().toString());
+    private void init(TriggerConfig triggerConfig) {
+        initComboBox();
 
-        this.triggerKey = triggerConfig.getTriggerKey();
+        if (triggerConfig != null) {
+            this.startDate.setDate(triggerConfig.getStart());
+            this.endDate.setDate(triggerConfig.getEnd());
+            this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
+            this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
+            this.intervalField.setText(triggerConfig.getInterval().toString());
+
+            this.triggerKey = triggerConfig.getTriggerKey();
+        }
     }
 
-    public final void initComboBox() {
+    public void reInit(TriggerConfig config) {
+        init(config);
+    }
+
+    private void initComboBox() {
         IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.SECOND),
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.MINUTE),

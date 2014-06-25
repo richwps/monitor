@@ -56,11 +56,9 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         this.parent = parent;
+        this.wpsProcess = Param.notNull(wpsProcess, "wpsProcess");
 
         initComponents();
-
-        this.wpsProcess = Param.notNull(wpsProcess, "wpsProcess");
-        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess, true);
 
         if (restored) {
             triggerSaveState();
@@ -68,16 +66,21 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             this.saved = false;
         }
 
-        if (wpsProcess.isWpsException()) {
-            indicateError();
-        }
+        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+        init();
+    }
+
+    private void init() {
+        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess, true);
+        this.measuredDataDialog = new ShowMeasuredData(mainFrame, wpsProcess, true);
 
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
-        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-
-        this.measuredDataDialog = new ShowMeasuredData(mainFrame, wpsProcess, true);
-
+        
+        if (wpsProcess.isWpsException()) {
+            indicateError();
+        }
+        
         registerMonitoringPausedEvent();
     }
 
@@ -370,14 +373,14 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_testRequestTextAreaKeyReleased
 
     private void showMeasuredDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMeasuredDataButtonActionPerformed
-        this.measuredDataDialog.recaptureData();
-        this.measuredDataDialog.setVisible(true);
+        measuredDataDialog.recaptureData();
+        
+        if(measuredDataDialog.isVisible()) {
+            measuredDataDialog.revalidate();
+        } else {
+            measuredDataDialog.setVisible(true);
+        }
     }//GEN-LAST:event_showMeasuredDataButtonActionPerformed
-
-    public WpsProcessJobDialog getWpsProcessJobDialog() {
-        return wpsProcessJobDialog;
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteProcessButton;

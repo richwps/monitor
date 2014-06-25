@@ -71,4 +71,9 @@ public class TriggerConfig {
     public void setTriggerKey(TriggerKey triggerKey) {
         this.triggerKey = triggerKey;
     }
+
+    @Override
+    public String toString() {
+        return "TriggerConfig{" + "intervalType=" + intervalType + ", start=" + start + ", end=" + end + ", interval=" + interval + ", triggerKey=" + triggerKey + '}';
+    }
 }

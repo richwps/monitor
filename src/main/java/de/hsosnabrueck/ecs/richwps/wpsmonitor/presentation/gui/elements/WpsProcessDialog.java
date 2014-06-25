@@ -19,6 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.BorderLayout;
+import java.util.List;
 import javax.swing.JPanel;
 
 /**
@@ -32,12 +33,31 @@ public class WpsProcessDialog extends javax.swing.JDialog {
 
     public WpsProcessDialog(WpsMonitorGui monitorMainFrame, WpsEntity wps, boolean modal) {
         super(monitorMainFrame, modal);
+        this.wps = wps;
+        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
+
         initComponents();
 
         setLocationRelativeTo(monitorMainFrame);
 
-        this.wps = wps;
-        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
+        init();
+    }
+
+    private void init() {
+        List<WpsProcessEntity> processesOfWps = monitorMainFrame.getMonitorReference()
+                .getMonitorControl()
+                .getProcessesOfWps(wps.getIdentifier());
+        
+        for(WpsProcessEntity processEntity : processesOfWps) {
+            WpsProcessPanel processPane = createSavedProcessPanel(processEntity);
+            addProcessPane.add(processPane);
+        }
+        
+        addProcessPane.revalidate();
+    }
+    
+    public void reInit() {
+        init();
     }
 
     private Boolean isNotEmptyProcessName() {
@@ -159,24 +179,37 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     private void createNewProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewProcessButtonActionPerformed
         if (isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
-
-            WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
-            WpsProcessPanel processPanel = new WpsProcessPanel(monitorMainFrame, addProcessPane, wpsProcessEntity);
-
-            addProcessPane.add(processPanel, BorderLayout.SOUTH);
             processIdentifierInput.setText("");
-
-            addProcessPane.revalidate();
+            
+            WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
+            
+            createAndAddProcessPanel(wpsProcessEntity);
         }
     }//GEN-LAST:event_createNewProcessButtonActionPerformed
 
+    private WpsProcessPanel createProcessPanel(WpsProcessEntity processEntity) {
+        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity);
+    }
+    
+    private WpsProcessPanel createSavedProcessPanel(WpsProcessEntity processEntity) {
+        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity, true);
+    }
+    
+    private void addProcessPanel(WpsProcessPanel panel) {
+        addProcessPane.add(panel, BorderLayout.SOUTH);
+        addProcessPane.revalidate();
+    }
+    
+    private WpsProcessPanel createAndAddProcessPanel(WpsProcessEntity processEntity) {
+        WpsProcessPanel panel = createProcessPanel(processEntity);
+        addProcessPanel(panel);
+        
+        return panel; 
+    }
+    
     private void processIdentifierInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processIdentifierInputActionPerformed
         createNewProcessButtonActionPerformed(evt);
     }//GEN-LAST:event_processIdentifierInputActionPerformed
-
-    public JPanel getAddProcessPane() {
-        return addProcessPane;
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel addProcessPane;

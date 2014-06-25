@@ -118,6 +118,8 @@ public class SimpleWpsClient implements WpsClient {
                             ex = new WpsException();
                         } else {
                             ex = new WpsException(wpsExceptionMessage);
+
+                            log.debug(wpsExceptionMessage);
                         }
 
                         response.setException(ex);

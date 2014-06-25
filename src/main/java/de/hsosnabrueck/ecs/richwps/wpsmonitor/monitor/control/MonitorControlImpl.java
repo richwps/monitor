@@ -181,24 +181,29 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri) {
-        WpsDataAccess wpsDao = null;
-        Boolean updateable = false;
+    public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri) {
+        WpsDataAccess wpsDao;
+        WpsEntity wps = null;
 
         try {
             wpsDao = wpsDaoFactory.create();
 
-            WpsEntity wps = wpsDao.find(Param.notNull(wpsIdentifier, "wpsIdentifier"));
+            wps = wpsDao.find(Param.notNull(oldWpsIdentifier, "oldWpsIdentifier"));
 
-            if (updateable = (wps != null)) {
-                wps.setUri(newUri);
+            if (wps != null) {
+                wps.setIdentifier(Param.notNull(newWpsIdentifier, "newWpsIdentifier"));
+                wps.setUri(Param.notNull(newUri, "newUri"));
+                
+                schedulerControl.updateJobs(oldWpsIdentifier, newWpsIdentifier);
                 wpsDao.update(wps);
             }
         } catch (CreateException ex) {
             log.error(ex);
+        } catch (SchedulerException ex) {
+            log.error(ex);
         }
 
-        return updateable;
+        return wps;
     }
 
     @Override

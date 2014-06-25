@@ -82,6 +82,9 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="newIdentifierTextField">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newIdentifierTextFieldActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="uriDecoText">
       <Properties>
@@ -93,6 +96,9 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="newUriTextField">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newUriTextFieldActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="saveButton">
       <Properties>

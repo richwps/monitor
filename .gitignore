@@ -3,4 +3,4 @@
 /QuartzJobStore/*
 /target/
 /derby.log
-/*lck
+*.lck

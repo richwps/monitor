@@ -28,49 +28,71 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Disassemble the bulk of MeasuredDataEntity objects and assigns the objects
- * to the specific converters 
- * 
+ * Disassemble the bulk of MeasuredDataEntity objects and assigns the objects to
+ * the specific converters
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDisassembler {
 
     private final Map<String, Factory<EntityConverter>> converterMap;
     private final static Logger log = LogManager.getLogger();
+    private final String NO_CONVERTER_INDEX;
 
     public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap) {
+        this(converterMap, "");
+    }
+
+    public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap, final String noConverterIndex) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
+        this.NO_CONVERTER_INDEX = noConverterIndex;
     }
 
     /**
-     * Removes the AbstractQosEntity Objects out of the MeasuredDataEntity
-     * List and assign the AbstractQosEntities to the specific Converter-Object
-     * 
+     * Removes the AbstractQosEntity Objects out of the MeasuredDataEntity List
+     * and assign the AbstractQosEntities to the specific Converter-Object
+     *
      * disassemble() modifieds the MeasuredDataEntity-Objects!
-     * 
+     *
      * @param dataList
-     * @return 
+     * @return
      */
     public Map<String, EntityConverter> disassemble(List<MeasuredDataEntity> dataList) {
         Map<String, EntityConverter> converters = createNewBunchOfConverters();
-        
+
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
-            
-            
+
             for (AbstractQosEntity abstractQosEntity : measureData) {
-                if (converters.containsKey(abstractQosEntity.getEntityName())) {
-                    converters.get(abstractQosEntity.getEntityName()).add(abstractQosEntity); 
-                } 
+                String converterEntityIndex = abstractQosEntity.getEntityName();
+
+                if (!converters.containsKey(converterEntityIndex)) {
+                    converterEntityIndex = NO_CONVERTER_INDEX;
+                }
+
+                // assign to the specific converter
+                converters.get(converterEntityIndex)
+                        .add(abstractQosEntity);
+
             }
         }
 
         return converters;
     }
 
+    private EntityConverter getDummyConverter() {
+        return new EntityConverter() {
+
+            @Override
+            public Object convert() {
+                return getEntities();
+            }
+        };
+    }
+
     /**
      * Creates new instances of the entity converters
-     * 
+     *
      * @return Map of entity converters
      */
     private Map<String, EntityConverter> createNewBunchOfConverters() {
@@ -83,6 +105,8 @@ public class EntityDisassembler {
                 log.warn(ex);
             }
         }
+
+        entityConverters.put(NO_CONVERTER_INDEX, getDummyConverter());
 
         return entityConverters;
     }

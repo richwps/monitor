@@ -142,4 +142,9 @@ public class WpsProcessEntity implements Serializable {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "WpsProcessEntity{" + "id=" + id + ", identifier=" + identifier + " wps=" + wps + '}';
+    }
 }

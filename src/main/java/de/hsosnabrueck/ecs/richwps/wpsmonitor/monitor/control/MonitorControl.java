@@ -30,11 +30,11 @@ import org.quartz.TriggerKey;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorControl {
-    public Boolean createWps(final String wpdIdentifier, final URI uri);
+    public Boolean createWps(final String wpsIdentifier, final URI uri);
     public Boolean createProcess(final String wpsIdentifier, final String processIdentifier);
     public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
-    public Boolean updateWpsUri(final String wpsIdentifier, final URI newUri);
+    public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri);
     public Boolean deleteWps(final String wpsIdentifier);
     public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier);
     public Boolean deleteTrigger(final TriggerKey triggerKey);

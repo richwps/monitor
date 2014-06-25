@@ -69,6 +69,10 @@ public class WpsEntity implements Serializable {
         return identifier;
     }
 
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
     public URI getUri() {
         return route;
     }
