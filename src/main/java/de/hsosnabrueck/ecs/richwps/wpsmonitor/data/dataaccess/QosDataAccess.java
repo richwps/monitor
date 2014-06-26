@@ -16,6 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,4 +64,7 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
      * @return List of MeasuredDataEntity-Objects
      */
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range);
+    
+    public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier);
+    public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifierfinal, final Date olderDate);
 }

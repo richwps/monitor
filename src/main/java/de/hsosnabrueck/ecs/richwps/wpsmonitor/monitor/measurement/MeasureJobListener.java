@@ -15,25 +15,21 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
 import org.quartz.JobListener;
-import org.quartz.SchedulerException;
 
 /**
  * Evaluates if a job cant measure because of an exception. In addition the
  * listener fire its own event over the MonitorEventHandler:
  * scheduler.job.wasexecuted with the process entity as message if an job was
- * executed and scheduler.job.paused with the process entity as message if 
- * a job cant measure a wps process.
+ * executed and scheduler.job.paused with the process entity as message if a job
+ * cant measure a wps process.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -42,8 +38,8 @@ public class MeasureJobListener implements JobListener {
     /**
      * WpsProcessDataAccess instance
      */
-    private final WpsProcessDataAccess dao;
-    
+    private final WpsProcessDaoFactory wpsProcessDaoFactory;
+
     /**
      * MonitorEventHandler instance
      */
@@ -53,12 +49,12 @@ public class MeasureJobListener implements JobListener {
 
     /**
      * Constructor.
-     * 
+     *
      * @param dao WpsProcessDataAccess instance
      * @param eventHandler MonitorEventHandler instance
      */
-    public MeasureJobListener(final WpsProcessDataAccess dao, final MonitorEventHandler eventHandler) {
-        this.dao = dao;
+    public MeasureJobListener(final WpsProcessDaoFactory dao, final MonitorEventHandler eventHandler) {
+        this.wpsProcessDaoFactory = dao;
         this.eventHandler = eventHandler;
     }
 
@@ -81,38 +77,24 @@ public class MeasureJobListener implements JobListener {
          */
     }
 
+    /**
+     * Starts a new worker thread which handle the jobWasExecuted-Event because
+     * of in this event happens some DataAcces-interactions which can slow the
+     * system because of the listener runs in the mainthread and the jobs runs
+     * in its own thread
+     *
+     * @see JobExecutedHandlerThread
+     * @param context JobExecutionContext contexten, injected by quartz
+     * @param jobException JobExecutionException injected by quartz
+     */
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        Job generalJob = context.getJobInstance();
-
-        if (generalJob instanceof MeasureJob) {
-            MeasureJob specificJob = (MeasureJob) generalJob;
-
-            WpsProcessEntity process = specificJob.getProcessEntity();
-            JobKey jobKey = JobKey.jobKey(process.getIdentifier(), process.getWps().getIdentifier());
-
-            log.debug("MeasureJobListener: Fire job was executed Event!");
-            eventHandler.fireEvent(new MonitorEvent("scheduler.job.wasexecuted", process));
-
-            if (specificJob.cantMeasure()) {
-
-                // markiere & persistiere, dass ein problem aufgetreten ist
-                process.setWpsException(true);
-                dao.update(process);
-
-                log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
-                        + " try to pause this job.", process);
-
-                try {
-                    // pause job if an error is triggered
-                    context.getScheduler().pauseJob(jobKey);
-                    eventHandler.fireEvent(new MonitorEvent("scheduler.job.paused", process));
-                } catch (SchedulerException ex) {
-                    log.error(ex);
-                }
-            }
+        try {
+            Thread handleJobWasExecuted = new JobExecutedHandlerThread(context, eventHandler, wpsProcessDaoFactory.create());
+            handleJobWasExecuted.start();
+        } catch (CreateException ex) {
+            log.error(ex);
         }
-
     }
 
 }

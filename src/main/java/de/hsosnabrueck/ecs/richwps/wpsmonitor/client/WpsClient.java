@@ -21,7 +21,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsClient {
-
+    
     /**
      * Invoke the WpsClient to execute the given wpsRequest. The WpsClient
      * should call WpsRequest.prepareRequest() at real execute Time.
@@ -47,4 +47,6 @@ public interface WpsClient {
      * @return The Answer from the called server
      */
     public WpsResponse execute(final WpsRequest wpsRequest);
+    
+    public void init(final WpsClientConfig config);
 }

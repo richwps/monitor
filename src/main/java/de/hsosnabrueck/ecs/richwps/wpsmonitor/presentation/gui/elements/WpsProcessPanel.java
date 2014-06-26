@@ -161,6 +161,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }
 
     public void processMonitoringPaused(WpsProcessEntity process) {
+        log.debug("Pause Event treiggered by {}", process);
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
         }

@@ -29,8 +29,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -43,12 +43,12 @@ import org.quartz.TriggerKey;
  */
 public class MonitorControlImpl implements MonitorControl {
 
-    private SchedulerControl schedulerControl;
+    private final SchedulerControl schedulerControl;
     private final QosDaoFactory qosDaoFactory;
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
 
-    private static Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger();
 
     public MonitorControlImpl(SchedulerControl scheduler, QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
         this.schedulerControl = Param.notNull(scheduler, "scheduler");
@@ -193,7 +193,7 @@ public class MonitorControlImpl implements MonitorControl {
             if (wps != null) {
                 wps.setIdentifier(Param.notNull(newWpsIdentifier, "newWpsIdentifier"));
                 wps.setUri(Param.notNull(newUri, "newUri"));
-                
+
                 schedulerControl.updateJobs(oldWpsIdentifier, newWpsIdentifier);
                 wpsDao.update(wps);
             }
@@ -306,13 +306,13 @@ public class MonitorControlImpl implements MonitorControl {
         QosDataAccess qosDao;
         List<MeasuredDataEntity> measuredData = null;
 
+        Param.notNull(wpsIdentifier, "wpsIdentifier");
+        Param.notNull(processIdentifier, "processIdentifier");
+
         try {
             qosDao = qosDaoFactory.create();
 
-            measuredData = qosDao.getByProcess(Param.notNull(wpsIdentifier, "wpsIdentifier"),
-                    Param.notNull(processIdentifier, "processIdentifier"),
-                    range
-            );
+            measuredData = qosDao.getByProcess(wpsIdentifier, processIdentifier, range);
         } catch (CreateException ex) {
             log.error(ex);
         }
@@ -323,6 +323,9 @@ public class MonitorControlImpl implements MonitorControl {
     @Override
     public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
         WpsProcessDataAccess wpsProcessDao;
+
+        Param.notNull(wpsIdentifier, "wpsIdentifier");
+        Param.notNull(processIdentifier, "processIdentifier");
 
         try {
             wpsProcessDao = wpsProcessDaoFactory.create();
@@ -349,6 +352,9 @@ public class MonitorControlImpl implements MonitorControl {
     public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
         WpsProcessDataAccess wpsProcessDao;
 
+        Param.notNull(wpsIdentifier, "wpsIdentifier");
+        Param.notNull(processIdentifier, "processIdentifier");
+
         try {
             wpsProcessDao = wpsProcessDaoFactory.create();
             WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
@@ -373,7 +379,25 @@ public class MonitorControlImpl implements MonitorControl {
         return schedulerControl;
     }
 
-    public void setSchedulerControl(SchedulerControl schedulerControl) {
-        this.schedulerControl = schedulerControl;
+    @Override
+    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier) {
+        deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier, null);
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs) {
+        QosDataAccess qosDao;
+
+        Param.notNull(wpsIdentifier, "wpsIdentifier");
+        Param.notNull(processIdentifier, "processIdentifier");
+
+        try {
+            qosDao = qosDaoFactory.create();
+
+            qosDao.deleteByProcess(wpsIdentifier, processIdentifier, olderAs);
+
+        } catch (CreateException ex) {
+            log.error(ex);
+        }
     }
 }

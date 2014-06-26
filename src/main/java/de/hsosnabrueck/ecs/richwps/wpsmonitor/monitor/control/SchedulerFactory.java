@@ -63,7 +63,7 @@ public class SchedulerFactory implements Factory<Scheduler> {
             WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create();
 
             JobFactory jobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
-            JobListener jobListener = new MeasureJobListener(wpsProcessDao, eventHandler);
+            JobListener jobListener = new MeasureJobListener(wpsProcessDaoFactory, eventHandler);
 
             result.setJobFactory(jobFactory);
             result.getListenerManager()

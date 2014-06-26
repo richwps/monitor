@@ -21,6 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import org.quartz.TriggerKey;
 
@@ -44,5 +45,7 @@ public interface MonitorControl {
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
-    public List<MeasuredDataEntity> getMeasuredData(String wpsIdentifier, String processIdentifier, Range range);
+    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range);
+    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier);
+    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs);
 }

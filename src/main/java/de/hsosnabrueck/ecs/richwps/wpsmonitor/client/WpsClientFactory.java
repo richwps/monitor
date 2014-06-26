@@ -38,6 +38,7 @@ public final class WpsClientFactory implements Factory<WpsClient> {
      * Factory which will used
      */
     private final Factory<WpsClient> defaultClientImpl;
+    private WpsClientConfig wpsClientConfig;
 
     /**
      * WpsClientFactory constructor to initiate this factory.
@@ -46,11 +47,27 @@ public final class WpsClientFactory implements Factory<WpsClient> {
      * Factory&lt;WpsClient>
      */
     public WpsClientFactory(final Factory<WpsClient> defaultClient) {
+        this(defaultClient, null);
+    }
+
+    public WpsClientFactory(final Factory<WpsClient> defaultClient, final WpsClientConfig config) {
         this.defaultClientImpl = Param.notNull(defaultClient, "defaultClient");
+        setWpsClientConfig(wpsClientConfig);
+    }
+
+    public WpsClientConfig getWpsClientConfig() {
+        return wpsClientConfig;
+    }
+
+    public void setWpsClientConfig(WpsClientConfig wpsClientConfig) {
+        this.wpsClientConfig = (wpsClientConfig == null) ? new WpsClientConfig() : wpsClientConfig;
     }
 
     @Override
     public WpsClient create() throws CreateException {
-        return defaultClientImpl.create();
+        WpsClient client = defaultClientImpl.create();
+        client.init(wpsClientConfig);
+
+        return client;
     }
 }

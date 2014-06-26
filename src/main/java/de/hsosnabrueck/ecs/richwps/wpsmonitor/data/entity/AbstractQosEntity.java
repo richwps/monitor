@@ -33,8 +33,12 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity t WHERE t.id IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier)"),
-    @NamedQuery(name = "abstractQos.deleteByWpsProcess", query = "DELETE FROM AbstractQosEntity t WHERE t.id IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)")
+    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
+            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier)"),
+    @NamedQuery(name = "abstractQos.deleteByWpsProcess", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
+            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)"),
+    @NamedQuery(name = "abstractQos.deleteByWpsProcessOlderAs", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
+            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier AND m.createTime < :date)")
 })
 public abstract class AbstractQosEntity implements Serializable {
 

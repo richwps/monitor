@@ -19,6 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,4 +67,35 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     public List<MeasuredDataEntity> getByWps(final String identifier) {
         return getByWps(identifier, null);
     }
+
+    @Override
+    public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("processIdentifier", Param.notNull(processIdentifier, "processIdentifier"));
+
+        doNamedQuery("qos.deleteByWpsProcess", parameters);
+
+        return doNamedQuery("abstractQos.deleteByWpsProcess", parameters);
+    }
+
+    @Override
+    public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier, final Date olderDate) {
+
+        if (olderDate == null) {
+            return deleteByProcess(wpsIdentifier, processIdentifier);
+        }
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("processIdentifier", Param.notNull(processIdentifier, "processIdentifier"));
+        parameters.put("date", olderDate);
+
+        doNamedQuery("qos.deleteByWpsProcessOlderAs", parameters);
+
+        return doNamedQuery("abstractQos.deleteByWpsProcessOlderAs", parameters);
+    }
+
 }

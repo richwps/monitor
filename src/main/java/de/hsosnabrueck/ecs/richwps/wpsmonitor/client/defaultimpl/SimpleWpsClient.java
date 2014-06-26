@@ -16,6 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsConnectionException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
@@ -30,12 +31,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
@@ -68,10 +70,23 @@ public class SimpleWpsClient implements WpsClient {
 
     private String wpsExceptionMessage;
     private final static Logger log = LogManager.getLogger();
+    private HttpClient httpClient;
+
+    @Override
+    public void init(final WpsClientConfig config) {
+        Integer timeout = config.getConnectionTimeout();
+
+        RequestConfig.Builder requestBuilder = RequestConfig.custom()
+                .setConnectTimeout(timeout)
+                .setConnectionRequestTimeout(timeout);
+
+        httpClient = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestBuilder.build())
+                .build();
+    }
 
     @Override
     public WpsResponse execute(WpsRequest wpsRequest) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
 
         String responseBody = null;
         Date responseTime = null;
@@ -82,17 +97,15 @@ public class SimpleWpsClient implements WpsClient {
                 // build http request
                 HttpPost httpRequest = buildRequest(wpsRequest);
 
+                log.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
+                
                 // prepare request (init requestTime)
                 // and do request 
                 wpsRequest.prepareRequest();
-
-                log.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
-
-                CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
-
-                log.debug("Response received.");
-
+                HttpResponse httpResponse = httpClient.execute(httpRequest);
                 responseTime = new Date();
+                
+                log.debug("Response received.");
 
                 // get response body
                 HttpEntity responseEntity = httpResponse.getEntity();

@@ -16,6 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
@@ -106,6 +107,12 @@ public class MonitorBuilder {
     public MonitorBuilder withWpsClientFactory(WpsClientFactory wpsClientFactory) {
         this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
 
+        return this;
+    }
+    
+    public MonitorBuilder withWpsClientConfig(WpsClientConfig config) {
+        this.wpsClientFactory.setWpsClientConfig(config);
+        
         return this;
     }
 
