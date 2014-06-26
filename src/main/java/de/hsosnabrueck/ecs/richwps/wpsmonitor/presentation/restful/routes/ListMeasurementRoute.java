@@ -20,6 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.Request;
@@ -33,10 +34,12 @@ public class ListMeasurementRoute extends MonitorRoute {
 
     public static final Logger log = LogManager.getLogger();
 
-    public ListMeasurementRoute() {
-        super("/measurement/wps/:wps/process/:process/count/:count");
+    public ListMeasurementRoute(final String alias) {
+        super(alias);
+    }
 
-        log.debug("ListMeasurementRoute instantiated");
+    public ListMeasurementRoute() {
+        super("/measurement/wps/:wps/process/:process/count/:count/format/:format");
     }
 
     @Override
@@ -45,6 +48,7 @@ public class ListMeasurementRoute extends MonitorRoute {
             String wpsIdentifier = Param.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Param.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
+            String format = request.params(":format");
 
             List<MeasuredDataEntity> measuredData = getMonitorControl()
                     .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
@@ -53,12 +57,39 @@ public class ListMeasurementRoute extends MonitorRoute {
                     wpsIdentifier, processIdentifier, count
             );
 
-            return getStrategy().presentate(getDispatch().dispatch(measuredData));
+            Map<String, Object> toPresentate = null;
+
+            if (format != null) {
+                if (format.equals("converted")) {
+                    toPresentate = getConverted(measuredData);
+                } else if (format.equals("twice")) {
+                    toPresentate = getRawAndConverted(measuredData);
+                }
+            } 
+            
+            if(toPresentate == null) {
+                toPresentate = getRaw(measuredData);
+            }
+
+            return getStrategy()
+                    .presentate(toPresentate);
         } catch (IllegalArgumentException exception) {
             response.status(404);
         }
 
         return null;
+    }
+
+    private Map<String, Object> getConverted(List<MeasuredDataEntity> measuredData) {
+        return getDispatch().dispatchToConverter(measuredData);
+    }
+
+    private Map<String, Object> getRaw(List<MeasuredDataEntity> measuredData) {
+        return getDispatch().dispatchData(measuredData);
+    }
+
+    private Map<String, Object> getRawAndConverted(List<MeasuredDataEntity> measuredData) {
+        return getDispatch().dispatchTwice(measuredData);
     }
 
     private Range getRange(String countValue) {

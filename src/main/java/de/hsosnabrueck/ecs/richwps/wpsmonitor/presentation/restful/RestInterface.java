@@ -87,7 +87,7 @@ public class RestInterface {
                                 .create();
                         
                         // init route at every request
-                        initRoute(newRoute)
+                        result = initRoute(newRoute)
                                 .handle(request, response);
                     } catch (CreateException ex) {
                         log.error(ex); // should never happened

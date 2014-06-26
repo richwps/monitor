@@ -68,7 +68,7 @@ public class MeasuredDataEntity implements Serializable {
     private long version;
 
     @Column(nullable = false, updatable = false)
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date createTime;
 
     @JoinColumn(nullable = false)

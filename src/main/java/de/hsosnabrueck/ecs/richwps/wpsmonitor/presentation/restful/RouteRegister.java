@@ -15,14 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 
 /**
  *

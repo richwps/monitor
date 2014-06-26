@@ -40,7 +40,7 @@ public class EntityDisassembler {
     private final String NO_CONVERTER_INDEX;
 
     public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap) {
-        this(converterMap, "");
+        this(converterMap, "raw");
     }
 
     public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap, final String noConverterIndex) {
@@ -50,16 +50,36 @@ public class EntityDisassembler {
 
     /**
      * Removes the AbstractQosEntity Objects out of the MeasuredDataEntity List
-     * and assign the AbstractQosEntities to the specific Converter-Object
-     *
-     * disassemble() modifieds the MeasuredDataEntity-Objects!
+ and assign the AbstractQosEntities to the specific Converter-Object
+
+ disassembleToConverters() modifieds the MeasuredDataEntity-Objects!
      *
      * @param dataList
      * @return
      */
-    public Map<String, EntityConverter> disassemble(List<MeasuredDataEntity> dataList) {
+    public Map<String, EntityConverter> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
         Map<String, EntityConverter> converters = createNewBunchOfConverters();
 
+        return disassembleLoop(converters, dataList);
+    }
+
+    public Map<String, EntityConverter> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
+        Map<String, EntityConverter> converters = new HashMap<String, EntityConverter>();
+        
+        return disassembleLoop(converters, dataList);
+    }
+    
+    public Map<String, EntityConverter> disassembleToConvertersWithRawData(final List<MeasuredDataEntity> dataList) {
+        Map<String, EntityConverter> converters = createNewBunchOfConverters();
+        
+        Map<String, EntityConverter> merged = disassembleLoop(converters, dataList);
+        merged.putAll(disassembleToDummyConverter(dataList));
+        
+        return merged; 
+    }
+    
+    private Map<String, EntityConverter> disassembleLoop(final Map<String, EntityConverter> converters, final List<MeasuredDataEntity> dataList) {
+        
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
 
@@ -67,6 +87,10 @@ public class EntityDisassembler {
                 String converterEntityIndex = abstractQosEntity.getEntityName();
 
                 if (!converters.containsKey(converterEntityIndex)) {
+                    if(!converters.containsKey(NO_CONVERTER_INDEX)) {
+                        converters.put(NO_CONVERTER_INDEX, getDummyConverter());
+                    }
+                    
                     converterEntityIndex = NO_CONVERTER_INDEX;
                 }
 
@@ -105,9 +129,7 @@ public class EntityDisassembler {
                 log.warn(ex);
             }
         }
-
-        entityConverters.put(NO_CONVERTER_INDEX, getDummyConverter());
-
+        
         return entityConverters;
     }
 }

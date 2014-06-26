@@ -28,6 +28,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.JsonPresentat
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.RestInterfaceBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementAllAliasRoute;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementNoFormatAliasRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListMeasurementRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsRoute;
@@ -103,7 +105,25 @@ public class Application {
                 .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
                     @Override
                     public MonitorRoute create() throws CreateException {
+                        // the main measurement route
+                        // /measurement/wps/:wps/process/:process/count/:count/format/:format
                         return new ListMeasurementRoute();
+                    }
+                })
+                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                    @Override
+                    public MonitorRoute create() throws CreateException {
+                        // Alias for the ListMeasurementRoute 
+                        // /measurement/wps/:wps/process/:process
+                        return new ListMeasurementAllAliasRoute();
+                    }
+                })
+                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                    @Override
+                    public MonitorRoute create() throws CreateException {
+                        // Alias for the ListMeasurementRoute
+                        // /measurement/wps/:wps/process/:process/count/:count
+                        return new ListMeasurementNoFormatAliasRoute();
                     }
                 })
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())

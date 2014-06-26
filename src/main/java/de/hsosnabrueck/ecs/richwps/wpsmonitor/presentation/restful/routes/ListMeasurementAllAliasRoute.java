@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
-import java.util.List;
-import spark.Request;
-import spark.Response;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ListWpsRoute extends MonitorRoute {
+public class ListMeasurementAllAliasRoute extends ListMeasurementRoute {
 
-    public ListWpsRoute() {
-        super("/measurement/wps");
+    public ListMeasurementAllAliasRoute() {
+        super("/measurement/wps/:wps/process/:process");
     }
-
-    @Override
-    public Object handle(Request request, Response response) {
-        List<WpsEntity> wpsList = getMonitorControl().getWpsList();
-
-        return getStrategy().presentate(wpsList);
-    }
-
 }
