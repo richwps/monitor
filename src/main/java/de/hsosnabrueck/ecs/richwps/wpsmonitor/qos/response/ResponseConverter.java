@@ -50,10 +50,16 @@ public class ResponseConverter extends EntityConverter {
                 }
             }
         }
-
+        
         if (!getEntities().isEmpty()) {
             average = average / getEntities().size();
-            availability = 100. * notAvailableCounter / getEntities().size();
+            Integer a, b;
+            a = getEntities().size();
+            b = notAvailableCounter;
+            System.out.println("NotAvailable " + a);
+            availability = a - (100. * b / a);
+        } else {
+            return "No Data available";
         }
 
         return new ResponseConverted(best, worst, average, availability);

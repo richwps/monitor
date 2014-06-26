@@ -74,6 +74,8 @@ public class SimpleWpsClient implements WpsClient {
 
     @Override
     public void init(final WpsClientConfig config) {
+        log.debug("Init WpsClient with {}", config);
+        
         Integer timeout = config.getConnectionTimeout();
 
         RequestConfig.Builder requestBuilder = RequestConfig.custom()

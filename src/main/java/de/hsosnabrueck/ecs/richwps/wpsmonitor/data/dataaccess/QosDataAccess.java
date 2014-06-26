@@ -67,4 +67,5 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier);
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifierfinal, final Date olderDate);
+    public Integer deleteAllOlderAs(final Date date);
 }

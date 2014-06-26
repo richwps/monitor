@@ -15,6 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
@@ -194,7 +196,7 @@ public class MonitorControlImpl implements MonitorControl {
                 wps.setIdentifier(Param.notNull(newWpsIdentifier, "newWpsIdentifier"));
                 wps.setUri(Param.notNull(newUri, "newUri"));
 
-                schedulerControl.updateJobs(oldWpsIdentifier, newWpsIdentifier);
+                schedulerControl.updateJobsWpsGroupName(oldWpsIdentifier, newWpsIdentifier);
                 wpsDao.update(wps);
             }
         } catch (CreateException ex) {
@@ -250,7 +252,7 @@ public class MonitorControlImpl implements MonitorControl {
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
 
             if (deleteable = (process != null)) {
-                schedulerControl.removeWpsJob(
+                schedulerControl.removeJob(
                         new JobKey(Param.notNull(processIdentifier, "processIdentifier"),
                                 Param.notNull(wpsIdentifier, "wpsIdentifier"))
                 );
@@ -395,6 +397,22 @@ public class MonitorControlImpl implements MonitorControl {
             qosDao = qosDaoFactory.create();
 
             qosDao.deleteByProcess(wpsIdentifier, processIdentifier, olderAs);
+
+        } catch (CreateException ex) {
+            log.error(ex);
+        }
+    }
+
+    @Override
+    public void deleteMeasuredData(final Date olderAs) {
+        QosDataAccess qosDao;
+
+        Param.notNull(olderAs, "olderAs");
+        
+        try {
+            qosDao = qosDaoFactory.create();
+
+            qosDao.deleteAllOlderAs(olderAs);
 
         } catch (CreateException ex) {
             log.error(ex);

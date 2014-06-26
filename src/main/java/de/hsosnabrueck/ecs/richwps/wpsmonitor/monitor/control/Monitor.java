@@ -16,7 +16,9 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
@@ -30,7 +32,7 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Monitor {
-    private MonitorControlImpl monitorControl;
+    private final MonitorControlImpl monitorControl;
     private final MonitorBuilder builderInstance;
     
     private final static Logger log = LogManager.getLogger();
@@ -79,6 +81,11 @@ public class Monitor {
     public MonitorControl getMonitorControl() {
         log.debug("getMonitorControl called by {}", Thread.currentThread().getName());
         return monitorControl;
+    }
+    
+    public void setWpsClientConfig(final WpsClientConfig config){
+        this.builderInstance
+                .withWpsClientConfig(config);
     }
     
     public MonitorEventHandler getEventHandler() {

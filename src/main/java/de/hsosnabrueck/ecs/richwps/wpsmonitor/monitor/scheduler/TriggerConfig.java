@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.Date;

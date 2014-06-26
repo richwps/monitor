@@ -33,12 +33,20 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.quartz.Job;
+import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
@@ -49,6 +57,7 @@ import org.quartz.SchedulerException;
 public class MonitorBuilder {
 
     private ProbeService probeService;
+    private JobFactoryService jobFactoryService;
     private WpsClientFactory wpsClientFactory;
     private MonitorEventHandler eventHandler;
 
@@ -58,7 +67,13 @@ public class MonitorBuilder {
 
     public MonitorBuilder withProbeService(ProbeService probeService) {
         this.probeService = Param.notNull(probeService, "probeService");
-
+        
+        return this;
+    }
+    
+    public MonitorBuilder withJobFactoryService(JobFactoryService jobFactoryService) {
+        this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
+        
         return this;
     }
 
@@ -135,16 +150,21 @@ public class MonitorBuilder {
     public MonitorBuilder withDefaultWpsClient() {
         return withWpsClientFactory(new SimpleWpsClientFactory());
     }
+    
+    public MonitorBuilder withDefaultJobFactoryService() {
+        return withJobFactoryService(new JobFactoryService());
+    }
 
     public MonitorBuilder setupDefault() {
         return withDefaultProbeService()
                 .withDefaultWpsClient()
                 .withDefaultQosDaoFactory()
                 .withDefaultWpsDaoFactory()
-                .withDefaultWpsProcessDaoFactory();
+                .withDefaultWpsProcessDaoFactory()
+                .withDefaultJobFactoryService();
     }
-
-    private SchedulerFactory setupSchedulerFactory() {
+    
+    private SchedulerFactory setupSchedulerFactory() throws CreateException {
         if (this.probeService == null) {
             withDefaultProbeService();
         }
@@ -160,8 +180,25 @@ public class MonitorBuilder {
         if (this.wpsClientFactory == null) {
             withDefaultWpsClient();
         }
+        
+        if(this.jobFactoryService == null) {
+            withDefaultJobFactoryService();
+        }
+        
+        /**
+         * Important! 
+         */
+        MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDaoFactory.create(), qosDaoFactory, wpsClientFactory);
+        jobFactoryService.put(MeasureJob.class, measureJobFactory);
+        
+        List<JobListener> jobListeners = new ArrayList<JobListener>();
+        jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
+        
+        /**
+         * Important end
+         */
 
-        return new SchedulerFactory(probeService, wpsProcessDaoFactory, qosDaoFactory, wpsClientFactory, eventHandler);
+        return new SchedulerFactory(jobFactoryService, jobListeners);
     }
 
     public ProbeService getProbeService() {

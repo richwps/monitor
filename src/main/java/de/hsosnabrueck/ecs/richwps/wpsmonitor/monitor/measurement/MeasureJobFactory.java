@@ -53,12 +53,12 @@ public class MeasureJobFactory implements JobFactory {
     /**
      * WpsProcessDataAccess instance
      */
-    private WpsProcessDataAccess processDao;
+    private final WpsProcessDataAccess processDao;
     
     /**
      * QosDaoFactory instance to create a new data access for a new job
      */
-    private QosDaoFactory qosDaoFactory;
+    private final QosDaoFactory qosDaoFactory;
 
     private final static Logger log = LogManager.getLogger();
 

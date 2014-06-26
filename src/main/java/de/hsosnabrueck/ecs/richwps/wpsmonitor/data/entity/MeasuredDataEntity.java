@@ -56,7 +56,8 @@ import javax.persistence.Version;
     @NamedQuery(name = "qos.deleteByWpsProcess", query = "DELETE FROM MeasuredDataEntity t WHERE "
             + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier"),
     @NamedQuery(name = "qos.deleteByWpsProcessOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE "
-            + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier AND t.createTime < :date")
+            + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier AND t.createTime < :date"),
+    @NamedQuery(name = "qos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.createTime < :date")
 })
 public class MeasuredDataEntity implements Serializable {
 

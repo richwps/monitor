@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
 import javax.swing.JPanel;

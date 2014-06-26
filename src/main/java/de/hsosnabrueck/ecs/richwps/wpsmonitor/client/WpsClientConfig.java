@@ -40,4 +40,9 @@ public class WpsClientConfig {
     public void setConnectionTimeout(Integer connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
+
+    @Override
+    public String toString() {
+        return "WpsClientConfig{" + "connectionTimeout=" + connectionTimeout + '}';
+    }
 }

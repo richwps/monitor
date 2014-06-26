@@ -90,8 +90,10 @@ public class MeasureJobListener implements JobListener {
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
         try {
-            Thread handleJobWasExecuted = new JobExecutedHandlerThread(context, eventHandler, wpsProcessDaoFactory.create());
-            handleJobWasExecuted.start();
+            if(context.getJobInstance() instanceof MeasureJob) {
+                Thread handleJobWasExecuted = new JobExecutedHandlerThread(context, eventHandler, wpsProcessDaoFactory.create());
+                handleJobWasExecuted.start();
+            }
         } catch (CreateException ex) {
             log.error(ex);
         }

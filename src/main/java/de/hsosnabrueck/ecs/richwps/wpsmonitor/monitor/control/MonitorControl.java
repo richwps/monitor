@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
@@ -48,4 +49,5 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range);
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier);
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs);
+    public void deleteMeasuredData(final Date olderAs);
 }

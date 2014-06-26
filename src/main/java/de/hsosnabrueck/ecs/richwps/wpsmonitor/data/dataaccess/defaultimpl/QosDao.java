@@ -98,4 +98,14 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         return doNamedQuery("abstractQos.deleteByWpsProcessOlderAs", parameters);
     }
 
+    @Override
+    public Integer deleteAllOlderAs(final Date date) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("date", Param.notNull(date, "date"));
+        
+        doNamedQuery("qos.deleteOlderAs", parameters);
+        
+        return doNamedQuery("abstractQos.deleteOlderAs", parameters);
+    }
 }
