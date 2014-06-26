@@ -111,7 +111,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         javax.swing.JPanel decoPanelWpsScroll = new javax.swing.JPanel();
         wpsScrollPane = new javax.swing.JScrollPane();
         wpsAddPanel = new javax.swing.JPanel();
-        jToolBar2 = new javax.swing.JToolBar();
+        javax.swing.JToolBar jToolBar2 = new javax.swing.JToolBar();
         settings = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -208,6 +208,11 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
         settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         settings.setText("Settings");
+        settings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsActionPerformed(evt);
+            }
+        });
         jToolBar2.add(settings);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -315,9 +320,12 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         addWpsButtonActionPerformed(evt);
     }//GEN-LAST:event_wpsToAddUriFieldActionPerformed
 
+    private void settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsActionPerformed
+        new MonitorProperties(this, true).setVisible(true);
+    }//GEN-LAST:event_settingsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
-    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JButton settings;
     private javax.swing.JPanel wpsAddPanel;
     private javax.swing.JScrollPane wpsScrollPane;

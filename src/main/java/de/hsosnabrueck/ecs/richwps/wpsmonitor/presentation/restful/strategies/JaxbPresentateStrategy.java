@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.strategies;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStrategy;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;

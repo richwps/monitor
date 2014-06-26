@@ -33,6 +33,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
@@ -189,7 +191,10 @@ public class MonitorBuilder {
          * Important! 
          */
         MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDaoFactory.create(), qosDaoFactory, wpsClientFactory);
+        //CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory);
+        
         jobFactoryService.put(MeasureJob.class, measureJobFactory);
+        //jobFactoryService.put(CleanUpJob.class, cleanupJobFactory);
         
         List<JobListener> jobListeners = new ArrayList<JobListener>();
         jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
@@ -258,7 +263,7 @@ public class MonitorBuilder {
     }
 
     public SchedulerControl buildSchedulerControl() throws SchedulerException, CreateException {
-        return new SchedulerControl(buildScheduler());
+        return new SchedulerControl(buildScheduler(), jobFactoryService);
     }
 
     public Monitor build() throws Exception {

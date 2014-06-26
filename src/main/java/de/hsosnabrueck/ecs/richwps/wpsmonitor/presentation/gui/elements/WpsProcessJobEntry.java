@@ -81,6 +81,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             new IntervalComboBoxItem(DateBuilder.IntervalUnit.YEAR)
         };
 
+        intervalTypeCombooBox.setSelectedIndex(2);
         intervalTypeCombooBox.setModel(new DefaultComboBoxModel(items));
     }
 

@@ -43,10 +43,12 @@ import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
  */
 public final class SchedulerControl {
 
-    protected Scheduler scheduler;
+    protected final Scheduler scheduler;
+    protected final JobFactoryService jobFactoryService;
 
-    public SchedulerControl(Scheduler scheduler) {
+    public SchedulerControl(Scheduler scheduler, JobFactoryService jobFactoryService) {
         this.scheduler = Param.notNull(scheduler, "scheduler");
+        this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
     }
 
     /**
@@ -280,7 +282,7 @@ public final class SchedulerControl {
 
         newTrigger = builder
                 .withSchedule(scheduleBuilder)
-                .build();
+                .build(); 
 
         return newTrigger;
     }
