@@ -21,6 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import java.util.Date;
 import java.util.List;
+import javax.swing.BoxLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,10 +60,12 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         measuredDataAddPanel.removeAll();
         
         // add new
-        for (MeasuredDataEntity e : measuredData) {
-            measuredDataAddPanel.add(
-                    new MeasuredDataPane(e.getCreateTime() + ": " + e.toString())
-            );
+        
+        for(int i = measuredData.size() - 1; i > 0; i--) {
+            MeasuredDataEntity e = measuredData.get(i);
+            MeasuredDataPane measuredDataPane = new MeasuredDataPane(e.getCreateTime() + ": " + e.toString());
+            
+            measuredDataAddPanel.add(measuredDataPane);
         }
         
         measuredDataAddPanel.revalidate();
