@@ -112,9 +112,9 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public Boolean createWps(final String wpdIdentifier, final URI uri) {
-        WpsEntity wps = new WpsEntity(Param.notNull(wpdIdentifier, "wpdIdentifier"), Param.notNull(uri, "uri"));
-        WpsDataAccess wpsDao = null;
+    public Boolean createWps(final String wpsIdentifier, final URI uri) {
+        WpsEntity wps = new WpsEntity(Param.notNull(wpsIdentifier, "wpsIdentifier"), Param.notNull(uri, "uri"));
+        WpsDataAccess wpsDao;
         Boolean result = false;
 
         try {
@@ -129,8 +129,8 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean createProcess(final String wpsIdentifier, final String processIdentifier) {
-        WpsDataAccess wpsDao = null;
-        WpsProcessDataAccess wpsProcessDao = null;
+        WpsDataAccess wpsDao;
+        WpsProcessDataAccess wpsProcessDao;
 
         try {
             wpsDao = wpsDaoFactory.create();
@@ -160,7 +160,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest) {
-        WpsProcessDataAccess wpsProcessDao = null;
+        WpsProcessDataAccess wpsProcessDao;
         Boolean exists = false;
 
         try {
