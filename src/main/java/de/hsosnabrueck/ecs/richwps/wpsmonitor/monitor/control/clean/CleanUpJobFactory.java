@@ -35,11 +35,11 @@ import org.quartz.spi.TriggerFiredBundle;
 public final class CleanUpJobFactory implements JobFactory {
 
     private final QosDaoFactory qosDaoFactory;
-    private Date olderAs;
+    private Integer olderAs;
 
     private final static Logger log = LogManager.getLogger();
 
-    public CleanUpJobFactory(final QosDaoFactory qosDaoFactory, final Date olderAs) {
+    public CleanUpJobFactory(final QosDaoFactory qosDaoFactory, final Integer olderAs) {
         this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
         setOlderAs(olderAs);
     }
@@ -47,9 +47,12 @@ public final class CleanUpJobFactory implements JobFactory {
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
         Job newJobInstance = null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -olderAs);
 
         try {
-            newJobInstance = new CleanUpJob(qosDaoFactory.create(), olderAs);
+            newJobInstance = new CleanUpJob(qosDaoFactory.create(), cal.getTime());
         } catch (CreateException ex) {
             log.fatal(ex);
         }
@@ -57,12 +60,8 @@ public final class CleanUpJobFactory implements JobFactory {
         return newJobInstance;
     }
 
-    public Date getOlderAs() {
-        return olderAs;
-    }
-
-    public void setOlderAs(Date olderAs) {
-        if (Param.notNull(olderAs, "olderAs").getTime() < new Date().getTime()) {
+    public void setOlderAs(Integer olderAs) {
+        if(olderAs == null || olderAs > 0) {
             this.olderAs = olderAs;
         }
     }

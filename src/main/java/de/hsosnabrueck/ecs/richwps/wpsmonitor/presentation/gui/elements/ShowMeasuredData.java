@@ -49,12 +49,10 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         Range range = new Range(null, 100);
         
         log.debug("Recapture Data from process {}", wpsProcess);
-        String wpsIdentifier = wpsProcess.getWps().getIdentifier();
-        String processIdentifier = wpsProcess.getIdentifier();
 
         List<MeasuredDataEntity> measuredData = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
-                .getMeasuredData(wpsIdentifier, processIdentifier, range);
+                .getMeasuredData(wpsProcess, range);
 
         // clear
         measuredDataAddPanel.removeAll();
@@ -180,13 +178,10 @@ public class ShowMeasuredData extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
-        String wpsIdentifier = this.wpsProcess.getWps().getIdentifier();
-        String wpsProcessIdentifier = this.wpsProcess.getIdentifier();
-
         this.monitorMainFrame
                 .getMonitorReference()
                 .getMonitorControl()
-                .deleteMeasuredDataOfProcess(wpsIdentifier, wpsProcessIdentifier);
+                .deleteMeasuredDataOfProcess(wpsProcess);
         
         recaptureData();
     }//GEN-LAST:event_deleteAllButtonActionPerformed
@@ -195,14 +190,12 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         if (deleteOlderAsDate.getDate() == null) {
             MessageDialogs.showError(this, "Error", "Please select a valid Date!");
         } else {
-            String wpsIdentifier = this.wpsProcess.getWps().getIdentifier();
-            String wpsProcessIdentifier = this.wpsProcess.getIdentifier();
             Date olderAs = deleteOlderAsDate.getDate();
             
             this.monitorMainFrame
                     .getMonitorReference()
                     .getMonitorControl()
-                    .deleteMeasuredDataOfProcess(wpsIdentifier, wpsProcessIdentifier, olderAs);
+                    .deleteMeasuredDataOfProcess(wpsProcess, olderAs);
             
             recaptureData();
         }

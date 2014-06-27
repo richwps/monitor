@@ -43,6 +43,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryServic
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -67,15 +68,29 @@ public class MonitorBuilder {
     private WpsDaoFactory wpsDaoFactory;
     private WpsProcessDaoFactory wpsProcessDaoFactory;
 
+    private File propertiesFile;
+
     public MonitorBuilder withProbeService(ProbeService probeService) {
         this.probeService = Param.notNull(probeService, "probeService");
-        
+
         return this;
     }
-    
+
+    public MonitorBuilder withPropertiesFile(String fileName) throws Exception {
+        File pFile = new File(Param.notNull(fileName, "fileName"));
+
+        if (!pFile.exists()) {
+            throw new Exception("Properties file does not exists");
+        }
+
+        this.propertiesFile = pFile;
+
+        return this;
+    }
+
     public MonitorBuilder withJobFactoryService(JobFactoryService jobFactoryService) {
         this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
-        
+
         return this;
     }
 
@@ -126,10 +141,10 @@ public class MonitorBuilder {
 
         return this;
     }
-    
+
     public MonitorBuilder withWpsClientConfig(WpsClientConfig config) {
         this.wpsClientFactory.setWpsClientConfig(config);
-        
+
         return this;
     }
 
@@ -152,7 +167,7 @@ public class MonitorBuilder {
     public MonitorBuilder withDefaultWpsClient() {
         return withWpsClientFactory(new SimpleWpsClientFactory());
     }
-    
+
     public MonitorBuilder withDefaultJobFactoryService() {
         return withJobFactoryService(new JobFactoryService());
     }
@@ -165,7 +180,7 @@ public class MonitorBuilder {
                 .withDefaultWpsProcessDaoFactory()
                 .withDefaultJobFactoryService();
     }
-    
+
     private SchedulerFactory setupSchedulerFactory() throws CreateException {
         if (this.probeService == null) {
             withDefaultProbeService();
@@ -182,27 +197,26 @@ public class MonitorBuilder {
         if (this.wpsClientFactory == null) {
             withDefaultWpsClient();
         }
-        
-        if(this.jobFactoryService == null) {
+
+        if (this.jobFactoryService == null) {
             withDefaultJobFactoryService();
         }
-        
+
         /**
-         * Important! 
+         * Important!
          */
         MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDaoFactory.create(), qosDaoFactory, wpsClientFactory);
         //CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory);
-        
+
         jobFactoryService.put(MeasureJob.class, measureJobFactory);
         //jobFactoryService.put(CleanUpJob.class, cleanupJobFactory);
-        
+
         List<JobListener> jobListeners = new ArrayList<JobListener>();
         jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
-        
+
         /**
          * Important end
          */
-
         return new SchedulerFactory(jobFactoryService, jobListeners);
     }
 
@@ -227,15 +241,8 @@ public class MonitorBuilder {
     }
 
     public MonitorEventHandler getEventHandler() {
+        setupEventHandler();
         return eventHandler;
-    }
-
-    public Boolean isValid() {
-        return !(probeService == null
-                || wpsDaoFactory == null
-                || qosDaoFactory == null
-                || wpsProcessDaoFactory == null
-                || wpsClientFactory == null);
     }
 
     public WpsDataAccess buildWpsDataAccess() throws CreateException {
@@ -266,37 +273,49 @@ public class MonitorBuilder {
         return new SchedulerControl(buildScheduler(), jobFactoryService);
     }
 
-    public Monitor build() throws Exception {
+    public Boolean isValid() {
+        return !(probeService == null
+                || wpsDaoFactory == null
+                || qosDaoFactory == null
+                || wpsProcessDaoFactory == null
+                || wpsClientFactory == null
+                || propertiesFile == null);
+    }
+
+    public Monitor build() throws BuilderException {
 
         Monitor builded = null;
 
         try {
             if (!isValid()) {
-                setupDefault();
+                throw new BuilderException("Builder state is not valid because of some dependencies are missing. Call setupDefault() first.");
             }
 
             setupEventHandler();
 
             MonitorControlImpl monitorControl = new MonitorControlImpl(buildSchedulerControl(),
+                    getEventHandler(),
                     qosDaoFactory,
                     wpsDaoFactory,
                     wpsProcessDaoFactory
             );
 
-            builded = new Monitor(monitorControl, this);
+            builded = new Monitor(monitorControl, propertiesFile, this);
         } catch (CreateException ex) {
-            throw new Exception(ex);
+            throw new BuilderException(ex.toString());
         } catch (SchedulerException ex) {
-            throw new Exception(ex);
+            throw new BuilderException(ex.toString());
         }
 
         return builded;
     }
 
     private void setupEventHandler() {
-        this.eventHandler = buildEventHandler();
+        if (this.eventHandler == null) {
+            this.eventHandler = buildEventHandler();
 
-        this.eventHandler.registerEvent("scheduler.job.paused");
-        this.eventHandler.registerEvent("scheduler.job.wasexecuted");
+            this.eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
+            this.eventHandler.registerEvent("measurement.wpsjob.wpsexception");
+        }
     }
 }

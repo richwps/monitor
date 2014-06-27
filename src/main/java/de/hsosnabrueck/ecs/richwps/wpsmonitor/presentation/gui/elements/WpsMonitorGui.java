@@ -263,7 +263,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
                 Boolean isWpsCreated = monitor
                         .getMonitorControl()
-                        .createWps(wps.getIdentifier(), wps.getUri());
+                        .createWps(wps);
 
                 if (isWpsCreated) {
                     resetAddWpsFields();

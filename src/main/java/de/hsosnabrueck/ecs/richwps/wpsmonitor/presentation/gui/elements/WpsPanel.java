@@ -67,7 +67,7 @@ public class WpsPanel extends javax.swing.JPanel {
             monitorMainFrame
                     .getMonitorReference()
                     .getEventHandler()
-                    .registerListener("scheduler.job.paused", new MonitorEventListener() {
+                    .registerListener("measurement.wpsjob.wpsexception", new MonitorEventListener() {
 
                         @Override
                         public void execute(MonitorEvent event) {
@@ -94,7 +94,7 @@ public class WpsPanel extends javax.swing.JPanel {
         this.wps = this.monitorMainFrame
                 .getMonitorReference()
                 .getMonitorControl()
-                .updateWps(oldIdentifier, wps.getIdentifier(), wps.getUri());
+                .updateWps(oldIdentifier, wps);
         
         setWpsTextLabels(wps);
         revalidate();
@@ -224,7 +224,7 @@ public class WpsPanel extends javax.swing.JPanel {
         if (option == JOptionPane.YES_OPTION) {
             monitorMainFrame.getMonitorReference()
                     .getMonitorControl()
-                    .deleteWps(wps.getIdentifier());
+                    .deleteWps(wps);
 
             addPanelParent.remove(this);
             addPanelParent.revalidate();

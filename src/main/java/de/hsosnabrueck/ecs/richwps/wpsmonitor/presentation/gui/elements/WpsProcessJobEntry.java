@@ -182,7 +182,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
                 TriggerKey newTrigger = mainFrame.getMonitorReference()
                         .getMonitorControl()
-                        .saveTrigger(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier(), tConfig);
+                        .saveTrigger(wpsProcess, tConfig);
 
                 if (newTrigger == null) {
                     MessageDialogs.showError(mainFrame,

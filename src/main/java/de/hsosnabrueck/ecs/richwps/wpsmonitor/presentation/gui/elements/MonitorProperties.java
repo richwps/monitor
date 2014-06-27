@@ -37,24 +37,8 @@ public class MonitorProperties extends javax.swing.JDialog {
         this.monitorMainFrame = monitorMainFrame;
         
         initComponents();
-        initComboBox();
         
         setLocationRelativeTo(monitorMainFrame);
-    }
-    
-    private void initComboBox() {
-        IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.SECOND),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MINUTE),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.HOUR),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.DAY),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.WEEK),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MONTH),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.YEAR)
-        };
-
-        intervalTypeComboBox.setModel(new DefaultComboBoxModel(items));
-        intervalTypeComboBox.setSelectedIndex(5);
     }
 
     /**
@@ -71,9 +55,9 @@ public class MonitorProperties extends javax.swing.JDialog {
         SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);
         timeSpinner = new javax.swing.JSpinner(sm);
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        intervalTypeComboBox = new javax.swing.JComboBox();
         javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         intervalValueField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -86,9 +70,9 @@ public class MonitorProperties extends javax.swing.JDialog {
 
         jLabel1.setText("at time");
 
-        intervalTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel2.setText("Delete QoS-Data all");
+
+        jLabel3.setText("Days");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -99,9 +83,9 @@ public class MonitorProperties extends javax.swing.JDialog {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(intervalValueField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(intervalTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -114,9 +98,9 @@ public class MonitorProperties extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(intervalTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(intervalValueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(intervalValueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -137,7 +121,7 @@ public class MonitorProperties extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 266, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(saveButton)))
                 .addContainerGap())
         );
@@ -159,8 +143,8 @@ public class MonitorProperties extends javax.swing.JDialog {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox intervalTypeComboBox;
     private javax.swing.JTextField intervalValueField;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JButton saveButton;
     private javax.swing.JSpinner timeSpinner;
     private Date spinnerTime;

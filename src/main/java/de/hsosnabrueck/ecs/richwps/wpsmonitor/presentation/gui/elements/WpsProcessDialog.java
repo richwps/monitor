@@ -46,7 +46,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     private void init() {
         List<WpsProcessEntity> processesOfWps = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
-                .getProcessesOfWps(wps.getIdentifier());
+                .getProcessesOfWps(wps);
         
         for(WpsProcessEntity processEntity : processesOfWps) {
             WpsProcessPanel processPane = createSavedProcessPanel(processEntity);
@@ -61,7 +61,10 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     }
 
     private Boolean isNotEmptyProcessName() {
-        return !processIdentifierInput.getText().trim().equalsIgnoreCase("");
+        return !processIdentifierInput
+                .getText()
+                .trim()
+                .equalsIgnoreCase("");
     }
 
     /**

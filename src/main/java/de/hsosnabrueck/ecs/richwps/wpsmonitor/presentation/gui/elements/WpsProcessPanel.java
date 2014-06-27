@@ -22,6 +22,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
@@ -76,29 +77,64 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
-        
+
         if (wpsProcess.isWpsException()) {
             indicateError();
         }
+
+        Boolean paused = mainFrame.getMonitorReference()
+                .getMonitorControl()
+                .isPausedMonitoring(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
         
-        registerMonitoringPausedEvent();
+        if (paused) {
+            triggerPauseCase();
+        } else {
+            triggerMonitoringCase();
+        }
+
+        registerMonitoringEvents();
     }
 
-    private void registerMonitoringPausedEvent() {
+    private void triggerPauseCase() {
+        stopMonitoringButton.setEnabled(false);
+        rescheduleButton.setEnabled(true);
+    }
+    
+    private void triggerMonitoringCase() {
+        stopMonitoringButton.setEnabled(true);
+        rescheduleButton.setEnabled(false);
+    }
+
+    private void registerMonitoringEvents() {
         try {
-            mainFrame.getMonitorReference()
-                    .getEventHandler()
-                    .registerListener("scheduler.job.paused", new MonitorEventListener() {
+            MonitorEventHandler eventHandler = mainFrame
+                    .getMonitorReference()
+                    .getEventHandler();
+
+            eventHandler
+                    .registerListener("measurement.wpsjob.wpsexception", new MonitorEventListener() {
 
                         @Override
                         public void execute(MonitorEvent event) {
 
                             if (event.getMsg() instanceof WpsProcessEntity) {
                                 WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
-                                processMonitoringPaused(wpsProcess);
+                                processRequestException(wpsProcess);
                             }
                         }
 
+                    });
+
+            eventHandler
+                    .registerListener("monitorcontrol.pauseMonitoring", new MonitorEventListener() {
+
+                        @Override
+                        public void execute(MonitorEvent event) {
+                            if (event.getMsg() instanceof WpsProcessEntity) {
+                                WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
+                                monitoringPauseEvent(wpsProcess);
+                            }
+                        }
                     });
         } catch (EventNotFound ex) {
             log.warn(ex);
@@ -157,13 +193,23 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
         saveProcessButton.setBackground(new Color(153, 255, 153));
         showJobsButton.setEnabled(true);
+        stopMonitoringButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
     }
 
-    public void processMonitoringPaused(WpsProcessEntity process) {
-        log.debug("Pause Event treiggered by {}", process);
+    public void processRequestException(WpsProcessEntity process) {
+        log.debug("Exception Event triggered by {}", process);
+
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
+        }
+    }
+
+    public void monitoringPauseEvent(WpsProcessEntity process) {
+        log.debug("Pause Event triggered by {}", process);
+
+        if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
+            rescheduleButton.setEnabled(true);
         }
     }
 
@@ -188,6 +234,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         javax.swing.JToolBar jToolBar1 = new javax.swing.JToolBar();
         showJobsButton = new javax.swing.JButton();
         showMeasuredDataButton = new javax.swing.JButton();
+        stopMonitoringButton = new javax.swing.JButton();
+        rescheduleButton = new javax.swing.JButton();
         deleteProcessButton = new javax.swing.JButton();
         saveProcessButton = new javax.swing.JButton();
         processNameText = new javax.swing.JLabel();
@@ -210,7 +258,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(showJobsButton);
 
-        showMeasuredDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/performance.png"))); // NOI18N
+        showMeasuredDataButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/measure.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measuredata");
         showMeasuredDataButton.setEnabled(false);
         showMeasuredDataButton.addActionListener(new java.awt.event.ActionListener() {
@@ -219,6 +267,26 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             }
         });
         jToolBar1.add(showMeasuredDataButton);
+
+        stopMonitoringButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/stop.png"))); // NOI18N
+        stopMonitoringButton.setText("Stop Monitoring");
+        stopMonitoringButton.setEnabled(false);
+        stopMonitoringButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopMonitoringButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(stopMonitoringButton);
+
+        rescheduleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        rescheduleButton.setText("Re-schedule");
+        rescheduleButton.setEnabled(false);
+        rescheduleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rescheduleButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(rescheduleButton);
 
         deleteProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteProcessButton.setText("Delete");
@@ -266,7 +334,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -277,13 +345,15 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(processNameText)
-                            .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 332, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(processNameText)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 156, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,8 +391,6 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void saveProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProcessButtonActionPerformed
 
-        String wpsIdentifier = wpsProcess.getWps().getIdentifier();
-        String wpsProcessIdentifier = wpsProcess.getIdentifier();
         String testRequest = testRequestTextArea.getText();
 
         if (evaluateTestRequest(testRequest)) {
@@ -332,19 +400,19 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             if (!saved) {
                 inserted = mainFrame.getMonitorReference()
                         .getMonitorControl()
-                        .createProcess(wpsIdentifier, wpsProcessIdentifier);
+                        .createAndScheduleProcess(wpsProcess);
             }
 
             if (inserted) {
                 inserted = mainFrame.getMonitorReference()
                         .getMonitorControl()
-                        .setTestRequest(wpsIdentifier, wpsProcessIdentifier, testRequest);
+                        .setTestRequest(wpsProcess, testRequest);
             }
 
             if (wpsProcess.isWpsException()) {
                 mainFrame.getMonitorReference()
                         .getMonitorControl()
-                        .resumeMonitoring(wpsIdentifier, wpsProcessIdentifier);
+                        .resumeMonitoring(wpsProcess);
             }
 
             if (inserted) {
@@ -361,7 +429,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         if (saved) {
             mainFrame.getMonitorReference()
                     .getMonitorControl()
-                    .deleteProcess(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+                    .deleteProcess(wpsProcess);
         }
 
         parent.remove(this);
@@ -375,22 +443,41 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void showMeasuredDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMeasuredDataButtonActionPerformed
         measuredDataDialog.recaptureData();
-        
-        if(measuredDataDialog.isVisible()) {
+
+        if (measuredDataDialog.isVisible()) {
             measuredDataDialog.revalidate();
         } else {
             measuredDataDialog.setVisible(true);
         }
     }//GEN-LAST:event_showMeasuredDataButtonActionPerformed
 
+    private void rescheduleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rescheduleButtonActionPerformed
+        mainFrame.getMonitorReference()
+                .getMonitorControl()
+                .resumeMonitoring(wpsProcess);
+
+        triggerMonitoringCase();
+    }//GEN-LAST:event_rescheduleButtonActionPerformed
+
+    private void stopMonitoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopMonitoringButtonActionPerformed
+
+        mainFrame.getMonitorReference()
+                .getMonitorControl()
+                .pauseMonitoring(wpsProcess);
+        
+        triggerPauseCase();
+    }//GEN-LAST:event_stopMonitoringButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteProcessButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel processNameText;
+    private javax.swing.JButton rescheduleButton;
     private javax.swing.JButton saveProcessButton;
     private javax.swing.JButton showJobsButton;
     private javax.swing.JButton showMeasuredDataButton;
+    private javax.swing.JButton stopMonitoringButton;
     private javax.swing.JTextArea testRequestTextArea;
     // End of variables declaration//GEN-END:variables
 }

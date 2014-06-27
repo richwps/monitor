@@ -16,6 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Stopf the scheduler
+     * Stop the scheduler
      *
      * @throws SchedulerException
      */
@@ -87,6 +89,16 @@ public final class SchedulerControl {
         scheduler.addJob(newJob, true);
 
         return newJob.getKey();
+    }
+    
+    /**
+     * Pauses a job and all triggers (delegate method to scheduler)
+     * 
+     * @param job
+     * @throws SchedulerException 
+     */
+    public synchronized void pauseJob(final JobKey job) throws SchedulerException {
+        scheduler.pauseJob(job);
     }
 
     /**

@@ -56,7 +56,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     private void init() {
         List<TriggerConfig> triggers = mainframe.getMonitorReference()
                 .getMonitorControl()
-                .getTriggers(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+                .getTriggers(wpsProcess);
         
         log.debug("init WpsProcessJobDialog");
         for(TriggerConfig config : triggers) {

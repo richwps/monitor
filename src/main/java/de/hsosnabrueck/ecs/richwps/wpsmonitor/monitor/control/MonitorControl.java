@@ -33,21 +33,57 @@ import org.quartz.TriggerKey;
  */
 public interface MonitorControl {
     public Boolean createWps(final String wpsIdentifier, final URI uri);
-    public Boolean createProcess(final String wpsIdentifier, final String processIdentifier);
+    public Boolean createWps(final WpsEntity wpsEntity);
+    
+    public Boolean createAndScheduleProcess(final String wpsIdentifier, final String processIdentifier);
+    public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity);
+    
     public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
+    public TriggerKey saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
+    
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
+    public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest);
+    
     public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri);
+    public WpsEntity updateWps(final String oldWpsIdentifier, final WpsEntity newWps);
+    
     public Boolean deleteWps(final String wpsIdentifier);
+    public Boolean deleteWps(final WpsEntity wpsEntity);
+    
     public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier);
-    public Boolean deleteTrigger(final TriggerKey triggerKey);
+    public Boolean deleteProcess(final WpsProcessEntity processEntity);
+    
     public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier);
+    public Boolean isPausedMonitoring(final WpsProcessEntity processEntity);
+    
     public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier);
-    public List<WpsEntity> getWpsList();
+    public void resumeMonitoring(final WpsProcessEntity processEntity);
+    
+    public void pauseMonitoring(final String wpsIdentifier, final String processIdentifier);
+    public void pauseMonitoring(final WpsProcessEntity processEntity);
+    
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
+    public List<WpsProcessEntity> getProcessesOfWps(final WpsEntity wpsEntity);
+    
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
+    public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity);
+    
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
+    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity);
+    
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range);
+    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range);
+    
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier);
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity);
+    
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs);
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
+    
+    public Boolean deleteTrigger(final TriggerKey triggerKey);
+    public List<WpsEntity> getWpsList();
+
+    
     public void deleteMeasuredData(final Date olderAs);
+    
 }
