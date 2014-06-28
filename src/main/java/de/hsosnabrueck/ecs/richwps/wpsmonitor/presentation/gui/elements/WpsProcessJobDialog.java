@@ -117,22 +117,24 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(newJobButton))
-                    .addComponent(jobScrollPane)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(newJobButton))
+                            .addComponent(jobScrollPane)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
                         .addComponent(jLabel1)
-                        .addGap(66, 66, 66)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
+                        .addGap(147, 147, 147)
                         .addComponent(jLabel4)
-                        .addGap(85, 85, 85)
+                        .addGap(39, 39, 39)
                         .addComponent(jLabel3)
-                        .addGap(228, 228, 228)))
+                        .addGap(174, 174, 174)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -166,6 +168,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     private void addJobEntryPane(WpsProcessJobEntry pane) {
         addJobPane.add(pane);
         addJobPane.revalidate();
+        addJobPane.repaint();
     }
 
 

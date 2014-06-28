@@ -136,6 +136,11 @@ public class MeasureJob implements Job {
 
         WpsRequest request = new WpsRequest(processEntity.getRawRequest(), info);
         WpsResponse response = wpsClient.execute(request);
+        
+        // if wps exception, then retry
+        if(response.isWpsException()) {
+            response = wpsClient.execute(request);
+        }
 
         return new Pair<WpsRequest, WpsResponse>(request, response);
     }
@@ -173,5 +178,14 @@ public class MeasureJob implements Job {
      */
     public WpsProcessEntity getProcessEntity() {
         return processEntity;
+    }
+
+    /**
+     * Returns the WpsClient instance
+     * 
+     * @return WpsClient instance 
+     */
+    public WpsClient getWpsClient() {
+        return wpsClient;
     }
 }

@@ -16,16 +16,12 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.Properties;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.IntervalComboBoxItem;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.text.DateFormatter;
-import org.quartz.DateBuilder;
 
 /**
  *

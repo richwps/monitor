@@ -35,7 +35,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.io.File;
 import java.util.Calendar;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -91,31 +90,35 @@ public class Monitor {
 
     private void cleanupJob() throws SchedulerException {
         try {
-            String schedulerName = monitorControl.getSchedulerControl()
-                    .getScheduler()
+            SchedulerControl schedulerControl = monitorControl.getSchedulerControl();
+            String schedulerName = schedulerControl.getScheduler()
                     .getSchedulerName();
 
             JobKey jobKey = new JobKey("deleteQosData", schedulerName);
             TriggerKey triggerKey = new TriggerKey("deleteQosData", schedulerName);
 
-            Boolean jobRegistred = monitorControl
-                    .getSchedulerControl()
+            Boolean jobRegistred = schedulerControl
                     .isJobRegistred(jobKey);
+            
+            Boolean triggerRegistred = schedulerControl
+                    .isTriggerRegistred(triggerKey);
+            
+            Trigger cleanupTrigger = getCleanupTrigger(triggerKey, jobKey);
 
             if (!jobRegistred) {
-                monitorControl
-                        .getSchedulerControl()
+                schedulerControl
                         .addJob(jobKey, CleanUpJob.class);
             }
-
-            monitorControl.getSchedulerControl()
-                    .getScheduler()
-                    .rescheduleJob(triggerKey, getCleanupTrigger(triggerKey, jobKey));
+            
+            if(!triggerRegistred) {
+                schedulerControl.getScheduler()
+                        .scheduleJob(cleanupTrigger);
+            }
+            schedulerControl.getScheduler()
+                    .rescheduleJob(triggerKey, cleanupTrigger);
 
             if (!config.isDeleteJobActiv()) {
-                monitorControl
-                        .getSchedulerControl()
-                        .pauseJob(jobKey);
+                schedulerControl.pauseJob(jobKey);
             }
         } catch (Exception ex) {
             log.error(ex);
@@ -131,7 +134,7 @@ public class Monitor {
         Trigger cleanupTrigger = TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
                 .forJob(jobKey)
-                .startAt(DateBuilder.tomorrowAt(hour, minute, 0))
+                .startAt(DateBuilder.todayAt(hour, minute, 0))
                 .withSchedule(CalendarIntervalScheduleBuilder.calendarIntervalSchedule()
                         .withIntervalInDays(1)
                 ).build();

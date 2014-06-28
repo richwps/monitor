@@ -19,16 +19,24 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures.IntervalComboBoxItem;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.text.DateFormatter;
 import org.quartz.DateBuilder;
 import org.quartz.TriggerKey;
 
 /**
- *
- * @author FloH
+ * Representates the GUI element for a job entry to create and add triggers
+ * to the monitor.
+ * 
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessJobEntry extends javax.swing.JPanel {
 
@@ -48,7 +56,8 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         this.mainFrame = mainFrame;
         this.wpsProcess = wpsProcess;
         this.parent = parent;
-
+        
+        saveJob.setBackground(new Color(255, 51, 51));
         init(triggerConfig);
     }
 
@@ -67,6 +76,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     }
 
     public void reInit(TriggerConfig config) {
+        saveJob.setBackground(new Color(240, 240, 240));
         init(config);
     }
 
@@ -105,14 +115,61 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
         startDate = new com.toedter.calendar.JDateChooser();
+        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        jLabel1 = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        timeSpinner = new javax.swing.JSpinner();
+        javax.swing.Box.Filler filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
         endDate = new com.toedter.calendar.JDateChooser();
-        intervalTypeCombooBox = new javax.swing.JComboBox();
+        javax.swing.Box.Filler filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
         intervalField = new javax.swing.JTextField();
+        intervalTypeCombooBox = new javax.swing.JComboBox();
+        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
         saveJob = new javax.swing.JButton();
         deleteJob = new javax.swing.JButton();
 
+        jToolBar1.setBorder(null);
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+        jToolBar1.setOpaque(false);
+        jToolBar1.add(startDate);
+        jToolBar1.add(filler1);
+
+        jLabel1.setText("at");
+        jToolBar1.add(jLabel1);
+        jToolBar1.add(filler2);
+
+        Date spinnerTime = new Date();
+        SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);
+        timeSpinner = new javax.swing.JSpinner(sm);
+        JSpinner.DateEditor de = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
+        DateFormatter formatter = (DateFormatter)de.getTextField().getFormatter();
+        formatter.setAllowsInvalid(false);
+        formatter.setOverwriteMode(true);
+        timeSpinner.setEditor(de);
+        jToolBar1.add(timeSpinner);
+        jToolBar1.add(filler6);
+        jToolBar1.add(jSeparator1);
+        jToolBar1.add(filler7);
+        jToolBar1.add(endDate);
+        jToolBar1.add(filler5);
+        jToolBar1.add(jSeparator3);
+        jToolBar1.add(filler4);
+        jToolBar1.add(intervalField);
+
         intervalTypeCombooBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
+        jToolBar1.add(intervalTypeCombooBox);
+        jToolBar1.add(filler3);
+        jToolBar1.add(jSeparator2);
+        jToolBar1.add(filler8);
 
         saveJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveJob.setText("Save");
@@ -121,6 +178,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 saveJobActionPerformed(evt);
             }
         });
+        jToolBar1.add(saveJob);
 
         deleteJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteJob.setText("Delete");
@@ -129,6 +187,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 deleteJobActionPerformed(evt);
             }
         });
+        jToolBar1.add(deleteJob);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -136,32 +195,15 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                .addComponent(intervalField, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(intervalTypeCombooBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
-                .addComponent(saveJob)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(deleteJob)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(intervalTypeCombooBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(intervalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(saveJob)
-                        .addComponent(deleteJob))
-                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -173,8 +215,12 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             try {
                 Integer interval = Integer.parseInt(intervalValue);
 
-                TriggerConfig tConfig = new TriggerConfig(startDate.getDate(),
-                        endDate.getDate(),
+                Date time = (Date) timeSpinner.getValue();
+                Date setStartDate = mergeDateAndTime(startDate.getDate(), time);
+                Date setEndDate = mergeDateAndTime(endDate.getDate(), time);
+
+                TriggerConfig tConfig = new TriggerConfig(setStartDate,
+                        setEndDate,
                         interval,
                         selectedItem.getFormatKey(),
                         triggerKey
@@ -201,6 +247,19 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_saveJobActionPerformed
 
+    private Date mergeDateAndTime(Date date, Date time) {
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
+
+        Calendar calTime = Calendar.getInstance();
+        calTime.setTime(time);
+
+        calDate.set(Calendar.HOUR_OF_DAY, calTime.get(Calendar.HOUR_OF_DAY));
+        calDate.set(Calendar.MINUTE, calTime.get(Calendar.MINUTE));
+        calDate.set(Calendar.SECOND, calTime.get(Calendar.SECOND));
+
+        return calDate.getTime();
+    }
     private void deleteJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
         if (triggerKey != null) { //if triggerkey null, then this job was not saved
             mainFrame.getMonitorReference()
@@ -220,7 +279,13 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser endDate;
     private javax.swing.JTextField intervalField;
     private javax.swing.JComboBox intervalTypeCombooBox;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton saveJob;
     private com.toedter.calendar.JDateChooser startDate;
+    private javax.swing.JSpinner timeSpinner;
     // End of variables declaration//GEN-END:variables
 }
