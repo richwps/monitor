@@ -3,22 +3,24 @@ RichWPS-Monitor
 
 A Monitoring System to monitor Web Processing Services (WPS)
 
-Used Libraries and Frameworks
+## Libraries and Frameworks
 * [Quartz Scheduler Library](http://quartz-scheduler.org/)
 * [Spark Micro Web Framewrok](http://www.sparkjava.com/)
-* [JPA](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html) & [JAXB](https://jaxb.java.net/)
+* [JPA](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html) 
+* [GSON](https://code.google.com/p/google-gson/)
 * [Apache HTTP Components](http://hc.apache.org/) (used for a simple WpsClient)
+* [Apache Derby](http://db.apache.org/derby/)
 
 
-# Monitor Events
+## Monitor Events
 
-## Events triggered by Monitor
+### Events triggered by Monitor
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
 | monitor.shutdown                        |                   |
 
-## Events triggered by MonitorControl
+### Events triggered by MonitorControl
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
@@ -33,7 +35,7 @@ Used Libraries and Frameworks
 | monitorcontrol.deleteTrigger            | TriggerKey        |
 | monitorcontrol.saveTrigger              | TriggerKey        |
 
-## Events triggered by JobExecutedHandlerThread
+### Events triggered by JobExecutedHandlerThread
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
