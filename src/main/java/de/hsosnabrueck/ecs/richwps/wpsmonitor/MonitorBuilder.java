@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
@@ -33,10 +34,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJobFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
@@ -48,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.quartz.Job;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -76,11 +72,11 @@ public class MonitorBuilder {
         return this;
     }
 
-    public MonitorBuilder withPropertiesFile(String fileName) throws Exception {
-        File pFile = new File(Param.notNull(fileName, "fileName"));
-
-        if (!pFile.exists()) {
-            throw new Exception("Properties file does not exists");
+    public MonitorBuilder withPropertiesFile(String fileName) {
+        File pFile = null;
+        
+        if(fileName != null && !fileName.trim().equals("")) {
+            pFile = new File(fileName);
         }
 
         this.propertiesFile = pFile;
@@ -171,6 +167,12 @@ public class MonitorBuilder {
     public MonitorBuilder withDefaultJobFactoryService() {
         return withJobFactoryService(new JobFactoryService());
     }
+    
+    public MonitorBuilder withDefaultPropertiesFile() {
+        withPropertiesFile("monitor.properties");
+        
+        return this;
+    }
 
     public MonitorBuilder setupDefault() {
         return withDefaultProbeService()
@@ -178,7 +180,8 @@ public class MonitorBuilder {
                 .withDefaultQosDaoFactory()
                 .withDefaultWpsDaoFactory()
                 .withDefaultWpsProcessDaoFactory()
-                .withDefaultJobFactoryService();
+                .withDefaultJobFactoryService()
+                .withDefaultPropertiesFile();
     }
 
     private SchedulerFactory setupSchedulerFactory() throws CreateException {
@@ -202,14 +205,7 @@ public class MonitorBuilder {
             withDefaultJobFactoryService();
         }
 
-        /**
-         * Important!
-         */
-        MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDaoFactory.create(), qosDaoFactory, wpsClientFactory);
-        //CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory);
-
-        jobFactoryService.put(MeasureJob.class, measureJobFactory);
-        //jobFactoryService.put(CleanUpJob.class, cleanupJobFactory);
+        
 
         List<JobListener> jobListeners = new ArrayList<JobListener>();
         jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
@@ -304,6 +300,8 @@ public class MonitorBuilder {
         } catch (CreateException ex) {
             throw new BuilderException(ex.toString());
         } catch (SchedulerException ex) {
+            throw new BuilderException(ex.toString());
+        } catch (MonitorConfigException ex) {
             throw new BuilderException(ex.toString());
         }
 

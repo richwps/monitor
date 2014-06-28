@@ -48,6 +48,10 @@ public class JobFactoryService implements JobFactory {
         return classFactoryMap.put(k, v);
     }
 
+    public JobFactory get(Class<? extends Job> o) {
+        return classFactoryMap.get(o);
+    }
+
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
         Class<? extends Job> jobClass = bundle

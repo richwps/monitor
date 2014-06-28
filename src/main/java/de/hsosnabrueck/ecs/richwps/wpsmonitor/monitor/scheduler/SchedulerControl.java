@@ -485,4 +485,8 @@ public final class SchedulerControl {
     public Scheduler getScheduler() {
         return scheduler;
     }
+
+    public JobFactoryService getJobFactoryService() {
+        return jobFactoryService;
+    }
 }

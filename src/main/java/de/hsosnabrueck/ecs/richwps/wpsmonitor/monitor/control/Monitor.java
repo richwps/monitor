@@ -16,20 +16,25 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJobFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Pair;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -48,60 +53,22 @@ public class Monitor {
 
     private final MonitorControlImpl monitorControl;
     private final MonitorBuilder builderInstance;
-    private final Pair<JobKey, TriggerKey> qosDeletePair;
-    private final Properties properties;
-    private Boolean withCleanup;
+    private final MonitorConfig config;
 
     private final static Logger log;
-    private final static Properties defaultProperties;
-    public final String MONITOR_ID;
 
     static {
         log = LogManager.getLogger();
-        defaultProperties = new Properties();
-
-        initDefaultProperties();
     }
 
-    private static void initDefaultProperties() {
-        defaultProperties.setProperty("qos.delete.afterdays", "360");
-        defaultProperties.setProperty("qos.delete.attime", "9:00");
-    }
-
-    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorBuilder builder) {
+    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorBuilder builder) throws MonitorConfigException {
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
         this.builderInstance = Param.notNull(builder, "builder");
-        this.MONITOR_ID = UUID.randomUUID().toString();
-        this.properties = new Properties(defaultProperties);
+        this.config = new MonitorConfig(propertiesFile);
 
-        this.withCleanup = true;
-
-        /**
-         * Register a Job & Triggerkey for clean-up operation. for this purpose,
-         * we need an unique group-id; so i give every monitor object its own
-         * unique id :)
-         */
-        JobKey jobKey = new JobKey("deleteQosData", MONITOR_ID);
-        TriggerKey triggerKey = new TriggerKey("deleteQosData", MONITOR_ID);
-
-        qosDeletePair = new Pair<JobKey, TriggerKey>(jobKey, triggerKey);
-
-        initProperties(Param.notNull(propertiesFile, "propertiesFile"));
         initGeneral();
-    }
-
-    private void initProperties(final File propertiesFile) {
-        try {
-            FileInputStream fileInputStream = new FileInputStream(propertiesFile);
-
-            properties.load(fileInputStream);
-        } catch (FileNotFoundException ex) {
-            log.error(ex);
-        } catch (IOException ex) {
-            log.error(ex);
-        }
-    }
-
+    } 
+    
     private void initGeneral() {
         builderInstance.getEventHandler()
                 .registerEvent("monitor.shutdown");
@@ -122,73 +89,96 @@ public class Monitor {
     }
 
     private void cleanupJob() throws SchedulerException {
-        
-        Boolean jobRegistred = monitorControl
-                .getSchedulerControl()
-                .isJobRegistred(qosDeletePair.getLeft());
+        try {
+            String schedulerName = monitorControl.getSchedulerControl()
+                    .getScheduler()
+                    .getSchedulerName();
 
-        if (!jobRegistred) {
-            monitorControl
+            JobKey jobKey = new JobKey("deleteQosData", schedulerName);
+            TriggerKey triggerKey = new TriggerKey("deleteQosData", schedulerName);
+
+            Boolean jobRegistred = monitorControl
                     .getSchedulerControl()
-                    .addJob(qosDeletePair.getLeft(), CleanUpJob.class);
-        }
+                    .isJobRegistred(jobKey);
 
-        monitorControl.getSchedulerControl()
-                .getScheduler()
-                .rescheduleJob(qosDeletePair.getRight(), getCleanupTrigger());
+            if (!jobRegistred) {
+                monitorControl
+                        .getSchedulerControl()
+                        .addJob(jobKey, CleanUpJob.class);
+            }
 
-        if (!withCleanup) {
-            monitorControl
-                    .getSchedulerControl()
-                    .pauseJob(qosDeletePair.getLeft());
+            monitorControl.getSchedulerControl()
+                    .getScheduler()
+                    .rescheduleJob(triggerKey, getCleanupTrigger(triggerKey, jobKey));
+
+            if (!config.isDeleteJobActiv()) {
+                monitorControl
+                        .getSchedulerControl()
+                        .pauseJob(jobKey);
+            }
+        } catch (Exception ex) {
+            log.error(ex);
         }
     }
 
-    private Trigger getCleanupTrigger() {
-        Integer dayInterval, hour, minute;
-        Integer[] dateInfos;
-
-        try {
-            dateInfos = cleanupPropertieHelper(properties);
-        } catch (NumberFormatException ex) {
-            dateInfos = cleanupPropertieHelper(defaultProperties);
-
-            log.error(ex);
-        }
-
-        dayInterval = dateInfos[0];
-        hour = dateInfos[1];
-        minute = dateInfos[2];
+    private Trigger getCleanupTrigger(final TriggerKey triggerKey, final JobKey jobKey) throws Exception {
+        Integer hour = config.getDeleteTime()
+                .get(Calendar.HOUR_OF_DAY);
+        Integer minute = config.getDeleteTime()
+                .get(Calendar.MINUTE);
 
         Trigger cleanupTrigger = TriggerBuilder.newTrigger()
-                .withIdentity(qosDeletePair.getRight())
-                .forJob(qosDeletePair.getLeft())
+                .withIdentity(triggerKey)
+                .forJob(jobKey)
                 .startAt(DateBuilder.tomorrowAt(hour, minute, 0))
                 .withSchedule(CalendarIntervalScheduleBuilder.calendarIntervalSchedule()
-                        .withIntervalInDays(dayInterval)
+                        .withIntervalInDays(1)
                 ).build();
 
         return cleanupTrigger;
     }
 
-    private Integer[] cleanupPropertieHelper(Properties prop) {
-        String[] split = prop.getProperty("qos.delete.attime")
-                .split(":");
+    private void afterStart() throws SchedulerException {
 
-        Integer[] p = new Integer[]{
-            Integer.parseInt(prop.getProperty("qos.delete.afterdays")),
-            Integer.parseInt(split[0]),
-            Integer.parseInt(split[1])
-        };
-
-        return p;
     }
 
-    private void afterStart() throws SchedulerException {
+    private void beforeStart() throws SchedulerException {
+        setupJobFactories();
         cleanupJob();
     }
 
+    private void setupJobFactories() {
+        try {
+            JobFactoryService jobFactoryService = monitorControl
+                    .getSchedulerControl()
+                    .getJobFactoryService();
+
+            ProbeService probeService = builderInstance
+                    .getProbeService();
+            WpsProcessDataAccess wpsProcessDao = builderInstance
+                    .getWpsProcessDaoFactory().create();
+            QosDaoFactory qosDaoFactory = builderInstance
+                    .getQosDaoFactory();
+            WpsClientFactory wpsClientFactory = builderInstance
+                    .getWpsClientFactory();
+
+            MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
+
+
+            CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory, config.getDeleteIntervalInDays());
+
+            jobFactoryService.put(MeasureJob.class, measureJobFactory);
+            jobFactoryService.put(CleanUpJob.class, cleanupJobFactory);
+        } catch (CreateException ex) {
+            log.fatal(ex);
+        } catch (Exception ex) {
+            log.fatal(ex);
+        }
+    }
+
     public void start() throws SchedulerException {
+        beforeStart();
+
         monitorControl
                 .getSchedulerControl().start();
 
@@ -201,9 +191,11 @@ public class Monitor {
         getEventHandler()
                 .fireEvent(new MonitorEvent("monitor.shutdown"));
 
+        config.save();
         monitorControl.getSchedulerControl()
                 .shutdown();
     }
+
 
     public MonitorControl getMonitorControl() {
         log.debug("getMonitorControl called by {}", Thread.currentThread().getName());
@@ -231,13 +223,7 @@ public class Monitor {
         return builderInstance.getProbeService();
     }
 
-    public Boolean isCleanup() {
-        return withCleanup;
-    }
-
-    public void setCleanup(Boolean withCleanup) {
-        if (withCleanup != null) {
-            this.withCleanup = withCleanup;
-        }
+    public MonitorConfig getConfig() {
+        return config;
     }
 }

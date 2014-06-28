@@ -35,6 +35,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWp
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWpsRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
+import java.util.Locale;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -48,6 +49,8 @@ public class Application {
     private final static Logger log = LogManager.getLogger();
 
     public static void main(String[] args) throws Exception {
+        Locale.setDefault(Locale.GERMANY);
+        
         try {
             new Application().run();
         } catch (Exception ex) {
