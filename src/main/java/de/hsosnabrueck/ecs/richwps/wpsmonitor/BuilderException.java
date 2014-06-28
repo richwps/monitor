@@ -17,7 +17,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 /**
- *
+ * Exception which will be thrown if an exeception occours at the building 
+ * process
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class BuilderException extends Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 FloH.
+ * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsProcessInfo;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
@@ -147,7 +147,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         try {
             WpsClient wpsClient = mainFrame.getMonitorReference()
                     .getBuilderInstance()
-                    .buildWpsClient();
+                    .getWpsClientFactory()
+                    .create();
 
             WpsProcessInfo info = new WpsProcessInfo(wpsProcess.getWps().getUri(), wpsProcess.getIdentifier());
             WpsRequest request = new WpsRequest(testRequest, info);

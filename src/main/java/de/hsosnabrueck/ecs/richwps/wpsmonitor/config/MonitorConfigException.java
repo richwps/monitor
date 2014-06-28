@@ -17,7 +17,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.config;
 
 /**
- *
+ * Exception which will be thrown if a configuration error occours. This case 
+ * should never happen, because of the default-config directives.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorConfigException extends Exception {

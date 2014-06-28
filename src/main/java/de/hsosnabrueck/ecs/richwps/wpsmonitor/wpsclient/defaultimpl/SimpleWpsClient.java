@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsConnectionException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsConnectionException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;

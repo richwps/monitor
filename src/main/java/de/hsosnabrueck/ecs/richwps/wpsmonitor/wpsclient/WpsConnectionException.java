@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 FloH.
+ * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
-
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
 /**
- * Factory which will be registred in WpsClientFactory. This Factory describes
- * how the SimpleWpsClient should be build.
+ * This Exception should be thrown if the wps server are offline, or if the
+ * answer not of type XML.
  *
+ * Normally this Exception is never thrown, but used from a WPS Client.
+ * Instances of this Class will be created if the WPS-Client detects that the
+ * server is offline or the response is not of type xml.
+ *
+ * @see WpsResponse
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class SimpleWpsClientFactory implements Factory<WpsClient> {
+public class WpsConnectionException extends Exception {
 
-    @Override
-    public WpsClient create() {
-        return new SimpleWpsClient();
+    public WpsConnectionException() {
+        super("Can't connect to the server.");
     }
-
 }

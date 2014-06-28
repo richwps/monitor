@@ -50,7 +50,7 @@ public class Application {
 
     public static void main(String[] args) throws Exception {
         Locale.setDefault(Locale.GERMANY);
-        
+
         try {
             new Application().run();
         } catch (Exception ex) {
@@ -86,6 +86,12 @@ public class Application {
         GuiStarter.start(monitor);
     }
 
+    /**
+     * Setup the Monitor-instance
+     *
+     * @return Monitor instance
+     * @throws Exception
+     */
     public Monitor setupMonitor() throws Exception {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
@@ -97,6 +103,12 @@ public class Application {
         return monitor;
     }
 
+    /**
+     * Setup the REST interface
+     *
+     * @param monitor Monitor instance
+     * @return
+     */
     public RestInterface setupRest(MonitorControl monitor) {
         RestInterface restInterface = new RestInterfaceBuilder()
                 .withMonitorControl(monitor)

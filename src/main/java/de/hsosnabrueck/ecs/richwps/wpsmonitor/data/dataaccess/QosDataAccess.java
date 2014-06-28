@@ -20,15 +20,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * DataAccess for MeasuredDataEntity-objects.
+ * DataAccess for {@link MeasuredDataEntity}-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
 
     /**
-     * Get all MeasuredDataEntity-Objects that matches the given (wpsIdentifier,
-     * processIdentifier) combination
+     * Get all {@link MeasuredDataEntity}-Objects that matches the given
+     * (wpsIdentifier, processIdentifier) combination
      *
      * @param wpsIdentifier Wps Entity identifier
      * @param processIdentifier Process Entity identifier
@@ -37,35 +37,62 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Get all MeasuredDataEntity-Objects that matches the given wpsIdentifier
+     * Get all {@link MeasuredDataEntity}-Objects that matches the given
+     * wpsIdentifier
      *
-     * @param wpsIdentifier Wps Entity identifier
+     * @param wpsIdentifier Wps entity identifier
      * @return List of MeasuredDataEntity-Objects
      */
     public List<MeasuredDataEntity> getByWps(final String wpsIdentifier);
 
     /**
-     * Get all MeasuredDataEntity-Objects in the specific range which is
+     * Get all {@link MeasuredDataEntity}-Objects in the specific range which is
      * described by the given range object.
      *
-     * @param wpsIdentifier Wps Entity identifier
-     * @param processIdentifier Process Entity identifier
+     * @param wpsIdentifier Wps etity identifier
+     * @param processIdentifier Process entity identifier
      * @param range Range Instance
      * @return List of MeasuredDataEntity-Objects
      */
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range);
 
     /**
-     * Get all MeasuredDataEntity-Objects that matches the given wpsIdentifier
-     * in the specific range which is described by the given range object.
+     * Get all {@link MeasuredDataEntity}-Objects that matches the given
+     * wpsIdentifier in the specific range which is described by the given range
+     * object.
      *
-     * @param identifier Wps Entity Identifier
+     * @param identifier Wps entity Identifier
      * @param range Range Instance
      * @return List of MeasuredDataEntity-Objects
      */
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range);
-    
+
+    /**
+     * Deletes all measured Qos-Data that matches the given Wps process which is
+     * identified by wpsIdentifier and processIdentifier.
+     *
+     * @param wpsIdentifier Wps entity identifier
+     * @param processIdentifier WpsProcess entity identifier
+     * @return Affected rows
+     */
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier);
+
+    /**
+     * Deletes all measured Qos-Data that matches the given Wps process which is
+     * identified by wpsIdentifier and processIdentifier.
+     *
+     * @param wpsIdentifier Wps entity identifier
+     * @param processIdentifierfinal WpsProcess entity identifier
+     * @param olderDate
+     * @return Affected rows
+     */
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifierfinal, final Date olderDate);
+
+    /**
+     * Deletes all measured Qos-Data which are older as date.
+     *
+     * @param date Date instance
+     * @return Affected rows
+     */
     public Integer deleteAllOlderAs(final Date date);
 }

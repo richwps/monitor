@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
 /**
  * This Exception should be thrown if the XML response of a WPS server describes

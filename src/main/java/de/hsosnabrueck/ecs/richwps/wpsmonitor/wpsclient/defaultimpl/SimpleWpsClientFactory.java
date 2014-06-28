@@ -13,36 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl;
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.client;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 
 /**
+ * Factory which will be registred in WpsClientFactory. This Factory describes
+ * how the SimpleWpsClient should be build.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsClientConfig {
-    /**
-     * Timeout in ms
-     */
-    private Integer connectionTimeout;
-    
-    /**
-     * Will set the timeout to 10 ms
-     */
-    public WpsClientConfig() {
-       connectionTimeout = 10000;
-    }
-
-    public Integer getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
-    public void setConnectionTimeout(Integer connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
+public class SimpleWpsClientFactory implements Factory<WpsClient> {
 
     @Override
-    public String toString() {
-        return "WpsClientConfig{" + "connectionTimeout=" + connectionTimeout + '}';
+    public WpsClient create() {
+        return new SimpleWpsClient();
     }
+
 }

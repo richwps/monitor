@@ -15,10 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsProcessInfo;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsProcessInfo;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

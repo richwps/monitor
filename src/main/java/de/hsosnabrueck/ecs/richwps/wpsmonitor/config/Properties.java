@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Extension of the {@link java.util.Properties} class at convert methods.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -42,6 +43,13 @@ public class Properties extends java.util.Properties {
         this.defaultProperties = defaultProperties;
     }
 
+    /**
+     * Tries to convert the property that matches the propertyKey into a Integer
+     * value.
+     *
+     * @param propertyKey Index of the property
+     * @return Integer instance
+     */
     public Integer getIntegerProperty(final String propertyKey) {
         String propertyValue = super.getProperty(propertyKey);
         Integer intValue = null;
@@ -57,16 +65,31 @@ public class Properties extends java.util.Properties {
             } catch (NumberFormatException e) {
                 log.error(ex);
             }
+        } catch (NullPointerException ex) {
+            log.error(ex);
         }
 
         return intValue;
     }
 
+    /**
+     * Tries to convert the property that matches the propertyKey into a Boolean
+     * value.
+     *
+     * @param propertyKey Index of the property
+     * @return Boolean instance
+     */
     public Boolean getBooleanProperty(final String propertyKey) {
-        Boolean boolValue = _getBooleanProperty(this, propertyKey);
+        Boolean boolValue = null;
 
-        if (boolValue == null) {
-            boolValue = _getBooleanProperty(defaultProperties, propertyKey);
+        try {
+            boolValue = _getBooleanProperty(this, propertyKey);
+
+            if (boolValue == null) {
+                boolValue = _getBooleanProperty(defaultProperties, propertyKey);
+            }
+        } catch (NullPointerException ex) {
+            log.error(ex);
         }
 
         return boolValue;
@@ -85,22 +108,50 @@ public class Properties extends java.util.Properties {
         return boolValue;
     }
 
+    /**
+     * Tries to convert the property that matches the propertyKey into a Date
+     * instance.
+     *
+     * @param propertyKey Index of the property
+     * @param dateFormat date-Format e.g. HH:mm:ss
+     * @return Date instance
+     */
     public Date getDateProperty(final String propertyKey, final String dateFormat) {
-        Date result = _getDateProperty(this, propertyKey, dateFormat);
+        Date result = null;
 
-        if (result == null) {
-            result = _getDateProperty(defaultProperties, propertyKey, dateFormat);
+        try {
+            result = _getDateProperty(this, propertyKey, dateFormat);
+
+            if (result == null) {
+                result = _getDateProperty(defaultProperties, propertyKey, dateFormat);
+            }
+        } catch (NullPointerException ex) {
+            log.error(ex);
         }
 
         return result;
     }
-    
+
+    /**
+     * Tries to convert the property that matches the propertyKey into a
+     * Calendar instance.
+     *
+     * @param propertyKey Index of the property
+     * @param dateFormat date-Format e.g. HH:mm:ss
+     * @return Calendar instance
+     */
     public Calendar getCalendarProperty(final String propertyKey, final String dateFormat) {
-        Date dateProperty = getDateProperty(propertyKey, dateFormat);
-        
-        Calendar result = Calendar.getInstance();
-        result.setTime(dateProperty);
-        
+        Calendar result = null;
+
+        try {
+            Date dateProperty = getDateProperty(propertyKey, dateFormat);
+
+            result = Calendar.getInstance();
+            result.setTime(dateProperty);
+        } catch (NullPointerException ex) {
+            log.error(ex);
+        }
+
         return result;
     }
 

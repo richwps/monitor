@@ -20,7 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 
 /**
- * Factory for QosDataAccess-Objects.
+ * Factory for {@link QosDataAccess}-Objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

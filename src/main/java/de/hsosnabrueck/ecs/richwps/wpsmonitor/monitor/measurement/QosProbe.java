@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsRequest;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**

@@ -18,15 +18,15 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfigException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.client.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.clean.CleanUpJobFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.clean.CleanUpJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.clean.CleanUpJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.ProbeService;
@@ -54,6 +54,7 @@ public class Monitor {
     private final MonitorControlImpl monitorControl;
     private final MonitorBuilder builderInstance;
     private final MonitorConfig config;
+    private final MonitorEventHandler eventHandler;
 
     private final static Logger log;
 
@@ -61,18 +62,20 @@ public class Monitor {
         log = LogManager.getLogger();
     }
 
-    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorBuilder builder) throws MonitorConfigException {
+    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorEventHandler eventHandler, 
+            MonitorBuilder builder) throws MonitorConfigException {
+        
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
         this.builderInstance = Param.notNull(builder, "builder");
+        this.eventHandler = Param.notNull(eventHandler, "eventHandler");
         this.config = new MonitorConfig(propertiesFile);
 
         initGeneral();
     }
 
     private void initGeneral() {
-        builderInstance.getEventHandler()
-                .registerEvent("monitor.shutdown");
-
+        initEventHandler();
+        
         // Shutdown Hook
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -86,6 +89,12 @@ public class Monitor {
                 }
             }
         });
+    }
+    
+    private void initEventHandler() {
+        eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
+        eventHandler.registerEvent("measurement.wpsjob.wpsexception");
+        eventHandler.registerEvent("monitor.shutdown");
     }
 
     private void cleanupJob() throws SchedulerException {
@@ -195,7 +204,7 @@ public class Monitor {
         if (isActive()) {
             log.debug("Monitor shutdown.");
 
-            getEventHandler()
+            eventHandler
                     .fireEvent(new MonitorEvent("monitor.shutdown"));
 
             config.save();
@@ -215,7 +224,7 @@ public class Monitor {
     }
 
     public MonitorEventHandler getEventHandler() {
-        return builderInstance.getEventHandler();
+        return eventHandler;
     }
 
     public SchedulerControl getSchedulerControl() {

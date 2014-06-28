@@ -25,6 +25,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Representate the configuration of a {@link Monitor} instance. For this
+ * purpose, the MonitorConfig will be used a extended version of the
+ * {@link Properties} class. All configurations will be readed out of a
+ * properties file. If the save-method called, all changed properties will be
+ * written back into the properties file.
+ *
+ * If a config is not valid, then the default properties is used as fallback.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -103,15 +110,18 @@ public final class MonitorConfig {
     private void assignVarsToPropertieObj() {
         Integer hour = deleteTime.get(Calendar.HOUR_OF_DAY);
         Integer minute = deleteTime.get(Calendar.MINUTE);
-        
+
         properties.setProperty("qos.delete.afterdays", deleteIntervalInDays.toString());
         properties.setProperty("qos.delete.attime", hour.toString() + ":" + minute.toString());
         properties.setProperty("qos.delete", deleteJobActiv ? "true" : "false");
     }
 
+    /**
+     * Try to save the changed properties into the defined properties file
+     */
     public void save() {
         assignVarsToPropertieObj();
-        
+
         try {
             if (!propertiesFile.exists()) {
                 propertiesFile.createNewFile();
@@ -123,26 +133,60 @@ public final class MonitorConfig {
         }
     }
 
+    /**
+     * Value which indicates in which interval captured Qos measurement data
+     * should be deleted
+     *
+     * @return Integer instance
+     */
     public Integer getDeleteIntervalInDays() {
         return deleteIntervalInDays;
     }
 
+    /**
+     * Value which indicates in which interval captured Qos measurement data
+     * should be deleted
+     *
+     * @param deleteIntervalInDays Integer instance
+     */
     public synchronized void setDeleteIntervalInDays(Integer deleteIntervalInDays) {
         this.deleteIntervalInDays = deleteIntervalInDays;
     }
 
+    /**
+     * Calendar instance which holds the time (HH:mm) when Qos measurement data
+     * should be deleted (Trigger-time of the cleanup job is meaned here).
+     *
+     * @return Calendar instance
+     */
     public Calendar getDeleteTime() {
         return deleteTime;
     }
 
+    /**
+     * Calendar instance which holds the time (HH:mm) when Qos measurement data
+     * should be deleted (Trigger-time of the cleanup job is meaned here).
+     *
+     * @param deleteTime Calendar instance
+     */
     public synchronized void setDeleteTime(Calendar deleteTime) {
         this.deleteTime = deleteTime;
     }
 
+    /**
+     * Is the cleanup job active.
+     *
+     * @return true if active, otherwise false
+     */
     public Boolean isDeleteJobActiv() {
         return deleteJobActiv;
     }
 
+    /**
+     * Is the cleanup job active.
+     *
+     * @param deleteJobActiv true for active, otherwise false
+     */
     public synchronized void setDeleteJobActiv(Boolean deleteJobActiv) {
         this.deleteJobActiv = deleteJobActiv;
     }

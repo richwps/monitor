@@ -18,10 +18,10 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 import java.util.List;
 
 /**
- * Primary Interface for DataAccess-Objects
+ * Primary Interface for {@link DataAccess}-Objects
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
- * @param <T> Type of Entity which the dataaccess implementation should take
+ * @param <T> Type of Entity which the {@link DataAccess} implementation should take
  * care of
  */
 public interface DataAccess<T> {
