@@ -33,12 +33,14 @@ public class MessageDialogs {
      * @param question Question text
      * @return JOptionPane enum value for evaluate YES or NO option
      */
-    public static int showQuestionDialog(Component frame, String title, String question) {
-        return JOptionPane.showConfirmDialog(
+    public static Boolean showQuestionDialog(Component frame, String title, String question) {
+        int n = JOptionPane.showConfirmDialog(
                 frame,
                 question,
                 title,
                 JOptionPane.YES_NO_OPTION);
+        
+        return n == JOptionPane.YES_OPTION;
     }
 
     /**

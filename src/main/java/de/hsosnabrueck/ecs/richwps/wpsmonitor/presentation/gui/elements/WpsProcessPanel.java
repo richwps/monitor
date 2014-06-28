@@ -164,12 +164,12 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private Boolean evaluateTestRequest(String testRequest) {
         WpsResponse response = doTestRequest(testRequest);
-        int n = JOptionPane.YES_OPTION;
+        Boolean result = true;
 
         if (response != null) {
 
             if (response.isConnectionException()) {
-                n = MessageDialogs.showQuestionDialog(mainFrame,
+                result = MessageDialogs.showQuestionDialog(mainFrame,
                         "Not reachable",
                         "The specified WPS is not reachable; do you want to proceed?");
             }
@@ -181,11 +181,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         + "I will use the previous Version of the Testrequest."
                         + "But, i will the old request shown after a restart. This give you a chance to edit the errornous Request. :)");
 
-                n = JOptionPane.NO_OPTION;
+                result = false;
             }
         }
 
-        return n == JOptionPane.YES_OPTION;
+        return result;
     }
 
     private void triggerSaveState() {

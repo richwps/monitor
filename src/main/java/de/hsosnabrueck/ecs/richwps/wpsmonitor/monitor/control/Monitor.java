@@ -35,6 +35,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.io.File;
 import java.util.Calendar;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -67,8 +68,8 @@ public class Monitor {
         this.config = new MonitorConfig(propertiesFile);
 
         initGeneral();
-    } 
-    
+    }
+
     private void initGeneral() {
         builderInstance.getEventHandler()
                 .registerEvent("monitor.shutdown");
@@ -164,7 +165,6 @@ public class Monitor {
 
             MeasureJobFactory measureJobFactory = new MeasureJobFactory(probeService, wpsProcessDao, qosDaoFactory, wpsClientFactory);
 
-
             CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory, config.getDeleteIntervalInDays());
 
             jobFactoryService.put(MeasureJob.class, measureJobFactory);
@@ -177,25 +177,29 @@ public class Monitor {
     }
 
     public void start() throws SchedulerException {
-        beforeStart();
+        if (!isActive()) {
+            beforeStart();
 
-        monitorControl
-                .getSchedulerControl().start();
+            monitorControl
+                    .getSchedulerControl()
+                    .start();
 
-        afterStart();
+            afterStart();
+        }
     }
 
     public void shutdown() throws SchedulerException {
-        log.debug("Monitor shutdown.");
+        if (isActive()) {
+            log.debug("Monitor shutdown.");
 
-        getEventHandler()
-                .fireEvent(new MonitorEvent("monitor.shutdown"));
+            getEventHandler()
+                    .fireEvent(new MonitorEvent("monitor.shutdown"));
 
-        config.save();
-        monitorControl.getSchedulerControl()
-                .shutdown();
+            config.save();
+            monitorControl.getSchedulerControl()
+                    .shutdown();
+        }
     }
-
 
     public MonitorControl getMonitorControl() {
         log.debug("getMonitorControl called by {}", Thread.currentThread().getName());
@@ -225,5 +229,22 @@ public class Monitor {
 
     public MonitorConfig getConfig() {
         return config;
+    }
+
+    public Boolean isActive() {
+        Boolean active;
+        
+        try {
+            active = monitorControl
+                    .getSchedulerControl()
+                    .getScheduler()
+                    .isStarted();
+        } catch (SchedulerException ex) {
+            active = false;
+            
+            log.error(ex);
+        }
+        
+        return active;
     }
 }

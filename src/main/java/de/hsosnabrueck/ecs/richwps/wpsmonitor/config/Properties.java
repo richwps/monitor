@@ -19,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,9 +77,9 @@ public class Properties extends java.util.Properties {
         Boolean boolValue = null;
 
         if (propertyValue.equalsIgnoreCase("true")) {
-            boolValue = false;
-        } else if (propertyValue.equalsIgnoreCase("false")) {
             boolValue = true;
+        } else if (propertyValue.equalsIgnoreCase("false")) {
+            boolValue = false;
         }
 
         return boolValue;

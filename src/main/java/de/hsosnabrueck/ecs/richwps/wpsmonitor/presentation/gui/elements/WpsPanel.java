@@ -216,12 +216,12 @@ public class WpsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
-        int option = MessageDialogs.showQuestionDialog(this,
+        Boolean sure = MessageDialogs.showQuestionDialog(this,
                 "Delete WPS",
                 "Are you sure you want to permanently delete this WPS out of the Monitor?"
         );
 
-        if (option == JOptionPane.YES_OPTION) {
+        if (sure) {
             monitorMainFrame.getMonitorReference()
                     .getMonitorControl()
                     .deleteWps(wps);
