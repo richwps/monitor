@@ -12,7 +12,7 @@ Used Libraries and Frameworks
 
 # Monitor Events
 
-## Events fired up by Monitor
+## Events triggered by  by Monitor
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
@@ -33,7 +33,7 @@ Used Libraries and Frameworks
 | monitorcontrol.deleteTrigger            | TriggerKey        |
 | monitorcontrol.saveTrigger              | TriggerKey        |
 
-## Events fired up by JobExecutedHandlerThread
+## Events triggered by JobExecutedHandlerThread
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
