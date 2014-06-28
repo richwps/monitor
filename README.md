@@ -12,7 +12,7 @@ Used Libraries and Frameworks
 
 # Monitor Events
 
-## Events triggered by  by Monitor
+## Events triggered by Monitor
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
