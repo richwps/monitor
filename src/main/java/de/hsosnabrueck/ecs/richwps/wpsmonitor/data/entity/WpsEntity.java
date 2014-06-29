@@ -39,10 +39,7 @@ import javax.persistence.Version;
 public class WpsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Version
-    private long version;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

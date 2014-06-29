@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,10 @@ import java.util.Set;
  */
 public class ConverterFactoryMap  {
     private Map<String, Set<Factory<EntityConverter>>> converterMap;
+
+    public ConverterFactoryMap() {
+        this.converterMap = new HashMap<String, Set<Factory<EntityConverter>>>();
+    }
     
     public ConverterFactoryMap add(final String index, final Factory<EntityConverter> converterFactory) {
         Param.notNull(index, "index");

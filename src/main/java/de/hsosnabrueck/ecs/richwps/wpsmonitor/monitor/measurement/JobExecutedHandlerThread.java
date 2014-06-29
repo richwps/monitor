@@ -61,35 +61,39 @@ public class JobExecutedHandlerThread extends Thread {
                     .fireEvent(new MonitorEvent("scheduler.wpsjob.wasexecuted", process));
 
             if (specificJob.cantMeasure()) {
-                log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
-                        + " try to pause this job.", process);
 
-                JobKey jobKey = new JobKey(process.getIdentifier(), process.getWps().getIdentifier());
+                WpsProcessEntity find = wpsProcessDao.find(process.getWps().getIdentifier(), process.getIdentifier());
+                // check if no thread was faster
+                if (!find.isWpsException()) {
+                    log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
+                            + " try to pause this job.", process);
 
-                // markiere & persistiere, dass ein problem aufgetreten ist
-                process
-                        .setWpsException(true);
-                wpsProcessDao
-                        .update(process);
+                    JobKey jobKey = new JobKey(process.getIdentifier(), process.getWps().getIdentifier());
 
-                try {
-                    // pause job if an error is triggered
-                    executionContext
-                            .getScheduler()
-                            .pauseJob(jobKey);
+                    // markiere & persistiere, dass ein problem aufgetreten ist
+                    process
+                            .setWpsException(true);
+                    wpsProcessDao
+                            .update(process);
 
-                    // todo: maybe cleanup 
-                    eventHandler
-                            .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
+                    try {
+                        // pause job if an error is triggered
+                        executionContext
+                                .getScheduler()
+                                .pauseJob(jobKey);
 
-                    log.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
-                    eventHandler
-                            .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));
-                } catch (SchedulerException ex) {
-                    log.error(ex);
+                        // todo: maybe cleanup 
+                        eventHandler
+                                .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
+
+                        log.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
+                        eventHandler
+                                .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));
+                    } catch (SchedulerException ex) {
+                        log.error(ex);
+                    }
                 }
             }
         }
     }
-
 }

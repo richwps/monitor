@@ -36,6 +36,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWp
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
 import java.util.Locale;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -110,40 +111,46 @@ public class Application {
      * @return
      */
     public RestInterface setupRest(MonitorControl monitor) {
-        RestInterface restInterface = new RestInterfaceBuilder()
-                .withMonitorControl(monitor)
-                .withStrategy(new JsonPresentateStrategy())
-                .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
-                .build();
+        RestInterface restInterface = null;
+        try {
+            restInterface = new RestInterfaceBuilder()
+                    .withMonitorControl(monitor)
+                    .withStrategy(new JsonPresentateStrategy())
+                    .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
+                    .build();
+            
+            restInterface
+                    .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                        @Override
+                        public MonitorRoute create() throws CreateException {
+                            // the main measurement route
+                            // /measurement/wps/:wps/process/:process/count/:count/format/:format
+                            return new ListMeasurementRoute();
+                        }
+                    })
+                    .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                        @Override
+                        public MonitorRoute create() throws CreateException {
+                            // Alias for the ListMeasurementRoute
+                            // /measurement/wps/:wps/process/:process
+                            return new ListMeasurementAllAliasRoute();
+                        }
+                    })
+                    .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
+                        @Override
+                        public MonitorRoute create() throws CreateException {
+                            // Alias for the ListMeasurementRoute
+                            // /measurement/wps/:wps/process/:process/count/:count
+                            return new ListMeasurementNoFormatAliasRoute();
+                        }
+                    })
+                    .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
+                    .addRoute(HttpOperation.GET, new ListWpsRoute());
 
-        restInterface
-                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
-                    @Override
-                    public MonitorRoute create() throws CreateException {
-                        // the main measurement route
-                        // /measurement/wps/:wps/process/:process/count/:count/format/:format
-                        return new ListMeasurementRoute();
-                    }
-                })
-                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
-                    @Override
-                    public MonitorRoute create() throws CreateException {
-                        // Alias for the ListMeasurementRoute 
-                        // /measurement/wps/:wps/process/:process
-                        return new ListMeasurementAllAliasRoute();
-                    }
-                })
-                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
-                    @Override
-                    public MonitorRoute create() throws CreateException {
-                        // Alias for the ListMeasurementRoute
-                        // /measurement/wps/:wps/process/:process/count/:count
-                        return new ListMeasurementNoFormatAliasRoute();
-                    }
-                })
-                .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
-                .addRoute(HttpOperation.GET, new ListWpsRoute());
-
+        } catch (BuilderException ex) {
+            log.error(ex);
+        }
+        
         return restInterface;
     }
 }

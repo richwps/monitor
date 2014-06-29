@@ -84,8 +84,6 @@ public class MeasuredDataEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Version
-    private long version;
 
     @Column(nullable = false, updatable = false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)

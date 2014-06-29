@@ -47,7 +47,7 @@ public final class SchedulerControl {
 
     protected final Scheduler scheduler;
     protected final JobFactoryService jobFactoryService;
-
+    
     public SchedulerControl(Scheduler scheduler, JobFactoryService jobFactoryService) {
         this.scheduler = Param.notNull(scheduler, "scheduler");
         this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
