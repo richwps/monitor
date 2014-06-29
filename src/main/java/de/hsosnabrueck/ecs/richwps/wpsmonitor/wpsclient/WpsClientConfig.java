@@ -27,7 +27,7 @@ public class WpsClientConfig {
     private Integer connectionTimeout;
     
     /**
-     * Will set the timeout to 10 ms
+     * Will set the timeout to 10 s
      */
     public WpsClientConfig() {
        connectionTimeout = 10000;

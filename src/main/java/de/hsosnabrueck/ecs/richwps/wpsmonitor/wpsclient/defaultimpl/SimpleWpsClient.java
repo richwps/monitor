@@ -80,6 +80,7 @@ public class SimpleWpsClient implements WpsClient {
 
         RequestConfig.Builder requestBuilder = RequestConfig.custom()
                 .setConnectTimeout(timeout)
+                .setSocketTimeout(timeout)
                 .setConnectionRequestTimeout(timeout);
 
         httpClient = HttpClientBuilder.create()
