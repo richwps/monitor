@@ -150,7 +150,9 @@ public final class MonitorConfig {
      * @param deleteIntervalInDays Integer instance
      */
     public synchronized void setDeleteIntervalInDays(Integer deleteIntervalInDays) {
-        this.deleteIntervalInDays = deleteIntervalInDays;
+        if (deleteIntervalInDays != null && deleteIntervalInDays > 0) {
+            this.deleteIntervalInDays = deleteIntervalInDays;
+        }
     }
 
     /**
@@ -170,7 +172,9 @@ public final class MonitorConfig {
      * @param deleteTime Calendar instance
      */
     public synchronized void setDeleteTime(Calendar deleteTime) {
-        this.deleteTime = deleteTime;
+        if (deleteTime != null) {
+            this.deleteTime = deleteTime;
+        }
     }
 
     /**
@@ -188,7 +192,9 @@ public final class MonitorConfig {
      * @param deleteJobActiv true for active, otherwise false
      */
     public synchronized void setDeleteJobActiv(Boolean deleteJobActiv) {
-        this.deleteJobActiv = deleteJobActiv;
+        if (deleteJobActiv != null) {
+            this.deleteJobActiv = deleteJobActiv;
+        }
     }
 
     public Properties getProperties() {

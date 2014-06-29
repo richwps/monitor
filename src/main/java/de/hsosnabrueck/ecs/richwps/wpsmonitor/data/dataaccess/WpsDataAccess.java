@@ -32,5 +32,10 @@ public interface WpsDataAccess extends DataAccess<WpsEntity> {
      */
     public List<WpsEntity> getAll();
     
+    /**
+     * Removes a stored {@link WpsEntity} 
+     * 
+     * @param wpsIdentifier Wps entity identifier
+     */
     public void remove(final String wpsIdentifier);
 }

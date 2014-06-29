@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
 
 /**
+ * Will be thrown if an exception rised during the create process.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class CreateException extends Exception{
+public class CreateException extends Exception {
 
     public CreateException(Exception e) {
         super(e);
     }
-    
+
 }

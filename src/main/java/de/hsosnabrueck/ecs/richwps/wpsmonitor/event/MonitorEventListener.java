@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 
 /**
- * Interface that need to be implement by eventlisteners
+ * Interface that need to be implement by Event listeners.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

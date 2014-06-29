@@ -20,6 +20,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
  * Factory Interface for Factories.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
+ * @param <T> Type which will be created by create()
  */
 public interface Factory<T> {
     /**

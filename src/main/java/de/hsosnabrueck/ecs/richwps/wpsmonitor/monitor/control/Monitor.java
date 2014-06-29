@@ -46,6 +46,14 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 
 /**
+ * Representation of the WpsMonitor. To control the Monitor, call
+ * getMonitorControl. MonitorControl is a facade to control the monitor (e.g.
+ * create a Wps, trigger or something else). Call start() or shutdown() to start
+ * or stop the monitor. The monitor fires a monitor.shutdown-event if shutdown is
+ * called. shutdown() will be called through a shutdownHook if the monitor is
+ * not already shutted down. Also a cleanUp-job is registred, which will try
+ * to clean up old measurements. This behavior can be configured in the 
+ * monitor.properties file.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -62,9 +70,9 @@ public class Monitor {
         log = LogManager.getLogger();
     }
 
-    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorEventHandler eventHandler, 
+    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorEventHandler eventHandler,
             MonitorBuilder builder) throws MonitorConfigException {
-        
+
         this.monitorControl = Param.notNull(monitorControl, "monitorControl");
         this.builderInstance = Param.notNull(builder, "builder");
         this.eventHandler = Param.notNull(eventHandler, "eventHandler");
@@ -75,7 +83,7 @@ public class Monitor {
 
     private void initGeneral() {
         initEventHandler();
-        
+
         // Shutdown Hook
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -90,7 +98,7 @@ public class Monitor {
             }
         });
     }
-    
+
     private void initEventHandler() {
         eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
         eventHandler.registerEvent("measurement.wpsjob.wpsexception");
@@ -108,18 +116,18 @@ public class Monitor {
 
             Boolean jobRegistred = schedulerControl
                     .isJobRegistred(jobKey);
-            
+
             Boolean triggerRegistred = schedulerControl
                     .isTriggerRegistred(triggerKey);
-            
+
             Trigger cleanupTrigger = getCleanupTrigger(triggerKey, jobKey);
 
             if (!jobRegistred) {
                 schedulerControl
                         .addJob(jobKey, CleanUpJob.class);
             }
-            
-            if(!triggerRegistred) {
+
+            if (!triggerRegistred) {
                 schedulerControl.getScheduler()
                         .scheduleJob(cleanupTrigger);
             }
@@ -245,7 +253,7 @@ public class Monitor {
 
     public Boolean isActive() {
         Boolean active;
-        
+
         try {
             active = monitorControl
                     .getSchedulerControl()
@@ -253,10 +261,10 @@ public class Monitor {
                     .isStarted();
         } catch (SchedulerException ex) {
             active = false;
-            
+
             log.error(ex);
         }
-        
+
         return active;
     }
 }

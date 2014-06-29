@@ -16,9 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -34,10 +32,10 @@ public abstract class ConfiguredEntityManagerFactory {
     private static String PERSISTENCE_UNIT;
     private static final EntityManagerFactory emf;
 
-    private static ThreadLocal<EntityManager> entityStorage;
-    private static List<EntityManager> entityManagerList;
+    private static final ThreadLocal<EntityManager> entityStorage;
+    private static final List<EntityManager> entityManagerList;
 
-    private static Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger();
 
     static {
         PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
@@ -57,6 +55,9 @@ public abstract class ConfiguredEntityManagerFactory {
         }
     };
 
+    /**
+     * Closes the entitymanager factory and all used entitymanagers
+     */
     public static void close() {
         for (EntityManager e : entityManagerList) {
             if (e.isOpen()) {
@@ -80,6 +81,10 @@ public abstract class ConfiguredEntityManagerFactory {
         }
     }
 
+    /**
+     * Returns an {@link EntityManager} which is stored by the called Thread.
+     * @return EntityManager instance
+     */
     public static EntityManager getThreadEntityManager() {
         EntityManager em = entityStorage.get();
 
@@ -92,14 +97,29 @@ public abstract class ConfiguredEntityManagerFactory {
         return em;
     }
 
+    /**
+     * Creates an {@link EntityManager}
+     * 
+     * @return EntityManager instance
+     */
     public static EntityManager createEntityManager() {
         return emf.createEntityManager();
     }
 
+    /**
+     * Set the persistenceUnitName
+     * 
+     * @param persistenceUnitName 
+     */
     public static void setPersistenceUnitName(String persistenceUnitName) {
         ConfiguredEntityManagerFactory.PERSISTENCE_UNIT = persistenceUnitName;
     }
 
+    /**
+     * Get PersistenceUnitName
+     * 
+     * @return Persistence unit name identifier
+     */
     public static String getPersistenceUnitName() {
         return ConfiguredEntityManagerFactory.PERSISTENCE_UNIT;
     }

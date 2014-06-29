@@ -33,12 +33,30 @@ import javax.persistence.Version;
  */
 @Entity
 @NamedQueries({
+    /**
+     * Delete all AbstractQosEntity instances which are associated with the
+     * given :wpsIdentifier
+     */
     @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
             + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier)"),
+
+    /**
+     * Delete all AbstractQosEntity instances which are associated with the
+     * given :wpsIdentifier and :processIdentifier
+     */
     @NamedQuery(name = "abstractQos.deleteByWpsProcess", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
             + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)"),
+
+    /**
+     * Delete all AbstractQosEntity instances which are associated with the
+     * given :wpsIdentifier and :processIdentifier and are older as :date
+     */
     @NamedQuery(name = "abstractQos.deleteByWpsProcessOlderAs", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
             + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
+
+    /**
+     * Delete all AbstractQosEntity instances which are older as :date
+     */
     @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.id IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.createTime < :date)")
 })
 public abstract class AbstractQosEntity implements Serializable {

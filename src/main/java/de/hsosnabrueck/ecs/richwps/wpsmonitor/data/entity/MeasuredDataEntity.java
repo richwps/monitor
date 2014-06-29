@@ -52,11 +52,30 @@ import javax.persistence.Version;
      * Select all MeasuredDataEntity objects by wps
      */
     @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier ORDER BY t.createTime DESC"),
+
+    /**
+     * Delete all MeasuredDataEntity instances which are associated by the given
+     * :wpsIdentifier
+     */
     @NamedQuery(name = "qos.deleteByWps", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :wpsIdentifier"),
+
+    /**
+     * Delete all MeasuredDataEntity instances which are associated by the given
+     * :wpsIdentifier and :processIdentifier
+     */
     @NamedQuery(name = "qos.deleteByWpsProcess", query = "DELETE FROM MeasuredDataEntity t WHERE "
             + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier"),
+
+    /**
+     * Delete all MeasuredDataEntity instances which are associated by the given
+     * :wpsIdentifier and :processIdentifier and are older as :date
+     */
     @NamedQuery(name = "qos.deleteByWpsProcessOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE "
             + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier AND t.createTime < :date"),
+
+    /**
+     * Delete all MeasuredDataEntity instances which are older as :date
+     */
     @NamedQuery(name = "qos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.createTime < :date")
 })
 public class MeasuredDataEntity implements Serializable {

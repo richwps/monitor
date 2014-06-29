@@ -18,7 +18,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.event;
 import java.util.Date;
 
 /**
- * MonitorEvent instances is used to fire specific events
+ * MonitorEvent instances is used to fire specific events. Events ca have a 
+ * message for the listener. The message is of type Object. The listeners need 
+ * to be known by self which concret type the message is.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -40,6 +42,10 @@ public class MonitorEvent {
      */
     private Object msg;
 
+    /**
+     * Constructor; eventName indicates the membership to a registred event
+     * @param eventName 
+     */
     public MonitorEvent(String eventName) {
         this.eventName = eventName;
         this.triggerDate = initDate();

@@ -172,6 +172,10 @@ public class MonitorProperties extends javax.swing.JDialog {
             config.setDeleteJobActiv(deleteIsActiveCheckbox.isSelected());
             config.setDeleteTime(cal);
             
+            if(!config.getDeleteIntervalInDays().equals(deleteInterval)) {
+                throw new NumberFormatException();
+            }
+            
             dispose();
         } catch (NumberFormatException ex) {
             MessageDialogs.showError(this, "Error", "Delete intervale value is not valid.");

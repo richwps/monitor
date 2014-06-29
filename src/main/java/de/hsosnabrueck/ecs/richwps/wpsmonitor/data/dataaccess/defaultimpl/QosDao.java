@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default implementation of a QosDataAccess-interface
+ * Default implementation of a QosDataAccess-interface.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
