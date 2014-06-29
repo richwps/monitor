@@ -23,10 +23,13 @@ import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
+ * Main frame of the monitor GUI. The monitor gets the Monitor instance as
+ * constructor dependencie. The monitor GUI allows to add, remove or edit WPS,
+ * WPSProcesses and Triggers. You can also show and remove the measured data by
+ * wps process. You can stop and resume the monitoring of wps processes.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -35,24 +38,27 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     private final Monitor monitor;
 
     /**
-     * Creates new form WpsMonitorControl
+     * Creates new form WpsMonitorGui instance
      *
-     * @param monitor
+     * @param monitor {@link Monitor} reference
      */
     public WpsMonitorGui(final Monitor monitor) {
         this.monitor = Param.notNull(monitor, "monitor");
-        
+
         initComponents();
         init();
-        
+
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Load data
+     */
     private void init() {
         List<WpsEntity> wpsList = monitor.getMonitorControl()
                 .getWpsList();
-        
-        for(WpsEntity wps : wpsList) {
+
+        for (WpsEntity wps : wpsList) {
             createAndAddWpsPanel(wps);
         }
     }
@@ -307,7 +313,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         WpsPanel panel = createWpsPanel(wps);
         addWpsPanel(panel);
     }
-    
+
     private WpsPanel createWpsPanel(WpsEntity wps) {
         return new WpsPanel(this, wpsAddPanel, wps);
     }
@@ -324,8 +330,13 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         );
     }
 
+    /**
+     * reInit the monitorgui
+     */
     public void reInit() {
         init();
+        revalidate();
+        repaint();
     }
 
     private void wpsToAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wpsToAddFieldActionPerformed
@@ -343,8 +354,8 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         Boolean yes = MessageDialogs
                 .showQuestionDialog(this, "Close Monitor?", "Are you sure to close this Application? The Monitor will be stoped.");
-        
-        if(yes) {
+
+        if (yes) {
             System.exit(0);
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed

@@ -27,6 +27,18 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**
+ * In Quartz can only one {@link JobFactory} be registred at the same time.
+ * However the WpsMonitor uses factories to inject all necessary dependencies
+ * into the new objects. This approach is also used at new Job instances.
+ *
+ * So the JobFactoryService which implements the JobFactory interface, stores
+ * other JobFactory instances and delegate the newJob-calls to the right
+ * registred JobFactory instance. The right {@link JobFactory} instance is
+ * identified by the Job.class Class.
+ *
+ * If no JobFactory is registred for a specific job, then
+ * {@link SimpleJobFactory} is used. {@link SimpleJobFactory} is the default
+ * behavior of Quartz.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -40,14 +52,33 @@ public class JobFactoryService implements JobFactory {
         this.classFactoryMap = new HashMap<Class<? extends Job>, JobFactory>();
     }
 
+    /**
+     * Checks if a {@link JobFactory} instance is allready registred.
+     *
+     * @param o Class instance
+     * @return true if allready registred, otherwise false will be returned
+     */
     public boolean containsKey(final Class<? extends Job> o) {
         return classFactoryMap.containsKey(o);
     }
 
-    public JobFactory put(Class<? extends Job> k, JobFactory v) {
-        return classFactoryMap.put(k, v);
+    /**
+     * Registers a new {@link JobFactory} instance for the given Job Class.
+     *
+     * @param jobClass Class instance
+     * @param jobFactory JobFactory instance
+     * @return The registred JobFactory
+     */
+    public JobFactory register(Class<? extends Job> jobClass, JobFactory jobFactory) {
+        return classFactoryMap.put(jobClass, jobFactory);
     }
 
+    /**
+     * Get a JobFactory.
+     *
+     * @param o Class instance
+     * @return JobFactory instance if registred, otherwise null will be returned
+     */
     public JobFactory get(Class<? extends Job> o) {
         return classFactoryMap.get(o);
     }

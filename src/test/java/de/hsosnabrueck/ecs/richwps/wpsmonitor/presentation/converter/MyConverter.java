@@ -17,8 +17,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -38,6 +36,11 @@ public class MyConverter extends EntityConverter {
 
         
         return new MyPresentate(sum);
+    }
+
+    @Override
+    public String getName() {
+        return "MyTestConverter";
     }
     
 }

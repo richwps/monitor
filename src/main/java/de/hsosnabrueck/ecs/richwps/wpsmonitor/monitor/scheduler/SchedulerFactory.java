@@ -25,7 +25,8 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
- *
+ * Creates a new Quartz {@link Scheduler} instance.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SchedulerFactory implements Factory<Scheduler> {
@@ -33,8 +34,13 @@ public class SchedulerFactory implements Factory<Scheduler> {
     private final List<JobListener> jobListeners;
     private final JobFactoryService jobFactoryService;
 
+    /**
+     * Constructor.
+     * 
+     * @param jobFactoryService {@link JobFactoryService} instance
+     * @param jobListeners List of {@link JobListener}s
+     */
     public SchedulerFactory(final JobFactoryService jobFactoryService, final List<JobListener> jobListeners) {
-
         this.jobListeners = jobListeners;
         this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
     }

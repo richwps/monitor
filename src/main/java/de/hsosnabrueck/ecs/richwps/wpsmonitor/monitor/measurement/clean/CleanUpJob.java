@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.clean;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
@@ -26,24 +25,31 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * A Job implementation which delete old measured datas.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class CleanUpJob implements Job {
+
     private final QosDataAccess qosDao;
     private final Date olderAs;
-    
+
     private final static Logger log = LogManager.getLogger();
-    
+
+    /**
+     * 
+     * @param qosDao QosDataAccess instance
+     * @param olderAs Date instance
+     */
     public CleanUpJob(final QosDataAccess qosDao, final Date olderAs) {
         this.qosDao = Param.notNull(qosDao, "qosDao");
         this.olderAs = Param.notNull(olderAs, "olderAs");
     }
-    
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         log.debug("Cleanup Job: deleteAllOlderAs {}", olderAs);
         qosDao.deleteAllOlderAs(olderAs);
     }
-    
+
 }

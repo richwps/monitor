@@ -29,12 +29,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Representate a WpsProcessEntity instance and all monitoring and job
+ * operations
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -50,10 +51,24 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private static Logger log = LogManager.getLogger();
 
+    /**
+     *
+     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param parent Parent panel; is needed for delete operation
+     * @param wpsProcess WpsProcessEntity instance to create the right trigger
+     */
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
         this(mainFrame, parent, wpsProcess, false);
     }
 
+    /**
+     *
+     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param parent Parent panel; is needed for delete operation
+     * @param wpsProcess WpsProcessEntity instance to create the right trigger
+     * @param restored true if the form is only restored by its parent (e.g. the
+     * monitor is restarted)
+     */
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         this.parent = parent;
@@ -85,7 +100,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         Boolean paused = mainFrame.getMonitorReference()
                 .getMonitorControl()
                 .isPausedMonitoring(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
-        
+
         if (paused) {
             triggerPauseCase();
         } else {
@@ -99,7 +114,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         stopMonitoringButton.setEnabled(false);
         rescheduleButton.setEnabled(true);
     }
-    
+
     private void triggerMonitoringCase() {
         stopMonitoringButton.setEnabled(true);
         rescheduleButton.setEnabled(false);
@@ -298,7 +313,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(deleteProcessButton);
 
-        saveProcessButton.setBackground(new java.awt.Color(255, 188, 188));
+        saveProcessButton.setBackground(new java.awt.Color(255, 51, 0));
         saveProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveProcessButton.setText("Save");
         saveProcessButton.addActionListener(new java.awt.event.ActionListener() {
@@ -347,14 +362,15 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(processNameText)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 156, Short.MAX_VALUE))))
+                        .addGap(55, 156, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(processNameText)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,7 +481,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         mainFrame.getMonitorReference()
                 .getMonitorControl()
                 .pauseMonitoring(wpsProcess);
-        
+
         triggerPauseCase();
     }//GEN-LAST:event_stopMonitoringButtonActionPerformed
 

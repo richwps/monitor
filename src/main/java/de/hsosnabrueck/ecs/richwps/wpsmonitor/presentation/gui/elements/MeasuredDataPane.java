@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 /**
- * Panel which representate one entry of the measured data.
+ * Panel which representate a MeasuredDataEntity.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -24,6 +24,8 @@ public class MeasuredDataPane extends javax.swing.JPanel {
 
     /**
      * Creates new form MeasuredDataPane
+     * 
+     * @param measurementText Text which should be displayed
      */
     public MeasuredDataPane(final String measurementText) {
         initComponents();

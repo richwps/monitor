@@ -35,13 +35,13 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Job class which calls a wps client with a request, which is stored in the
- * WpsProcessEntity object. The WpsProcessEntity object is injected by the
- * MeasureJobFactory.
+ * Job class which use a wps client with a request which is stored in the
+ * {@link WpsProcessEntity} object to call a Wps Server. The WpsProcessEntity
+ * object is injected by the {@link MeasureJobFactory}.
  *
  * If occours no wps exception, then the registred QosProbe instances are
  * called. Otherwise a error flag is set, which is evaluated by
- * MeasureJobListener.
+ * {@link MeasureJobListener}.
  *
  * The dependencies should be thread save or new instantiated by the
  * MeasureJobFactory.
@@ -64,7 +64,7 @@ public class MeasureJob implements Job {
 
     /**
      * Constructor.
-     * 
+     *
      * @param probes List of QosProbe instances
      * @param entity WpsProcessEntity which the specific job take care of
      * @param dao QosDataAcces instance
@@ -93,7 +93,7 @@ public class MeasureJob implements Job {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
             }
-            
+
             log.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     context.getJobDetail().getKey(),
                     context.getTrigger().getKey(),
@@ -136,9 +136,9 @@ public class MeasureJob implements Job {
 
         WpsRequest request = new WpsRequest(processEntity.getRawRequest(), info);
         WpsResponse response = wpsClient.execute(request);
-        
+
         // if wps exception, then retry
-        if(response.isWpsException()) {
+        if (response.isWpsException()) {
             response = wpsClient.execute(request);
         }
 
@@ -182,8 +182,8 @@ public class MeasureJob implements Job {
 
     /**
      * Returns the WpsClient instance
-     * 
-     * @return WpsClient instance 
+     *
+     * @return WpsClient instance
      */
     public WpsClient getWpsClient() {
         return wpsClient;

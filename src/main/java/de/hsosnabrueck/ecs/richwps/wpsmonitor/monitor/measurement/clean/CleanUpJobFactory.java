@@ -29,7 +29,8 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**
- *
+ * Factory for the CleanUp-Job.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public final class CleanUpJobFactory implements JobFactory {

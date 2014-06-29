@@ -20,12 +20,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Encapsulates the Spark API.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RouteRegister {
     private static final Logger log = LogManager.getLogger();
     
+    /**
+     * Register a Route.
+     * 
+     * @param operation {@link HttpOperation} value
+     * @param routeObj {@link MonitorRoute} instance
+     */
     public void register(final HttpOperation operation, final MonitorRoute routeObj) {
         switch (Param.notNull(operation, "operation")) {
             case GET:
@@ -48,22 +55,47 @@ public class RouteRegister {
         }
     }
 
+    /**
+     * Register a MonitorRoute instance as GET-HttpOperation
+     * 
+     * @param routeObj MonitorRoute instance
+     */
     public void get(final MonitorRoute routeObj) {
         spark.Spark.get(routeObj);
     }
 
+    /**
+     * Register a MonitorRoute instance as POST-HttpOperation
+     * 
+     * @param routeObj MonitorRoute instance
+     */
     public void post(final MonitorRoute routeObj) {
         spark.Spark.post(routeObj);
     }
 
+    /**
+     * Register a MonitorRoute instance as DELETE-HttpOperation
+     * 
+     * @param routeObj MonitorRoute instance
+     */
     public void delete(final MonitorRoute routeObj) {
         spark.Spark.delete(routeObj);
     }
 
+    /**
+     * Register a MonitorRoute instance as PUT-HttpOperation
+     * 
+     * @param routeObj MonitorRoute instance
+     */
     public void put(final MonitorRoute routeObj) {
         spark.Spark.put(routeObj);
     }
 
+    /**
+     * Register a MonitorRoute instance as OPTIONS-HttpOperation
+     * 
+     * @param routeObj MonitorRoute instance
+     */
     public void options(final MonitorRoute routeObj) {
         spark.Spark.options(routeObj);
     }

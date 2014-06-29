@@ -23,14 +23,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.awt.Dimension;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- *
+ * Representation of a WPS entry.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsPanel extends javax.swing.JPanel {
@@ -40,6 +39,13 @@ public class WpsPanel extends javax.swing.JPanel {
     private WpsProcessDialog wpsProcessDialog;
     private WpsEntity wps;
 
+    /**
+     * Constructor.
+     * 
+     * @param monitorMainFrame Reference to the WpsMonitorGui of this gui
+     * @param addPanelParent Parent panel; is needed for delete operation
+     * @param wps {@link WpsEntity} to request the right data from the monitor
+     */
     public WpsPanel(WpsMonitorGui monitorMainFrame, JPanel addPanelParent, final WpsEntity wps) {
         this.wps = Param.notNull(wps, "wps");
         this.addPanelParent = Param.notNull(addPanelParent, "parent");
@@ -58,10 +64,18 @@ public class WpsPanel extends javax.swing.JPanel {
         registerMonitoringPausedEvent();
     }
     
+    /**
+     * reinit the form - all data will be rerequestet 
+     */
     public void reInit() {
         init();
+        revalidate();
+        repaint();
     }
 
+    /**
+     * Listener - if a WpsProcess's job is paused
+     */
     private void registerMonitoringPausedEvent() {
         try {
             monitorMainFrame
@@ -84,10 +98,20 @@ public class WpsPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Getter for the edit dialog
+     * 
+     * @return {@link WpsEntity} instance
+     */
     public WpsEntity getWps() {
         return wps;
     }
 
+    /**
+     * Updates a wps 
+     * 
+     * @param wps WpsEntity instance
+     */
     public void updateWps(WpsEntity wps) {
         String oldIdentifier = this.wps.getIdentifier();
 
@@ -249,16 +273,27 @@ public class WpsPanel extends javax.swing.JPanel {
         this.wpsProcessDialog = wpsProcessDialog;
     }
 
+    /**
+     * Listener method for a MonitorEvent
+     * 
+     * @param process WpsProcessEntity instance
+     */
     public void processMonitoringPaused(WpsProcessEntity process) {
         if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
             showErrorIndicator();
         }
     }
 
+    /**
+     * hides the error indicator
+     */
     public void hideErrorIndicator() {
         errorIcon.setEnabled(false);
     }
 
+    /**
+     * displays the error indicator
+     */
     public void showErrorIndicator() {
         errorIcon.setEnabled(true);
     }

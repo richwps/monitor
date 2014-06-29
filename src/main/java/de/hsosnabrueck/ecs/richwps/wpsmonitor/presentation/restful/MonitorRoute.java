@@ -20,6 +20,11 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispa
 import spark.Route;
 
 /**
+ * Abstract class for routes in Spark. However the route objects needs some
+ * dependencies: {@link MonitorControl}, {@link EntityDispatcher} and the
+ * {@link PresentateStrategy} instance. This class is abstract because of the 
+ * init method which is called before a route is registred through the 
+ * {@link RouteRegister} class.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -36,6 +41,13 @@ public abstract class MonitorRoute extends Route {
         this.route = routeStr;
     }
 
+    /**
+     * Init a route instance with the necessary dependencies.
+     * 
+     * @param monitorControl {@link MonitorControl} instance
+     * @param dispatch {@link EntityDispatcher} instance
+     * @param strategy {@link PresentateStrategy} instance
+     */
     public void init(MonitorControl monitorControl, EntityDispatcher dispatch, PresentateStrategy strategy) {
         this.monitorControl = monitorControl;
         this.dispatch = dispatch;

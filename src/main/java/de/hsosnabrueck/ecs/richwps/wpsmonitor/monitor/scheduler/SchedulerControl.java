@@ -16,8 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
@@ -40,6 +38,8 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
 
 /**
+ * Holds a Quartz-{@link Scheduler} instance and delegates some complex
+ * interactions.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -54,7 +54,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Starts the scheduler
+     * Start the scheduler.
      *
      * @throws SchedulerException
      */
@@ -63,7 +63,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Stop the scheduler
+     * Stop the scheduler.
      *
      * @throws SchedulerException
      */
@@ -73,7 +73,7 @@ public final class SchedulerControl {
 
     /**
      * Add a job to the scheduler. If the jobKey is already exists, then quartz
-     * will replace the old job by the new one
+     * will replace the old job by the new one.
      *
      * @param jobKey JobKey instance
      * @param jobClass Class of the job, must extends Job interface
@@ -90,19 +90,19 @@ public final class SchedulerControl {
 
         return newJob.getKey();
     }
-    
+
     /**
-     * Pauses a job and all triggers (delegate method to scheduler)
-     * 
+     * Pauses a job and all triggers (delegate method to scheduler).
+     *
      * @param job
-     * @throws SchedulerException 
+     * @throws SchedulerException
      */
     public synchronized void pauseJob(final JobKey job) throws SchedulerException {
         scheduler.pauseJob(job);
     }
 
     /**
-     * Add a Wps measurement job
+     * Add a Wps measurement job.
      *
      * @param process WpsProcessEntity instance
      * @return The jobKey, name = wpsProcess identifier, group = wps identifier
@@ -113,7 +113,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a Wps measurement job
+     * Add a Wps measurement job.
      *
      * @param wpsIdentifier Wps entity identifier
      * @param processIdentifier wpsprocess entity identifier
@@ -130,7 +130,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a trigger to a job; internally calendarIntervalSchedule is used
+     * Add a trigger to a job; internally calendarIntervalSchedule is used.
      *
      * @param jobKey To this job is the trigger added
      * @param config Config with schedule informations
@@ -147,21 +147,8 @@ public final class SchedulerControl {
         return newTrigger.getKey();
     }
 
-    public synchronized TriggerKey addPermaTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
-        // Get JobDetail
-        JobDetail forJob = scheduler.getJobDetail(Param.notNull(jobKey, "jobKey"));
-        Trigger newTrigger = createTriggerWithStartAndEnd(forJob, config)
-                .getTriggerBuilder()
-                .endAt(null)
-                .build();
-
-        scheduler.scheduleJob(newTrigger);
-
-        return newTrigger.getKey();
-    }
-
     /**
-     * Checks if the given triggerKey is already registred in the scheduler
+     * Checks if the given triggerKey is already registred in the Scheduler.
      *
      * @param triggerKey TriggerKey instance
      * @return true if the trigger is already registred in the scheduler,
@@ -184,28 +171,29 @@ public final class SchedulerControl {
 
         return matched;
     }
-    
+
     /**
-     * Checks if the given jobKey is already registred in the scheduler
-     * 
+     * Checks if the given {@link JobKey} is already registred in the
+     * {@link Scheduler}.
+     *
      * @param jobKey JobKey instance
      * @return True if the jobKey is already registred in the scheduler
-     * @throws SchedulerException 
+     * @throws SchedulerException
      */
     public synchronized Boolean isJobRegistred(final JobKey jobKey) throws SchedulerException {
         List<String> jobGroupNames = scheduler.getJobGroupNames();
         Boolean matched = false;
-        
-        for(String jobGroupName : jobGroupNames) {
+
+        for (String jobGroupName : jobGroupNames) {
             Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName));
-            
-            for(JobKey k : jobKeys) {
-                if(jobKey.equals(k)) {
+
+            for (JobKey k : jobKeys) {
+                if (jobKey.equals(k)) {
                     matched = true;
                 }
             }
         }
-        
+
         return matched;
     }
 
@@ -236,7 +224,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Creates a trigger by the given TriggerConfig
+     * Creates a trigger by the given {@link TriggerConfig}.
      *
      * @param forJob For which job
      * @param config TriggerConfig instance
@@ -294,15 +282,15 @@ public final class SchedulerControl {
 
         newTrigger = builder
                 .withSchedule(scheduleBuilder)
-                .build(); 
+                .build();
 
         return newTrigger;
     }
 
     /**
-     * Removes a trigger which is identified by the given triggerkey
+     * Removes a trigger which is identified by the given {@link TriggerKey}.
      *
-     * @param triggerKey TriggerKey instance
+     * @param triggerKey {@link TriggerKey} instance
      * @throws SchedulerException
      */
     public synchronized void removeTrigger(final TriggerKey triggerKey) throws SchedulerException {
@@ -310,7 +298,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Removes a Job which is identified by the given jobkey
+     * Removes a {@link Job} which is identified by the given {@link JobKey}.
      *
      * @param jobKey JobKey instance
      * @throws SchedulerException
@@ -320,7 +308,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Remove all Jobs for the given wpsIdentifier (groupname)
+     * Remove all Jobs for the given wpsIdentifier (groupname).
      *
      * @param wpsIdentifier Wps identifier
      * @return true if is sucessfully removed
@@ -340,7 +328,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Updates a trigger - triggerKey need to be set in triggerconfig
+     * Updates a {@link Trigger} - {@link TriggerKey} need to be set in the
+     * given {@link TriggerConfig} instance.
      *
      * @param config TriggerConfig instance
      * @throws SchedulerException
@@ -359,10 +348,11 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get all TriggerKeys which are associated with the given jobKey
+     * Get all {@link TriggerKey}s which are associated with the given
+     * {@link JobKey}.
      *
      * @param jobKey JobKey instance
-     * @return List of TriggerKey-instances that matches to the given jobKey
+     * @return List of TriggerKey-instances that matches to the given JobKey
      * @throws SchedulerException
      */
     public synchronized List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
@@ -376,7 +366,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get all Trigger-objects which are associated with the given jobKey
+     * Get all Trigger-objects which are associated with the given
+     * {@link JobKey}.
      *
      * @param jobKey JobKey instance
      * @return List of triggers
@@ -388,7 +379,7 @@ public final class SchedulerControl {
 
     /**
      * Get a list of TriggerConfig-instances which are associated with the given
-     * jobKey
+     * {@link JobKey}.
      *
      * @param jobKey JobKey instance
      * @return List of trigger configs
@@ -405,7 +396,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get a TriggerConfig instance for the given triggerKey
+     * Get a TriggerConfig instance for the given {@link TriggerKey}.
      *
      * @param triggerKey TriggerKey instance
      * @return TriggerConfig instance
@@ -418,7 +409,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get a TriggerConfig instance for the given Trigger instance
+     * Get a {@link TriggerConfig} instance for the given {@link Trigger}
+     * instance.
      *
      * @param trigger Trigger instance
      * @return TriggerConfig instance
@@ -445,9 +437,9 @@ public final class SchedulerControl {
     }
 
     /**
-     * Checks if a job is paused
+     * Checks if a {@link Job} is paused.
      *
-     * @param jobKey JobKey instance
+     * @param jobKey {@link JobKey} instance
      * @return true if paused, otherwise false
      * @throws SchedulerException
      */
@@ -468,7 +460,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Resumes a job
+     * Resumes a {@link Job}.
      *
      * @param jobKey JobKey instance
      * @throws SchedulerException
@@ -478,7 +470,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get the scheduler instance
+     * Get the {@link Scheduler} instance.
      *
      * @return Scheduler instance
      */

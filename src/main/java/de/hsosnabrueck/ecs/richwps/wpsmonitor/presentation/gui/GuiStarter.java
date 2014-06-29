@@ -23,6 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Setups a look and feel and starts the monitor gui with the montior
+ * as dependencie.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -66,7 +68,6 @@ public class GuiStarter {
             }
         });
     }
-
 
     private GuiStarter() {
 

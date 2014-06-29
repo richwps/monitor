@@ -16,7 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 /**
- *
+ * Enum of possible HTTP operations.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public enum HttpOperation {

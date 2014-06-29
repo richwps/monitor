@@ -24,6 +24,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.text.DateFormatter;
 
 /**
+ * Dialog to configure the montior.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -31,6 +32,12 @@ public class MonitorProperties extends javax.swing.JDialog {
 
     private final WpsMonitorGui monitorMainFrame;
 
+    /**
+     * Constructor.
+     *
+     * @param monitorMainFrame Reference to the MainFrame of this gui
+     * @param modal true for modal dialog
+     */
     public MonitorProperties(WpsMonitorGui monitorMainFrame, boolean modal) {
         super(monitorMainFrame, modal);
 
@@ -42,6 +49,9 @@ public class MonitorProperties extends javax.swing.JDialog {
         setLocationRelativeTo(monitorMainFrame);
     }
 
+    /**
+     * Load {@link MonitorConfig} into the forms
+     */
     private void init() {
         MonitorConfig config = monitorMainFrame.getMonitorReference()
                 .getConfig();
@@ -164,18 +174,18 @@ public class MonitorProperties extends javax.swing.JDialog {
 
         try {
             Integer deleteInterval = Integer.parseInt(intervalValueField.getText());
-            Date time = (Date)timeSpinner.getValue();
+            Date time = (Date) timeSpinner.getValue();
             Calendar cal = Calendar.getInstance();
             cal.setTime(time);
-            
+
             config.setDeleteIntervalInDays(deleteInterval);
             config.setDeleteJobActiv(deleteIsActiveCheckbox.isSelected());
             config.setDeleteTime(cal);
-            
-            if(!config.getDeleteIntervalInDays().equals(deleteInterval)) {
+
+            if (!config.getDeleteIntervalInDays().equals(deleteInterval)) {
                 throw new NumberFormatException();
             }
-            
+
             dispose();
         } catch (NumberFormatException ex) {
             MessageDialogs.showError(this, "Error", "Delete intervale value is not valid.");

@@ -16,7 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 /**
- *
+ * A simple Pair implementation.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Pair<A, B> {

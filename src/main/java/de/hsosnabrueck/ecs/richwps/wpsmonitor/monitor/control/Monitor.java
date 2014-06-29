@@ -187,8 +187,8 @@ public class Monitor {
 
             CleanUpJobFactory cleanupJobFactory = new CleanUpJobFactory(qosDaoFactory, config.getDeleteIntervalInDays());
 
-            jobFactoryService.put(MeasureJob.class, measureJobFactory);
-            jobFactoryService.put(CleanUpJob.class, cleanupJobFactory);
+            jobFactoryService.register(MeasureJob.class, measureJobFactory);
+            jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
         } catch (CreateException ex) {
             log.fatal(ex);
         } catch (Exception ex) {

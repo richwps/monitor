@@ -25,6 +25,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Dialog to show the measured data. The measured data will shown in a
+ * {@link MeasuredDataPane} JPanel in the scoll area of this dialog.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -35,6 +37,13 @@ public class ShowMeasuredData extends javax.swing.JDialog {
 
     private final static Logger log = LogManager.getLogger();
 
+    /**
+     * Constructor.
+     * 
+     * @param monitorMainFrame Reference to the MainFrame of this gui
+     * @param process WpsProcessEntity to select the right measured data
+     * @param modal true for modal dialog
+     */
     public ShowMeasuredData(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
@@ -44,9 +53,12 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         this.wpsProcess = process;
     }
 
+    /**
+     * Reinitialize the dialog with new data from the database.
+     */
     public void recaptureData() {
         Range range = new Range(null, 100);
-        
+
         log.debug("Recapture Data from process {}", wpsProcess);
 
         List<MeasuredDataEntity> measuredData = monitorMainFrame.getMonitorReference()
@@ -55,15 +67,14 @@ public class ShowMeasuredData extends javax.swing.JDialog {
 
         // clear
         measuredDataAddPanel.removeAll();
-        
+
         // add new
-        
-        for(MeasuredDataEntity e : measuredData) {
+        for (MeasuredDataEntity e : measuredData) {
             MeasuredDataPane measuredDataPane = new MeasuredDataPane(e.getCreateTime() + ": " + e.toString());
-            
+
             measuredDataAddPanel.add(measuredDataPane);
         }
-        
+
         measuredDataAddPanel.revalidate();
     }
 
@@ -175,30 +186,45 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Action behavior for the deleteAllButton button.
+     * 
+     * @param evt 
+     */
     private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
         this.monitorMainFrame
                 .getMonitorReference()
                 .getMonitorControl()
                 .deleteMeasuredDataOfProcess(wpsProcess);
-        
+
         recaptureData();
     }//GEN-LAST:event_deleteAllButtonActionPerformed
 
+    /**
+     * Action behavior for the deleteByDateButton.
+     * 
+     * @param evt 
+     */
     private void deleteByDateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteByDateButtonActionPerformed
         if (deleteOlderAsDate.getDate() == null) {
             MessageDialogs.showError(this, "Error", "Please select a valid Date!");
         } else {
             Date olderAs = deleteOlderAsDate.getDate();
-            
+
             this.monitorMainFrame
                     .getMonitorReference()
                     .getMonitorControl()
                     .deleteMeasuredDataOfProcess(wpsProcess, olderAs);
-            
+
             recaptureData();
         }
     }//GEN-LAST:event_deleteByDateButtonActionPerformed
 
+    /**
+     * Action behavior for the refreh button.
+     * 
+     * @param evt 
+     */
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         recaptureData();
     }//GEN-LAST:event_refreshButtonActionPerformed

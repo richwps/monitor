@@ -35,7 +35,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -43,6 +42,10 @@ import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 
 /**
+ * Implementation of the MonitorControl interface. This implementation tries to
+ * work like a request-response principe. That means, that every method call
+ * creates a new DataAccess-instance. Possible close operations musst be
+ * handeled by the specific DataAccess implementation.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -56,6 +59,15 @@ public class MonitorControlImpl implements MonitorControl {
 
     private static final Logger log = LogManager.getLogger();
 
+    /**
+     *  Constructor.
+     * 
+     * @param scheduler {@link SchedulerControl} instance.
+     * @param eventHandler {@link MonitorEventHandler} instance.
+     * @param qosDao {@link QosDaoFactory} instance.
+     * @param wpsDao {@link WpsDaoFactory} instance.
+     * @param wpsProcessDao {@link WpsProcessDaoFactory} instance.
+     */
     public MonitorControlImpl(SchedulerControl scheduler, MonitorEventHandler eventHandler,
             QosDaoFactory qosDao, WpsDaoFactory wpsDao, WpsProcessDaoFactory wpsProcessDao) {
 
@@ -64,10 +76,13 @@ public class MonitorControlImpl implements MonitorControl {
         this.wpsDaoFactory = Param.notNull(wpsDao, "wpsDao");
         this.wpsProcessDaoFactory = Param.notNull(wpsProcessDao, "wpsProcessDao");
         this.eventHandler = Param.notNull(eventHandler, "eventHandler");
-        
+
         initMonitorControlEvents();
     }
 
+    /**
+     * Register all necessary events which are fired by the MonitorControlImpl
+     */
     private void initMonitorControlEvents() {
         String[] eventNames = new String[]{
             "monitorcontrol.pauseMonitoring",
@@ -81,8 +96,8 @@ public class MonitorControlImpl implements MonitorControl {
             "monitorcontrol.deleteTrigger",
             "monitorcontrol.saveTrigger"
         };
-        
-        for(String eventName : eventNames) {
+
+        for (String eventName : eventNames) {
             eventHandler.registerEvent(eventName);
         }
     }
@@ -509,7 +524,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return createAndScheduleProcess(wpsIdentifier, processIdentifier);
     }
 
@@ -519,7 +534,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return saveTrigger(wpsIdentifier, processIdentifier, config);
     }
 
@@ -529,7 +544,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return setTestRequest(wpsIdentifier, processIdentifier, testRequest);
     }
 
@@ -549,7 +564,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return deleteProcess(wpsIdentifier, processIdentifier);
     }
 
@@ -559,7 +574,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return isPausedMonitoring(wpsIdentifier, processIdentifier);
     }
 
@@ -569,7 +584,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         resumeMonitoring(wpsIdentifier, processIdentifier);
     }
 
@@ -579,7 +594,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         pauseMonitoring(wpsIdentifier, processIdentifier);
     }
 
@@ -594,7 +609,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return getTriggers(wpsIdentifier, processIdentifier);
     }
 
@@ -609,7 +624,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return getMeasuredData(wpsIdentifier, processIdentifier, range);
     }
 
@@ -619,7 +634,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier);
     }
 
@@ -629,7 +644,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier, olderAs);
     }
 }

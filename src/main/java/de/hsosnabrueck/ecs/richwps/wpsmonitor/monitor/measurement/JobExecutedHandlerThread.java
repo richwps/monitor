@@ -27,6 +27,8 @@ import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 
 /**
+ * Helper Thread for the {@link MeasureJobListener}. This approach tries to
+ * relieve the main thread in which the {@link MeasureJobListener} is working.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -75,11 +77,11 @@ public class JobExecutedHandlerThread extends Thread {
                     executionContext
                             .getScheduler()
                             .pauseJob(jobKey);
-                    
+
                     // todo: maybe cleanup 
                     eventHandler
                             .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
-                    
+
                     log.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
                     eventHandler
                             .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));

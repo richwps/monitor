@@ -22,22 +22,46 @@ import org.quartz.DateBuilder;
 import org.quartz.TriggerKey;
 
 /**
- *
+ * Holds all necessary data to configure a {@link Trigger}.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class TriggerConfig {
 
+    /**
+     * Interval Type (e.g Month)
+     */
     private DateBuilder.IntervalUnit intervalType;
+    
+    /**
+     * Start Date instance
+     */
     private Date start;
+    
+    /**
+     * End Date instance
+     */
     private Date end;
+    
+    /**
+     * Interval number
+     */
     private Integer interval;
+    
+    /**
+     * TriggerKey - can be null
+     */
     private TriggerKey triggerKey;
     
-    public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType) {
+    public TriggerConfig(final Date start, final Date end, final Integer interval, 
+            final DateBuilder.IntervalUnit intervalType) {
+        
         this(start, end, interval, intervalType, null);
     }
     
-    public TriggerConfig(final Date start, final Date end, final Integer interval, final DateBuilder.IntervalUnit intervalType, final TriggerKey triggerKey) {
+    public TriggerConfig(final Date start, final Date end, final Integer interval, 
+            final DateBuilder.IntervalUnit intervalType, final TriggerKey triggerKey) {
+        
         this.start = Param.notNull(start, "start");
         this.end = Param.notNull(end, "end");
         this.interval = Param.notNull(interval, "interval");

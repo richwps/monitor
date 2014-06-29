@@ -20,14 +20,20 @@ import java.util.EnumMap;
 import org.quartz.DateBuilder;
 
 /**
+ * A ComboBox item for interval type selection .
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class IntervalComboBoxItem {
 
-    private DateBuilder.IntervalUnit dateKey;
+    private final DateBuilder.IntervalUnit dateKey;
     private static EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
 
+    /**
+     * Creates a intervale type item that matches the given dataKey.
+     *
+     * @param dateKey {@link DateBuilder.IntervalUnit} instance
+     */
     public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
         this.dateKey = Param.notNull(dateKey, "dateKey");
 

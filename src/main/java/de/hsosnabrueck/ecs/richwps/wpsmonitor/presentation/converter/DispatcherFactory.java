@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
@@ -21,22 +20,23 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import java.util.Map;
 
 /**
- * Setups a EntityDispatcher with the configured converterMap in the 
- * MonitorBuilder instance
- * 
+ * Setups a EntityDispatcher with the configured converterMap which was set in
+ * the MonitorBuilder instance
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DispatcherFactory {
-    private final Map<String, Factory<EntityConverter>> converterMap;
-    
-    public DispatcherFactory(final Map<String, Factory<EntityConverter>> converterMap) {
+
+    private final ConverterFactoryMap converterMap;
+
+    public DispatcherFactory(final ConverterFactoryMap converterMap) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
     }
-    
+
     public EntityDispatcher create() {
         EntityDisassembler entityDisassembler = new EntityDisassembler(converterMap);
         EntityDispatcher entityDispatcher = new EntityDispatcher(entityDisassembler);
-        
+
         return entityDispatcher;
     }
 }

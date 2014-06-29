@@ -19,12 +19,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.List;
-import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Shows all {@link Trigger}s of the selected Wps-Process.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessJobDialog extends javax.swing.JDialog {
@@ -35,11 +35,11 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     private final static Logger log = LogManager.getLogger();
 
     /**
-     * Creates new form WpsProcessJobDialog
+     * Creates new form WpsProcessJobDialog.
      *
-     * @param mainFrame
-     * @param wpsProcess
-     * @param modal
+     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param wpsProcess WpsProcessEntity instance to request the right trigger
+     * @param modal true for modal form
      */
     public WpsProcessJobDialog(WpsMonitorGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
         super(mainFrame, modal);
@@ -169,6 +169,16 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         addJobPane.add(pane);
         addJobPane.revalidate();
         addJobPane.repaint();
+    }
+    
+    /**
+     * reinitialize the form
+     */
+    public void reInit() {
+        addJobPane.removeAll();
+        init();
+        revalidate();
+        repaint();
     }
 
 

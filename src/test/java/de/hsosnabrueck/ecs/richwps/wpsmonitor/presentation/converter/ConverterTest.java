@@ -50,8 +50,8 @@ public class ConverterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        Map<String, Factory<EntityConverter>> converterMap = new HashMap<String, Factory<EntityConverter>>();
-        converterMap.put("exampleMeasurement", new MyConverterFactory());
+        ConverterFactoryMap converterMap = new ConverterFactoryMap();
+        converterMap.add("exampleMeasurement", new MyConverterFactory());
 
         dispatchFactory = new DispatcherFactory(converterMap);
     }

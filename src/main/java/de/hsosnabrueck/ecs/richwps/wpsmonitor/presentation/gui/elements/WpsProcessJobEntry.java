@@ -45,10 +45,25 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     private TriggerKey triggerKey;
     private JPanel parent;
 
+    /**
+     * Constructor.
+     * 
+     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param parent Parent panel; is needed for delete operation
+     * @param wpsProcess WpsProcessEntity instance to create the right trigger
+     */
     public WpsProcessJobEntry(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
         this(mainFrame, parent, wpsProcess, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param parent Parent panel; is needed for delete operation
+     * @param wpsProcess WpsProcessEntity instance to create the right trigger
+     * @param triggerConfig  TriggerConfig instance to restore this panel
+     */
     public WpsProcessJobEntry(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, TriggerConfig triggerConfig) {
         initComponents();
 
@@ -75,9 +90,17 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Reinitialize the panel with a given {@link TriggerConfig} instance.
+     * 
+     * @param config {@link TriggerConfig} instance
+     */
     public void reInit(TriggerConfig config) {
         saveJob.setBackground(new Color(240, 240, 240));
         init(config);
+        
+        revalidate();
+        repaint();
     }
 
     private void initComboBox() {
@@ -95,14 +118,14 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         intervalTypeCombooBox.setModel(new DefaultComboBoxModel(items));
     }
 
-    public Boolean isFieldsValid() {
+    private Boolean isFieldsValid() {
         return !isEmpty(intervalField)
                 && startDate.getDate() != null
                 && endDate.getDate() != null
                 && startDate.getDate().before(endDate.getDate());
     }
 
-    public Boolean isEmpty(JTextField validate) {
+    private Boolean isEmpty(JTextField validate) {
         return validate == null || validate.getText().trim().equals("");
     }
 

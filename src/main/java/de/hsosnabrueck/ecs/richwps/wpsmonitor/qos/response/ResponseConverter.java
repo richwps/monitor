@@ -65,4 +65,9 @@ public class ResponseConverter extends EntityConverter {
         return new ResponseConverted(best, worst, average, availability);
     }
 
+    @Override
+    public String getName() {
+        return "response_metric";
+    }
+
 }

@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 /**
- *
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Param {
@@ -25,6 +25,14 @@ public class Param {
 
     }
 
+    /**
+     * Checks if a Parameter is null.
+     * 
+     * @param <T> Return type
+     * @param var Check if null
+     * @param name Outputname for exception message
+     * @return T
+     */
     public static <T> T notNull(T var, String name) {
         if (var == null) {
             throw new IllegalArgumentException(name + " was null.");

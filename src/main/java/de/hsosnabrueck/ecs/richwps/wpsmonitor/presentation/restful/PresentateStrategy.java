@@ -16,10 +16,18 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 /**
+ * Strategy pattern interface for the representation of the data inside a
+ * webbrowser.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface PresentateStrategy {
 
+    /**
+     * Transformes the given Object instance into a String.
+     * 
+     * @param presentate Object instance
+     * @return String
+     */
     public String presentate(Object presentate);
 }

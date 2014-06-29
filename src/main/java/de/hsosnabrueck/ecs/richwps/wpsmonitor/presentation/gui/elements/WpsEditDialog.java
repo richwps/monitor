@@ -22,7 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 /**
- *
+ * JDialog to edit WPS. Actions with this dialog has impcats of the scheduler
+ * and the wps database. All jobs need to unsheduled and replaced with a 
+ * new one which matched the changes of the wps identifier.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsEditDialog extends javax.swing.JDialog {
@@ -30,6 +33,13 @@ public class WpsEditDialog extends javax.swing.JDialog {
     private final WpsPanel addParentPanel;
     private final WpsMonitorGui monitorMainFrame;
 
+    /**
+     * Constructor.
+     * 
+     * @param monitorMainFrame Reference to the MainFrame of this gui
+     * @param addParentPanel Parent panel; is needed for delete operation
+     * @param modal true for modal dialog
+     */
     public WpsEditDialog(WpsMonitorGui monitorMainFrame, WpsPanel addParentPanel, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
@@ -145,6 +155,11 @@ public class WpsEditDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Action behavior for saveButton.
+     * 
+     * @param evt 
+     */
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
 
         String wpsIdentifier = newIdentifierTextField.getText();
