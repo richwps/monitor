@@ -120,8 +120,10 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu monitorMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem settingsMenuItem = new javax.swing.JMenuItem();
+        javax.swing.JPopupMenu.Separator jSeparator1 = new javax.swing.JPopupMenu.Separator();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu aboutMenu = new javax.swing.JMenu();
+        javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WPS-Monitor Control Interface");
@@ -243,7 +245,9 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             }
         });
         monitorMenu.add(settingsMenuItem);
+        monitorMenu.add(jSeparator1);
 
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         exitMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -255,7 +259,16 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
         menuBar.add(monitorMenu);
 
-        aboutMenu.setText("About");
+        aboutMenu.setText("Help");
+
+        aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
+        aboutMenu.add(aboutMenuItem);
+
         menuBar.add(aboutMenu);
 
         setJMenuBar(menuBar);
@@ -359,6 +372,10 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+        new About(this, true).setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
