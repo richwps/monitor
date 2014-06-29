@@ -22,8 +22,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,73 +37,92 @@ import org.apache.logging.log4j.Logger;
  */
 public class EntityDisassembler {
 
-    private final Map<String, Factory<EntityConverter>> converterMap;
+    private final ConverterFactoryMap converterMap;
     private final static Logger log = LogManager.getLogger();
     private final String NO_CONVERTER_INDEX;
 
-    public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap) {
+    public EntityDisassembler(final ConverterFactoryMap converterMap) {
         this(converterMap, "raw");
     }
 
-    public EntityDisassembler(final Map<String, Factory<EntityConverter>> converterMap, final String noConverterIndex) {
+    public EntityDisassembler(final ConverterFactoryMap converterMap, final String noConverterIndex) {
         this.converterMap = Param.notNull(converterMap, "converterMap");
         this.NO_CONVERTER_INDEX = noConverterIndex;
     }
 
     /**
-     * Removes the AbstractQosEntity Objects out of the MeasuredDataEntity List
- and assign the AbstractQosEntities to the specific Converter-Object
-
- disassembleToConverters() modifieds the MeasuredDataEntity-Objects!
+     * Dissassembles the given dataList to the specific Converters.
      *
-     * @param dataList
+     * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
     public Map<String, EntityConverter> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
-        Map<String, EntityConverter> converters = createNewBunchOfConverters();
+        Map<String, Set<EntityConverter>> converters = createNewBunchOfConverters();
 
-        return disassembleLoop(converters, dataList);
+        return disassembleLoop(dataList, converters);
     }
 
+    /**
+     * Disassemble the given dataList to a default Converter.
+     *
+     * @param dataList List of {@link MeasuredDataEntity} instances
+     * @return
+     */
     public Map<String, EntityConverter> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
-        Map<String, EntityConverter> converters = new HashMap<String, EntityConverter>();
-        
-        return disassembleLoop(converters, dataList);
+        return disassembleLoop(dataList);
     }
-    
+
     public Map<String, EntityConverter> disassembleToConvertersWithRawData(final List<MeasuredDataEntity> dataList) {
-        Map<String, EntityConverter> converters = createNewBunchOfConverters();
-        
-        Map<String, EntityConverter> merged = disassembleLoop(converters, dataList);
+        Map<String, Set<EntityConverter>> converters = createNewBunchOfConverters();
+
+        Map<String, EntityConverter> merged = disassembleLoop(dataList, converters);
         merged.putAll(disassembleToDummyConverter(dataList));
-        
-        return merged; 
+
+        return merged;
     }
-    
-    private Map<String, EntityConverter> disassembleLoop(final Map<String, EntityConverter> converters, final List<MeasuredDataEntity> dataList) {
-        
+
+    private Map<String, EntityConverter> disassembleLoop(final List<MeasuredDataEntity> dataList) {
+        return disassembleLoop(dataList, null);
+    }
+
+    /**
+     * Mainloop which processes each disassemble process (very complex code ..
+     * teh hell of code).
+     *
+     * @param converters EntityConverter list
+     * @param dataList List of {@link MeasuredDataEntity} instances
+     * @return
+     */
+    private Map<String, EntityConverter> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<EntityConverter>> converters) {
+        Map<String, EntityConverter> finalConverters = new HashMap<String, EntityConverter>();
+
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
 
             for (AbstractQosEntity abstractQosEntity : measureData) {
                 String converterEntityIndex = abstractQosEntity.getEntityName();
 
-                if (!converters.containsKey(converterEntityIndex)) {
-                    if(!converters.containsKey(NO_CONVERTER_INDEX)) {
-                        converters.put(NO_CONVERTER_INDEX, getDummyConverter());
+                // if converters null, then use defaultConverter
+                if (converters == null || !converters.containsKey(converterEntityIndex)) {
+                    if (!finalConverters.containsKey(NO_CONVERTER_INDEX)) {
+                        finalConverters.put(NO_CONVERTER_INDEX, getDummyConverter());
                     }
-                    
-                    converterEntityIndex = NO_CONVERTER_INDEX;
+
+                    finalConverters.get(NO_CONVERTER_INDEX).add(abstractQosEntity);
+                } else {
+
+                    // assign to the specific converter
+                    Set<EntityConverter> get = converters.get(converterEntityIndex);
+
+                    for (EntityConverter conv : get) {
+                        conv.add(abstractQosEntity);
+                        finalConverters.put(conv.getName(), conv);
+                    }
                 }
-
-                // assign to the specific converter
-                converters.get(converterEntityIndex)
-                        .add(abstractQosEntity);
-
             }
         }
 
-        return converters;
+        return finalConverters;
     }
 
     private EntityConverter getDummyConverter() {
@@ -111,6 +132,11 @@ public class EntityDisassembler {
             public Object convert() {
                 return getEntities();
             }
+
+            @Override
+            public String getName() {
+                return NO_CONVERTER_INDEX;
+            }
         };
     }
 
@@ -119,17 +145,26 @@ public class EntityDisassembler {
      *
      * @return Map of entity converters
      */
-    private Map<String, EntityConverter> createNewBunchOfConverters() {
-        Map<String, EntityConverter> entityConverters = new HashMap<String, EntityConverter>();
+    private Map<String, Set<EntityConverter>> createNewBunchOfConverters() {
+        Map<String, Set<EntityConverter>> entityConverters = new HashMap<String, Set<EntityConverter>>();
 
         for (Map.Entry e : converterMap.entrySet()) {
             try {
-                entityConverters.put((String) e.getKey(), ((Factory<EntityConverter>) e.getValue()).create());
+                Set<Factory<EntityConverter>> converterFactoryList = (Set<Factory<EntityConverter>>) e.getValue();
+                String entityName = (String) e.getKey();
+
+                if (!entityConverters.containsKey(entityName)) {
+                    entityConverters.put(entityName, new HashSet<EntityConverter>());
+                }
+
+                for (Factory<EntityConverter> factory : converterFactoryList) {
+                    entityConverters.get(entityName).add(factory.create());
+                }
             } catch (CreateException ex) {
                 log.warn(ex);
             }
         }
-        
+
         return entityConverters;
     }
 }

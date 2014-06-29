@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Calls the convert method on the converter objects and dispatchtes the result
- * in a Map
+ * in a Map.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -41,11 +41,11 @@ public class EntityDispatcher {
     }
 
     /**
-     * Dispatches the converters into a Map. Entities which have no converter
-     * would be registred under the "MeasuredData"-key.
+     * Dispatches the converters into a Map. Entities which have no registred
+     * converter will be ignored.
      *
-     * @param data
-     * @return
+     * @param data List of {@link MeasuredDataEntity} instances
+     * @return Map with Entity name as key and converted data as value
      */
     public Map<String, Object> dispatchToConverter(List<MeasuredDataEntity> data) {
         Map<String, EntityConverter> disassemble = disassembler.disassembleToConverters(data);
@@ -53,12 +53,25 @@ public class EntityDispatcher {
         return dispatch(disassemble);
     }
     
+    /**
+     * Dispatches data to a map. Registred converter will be ignored. A raw 
+     * output will be generated.
+     * 
+     * @param data List of {@link MeasuredDataEntity} instances
+     * @return Map with Entity name as key and converted data as value
+     */
     public Map<String, Object> dispatchData(List<MeasuredDataEntity> data) {
         Map<String, EntityConverter> disassemble = disassembler.disassembleToDummyConverter(data);
 
         return dispatch(disassemble);
     }
     
+    /**
+     * Dispatches the converter and all data into a map.
+     * 
+     * @param data List of {@link MeasuredDataEntity} instances
+     * @return Map with Entity name as key and converted data as value
+     */
     public Map<String, Object> dispatchTwice(List<MeasuredDataEntity> data) {
         Map<String, EntityConverter> disassemble = disassembler.disassembleToConvertersWithRawData(data);
 

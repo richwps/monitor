@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -21,23 +20,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Absract EntityConverter which is fill up with AbstractQosEntity for which
- * this converter is registred.
- * 
- * The assignation is evaluated over AbstractQosEntity's  getEntityName-method
- * 
+ * Absract EntityConverter which will be filled up with
+ * {@link AbstractQosEntity} for which the specific converter instance take care
+ * of.
+ *
+ * The assignation is evaluated over AbstractQosEntity's getEntityName-method.
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class EntityConverter {
+
     private final List<AbstractQosEntity> entities;
-    
+
     public EntityConverter() {
         entities = new ArrayList<AbstractQosEntity>();
     }
-    
+
     /**
-     * Adds an abstractQosEntity instance to the converter
-     * 
+     * Adds an {@link AbstractQosEntity} instance to the converter.
+     *
      * @param data AbstractQosEntity instance
      */
     public void add(final AbstractQosEntity data) {
@@ -45,18 +46,20 @@ public abstract class EntityConverter {
     }
 
     /**
-     * Gets all added entities
-     * 
+     * Gets all added entities.
+     *
      * @return List of AbstractQosEntity instances
      */
     public List<AbstractQosEntity> getEntities() {
         return entities;
     }
-    
+
     /**
-     * Execute the convert process
-     * 
-     * @return Object which will be outputet over toString or JAXB or JSON ..
+     * Starts the convert process.
+     *
+     * @return Object which can be outputet over toString or JAXB or JSON ..
      */
     public abstract Object convert();
+    
+    public abstract String getName();
 }
