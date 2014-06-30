@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.net.URI;
 
 /**

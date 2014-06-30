@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityDispatcher;
 import spark.Route;
 
 /**

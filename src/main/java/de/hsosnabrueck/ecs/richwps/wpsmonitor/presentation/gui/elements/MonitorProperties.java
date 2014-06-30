@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.config.MonitorConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import java.util.Calendar;
 import java.util.Date;

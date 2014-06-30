@@ -17,11 +17,11 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -27,10 +27,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;

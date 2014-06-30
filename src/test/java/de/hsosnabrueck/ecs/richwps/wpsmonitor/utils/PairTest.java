@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

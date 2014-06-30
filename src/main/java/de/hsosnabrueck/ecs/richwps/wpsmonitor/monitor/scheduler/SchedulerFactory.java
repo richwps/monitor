@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.util.List;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;

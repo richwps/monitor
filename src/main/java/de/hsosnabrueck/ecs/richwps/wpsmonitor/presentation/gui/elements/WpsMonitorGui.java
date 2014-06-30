@@ -16,9 +16,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

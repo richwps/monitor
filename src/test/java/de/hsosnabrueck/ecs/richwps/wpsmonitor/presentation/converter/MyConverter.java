@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityConverter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**

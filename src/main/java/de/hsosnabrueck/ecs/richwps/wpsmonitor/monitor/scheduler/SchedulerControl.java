@@ -16,8 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

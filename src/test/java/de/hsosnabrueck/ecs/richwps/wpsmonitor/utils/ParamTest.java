@@ -16,6 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import junit.framework.Assert;
 import org.junit.Test;
 

@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;

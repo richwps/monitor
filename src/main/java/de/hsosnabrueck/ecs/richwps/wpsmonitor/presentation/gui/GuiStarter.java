@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements.WpsMonitorGui;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

@@ -15,13 +15,13 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.BuilderException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ConverterFactoryMap;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.DispatcherFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.EntityConverter;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.utils.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.ConverterFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

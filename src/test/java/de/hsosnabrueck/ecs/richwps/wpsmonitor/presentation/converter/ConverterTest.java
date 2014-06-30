@@ -15,6 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.ConverterFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
