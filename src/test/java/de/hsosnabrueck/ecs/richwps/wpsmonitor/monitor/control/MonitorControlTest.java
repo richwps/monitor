@@ -220,6 +220,20 @@ public class MonitorControlTest {
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(unstoredProcessEntity);
         Assert.assertTrue(registred && checkIsCreateAndScheduledProcess);
     }
+    
+    /**
+     * Test of createAndScheduleProcess method, of class MonitorControl.
+     */
+    @Test
+    public void testCreateAndScheduleProcessWithAlreadyExistedProcess() {
+        System.out.println("createAndScheduleProcess");
+
+        WpsProcessEntity storedEntity = getStoredEntity();
+
+        Boolean registred = mControl.createAndScheduleProcess(storedEntity);
+        Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(storedEntity);
+        Assert.assertTrue(!registred && !checkIsCreateAndScheduledProcess);
+    }
 
     @Test
     public void testCreateAndScheduleProcessIsNotAcceptedNullValues() {
@@ -286,7 +300,7 @@ public class MonitorControlTest {
         c.setTime(new Date());
         c.add(Calendar.DATE, 1);
         
-        mControl.createAndScheduleProcess(p);
+        Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(p);
         
         return new TriggerConfig(new Date(), c.getTime(), 30, DateBuilder.IntervalUnit.MINUTE);
     }
@@ -306,7 +320,10 @@ public class MonitorControlTest {
     @Test
     public void testSaveTrigger_WpsProcessEntity_TriggerConfig() {
         System.out.println("saveTrigger");
-        WpsProcessEntity pE = getStoredEntity();
+        
+        WpsProcessEntity pE = getUnstoredProcessEntity();
+        wpsDao.persist(pE.getWps());
+        
         TriggerConfig t = getTriggerConfigAndCreateJob(pE);
         
         TriggerKey saveTrigger = mControl.saveTrigger(pE, t);
@@ -315,22 +332,7 @@ public class MonitorControlTest {
         Assert.assertTrue(checkIfSaved);
     }
     
-    /**
-     * Test of saveTrigger method, of class MonitorControl.
-     */
-    @Test
-    public void testSaveTrigger_3args() {
-        System.out.println("saveTrigger");
-
-        WpsProcessEntity pE = getStoredEntity();     
-        TriggerConfig t = getTriggerConfigAndCreateJob(pE);
-        
-        TriggerKey saveTrigger = mControl.saveTrigger(pE.getWps().getIdentifier(), pE.getIdentifier(), t);
-        
-        Boolean checkIfSaved = checkIfSaved(saveTrigger);
-        
-        Assert.assertTrue(checkIfSaved);
-    }
+    
 
     /**
      * Test of setTestRequest method, of class MonitorControl.
@@ -338,17 +340,16 @@ public class MonitorControlTest {
     @Test
     public void testSetTestRequest_3args() {
         System.out.println("setTestRequest");
+        WpsProcessEntity storedEntity = getStoredEntity();
+        mControl.setTestRequest(storedEntity, "hello world");
         
+        wpsProcessDao.update(storedEntity);
+        
+        WpsProcessEntity find = wpsProcessDao.find(storedEntity.getWps().getIdentifier(), storedEntity.getIdentifier());
+        
+        Assert.assertTrue(find != null && find.getRawRequest().equals("hello world"));
     }
 
-    /**
-     * Test of setTestRequest method, of class MonitorControl.
-     */
-    @Test
-    public void testSetTestRequest_WpsProcessEntity_String() {
-        System.out.println("setTestRequest");
-
-    }
 
     /**
      * Test of updateWps method, of class MonitorControl.

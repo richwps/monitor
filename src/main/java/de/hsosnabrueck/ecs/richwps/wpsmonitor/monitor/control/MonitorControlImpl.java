@@ -103,19 +103,20 @@ public class MonitorControlImpl implements MonitorControl {
         }
     }
 
-
     @Override
     public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config) {
         TriggerKey result = null;
 
         try {
-            if (isProcessExists(wpsIdentifier, processIdentifier) && config.getTriggerKey() == null) {
-                JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
+            if (isProcessExists(wpsIdentifier, processIdentifier)) {
+                if (config.getTriggerKey() == null) {
+                    JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
 
-                result = schedulerControl.addTriggerToJob(jobKey, config);
-            } else {
-                schedulerControl.updateTrigger(config);
-                result = config.getTriggerKey();
+                    result = schedulerControl.addTriggerToJob(jobKey, config);
+                } else {
+                    schedulerControl.updateTrigger(config);
+                    result = config.getTriggerKey();
+                }
             }
         } catch (SchedulerException ex) {
             log.error(ex);
@@ -453,7 +454,7 @@ public class MonitorControlImpl implements MonitorControl {
     public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
-        
+
         WpsProcessDataAccess wpsProcessDao = null;
 
         try {
@@ -477,7 +478,7 @@ public class MonitorControlImpl implements MonitorControl {
         } catch (CreateException ex) {
             log.error(ex);
         } finally {
-            if(wpsProcessDao != null) {
+            if (wpsProcessDao != null) {
                 wpsProcessDao.close();
             }
         }
@@ -529,7 +530,7 @@ public class MonitorControlImpl implements MonitorControl {
     @Override
     public void deleteMeasuredData(final Date olderAs) {
         Validate.notNull(olderAs, "olderAs");
-        
+
         QosDataAccess qosDao;
 
         try {
