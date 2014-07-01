@@ -16,7 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -27,13 +27,13 @@ import org.junit.Test;
 public class ParamTest {
 
     /**
-     * Test of notNull method, of class Param.
+     * Test of notNull method, of class Validate.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testNotNullThrowsException() {
         System.out.println("notNull");
         
-        Param.notNull(null, "Null test");
+        Validate.notNull(null, "Null test");
     }
     
     @Test
@@ -42,7 +42,7 @@ public class ParamTest {
         String str = "Hello World!";
         
         try {
-        Param.notNull(str, "Null test");
+        Validate.notNull(str, "Null test");
         } catch(IllegalArgumentException ex) {
             Assert.assertTrue(false);
         }

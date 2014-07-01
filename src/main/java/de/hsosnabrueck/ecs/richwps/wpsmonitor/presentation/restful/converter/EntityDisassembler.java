@@ -19,7 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +46,7 @@ public class EntityDisassembler {
     }
 
     public EntityDisassembler(final ConverterFactoryMap converterMap, final String noConverterIndex) {
-        this.converterMap = Param.notNull(converterMap, "converterMap");
+        this.converterMap = Validate.notNull(converterMap, "converterMap");
         this.NO_CONVERTER_INDEX = noConverterIndex;
     }
 

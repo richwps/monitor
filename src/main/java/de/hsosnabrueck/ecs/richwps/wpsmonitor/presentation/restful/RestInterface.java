@@ -20,7 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityDispatcher;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -83,9 +83,9 @@ public class RestInterface {
      * @param dispatchFactory {@link DispatcherFactory} instance
      */
     public RestInterface(final PresentateStrategy strategy, final MonitorControl control, final DispatcherFactory dispatchFactory) {
-        this.strategy = Param.notNull(strategy, "strategy");
-        this.monitorControl = Param.notNull(control, "control");
-        this.dispatchFactory = Param.notNull(dispatchFactory, "dispatchFactory");
+        this.strategy = Validate.notNull(strategy, "strategy");
+        this.monitorControl = Validate.notNull(control, "control");
+        this.dispatchFactory = Validate.notNull(dispatchFactory, "dispatchFactory");
 
         this.routeRegister = new RouteRegister();
         this.port = 4567;
@@ -109,8 +109,8 @@ public class RestInterface {
      * @return RestInterface instance
      */
     public RestInterface addRoute(HttpOperation operation, MonitorRoute RouteObj) {
-        routeMap.get(Param.notNull(operation, "operation"))
-                .add(Param.notNull(RouteObj, "RouteObj"));
+        routeMap.get(Validate.notNull(operation, "operation"))
+                .add(Validate.notNull(RouteObj, "RouteObj"));
 
         return this;
     }

@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +34,7 @@ public class RouteRegister {
      * @param routeObj {@link MonitorRoute} instance
      */
     public void register(final HttpOperation operation, final MonitorRoute routeObj) {
-        switch (Param.notNull(operation, "operation")) {
+        switch (Validate.notNull(operation, "operation")) {
             case GET:
                 get(routeObj);
                 break;

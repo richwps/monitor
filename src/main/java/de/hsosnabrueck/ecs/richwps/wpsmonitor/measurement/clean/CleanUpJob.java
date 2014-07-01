@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,8 +42,8 @@ public class CleanUpJob implements Job {
      * @param olderAs Date instance
      */
     public CleanUpJob(final QosDataAccess qosDao, final Date olderAs) {
-        this.qosDao = Param.notNull(qosDao, "qosDao");
-        this.olderAs = Param.notNull(olderAs, "olderAs");
+        this.qosDao = Validate.notNull(qosDao, "qosDao");
+        this.olderAs = Validate.notNull(olderAs, "olderAs");
     }
 
     @Override

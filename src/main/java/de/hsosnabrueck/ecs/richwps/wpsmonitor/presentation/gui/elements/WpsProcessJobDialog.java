@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         setLocationRelativeTo(mainFrame);
 
         this.wpsProcess = wpsProcess;
-        this.mainframe = Param.notNull(mainFrame, "mainFrame");
+        this.mainframe = Validate.notNull(mainFrame, "mainFrame");
         
         init();
     }

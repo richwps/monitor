@@ -16,7 +16,7 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
 import org.quartz.DateBuilder;
 import org.quartz.TriggerKey;
@@ -62,10 +62,10 @@ public class TriggerConfig {
     public TriggerConfig(final Date start, final Date end, final Integer interval, 
             final DateBuilder.IntervalUnit intervalType, final TriggerKey triggerKey) {
         
-        this.start = Param.notNull(start, "start");
-        this.end = Param.notNull(end, "end");
-        this.interval = Param.notNull(interval, "interval");
-        this.intervalType = Param.notNull(intervalType, "intervalType");
+        this.start = Validate.notNull(start, "start");
+        this.end = Validate.notNull(end, "end");
+        this.interval = Validate.notNull(interval, "interval");
+        this.intervalType = Validate.notNull(intervalType, "intervalType");
         this.triggerKey = triggerKey;
     }
 

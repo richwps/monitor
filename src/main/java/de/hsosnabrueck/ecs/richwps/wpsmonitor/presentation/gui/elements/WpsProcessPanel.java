@@ -26,7 +26,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JPanel;
@@ -72,7 +72,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     public WpsProcessPanel(WpsMonitorGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, Boolean restored) {
         this.mainFrame = mainFrame;
         this.parent = parent;
-        this.wpsProcess = Param.notNull(wpsProcess, "wpsProcess");
+        this.wpsProcess = Validate.notNull(wpsProcess, "wpsProcess");
 
         initComponents();
 

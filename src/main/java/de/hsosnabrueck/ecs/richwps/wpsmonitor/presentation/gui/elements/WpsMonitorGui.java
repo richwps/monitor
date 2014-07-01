@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -43,7 +43,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
      * @param monitor {@link Monitor} reference
      */
     public WpsMonitorGui(final Monitor monitor) {
-        this.monitor = Param.notNull(monitor, "monitor");
+        this.monitor = Validate.notNull(monitor, "monitor");
 
         initComponents();
         init();

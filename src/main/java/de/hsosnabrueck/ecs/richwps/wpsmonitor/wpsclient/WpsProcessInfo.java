@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.URI;
 
 /**
@@ -43,8 +43,8 @@ public class WpsProcessInfo {
      * @param processIdentifier Identifier of the Process
      */
     public WpsProcessInfo(final URI wpsUri, final String processIdentifier) {
-        this.wpsUri = Param.notNull(wpsUri, "wpsUri");
-        this.processIdentifier = Param.notNull(processIdentifier, "processIdentifier");
+        this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
+        this.processIdentifier = Validate.notNull(processIdentifier, "processIdentifier");
     }
 
     public URI getWpsUri() {

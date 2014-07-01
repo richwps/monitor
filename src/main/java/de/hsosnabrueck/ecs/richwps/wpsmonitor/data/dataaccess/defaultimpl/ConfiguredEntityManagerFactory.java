@@ -29,7 +29,6 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class ConfiguredEntityManagerFactory {
 
-    private static String PERSISTENCE_UNIT;
     private static final EntityManagerFactory emf;
 
     private static final ThreadLocal<EntityManager> entityStorage;
@@ -38,8 +37,8 @@ public abstract class ConfiguredEntityManagerFactory {
     private static final Logger log = LogManager.getLogger();
 
     static {
-        PERSISTENCE_UNIT = "de.hsosnabrueck.ecs.richwps_WPSMonitor_pu";
-        emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+       
+        emf = Persistence.createEntityManagerFactory(JpaPuConfig.PERSISTENCE_UNIT);
         entityStorage = new ThreadLocal<EntityManager>();
         entityManagerList = new ArrayList<EntityManager>();
     }
@@ -104,23 +103,5 @@ public abstract class ConfiguredEntityManagerFactory {
      */
     public static EntityManager createEntityManager() {
         return emf.createEntityManager();
-    }
-
-    /**
-     * Set the persistenceUnitName
-     * 
-     * @param persistenceUnitName 
-     */
-    public static void setPersistenceUnitName(String persistenceUnitName) {
-        ConfiguredEntityManagerFactory.PERSISTENCE_UNIT = persistenceUnitName;
-    }
-
-    /**
-     * Get PersistenceUnitName
-     * 
-     * @return Persistence unit name identifier
-     */
-    public static String getPersistenceUnitName() {
-        return ConfiguredEntityManagerFactory.PERSISTENCE_UNIT;
     }
 }

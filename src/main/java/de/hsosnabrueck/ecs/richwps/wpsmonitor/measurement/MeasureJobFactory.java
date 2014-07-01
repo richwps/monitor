@@ -21,7 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
@@ -73,10 +73,10 @@ public class MeasureJobFactory implements JobFactory {
     public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao,
             final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
         
-        this.probeService = Param.notNull(probeService, "probeService");
-        this.processDao = Param.notNull(processDao, "processDao");
-        this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
-        this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
+        this.probeService = Validate.notNull(probeService, "probeService");
+        this.processDao = Validate.notNull(processDao, "processDao");
+        this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
+        this.wpsClientFactory = Validate.notNull(wpsClientFactory, "wpsClientFactory");
     }
 
     @Override

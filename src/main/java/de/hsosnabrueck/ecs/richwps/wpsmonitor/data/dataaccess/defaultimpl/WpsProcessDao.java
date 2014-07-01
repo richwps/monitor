@@ -19,7 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
     @Override
     public WpsProcessEntity find(final Object primaryKey) {
-        return getEntityManager().find(WpsProcessEntity.class, Param.notNull(primaryKey, "primaryKey"));
+        return getEntityManager().find(WpsProcessEntity.class, Validate.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
@@ -53,8 +53,8 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     @Override
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        parameters.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
+        parameters.put("wpsidentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("identifier", Validate.notNull(processIdentifier, "processIdentifier"));
 
         List<WpsProcessEntity> resultList = getBy("wpsprocess.get", parameters, WpsProcessEntity.class);
         WpsProcessEntity result = null;
@@ -69,7 +69,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     @Override
     public List<WpsProcessEntity> getAll(final String wpsIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("identifier", Param.notNull(wpsIdentifier, "wpsidentifier"));
+        parameters.put("identifier", Validate.notNull(wpsIdentifier, "wpsidentifier"));
 
         return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
     }
@@ -77,7 +77,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     @Override
     public void deleteProcessesOfWps(String wpsIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("wpsidentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("wpsidentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
 
         doNamedQuery("wpsprocess.deleteAllFromWps", parameters);
     }
@@ -98,7 +98,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
                 || o.getWps().getIdentifier() == null
                 || o.getIdentifier() == null) {
             
-            Param.notNull(null, "Given WpsProcessEntity");
+            Validate.notNull(null, "Given WpsProcessEntity");
         }
 
         Map<String, Object> parameters = new HashMap<String, Object>();

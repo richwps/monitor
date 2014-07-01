@@ -17,7 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,8 +36,8 @@ public class ConverterFactoryMap  {
     }
     
     public ConverterFactoryMap add(final String index, final Factory<EntityConverter> converterFactory) {
-        Param.notNull(index, "index");
-        Param.notNull(converterFactory, "converterFactory");
+        Validate.notNull(index, "index");
+        Validate.notNull(converterFactory, "converterFactory");
                 
         if(!converterMap.containsKey(index)) {
             converterMap.put(index, new HashSet<Factory<EntityConverter>>());

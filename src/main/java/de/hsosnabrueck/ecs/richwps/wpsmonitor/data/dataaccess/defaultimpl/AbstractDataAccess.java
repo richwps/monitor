@@ -296,4 +296,13 @@ public abstract class AbstractDataAccess<T> {
             }
         }
     }
+    
+    /**
+     *
+     */
+    public void close() {
+        if(getEntityManager().isOpen()) {
+            getEntityManager().close();
+        }
+    }
 }

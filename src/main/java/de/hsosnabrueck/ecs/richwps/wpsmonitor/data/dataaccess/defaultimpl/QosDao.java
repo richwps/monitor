@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +33,13 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {
-        return getEntityManager().find(MeasuredDataEntity.class, Param.notNull(primaryKey, "primaryKey"));
+        return getEntityManager().find(MeasuredDataEntity.class, Validate.notNull(primaryKey, "primaryKey"));
     }
 
     @Override
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range) {
         Map<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("identifier", Param.notNull(identifier, "identifier"));
+        parameter.put("identifier", Validate.notNull(identifier, "identifier"));
 
         return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class, range);
     }
@@ -47,8 +47,8 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     @Override
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range) {
         Map<String, Object> parameter = new HashMap<String, Object>();
-        parameter.put("identifier", Param.notNull(processIdentifier, "processIdentifier"));
-        parameter.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameter.put("identifier", Validate.notNull(processIdentifier, "processIdentifier"));
+        parameter.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
 
         return getBy("qos.getQosByProcess", parameter, MeasuredDataEntity.class, range);
     }
@@ -72,8 +72,8 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
 
-        parameters.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        parameters.put("processIdentifier", Param.notNull(processIdentifier, "processIdentifier"));
+        parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
 
         doNamedQuery("qos.deleteByWpsProcess", parameters);
 
@@ -89,8 +89,8 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
         Map<String, Object> parameters = new HashMap<String, Object>();
 
-        parameters.put("wpsIdentifier", Param.notNull(wpsIdentifier, "wpsIdentifier"));
-        parameters.put("processIdentifier", Param.notNull(processIdentifier, "processIdentifier"));
+        parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
         parameters.put("date", olderDate);
 
         doNamedQuery("qos.deleteByWpsProcessOlderAs", parameters);
@@ -102,7 +102,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     public Integer deleteAllOlderAs(final Date date) {
         Map<String, Object> parameters = new HashMap<String, Object>();
 
-        parameters.put("date", Param.notNull(date, "date"));
+        parameters.put("date", Validate.notNull(date, "date"));
         
         doNamedQuery("qos.deleteOlderAs", parameters);
         

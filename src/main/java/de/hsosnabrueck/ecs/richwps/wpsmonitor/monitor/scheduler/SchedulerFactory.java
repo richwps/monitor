@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.List;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
@@ -42,7 +42,7 @@ public class SchedulerFactory implements Factory<Scheduler> {
      */
     public SchedulerFactory(final JobFactoryService jobFactoryService, final List<JobListener> jobListeners) {
         this.jobListeners = jobListeners;
-        this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
+        this.jobFactoryService = Validate.notNull(jobFactoryService, "jobFactoryService");
     }
 
     @Override

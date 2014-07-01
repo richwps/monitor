@@ -21,7 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,9 +47,9 @@ public class WpsPanel extends javax.swing.JPanel {
      * @param wps {@link WpsEntity} to request the right data from the monitor
      */
     public WpsPanel(WpsMonitorGui monitorMainFrame, JPanel addPanelParent, final WpsEntity wps) {
-        this.wps = Param.notNull(wps, "wps");
-        this.addPanelParent = Param.notNull(addPanelParent, "parent");
-        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
+        this.wps = Validate.notNull(wps, "wps");
+        this.addPanelParent = Validate.notNull(addPanelParent, "parent");
+        this.monitorMainFrame = Validate.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));

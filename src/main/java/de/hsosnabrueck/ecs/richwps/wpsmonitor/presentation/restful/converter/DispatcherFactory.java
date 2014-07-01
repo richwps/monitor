@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import java.util.Map;
 
@@ -30,7 +30,7 @@ public class DispatcherFactory {
     private final ConverterFactoryMap converterMap;
 
     public DispatcherFactory(final ConverterFactoryMap converterMap) {
-        this.converterMap = Param.notNull(converterMap, "converterMap");
+        this.converterMap = Validate.notNull(converterMap, "converterMap");
     }
 
     public EntityDispatcher create() {

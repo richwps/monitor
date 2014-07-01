@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     public WpsProcessDialog(WpsMonitorGui monitorMainFrame, WpsEntity wps, boolean modal) {
         super(monitorMainFrame, modal);
         this.wps = wps;
-        this.monitorMainFrame = Param.notNull(monitorMainFrame, "mainFrame");
+        this.monitorMainFrame = Validate.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
 

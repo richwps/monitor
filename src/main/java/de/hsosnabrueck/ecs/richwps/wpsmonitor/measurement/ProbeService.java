@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +50,7 @@ public class ProbeService {
      * @return this for method chaining
      */
     public ProbeService addProbe(final Factory<QosProbe> probeFactory) {
-        probeFactories.add(Param.notNull(probeFactory, "probeFactory"));
+        probeFactories.add(Validate.notNull(probeFactory, "probeFactory"));
 
         return this;
     }

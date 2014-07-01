@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
@@ -47,7 +47,7 @@ public class WpsEditDialog extends javax.swing.JDialog {
         setLocationRelativeTo(monitorMainFrame);
 
         this.monitorMainFrame = monitorMainFrame;
-        this.addParentPanel = Param.notNull(addParentPanel, "parent");
+        this.addParentPanel = Validate.notNull(addParentPanel, "parent");
         this.newIdentifierTextField.setText(addParentPanel.getWps()
                 .getIdentifier()
         );

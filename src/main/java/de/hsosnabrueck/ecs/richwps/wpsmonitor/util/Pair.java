@@ -26,8 +26,8 @@ public class Pair<A, B> {
     private final B b;
 
     public Pair(final A left, final B right) {
-        this.a = Param.notNull(left, "left");
-        this.b = Param.notNull(right, "right");
+        this.a = Validate.notNull(left, "left");
+        this.b = Validate.notNull(right, "right");
     }
 
     public A getLeft() {

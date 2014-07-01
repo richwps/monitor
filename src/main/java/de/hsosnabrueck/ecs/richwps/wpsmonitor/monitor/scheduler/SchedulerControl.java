@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,10 +47,10 @@ public final class SchedulerControl {
 
     protected final Scheduler scheduler;
     protected final JobFactoryService jobFactoryService;
-    
+
     public SchedulerControl(Scheduler scheduler, JobFactoryService jobFactoryService) {
-        this.scheduler = Param.notNull(scheduler, "scheduler");
-        this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
+        this.scheduler = Validate.notNull(scheduler, "scheduler");
+        this.jobFactoryService = Validate.notNull(jobFactoryService, "jobFactoryService");
     }
 
     /**
@@ -113,7 +113,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a Wps measurement job.
+     * Add a Wps measurement job; if the job is already exists, then the job
+     * will replaced.
      *
      * @param wpsIdentifier Wps entity identifier
      * @param processIdentifier wpsprocess entity identifier
@@ -121,8 +122,8 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized JobKey addWpsAsJob(final String wpsIdentifier, final String processIdentifier) throws SchedulerException {
-        Param.notNull(wpsIdentifier, "wpsIdentifier");
-        Param.notNull(processIdentifier, "processIdentifier");
+        Validate.notNull(wpsIdentifier, "wpsIdentifier");
+        Validate.notNull(processIdentifier, "processIdentifier");
 
         JobKey wpsJobKey = new JobKey(processIdentifier, wpsIdentifier);
 
@@ -139,7 +140,12 @@ public final class SchedulerControl {
      */
     public synchronized TriggerKey addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
         // Get JobDetail
-        JobDetail forJob = scheduler.getJobDetail(Param.notNull(jobKey, "jobKey"));
+        JobDetail forJob = scheduler.getJobDetail(Validate.notNull(jobKey, "jobKey"));
+
+        if (forJob == null) {
+            throw new SchedulerException("addTriggerToJob failed because of no job was found for the given JobKey: " + jobKey.toString());
+        }
+
         Trigger newTrigger = createTriggerWithStartAndEnd(forJob, config);
 
         scheduler.scheduleJob(newTrigger);
@@ -208,7 +214,9 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized void updateJobsWpsGroupName(final String oldWpsIdentifier, final String newWpsIdentifier) throws SchedulerException {
-        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(oldWpsIdentifier));
+        Set<JobKey> jobKeys = scheduler.getJobKeys(
+                GroupMatcher.jobGroupEquals(Validate.notNull(oldWpsIdentifier, "oldWpsIdentifier"))
+        );
 
         for (JobKey k : jobKeys) {
             List<TriggerConfig> triggerConfigsOfJob = getTriggerConfigsOfJob(k);
@@ -231,6 +239,9 @@ public final class SchedulerControl {
      * @return Trigger Object
      */
     private synchronized Trigger createTriggerWithStartAndEnd(final JobDetail forJob, final TriggerConfig config) {
+        Validate.notNull(forJob, "forJob");
+        Validate.notNull(config, "config");
+        
         Trigger newTrigger;
         ScheduleBuilder scheduleBuilder = null;
 
@@ -247,7 +258,7 @@ public final class SchedulerControl {
          */
         Integer interval = config.getInterval();
 
-        switch (Param.notNull(config, "config").getIntervalType()) {
+        switch (config.getIntervalType()) {
             case SECOND:
                 scheduleBuilder = CalendarIntervalScheduleBuilder
                         .calendarIntervalSchedule()
@@ -335,16 +346,16 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized void updateTrigger(final TriggerConfig config) throws SchedulerException {
+        Validate.notNull(config, "config");
+        Validate.notNull(config.getTriggerKey(), "config's TriggerKey");
 
-        if (config.getTriggerKey() != null) {
-            JobDetail jobDetail = scheduler.getJobDetail(scheduler
-                    .getTrigger(config.getTriggerKey())
-                    .getJobKey()
-            );
+        JobDetail jobDetail = scheduler.getJobDetail(scheduler
+                .getTrigger(config.getTriggerKey())
+                .getJobKey()
+        );
 
-            // replace old trigger with a new one
-            scheduler.rescheduleJob(config.getTriggerKey(), createTriggerWithStartAndEnd(jobDetail, config));
-        }
+        // replace old trigger with a new one
+        scheduler.rescheduleJob(config.getTriggerKey(), createTriggerWithStartAndEnd(jobDetail, config));
     }
 
     /**

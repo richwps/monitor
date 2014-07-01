@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -45,8 +45,8 @@ public class ListMeasurementRoute extends MonitorRoute {
     @Override
     public Object handle(Request request, Response response) {
         try {
-            String wpsIdentifier = Param.notNull(request.params(":wps"), "Wps parameter");
-            String processIdentifier = Param.notNull(request.params(":process"), "Process parameter");
+            String wpsIdentifier = Validate.notNull(request.params(":wps"), "Wps parameter");
+            String processIdentifier = Validate.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
             String format = request.params(":format");
 

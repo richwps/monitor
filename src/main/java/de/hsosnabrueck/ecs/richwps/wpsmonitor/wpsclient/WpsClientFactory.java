@@ -19,7 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * This Factory is used by the MonitorBuilder and as dependency for MeasureJob.
@@ -51,7 +51,7 @@ public final class WpsClientFactory implements Factory<WpsClient> {
     }
 
     public WpsClientFactory(final Factory<WpsClient> defaultClient, final WpsClientConfig config) {
-        this.defaultClientImpl = Param.notNull(defaultClient, "defaultClient");
+        this.defaultClientImpl = Validate.notNull(defaultClient, "defaultClient");
         setWpsClientConfig(wpsClientConfig);
     }
 

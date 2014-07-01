@@ -21,7 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.ConverterFactoryMap;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityConverter;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +63,7 @@ public class RestInterfaceBuilder {
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder withConverterMap(ConverterFactoryMap converterMap) {
-        this.converterMap = Param.notNull(converterMap, "converterMap");
+        this.converterMap = Validate.notNull(converterMap, "converterMap");
 
         return this;
     }
@@ -75,7 +75,7 @@ public class RestInterfaceBuilder {
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder withStrategy(final PresentateStrategy strategy) {
-        this.strategy = Param.notNull(strategy, "strategy");
+        this.strategy = Validate.notNull(strategy, "strategy");
 
         return this;
     }
@@ -87,7 +87,7 @@ public class RestInterfaceBuilder {
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder withMonitorControl(final MonitorControl monitorControl) {
-        this.monitorControl = Param.notNull(monitorControl, "monitorControl");
+        this.monitorControl = Validate.notNull(monitorControl, "monitorControl");
 
         return this;
     }
@@ -100,8 +100,8 @@ public class RestInterfaceBuilder {
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final Factory<EntityConverter> converterFactory) {
-        Param.notNull(abstractQosEntityName, "abstractQosEntityName");
-        Param.notNull(converterFactory, "converterFactory");
+        Validate.notNull(abstractQosEntityName, "abstractQosEntityName");
+        Validate.notNull(converterFactory, "converterFactory");
                 
         converterMap.add(abstractQosEntityName, converterFactory);
         

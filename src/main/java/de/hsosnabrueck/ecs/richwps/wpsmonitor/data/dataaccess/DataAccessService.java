@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +43,7 @@ public class DataAccessService {
             throw new DataAccesNameAlreadyRegistred();
         }
         
-        dataAccessFactories.put(accessName, Param.notNull(daoFactory, "daoFactory"));
+        dataAccessFactories.put(accessName, Validate.notNull(daoFactory, "daoFactory"));
     }
     
     public Boolean isNameRegistred(final String accessName) {

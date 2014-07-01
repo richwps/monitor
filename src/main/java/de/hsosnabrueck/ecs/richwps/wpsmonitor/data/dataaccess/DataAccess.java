@@ -89,4 +89,11 @@ public interface DataAccess<T> {
      * @param value false to deactivate autocommit, otherwise true
      */
     public void setAutoCommit(Boolean value);
+    
+    /**
+     * Should be called if the DataAccess is no longer needed.
+     * The specific implementation of the DataAccess interface need to decide 
+     * what is to do.
+     */
+    public void close();
 }

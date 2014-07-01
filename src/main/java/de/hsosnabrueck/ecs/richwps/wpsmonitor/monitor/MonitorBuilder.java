@@ -40,7 +40,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withProbeService(ProbeService probeService) {
-        this.probeService = Param.notNull(probeService, "probeService");
+        this.probeService = Validate.notNull(probeService, "probeService");
 
         return this;
     }
@@ -139,7 +139,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withJobFactoryService(JobFactoryService jobFactoryService) {
-        this.jobFactoryService = Param.notNull(jobFactoryService, "jobFactoryService");
+        this.jobFactoryService = Validate.notNull(jobFactoryService, "jobFactoryService");
 
         return this;
     }
@@ -151,7 +151,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withQosDaoFactory(QosDaoFactory qosDaoFactory) {
-        this.qosDaoFactory = Param.notNull(qosDaoFactory, "qosDaoFactory");
+        this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
 
         return this;
     }
@@ -163,7 +163,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsDaoFactory(WpsDaoFactory wpsDaoFactory) {
-        this.wpsDaoFactory = Param.notNull(wpsDaoFactory, "wpsDaoFactory");
+        this.wpsDaoFactory = Validate.notNull(wpsDaoFactory, "wpsDaoFactory");
 
         return this;
     }
@@ -175,7 +175,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsProcessDaoFactory(WpsProcessDaoFactory wpsProcessDaoFactory) {
-        this.wpsProcessDaoFactory = Param.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
+        this.wpsProcessDaoFactory = Validate.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
 
         return this;
     }
@@ -239,7 +239,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsClientFactory(WpsClientFactory wpsClientFactory) {
-        this.wpsClientFactory = Param.notNull(wpsClientFactory, "wpsClientFactory");
+        this.wpsClientFactory = Validate.notNull(wpsClientFactory, "wpsClientFactory");
 
         return this;
     }
@@ -252,7 +252,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsClientConfig(WpsClientConfig config) {
-        this.wpsClientConfig = Param.notNull(config, "config");
+        this.wpsClientConfig = Validate.notNull(config, "config");
 
         return this;
     }

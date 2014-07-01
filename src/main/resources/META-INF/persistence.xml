@@ -8,11 +8,11 @@
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
     <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:derby:MonitoredData;create=true"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby:Database/MonitoredData;create=true"/>
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="javax.persistence.jdbc.user" value=""/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
 </persistence>

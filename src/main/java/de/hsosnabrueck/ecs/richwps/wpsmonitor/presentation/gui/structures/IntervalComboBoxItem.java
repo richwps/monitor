@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.structures;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
 import org.quartz.DateBuilder;
 
@@ -35,7 +35,7 @@ public class IntervalComboBoxItem {
      * @param dateKey {@link DateBuilder.IntervalUnit} instance
      */
     public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
-        this.dateKey = Param.notNull(dateKey, "dateKey");
+        this.dateKey = Validate.notNull(dateKey, "dateKey");
 
         if (enumStringMap == null) {
             initMap();

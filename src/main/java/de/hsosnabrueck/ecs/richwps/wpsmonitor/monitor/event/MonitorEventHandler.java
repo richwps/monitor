@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,14 +88,14 @@ public class MonitorEventHandler {
      * @throws EventNotFound If the event is not found
      */
     public void registerListener(final String eventName, final MonitorEventListener eventToRegister) throws EventNotFound {
-        if (!events.containsKey(Param.notNull(eventName, "eventName"))) {
+        if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
             log.debug("EventHandler: registerListener: Event {} not found!", eventName);
 
             throw new EventNotFound(eventName);
         }
 
         events.get(eventName)
-                .add(Param.notNull(eventToRegister, "eventToRegister"));
+                .add(Validate.notNull(eventToRegister, "eventToRegister"));
 
         log.debug("EventHandler: Register new Listener: {}", eventToRegister.getClass().getName());
     }
@@ -108,14 +108,14 @@ public class MonitorEventHandler {
      * @throws EventNotFound If the event is not found
      */
     public void removeListener(final String eventName, final MonitorEventListener eventToRemove) throws EventNotFound {
-        if (!events.containsKey(Param.notNull(eventName, "eventName"))) {
+        if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
             log.debug("EventHandler: removeListener: Event {} not found!", eventName);
 
             throw new EventNotFound(eventName);
         }
 
         events.get(eventName)
-                .remove(Param.notNull(eventToRemove, "eventToRemove"));
+                .remove(Validate.notNull(eventToRemove, "eventToRemove"));
 
         log.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
     }

@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +30,16 @@ import java.util.Map;
  */
 public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
 
+    /**
+     * Finds a WpsEntity instance by the wpsIdentifier String.
+     *
+     * @param wpsIdentifier wpsIdentifier String
+     * @return WpsEntity instance or null if not found
+     */
     @Override
-    public WpsEntity find(Object primaryKey) {
+    public WpsEntity find(String wpsIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("identifier", primaryKey);
+        parameters.put("identifier", wpsIdentifier);
 
         List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
 
@@ -57,16 +63,16 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     @Override
     public void remove(final String wpsIdentifier) {
         WpsEntity find = find(wpsIdentifier);
-    
+
         remove(find);
     }
 
     @Override
     public void remove(final WpsEntity o) {
         beginTransaction();
-        
-        Param.notNull(o, "WpsEntity");
-        Param.notNull(o.getIdentifier(), "WpsEntity Identifier");
+
+        Validate.notNull(o, "WpsEntity");
+        Validate.notNull(o.getIdentifier(), "WpsEntity Identifier");
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("wpsIdentifier", o.getIdentifier());
@@ -79,8 +85,13 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
         // delete all processes of wps
         doNamedQuery("wpsprocess.deleteByWps", parameters);
-        
+
         super.remove(o);
         requestCommit();
+    }
+
+    @Override
+    public WpsEntity find(Object primaryKey) {
+        return getEntityManager().find(WpsEntity.class, primaryKey);
     }
 }

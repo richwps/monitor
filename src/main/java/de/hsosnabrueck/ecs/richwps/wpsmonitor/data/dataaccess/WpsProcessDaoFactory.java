@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Factory for WpsProcessDataAccess-objects.
@@ -35,7 +35,7 @@ public final class WpsProcessDaoFactory implements Factory<WpsProcessDataAccess>
      * create()-Method
      */
     public WpsProcessDaoFactory(final Factory<WpsProcessDataAccess> defaultFactory) {
-        this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
+        this.defaultFactory = Validate.notNull(defaultFactory, "defaultFactory");
     }
 
     @Override

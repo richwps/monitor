@@ -24,7 +24,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,10 +71,10 @@ public class MeasureJob implements Job {
      * @param wpsClient WpsClient instance
      */
     public MeasureJob(final List<QosProbe> probes, final WpsProcessEntity entity, final QosDataAccess dao, final WpsClient wpsClient) {
-        this.probes = Param.notNull(probes, "probeService");
-        this.dao = Param.notNull(dao, "dao");
-        this.processEntity = Param.notNull(entity, "entity");
-        this.wpsClient = Param.notNull(wpsClient, "wpsClient");
+        this.probes = Validate.notNull(probes, "probeService");
+        this.dao = Validate.notNull(dao, "dao");
+        this.processEntity = Validate.notNull(entity, "entity");
+        this.wpsClient = Validate.notNull(wpsClient, "wpsClient");
 
         error = false;
     }

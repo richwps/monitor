@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Factory for {@link QosDataAccess}-Objects.
@@ -34,7 +34,7 @@ public final class QosDaoFactory implements Factory<QosDataAccess> {
      * @param defaultFactory Default Factory-instance
      */
     public QosDaoFactory(Factory<QosDataAccess> defaultFactory) {
-        this.defaultFactory = Param.notNull(defaultFactory, "defaultFactory");
+        this.defaultFactory = Validate.notNull(defaultFactory, "defaultFactory");
     }
 
     @Override

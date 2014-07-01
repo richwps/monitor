@@ -34,7 +34,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.io.File;
 import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
@@ -75,9 +75,9 @@ public class Monitor {
     public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorEventHandler eventHandler,
             MonitorBuilder builder) throws MonitorConfigException {
 
-        this.monitorControl = Param.notNull(monitorControl, "monitorControl");
-        this.builderInstance = Param.notNull(builder, "builder");
-        this.eventHandler = Param.notNull(eventHandler, "eventHandler");
+        this.monitorControl = Validate.notNull(monitorControl, "monitorControl");
+        this.builderInstance = Validate.notNull(builder, "builder");
+        this.eventHandler = Validate.notNull(eventHandler, "eventHandler");
         this.config = new MonitorConfig(propertiesFile);
 
         initGeneral();

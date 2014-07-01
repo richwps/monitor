@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Param;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class EntityDispatcher {
      * @param disassembler EntityDisassembler instance
      */
     public EntityDispatcher(EntityDisassembler disassembler) {
-        this.disassembler = Param.notNull(disassembler, "disassembler");
+        this.disassembler = Validate.notNull(disassembler, "disassembler");
     }
 
     /**
