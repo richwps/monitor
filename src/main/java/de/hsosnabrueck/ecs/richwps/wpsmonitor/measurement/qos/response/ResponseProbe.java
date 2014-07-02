@@ -23,7 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.QosProbe;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ResponseAvailabilityProbe extends QosProbe {
+public class ResponseProbe extends QosProbe {
 
     @Override
     public void execute(WpsRequest request, WpsResponse response) {

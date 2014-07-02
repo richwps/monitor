@@ -26,7 +26,6 @@ public class ResponseFactory implements Factory<QosProbe> {
 
     @Override
     public QosProbe create() {
-        return new ResponseAvailabilityProbe();
+        return new ResponseProbe();
     }
-
 }

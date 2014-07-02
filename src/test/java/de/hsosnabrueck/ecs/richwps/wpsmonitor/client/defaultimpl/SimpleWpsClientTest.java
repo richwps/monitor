@@ -15,8 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
@@ -46,6 +48,7 @@ public class SimpleWpsClientTest {
 
     private final static String WPS_URI = "http://localhost:8080/wps/WebProcessingService";
     private final static String TEST_REQUEST_FILE = "/request.xml";
+    private static WpsClientFactory wpsClientFactory;
 
     private static String rawRequest;
     private WpsProcessInfo info;
@@ -67,6 +70,7 @@ public class SimpleWpsClientTest {
 
     @BeforeClass
     public static void setUpClass() {
+        wpsClientFactory = new WpsClientFactory(new SimpleWpsClientFactory());
         StringBuilder buf = new StringBuilder();
         Scanner scan = null;
 
@@ -97,7 +101,11 @@ public class SimpleWpsClientTest {
 
     @Before
     public void setUp() {
-        client = new SimpleWpsClientFactory().create();
+        try {
+            client = wpsClientFactory.create();
+        } catch (CreateException ex) {
+            fail("can't create WPS");
+        }
 
         if (rawRequest == null || rawRequest.equals("")) {
             fail("Can't load testrequest from file");

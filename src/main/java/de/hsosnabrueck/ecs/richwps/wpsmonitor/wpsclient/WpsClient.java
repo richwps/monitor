@@ -27,7 +27,8 @@ public interface WpsClient {
      * should call WpsRequest.prepareRequest() at real execution Time.
      * WpsRequest.prepareRequest() sets the now-time as a new Date() Object.
      *
-     * e.g.      <code>
+     * e.g.      
+     * <code><pre>
      *     public void execute(final WpsRequest request) {
      *          // prepare client
      *          // do some stuff
@@ -35,6 +36,7 @@ public interface WpsClient {
      *          HttpResponse response = specificCode.executeRequest(niceThingsToDo);
      *          WpsResponse response = new WpsResponse ..
      *     }
+     * </pre>
      * </code>
      *
      * The return value WpsResponse should also contain the accurate

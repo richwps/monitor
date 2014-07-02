@@ -54,7 +54,7 @@ public class ResponseEntity extends AbstractQosEntity {
     }
 
     @Override
-    public String getDataAsString() {
+    public String toString() {
         return (responseTime != null) ? "Responsetime: " + responseTime.toString() : "Was not reachable";
     }
 
@@ -89,10 +89,4 @@ public class ResponseEntity extends AbstractQosEntity {
         }
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "de.hsosnabrueck.ecs.richwps.wpsmonitor.qos.response.ResponseEntity[ id=" + id + " ]";
-    }
-
 }

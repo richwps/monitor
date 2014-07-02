@@ -39,11 +39,6 @@ public class ExampleQos extends AbstractQosEntity{
         return "exampleMeasurement";
     }
 
-    @Override
-    public String getDataAsString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public String getResult() {
         return result;
     }

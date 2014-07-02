@@ -166,7 +166,7 @@ public class MeasuredDataEntity implements Serializable {
         StringBuilder builder = new StringBuilder();
 
         for (AbstractQosEntity e : data) {
-            builder.append(e.getDataAsString());
+            builder.append(e);
             builder.append("\n");
         }
 

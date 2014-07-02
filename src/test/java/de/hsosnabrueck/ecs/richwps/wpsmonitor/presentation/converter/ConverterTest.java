@@ -122,12 +122,18 @@ public class ConverterTest {
     public void testJsonStrategyOutput() {
         Assert.assertTrue(
                 new JsonPresentateStrategy().presentate(dispatch.dispatchToConverter(data))
-                .equals("{\"exampleMeasurement\":{\"sum\":84}}")
+                .equals("{\n"
+                        + "  \"MyTestConverter\": {\n"
+                        + "    \"sum\": 84\n"
+                        + "  }\n"
+                        + "}")
         );
     }
 
     public static void main(String[] args) {
+        ConverterTest.setUpClass();
         ConverterTest t = new ConverterTest();
+
         t.setUp();
         PresentateStrategy json = new JsonPresentateStrategy();
         System.out.println(json.presentate(t.dispatch.dispatchToConverter(t.data)));

@@ -100,11 +100,8 @@ public abstract class AbstractQosEntity implements Serializable {
         return true;
     }
 
-    public abstract String getDataAsString();
-
     @Override
     public String toString() {
         return "de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
     }
-
 }

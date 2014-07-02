@@ -154,7 +154,11 @@ public class MeasureJob implements Job {
         List<AbstractQosEntity> measuredDatas = new ArrayList<AbstractQosEntity>();
 
         for (QosProbe p : probes) {
-            measuredDatas.add(p.getMeasuredData());
+            AbstractQosEntity measuredData = p.getMeasuredData();
+            
+            if(measuredData != null) {
+                measuredDatas.add(measuredData);
+            }
         }
 
         return measuredDatas;

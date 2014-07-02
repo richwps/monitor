@@ -93,13 +93,13 @@ public class MonitorProperties extends javax.swing.JDialog {
         formatter.setOverwriteMode(true);
         timeSpinner.setEditor(de);
 
-        jLabel1.setText("at time");
+        jLabel1.setText("Everyday at");
 
-        jLabel3.setText("Days");
+        jLabel3.setText("Days.");
 
         deleteIsActiveCheckbox.setText("Delete QoS-Data");
 
-        jLabel2.setText("all");
+        jLabel2.setText("older than");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,7 +118,7 @@ public class MonitorProperties extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

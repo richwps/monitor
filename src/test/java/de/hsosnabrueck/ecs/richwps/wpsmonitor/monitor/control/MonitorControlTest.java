@@ -244,28 +244,28 @@ public class MonitorControlTest {
 
         Boolean check = true;
         try {
-            Boolean registred = mControl.createAndScheduleProcess(null);
+            mControl.createAndScheduleProcess(null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
 
         try {
-            Boolean registred = mControl.createAndScheduleProcess(null, processIdentifier);
+            mControl.createAndScheduleProcess(null, processIdentifier);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
 
         try {
-            Boolean registred = mControl.createAndScheduleProcess(wpsIdentifier, null);
+            mControl.createAndScheduleProcess(wpsIdentifier, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
 
         try {
-            Boolean registred = mControl.createAndScheduleProcess(null, null);
+            mControl.createAndScheduleProcess(null, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
@@ -301,7 +301,9 @@ public class MonitorControlTest {
         c.setTime(new Date());
         c.add(Calendar.DATE, 1);
         
-        Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(p);
+        if(!mControl.createAndScheduleProcess(p)) {
+            fail("Can't create and schedule process.");
+        }
         
         return new TriggerConfig(new Date(), c.getTime(), 30, DateBuilder.IntervalUnit.MINUTE);
     }
