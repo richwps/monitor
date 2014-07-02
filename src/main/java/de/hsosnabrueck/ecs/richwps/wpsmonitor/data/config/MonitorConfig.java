@@ -27,8 +27,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Representate the configuration of a {@link Monitor} instance. For this
  * purpose, the MonitorConfig will be used a extended version of the
- * {@link Properties} class. All configurations will be readed out of a
- * properties file. If the save-method called, all changed properties will be
+ * {@link Properties} class. All configurations will be read out of a
+ * properties file. If the save-method is called, all changed properties will be
  * written back into the properties file.
  *
  * If a config is not valid, then the default properties is used as fallback.
@@ -62,9 +62,9 @@ public final class MonitorConfig {
 
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
         this.properties = new Properties(defaultProperties);
-        this.propertiesFile = propertiesFile == null ? new File("monitor.properties") : propertiesFile;
-        /* magic string because of, if u use a valid propertie file, 
-         then u can decide which name the propertie file has*/
+        this.propertiesFile = propertiesFile == null && propertiesFile.exists() ? new File("monitor.properties") : propertiesFile;
+        /* Using magic string because, if you use a valid propertie file, 
+         then you can decide which name the propertie file has */
 
         initPropertiesObject();
         readProperties();
@@ -156,8 +156,8 @@ public final class MonitorConfig {
     }
 
     /**
-     * Calendar instance which holds the time (HH:mm) when Qos measurement data
-     * should be deleted (Trigger-time of the cleanup job is meaned here).
+     * Calendar instance which contains the point of time (HH:mm) when Qos measurement data
+     * should be deleted (Trigger-time of the cleanup job is meant here).
      *
      * @return Calendar instance
      */
@@ -166,8 +166,8 @@ public final class MonitorConfig {
     }
 
     /**
-     * Calendar instance which holds the time (HH:mm) when Qos measurement data
-     * should be deleted (Trigger-time of the cleanup job is meaned here).
+     * Calendar instance which contains the point of time (HH:mm) when Qos measurement data
+     * should be deleted (Trigger-time of the cleanup job is meant here).
      *
      * @param deleteTime Calendar instance
      */
@@ -178,7 +178,7 @@ public final class MonitorConfig {
     }
 
     /**
-     * Is the cleanup job active.
+     * Checks if the cleanup job is active.
      *
      * @return true if active, otherwise false
      */
@@ -187,7 +187,7 @@ public final class MonitorConfig {
     }
 
     /**
-     * Is the cleanup job active.
+     * Sets the cleanup job to active.
      *
      * @param deleteJobActiv true for active, otherwise false
      */

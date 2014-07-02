@@ -27,12 +27,12 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**
- * In Quartz can only one {@link JobFactory} be registred at the same time.
+ * Only one {@link JobFactory} can be registred in Quartz at the same time.
  * However the WpsMonitor uses factories to inject all necessary dependencies
  * into the new objects. This approach is also used at new Job instances.
  *
- * So the JobFactoryService which implements the JobFactory interface, stores
- * other JobFactory instances and delegate the newJob-calls to the right
+ * So the JobFactoryService, which implements the JobFactory interface, stores
+ * other JobFactory instances and delegates the newJob-calls to the right
  * registred JobFactory instance. The right {@link JobFactory} instance is
  * identified by the Job.class Class.
  *
@@ -53,10 +53,10 @@ public class JobFactoryService implements JobFactory {
     }
 
     /**
-     * Checks if a {@link JobFactory} instance is allready registred.
+     * Checks if a {@link JobFactory} instance is already registered.
      *
      * @param o Class instance
-     * @return true if allready registred, otherwise false will be returned
+     * @return true if already registered, otherwise false
      */
     public boolean containsKey(final Class<? extends Job> o) {
         return classFactoryMap.containsKey(o);
@@ -77,7 +77,7 @@ public class JobFactoryService implements JobFactory {
      * Get a JobFactory.
      *
      * @param o Class instance
-     * @return JobFactory instance if registred, otherwise null will be returned
+     * @return JobFactory instance if registered, otherwise null
      */
     public JobFactory get(Class<? extends Job> o) {
         return classFactoryMap.get(o);

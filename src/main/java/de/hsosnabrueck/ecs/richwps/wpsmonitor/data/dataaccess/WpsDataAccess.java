@@ -19,21 +19,21 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import java.util.List;
 
 /**
- * DataAcces for WpsEntity-objects
+ * DataAcces for WpsEntity-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsDataAccess extends DataAccess<WpsEntity> {
 
     /**
-     * Gets all WpsEntity-objects
+     * Gets all WpsEntity-objects.
      *
      * @return List of WpsEntity objects
      */
     public List<WpsEntity> getAll();
     
     /**
-     * Find a WpsEntity instance by its identifier String.
+     * Finds a WpsEntity instance by its identifier String.
      * 
      * @param wpsIdentifier WpsIdentifier String
      * @return WpsEntity instance
@@ -41,7 +41,7 @@ public interface WpsDataAccess extends DataAccess<WpsEntity> {
     public WpsEntity find(String wpsIdentifier);
     
     /**
-     * Removes a stored {@link WpsEntity} 
+     * Removes a stored {@link WpsEntity}.
      * 
      * @param wpsIdentifier Wps entity identifier
      */

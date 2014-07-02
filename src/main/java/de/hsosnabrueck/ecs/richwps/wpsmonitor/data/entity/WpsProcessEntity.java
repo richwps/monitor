@@ -17,31 +17,31 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 
 /**
- *
+ * Entity for WpsProcesses.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
 @NamedQueries({
     /**
-     * Gets all WpsProcess-entities by wps identifier
+     * Gets all WpsProcess-entities by wps identifier.
      */
     @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier"),
 
     /**
-     * Gets all WpsProcess-entities
+     * Gets all WpsProcess-entities.
      */
     @NamedQuery(name = "wpsprocess.getAll", query = "SELECT t FROM WpsProcessEntity t"),
 
     /**
-     * Gets a specific process entity by wps.identifier and process.identifier
+     * Gets a specific process entity by wps.identifier and process.identifier.
      */
     @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier"),
 
     /**
-     * Deletes all process entities that matches the given wps identifier
+     * Deletes all process entities that match the given wps identifier.
      */
     @NamedQuery(name = "wpsprocess.deleteByWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsIdentifier")
 })

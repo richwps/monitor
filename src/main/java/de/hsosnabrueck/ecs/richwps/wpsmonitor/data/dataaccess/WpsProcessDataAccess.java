@@ -19,14 +19,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
 
 /**
- * DataAccess for WpsProcessEntity-objects.
+ * DataAccess for {@link WpsProcessEntity}-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
 
     /**
-     * Find a WpsProcessEntity-object that matches the given wpsIdentifier &&
+     * Finds a {@link WpsProcessEntity}-object that matches the given wpsIdentifier &&
      * processIdentifier.
      *
      * @param wpsIdentifier Identifier of wps-entity
@@ -36,7 +36,7 @@ public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
     public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Gets all WpsProcessEntity-objects.
+     * Gets all {@link WpsProcessEntity}-objects.
      *
      * @param wpsIdentifier Identifier of wps-entity
      * @return List of all WpsProcessEntity-objects; null if no result is found
@@ -44,7 +44,7 @@ public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
     public List<WpsProcessEntity> getAll(final String wpsIdentifier);
 
     /**
-     * Deletes all processes from the wps that machtes the given wpsIdentifier.
+     * Deletes all processes from the wps that match the given wpsIdentifier.
      *
      * @param wpsIdentifier Identifier of wps-entity.
      */

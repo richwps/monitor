@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Absract EntityConverter which will be filled up with
- * {@link AbstractQosEntity} for which the specific converter instance take care
+ * Absract EntityConverter, which will be filled up with
+ * {@link AbstractQosEntity}, which the specific converter instance takes care
  * of.
  *
- * The assignation is evaluated over AbstractQosEntity's getEntityName-method.
+ * The assignment is evaluated over AbstractQosEntity's getEntityName-method.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -57,9 +57,14 @@ public abstract class EntityConverter {
     /**
      * Starts the convert process.
      *
-     * @return Object which can be outputet over toString or JAXB or JSON ..
+     * @return Object which can be displayed over toString or JAXB or JSON ..
      */
     public abstract Object convert();
     
+    /**
+     * Gets the converter name.
+     * 
+     * @return String
+     */
     public abstract String getName();
 }

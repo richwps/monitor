@@ -17,22 +17,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Version;
 
 /**
- * Entity for WPS
+ * Entity for WPS.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity
 @NamedQueries({
     /**
-     * Selects all wps entities
+     * Selects all wps entities.
      */
     @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t"),
 
     /**
-     * Selects a specific wps that matchtes the given identifier
+     * Selects a specific wps that matches the given identifier parameter.
      */
     @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier"),
 })

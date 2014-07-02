@@ -40,23 +40,23 @@ public class RestInterface {
 
     /**
      * Concrete PresentateStragey instance which should be used. Is used as
-     * dependencie for the registred routes.
+     * dependency for the registred routes.
      */
     private final PresentateStrategy strategy;
 
     /**
-     * RouteRegister instance - Wrapper for Spark's static methods
+     * RouteRegister instance - Wrapper for Spark's static methods.
      */
     private final RouteRegister routeRegister;
 
     /**
-     * MonitorControl instance to interact with the Monitor Is used as
-     * dependencie for the registred routes.
+     * MonitorControl instance to interact with the Monitor. It is used as
+     * dependency for the registred routes.
      */
     private final MonitorControl monitorControl;
 
     /**
-     * DispatcherFactory instance. Is used as dependencie for the registred
+     * DispatcherFactory instance. It is used as dependency for the registred
      * routes.
      */
     private final DispatcherFactory dispatchFactory;
@@ -68,8 +68,8 @@ public class RestInterface {
     private Integer port;
 
     /**
-     * Map in which stored the MonitorRoute instances for the right
-     * {@link HttpOperation}
+     * Map which stores the MonitorRoute instances for the right
+     * {@link HttpOperation}.
      */
     private EnumMap<HttpOperation, Set<MonitorRoute>> routeMap;
 
@@ -102,7 +102,7 @@ public class RestInterface {
     }
 
     /**
-     * Add a MonitorRoute instance to the given HttpOperation index.
+     * Adds a MonitorRoute instance to the given HttpOperation index.
      *
      * @param operation {@link HttpOperation} instance
      * @param RouteObj {@link MonitorRoute} instance
@@ -116,8 +116,8 @@ public class RestInterface {
     }
 
     /**
-     * Creates a MonitorRoute instance which will call instance =
-     * monitorRouteFactory.create() and instance.init() at each request.
+     * Creates a MonitorRoute instance which will call <code>MonitorRoute instance =
+     * monitorRouteFactory.create()</code> and <code>instance.init()</code> at each request.
      *
      * @param operation {@link HttpOperation} instance
      * @param monitorRouteFactory Factory&lt;MonitorRoute> instance
@@ -159,7 +159,7 @@ public class RestInterface {
     }
 
     /**
-     * Initializt and register all added MonitorRoute instances.
+     * Initializes and registers all added {@link MonitorRoute} instances.
      */
     public void start() {
         spark.Spark.setPort(port);
@@ -188,6 +188,11 @@ public class RestInterface {
         return port;
     }
 
+    /**
+     * Sets the port Spark listens on.
+     * 
+     * @param port Port number
+     */
     public void setPort(Integer port) {
         if(port != null && port > 0) {
             this.port = port;

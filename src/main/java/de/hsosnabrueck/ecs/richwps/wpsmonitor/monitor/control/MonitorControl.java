@@ -33,7 +33,7 @@ import org.quartz.TriggerKey;
 public interface MonitorControl {
 
     /**
-     * Persists a {@link WpsEntity} instance. Fires a "monitorcontrol.createWps"
+     * Stores a {@link WpsEntity} instance. Fires a "monitorcontrol.createWps"
      * event.
      *
      * @param wpsEntity WpsEntity identifier
@@ -42,7 +42,7 @@ public interface MonitorControl {
     public Boolean createWps(final WpsEntity wpsEntity);
 
     /**
-     * Creates and persists a {@link WpsEntity} instance. Fires a
+     * Creates and stores a {@link WpsEntity} instance. Fires a
      * "monitorcontrol.createWps" event.
      *
      * @param wpsIdentifier WpsEntity identifier
@@ -52,9 +52,9 @@ public interface MonitorControl {
     public Boolean createWps(final String wpsIdentifier, final URI uri);
 
     /**
-     * Creates and persists a {@link WpsProcessEntity} instance and register a
-     * new Job in the scheduler with the key name of process identifier and the
-     * group name of wps identifier.
+     * Creates and stores a {@link WpsProcessEntity} instance and registers a
+     * new Job in the scheduler with the JobKey name as process identifier and
+     * the group name as wps identifier.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -63,9 +63,9 @@ public interface MonitorControl {
     public Boolean createAndScheduleProcess(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Persists a {@link WpsProcessEntity} instance and register a new Job in
-     * the scheduler with the key name of process identifier and the group name
-     * of wps identifier.
+     * Stores a {@link WpsProcessEntity} instance and registers a new Job in the
+     * scheduler with the JobKey name as process identifier and the group name
+     * as wps identifier.
      *
      * @param processEntity WpsProcessEntity instance
      * @return true if sucessfully created, otherwise false
@@ -73,7 +73,7 @@ public interface MonitorControl {
     public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity);
 
     /**
-     * Creates and saves a trigger for the job which matched the JobKey name of
+     * Creates and saves a trigger for the job which matches the JobKey name of
      * processIdentifier and group name of wpsIdentifier.
      *
      * @param wpsIdentifier WpsEntity identifier
@@ -84,7 +84,7 @@ public interface MonitorControl {
     public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
 
     /**
-     * Creates and saves a trigger for the job which matched the JobKey name of
+     * Creates and saves a trigger for the job which matches the JobKey name of
      * processEntity.identifier and group name of processEntity.wps.identifier.
      *
      * @param processEntity WpsProcessEntity instance
@@ -94,8 +94,8 @@ public interface MonitorControl {
     public TriggerKey saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
 
     /**
-     * Set a test request string to {@link WpsProcessEntity} instance which is
-     * matched by the given wpsIdentifier and processIdentifier String.
+     * Sets a test request string to {@link WpsProcessEntity} instance which
+     * matches the given wpsIdentifier and processIdentifier String.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -105,7 +105,7 @@ public interface MonitorControl {
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
 
     /**
-     * Set a test request string to {@link WpsProcessEntity} instance.
+     * Sets a test request string to {@link WpsProcessEntity} instance.
      *
      * @param processEntity WpsProcessEntity instance.
      * @param testRequest Testrequest string as XML format
@@ -145,7 +145,7 @@ public interface MonitorControl {
     public Boolean deleteWps(final String wpsIdentifier);
 
     /**
-     * Delete the given {@link WpsEntity} instance.
+     * Deletes the given {@link WpsEntity} instance.
      *
      * @param wpsEntity WpsEntity instance
      * @return true if successfully removed
@@ -226,8 +226,8 @@ public interface MonitorControl {
     public void pauseMonitoring(final WpsProcessEntity processEntity);
 
     /**
-     * Get all {@link WpsProcessEntity} instances of the {@link WpsEntity} which
-     * is identified by the identifier string.
+     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
+     * which are identified by the identifier string.
      *
      * @param identifier WpsEntity identifier
      * @return List of WpsProcessEntity instances
@@ -235,8 +235,8 @@ public interface MonitorControl {
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
 
     /**
-     * Get all {@link WpsProcessEntity} instances of the {@link WpsEntity} which
-     * is identified by the wpsEntity.identifier string.
+     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
+     * which are identified by the wpsEntity.identifier string.
      *
      * @param wpsEntity WpsEntity instance
      * @return List of WpsProcessEntity instances
@@ -244,8 +244,8 @@ public interface MonitorControl {
     public List<WpsProcessEntity> getProcessesOfWps(final WpsEntity wpsEntity);
 
     /**
-     * Get all {@link TriggerConfig} instances of the job which is identified by
-     * the &lt;wpsIdentifier, processIdentifier> {@link JobKey}.
+     * Gets all {@link TriggerConfig} instances of the job which are identified
+     * by the &lt;wpsIdentifier, processIdentifier> {@link JobKey}.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -254,8 +254,8 @@ public interface MonitorControl {
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Get all {@link TriggerConfig} instances of the job which is identified by
-     * the &lt;WpsProcessEntity.Identifier,
+     * Gets all {@link TriggerConfig} instances of the job which are identified
+     * by the &lt;WpsProcessEntity.Identifier,
      * WpsProcessEntity.wps.processIdentifier> {@link JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
@@ -264,9 +264,9 @@ public interface MonitorControl {
     public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity);
 
     /**
-     * Get all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the specific {@link WpsProcessEntity} which
-     * is identified by the wpsIdentifier and processIdentifier string.
+     * Gets all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by the wpsIdentifier and processIdentifier string.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -275,8 +275,8 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Get all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the given {@link WpsProcessEntity}.
+     * Gets all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the given {@link WpsProcessEntity}.
      *
      * @param processEntity WpsProcessEntity instance
      * @return List of MeasuredDataEntity instances
@@ -284,8 +284,8 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity);
 
     /**
-     * Get all {@link MeasuredDataEntity} instances in the given {@link Range}
-     * which was stored in the measure process of the Job of the specific
+     * Gets all {@link MeasuredDataEntity} instances in the given {@link Range}
+     * which were stored in the Jobs' measure process of the specific
      * {@link WpsProcessEntity} which is identified by the wpsIdentifier and
      * processIdentifier string.
      *
@@ -297,8 +297,8 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range);
 
     /**
-     * Get all {@link MeasuredDataEntity} instances in the given {@link Range}
-     * which was stored in the measure process of the Job of the given
+     * Gets all {@link MeasuredDataEntity} instances in the given {@link Range}
+     * which were stored in the Jobs' measure process of the given
      * {@link WpsProcessEntity}.
      *
      * @param processEntity WpsProcessEntity instance
@@ -308,9 +308,9 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range);
 
     /**
-     * Delete all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the specific {@link WpsProcessEntity} which
-     * is identified by the wpsIdentifier and processIdentifier string.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by the wpsIdentifier and processIdentifier string.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -318,18 +318,18 @@ public interface MonitorControl {
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Delete all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the given {@link WpsProcessEntity}.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the given {@link WpsProcessEntity}.
      *
      * @param processEntity WpsProcessEntity instance
      */
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity);
 
     /**
-     * Delete all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the specific {@link WpsProcessEntity} which
-     * is identified by the wpsIdentifier and processIdentifier string and they
-     * are older as olderAs.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by the wpsIdentifier and processIdentifier string and they are
+     * older as olderAs.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -338,9 +338,9 @@ public interface MonitorControl {
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs);
 
     /**
-     * Delete all {@link MeasuredDataEntity} instances which was stored in the
-     * measure process of the Job of the specific {@link WpsProcessEntity} and
-     * they are older as olderAs.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} and they
+     * are older as olderAs.
      *
      * @param processEntity WpsProcessEntity instance
      * @param olderAs Date instance
@@ -348,7 +348,7 @@ public interface MonitorControl {
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
 
     /**
-     * Delete a trigger whith the given triggerKey.
+     * Deletes a trigger whith the given triggerKey.
      *
      * @param triggerKey {@link TriggerKey} instance
      * @return true if successfully deleted
@@ -356,17 +356,35 @@ public interface MonitorControl {
     public Boolean deleteTrigger(final TriggerKey triggerKey);
 
     /**
-     * Get all WpsEntity instances.
+     * Gets all WpsEntity instances.
      *
      * @return List of {@link WpsEntity} instances
      */
     public List<WpsEntity> getWpsList();
 
     /**
-     * Delete all {@link MeasuredDataEntity} instances which are older as
+     * Deletes all {@link MeasuredDataEntity} instances which are older as
      * olderAs.
      *
      * @param olderAs Date instance
      */
     public void deleteMeasuredData(final Date olderAs);
+
+    /**
+     * Checks if the Job of the given {@link WpsProcessEntity} exists.
+     *
+     * @param wpsProcess {@link WpsProcessEntity} instance
+     * @return true if the job is exists
+     */
+    public Boolean isProcessScheduled(final WpsProcessEntity wpsProcess);
+
+    /**
+     * Checks if the Job of the {@link WpsProcessEntity}, which is identified
+     * through the wpsIdentifier and processIdentifier String, exists.
+     *
+     * @param wpsIdentifier {@link WpsEntity} identifier
+     * @param processIdentifier {@link WpsProcessEntity} identifier
+     * @return true if the job is exists
+     */
+    public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier);
 }

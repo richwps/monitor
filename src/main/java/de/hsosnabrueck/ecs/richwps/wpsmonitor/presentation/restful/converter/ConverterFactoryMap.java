@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Encapsulate a complex datastructure.
+ * Encapsulates a complex datastructure.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ConverterFactoryMap  {
-    private Map<String, Set<Factory<EntityConverter>>> converterMap;
+    private final Map<String, Set<Factory<EntityConverter>>> converterMap;
 
     public ConverterFactoryMap() {
         this.converterMap = new HashMap<String, Set<Factory<EntityConverter>>>();

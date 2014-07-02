@@ -37,7 +37,7 @@ public abstract class ConfiguredEntityManagerFactory {
     private static final Logger log = LogManager.getLogger();
 
     static {
-       
+
         emf = Persistence.createEntityManagerFactory(JpaPuConfig.PERSISTENCE_UNIT);
         entityStorage = new ThreadLocal<EntityManager>();
         entityManagerList = new ArrayList<EntityManager>();
@@ -82,6 +82,7 @@ public abstract class ConfiguredEntityManagerFactory {
 
     /**
      * Returns an {@link EntityManager} which is stored by the called Thread.
+     *
      * @return EntityManager instance
      */
     public static EntityManager getThreadEntityManager() {
@@ -97,8 +98,8 @@ public abstract class ConfiguredEntityManagerFactory {
     }
 
     /**
-     * Creates an {@link EntityManager}
-     * 
+     * Creates an {@link EntityManager}.
+     *
      * @return EntityManager instance
      */
     public static EntityManager createEntityManager() {

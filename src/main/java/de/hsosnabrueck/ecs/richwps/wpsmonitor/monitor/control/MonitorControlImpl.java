@@ -35,7 +35,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -45,8 +44,7 @@ import org.quartz.TriggerKey;
 /**
  * Implementation of the MonitorControl interface. This implementation tries to
  * work like a request-response principe. That means, that every method call
- * creates a new DataAccess-instance. Possible close operations musst be
- * handeled by the specific DataAccess implementation.
+ * creates a new DataAccess-instance. 
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -265,6 +263,10 @@ public class MonitorControlImpl implements MonitorControl {
 
         WpsDataAccess wpsDao = null;
         WpsEntity wps = getWps(oldWpsIdentifier);
+        
+        if(wps.getIdentifier().equals(newWpsIdentifier) && wps.getUri().equals(newUri)) {
+            return wps;
+        }
 
         try {
             wpsDao = wpsDaoFactory.create();
@@ -293,10 +295,9 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     /**
-     * yes, here i can logically call delete process, but the cascade delete
-     * behavior is already in the specific data access implementations
-     * implemented. If i call deleteProcess here, a redundant unnecessary
-     * beahvior it happens
+     * The delete process can be called logically here, but the cascade delete
+     * behavior is already implemented in the specific data access implementations.
+     * If the call deleteProcess is called here, there is an unnecessary redundancy.
      */
     @Override
     public Boolean deleteWps(final String wpsIdentifier) {
@@ -780,5 +781,31 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(processEntity.getWps(), "processEntitie's Wps instance");
 
         return getJobKey(processEntity.getWps().getIdentifier(), processEntity.getIdentifier());
+    }
+
+    @Override
+    public Boolean isProcessScheduled(final WpsProcessEntity processEntity) {
+        Validate.notNull(processEntity, "processEntity");
+
+        String wpsIdentifier = processEntity.getWps()
+                .getIdentifier();
+        String processIdentifier = processEntity
+                .getIdentifier();
+        
+        return isProcessScheduled(wpsIdentifier, processIdentifier);
+    }
+
+    @Override
+    public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier) {
+        JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
+        Boolean result = false;
+        
+        try {
+            result = schedulerControl.isJobRegistred(jobKey);
+        } catch (SchedulerException ex) {
+            log.warn(ex);
+        }
+        
+        return result;
     }
 }

@@ -33,7 +33,7 @@ import org.quartz.DateBuilder;
 import org.quartz.TriggerKey;
 
 /**
- * Representates the GUI element for a job entry to create and add triggers
+ * Represents the GUI element for a job entry to create and add triggers
  * to the monitor.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>

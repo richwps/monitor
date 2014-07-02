@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
 
 /**
- * Factory Interface for Factories.
- * 
+ * Factory Interface for factories.
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  * @param <T> Type which will be created by create()
  */
 public interface Factory<T> {
+
     /**
      * Create an instance of type &lt;T>
+     *
      * @return The new instance of &lt;T>
      * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException
      */

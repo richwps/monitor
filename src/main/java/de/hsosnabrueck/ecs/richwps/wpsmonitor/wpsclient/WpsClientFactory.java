@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;

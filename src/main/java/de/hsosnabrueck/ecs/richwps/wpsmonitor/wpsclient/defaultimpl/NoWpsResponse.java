@@ -16,15 +16,15 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl;
 
 /**
- * Exception which will be thrown if the given Response was not an valid
- * WPS-Server respond. (e.g. wrong format; xml excepted)
+ * Exception which will be thrown if the given response was not a valid
+ * WPS-Server response. (e.g. wrong format; xml expected)
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class NoWpsResponse extends Exception {
 
     public NoWpsResponse() {
-        super("Can't interprete the server respond.");
+        super("Can't interprete the server response.");
     }
 
 }

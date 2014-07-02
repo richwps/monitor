@@ -25,9 +25,9 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
 
 /**
- * Evaluates if a job cant measure because of an exception. In addition the
- * listener fire its own event over the MonitorEventHandler:
- * scheduler.job.wasexecuted with the process entity as message if an job was
+ * Evaluates if a job can't be measured because of an exception. In addition,
+ * the listener fires its own event over the MonitorEventHandler:
+ * scheduler.job.wasexecuted with the process entity as message if a job was
  * executed and scheduler.job.paused with the process entity as message if a job
  * cant measure a wps process.
  *
@@ -36,12 +36,12 @@ import org.quartz.JobListener;
 public class MeasureJobListener implements JobListener {
 
     /**
-     * WpsProcessDataAccess instance
+     * WpsProcessDataAccess instance.
      */
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
 
     /**
-     * MonitorEventHandler instance
+     * MonitorEventHandler instance.
      */
     private final MonitorEventHandler eventHandler;
 
@@ -66,22 +66,22 @@ public class MeasureJobListener implements JobListener {
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
         /*
-         Nothing to do here yet
+         Nothing to do here yet.
          */
     }
 
     @Override
     public void jobExecutionVetoed(JobExecutionContext context) {
         /*
-         Nothing to do here yet
+         Nothing to do here yet.
          */
     }
 
     /**
-     * Starts a new worker thread which handle the jobWasExecuted-Event because
-     * of in this event happens some DataAcces-interactions which can slow the
-     * system because of the listener runs in the mainthread and the jobs runs
-     * in its own thread
+     * Starts a new worker thread which handles the jobWasExecuted-Event because
+     * within this event some DataAcces-interactions are happening which can
+     * slow down the system because the listener runs in the mainthread and
+     * the jobs runs in its own thread.
      *
      * @see JobExecutedHandlerThread
      * @param context JobExecutionContext contexten, injected by quartz
@@ -90,7 +90,7 @@ public class MeasureJobListener implements JobListener {
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
         try {
-            if(context.getJobInstance() instanceof MeasureJob) {
+            if (context.getJobInstance() instanceof MeasureJob) {
                 Thread handleJobWasExecuted = new JobExecutedHandlerThread(context, eventHandler, wpsProcessDaoFactory.create());
                 handleJobWasExecuted.start();
             }

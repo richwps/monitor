@@ -19,7 +19,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
 
 /**
- * Default Factory for WpsProcessDataAccess
+ * Default Factory for WpsProcessDataAccess.
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDaoDefaultFactory implements Factory<WpsProcessDataAccess> {

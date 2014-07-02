@@ -34,8 +34,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Representate a WpsProcessEntity instance and all monitoring and job
- * operations
+ * Represents a WpsProcessEntity instance and all monitoring and job
+ * operations..
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -192,10 +192,10 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
             if (response.isWpsException()) {
                 MessageDialogs.showError(mainFrame,
-                        "WPS Exception",
-                        "The testrequest proceed an Exception! "
-                        + "I will use the previous Version of the Testrequest."
-                        + "But, i will the old request shown after a restart. This give you a chance to edit the errornous Request. :)");
+                        "WPS exception",
+                        "The testrequest produced an exception! "
+                        + "I will use the previous version of the Testrequest."
+                        + "The old request is shown after a restart. This gives you a chance to edit the errornous request. :)");
 
                 result = false;
             }
@@ -214,7 +214,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }
 
     public void processRequestException(WpsProcessEntity process) {
-        log.debug("Exception Event triggered by {}", process);
+        log.debug("Exception event triggered by {}", process);
 
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
@@ -222,7 +222,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }
 
     public void monitoringPauseEvent(WpsProcessEntity process) {
-        log.debug("Pause Event triggered by {}", process);
+        log.debug("Pause event triggered by {}", process);
 
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             rescheduleButton.setEnabled(true);

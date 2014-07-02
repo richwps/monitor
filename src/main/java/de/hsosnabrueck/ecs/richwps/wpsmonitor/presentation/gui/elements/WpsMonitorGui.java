@@ -27,8 +27,8 @@ import javax.swing.JTextField;
 
 /**
  * Main frame of the monitor GUI. The monitor gets the Monitor instance as
- * constructor dependencie. The monitor GUI allows to add, remove or edit WPS,
- * WPSProcesses and Triggers. You can also show and remove the measured data by
+ * constructor dependency. The monitor GUI allows to add, remove or edit WPS,
+ * WPSProcesses and Triggers. You can also show and remove the measured data of the
  * wps process. You can stop and resume the monitoring of wps processes.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -38,7 +38,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     private final Monitor monitor;
 
     /**
-     * Creates new form WpsMonitorGui instance
+     * Creates new form WpsMonitorGui instance.
      *
      * @param monitor {@link Monitor} reference
      */

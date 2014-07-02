@@ -28,7 +28,7 @@ import org.quartz.SchedulerException;
 
 /**
  * Helper Thread for the {@link MeasureJobListener}. This approach tries to
- * relieve the main thread in which the {@link MeasureJobListener} is working.
+ * take the load off the main thread in which the {@link MeasureJobListener} is working.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -45,7 +45,7 @@ public class JobExecutedHandlerThread extends Thread {
         this.wpsProcessDao = wpsProcessDao;
         this.eventHandler = eventHandler;
 
-        super.setName("JobExecutedHandler");
+        //super.setName("JobExecutedHandler");
     }
 
     @Override

@@ -92,6 +92,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
     @Override
     public WpsEntity find(Object primaryKey) {
-        return getEntityManager().find(WpsEntity.class, primaryKey);
+        return getEntityManager()
+                .find(WpsEntity.class, primaryKey);
     }
 }

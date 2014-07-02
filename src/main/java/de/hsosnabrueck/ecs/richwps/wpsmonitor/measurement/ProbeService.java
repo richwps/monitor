@@ -24,12 +24,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * ProbeService can store multiple Factory&lt;QosProbe> factories which can
- * create various types of objects which extends the {@link QosProbe} interface.
+ * The ProbeService can store multiple Factory&lt;QosProbe> factories which can
+ * create various types of objects which extend the {@link QosProbe} interface.
  * The idea behind this service is, that everyone can register its own QosProbe
  * instance which is executed at each measurement process.
  *
- * However, jobs can be threads. To minimize siteeffects, the probeservice uses
+ * However, jobs can be threads. To minimize side effects, the probeservice uses
  * the factories to create a list of new QosProbe instances.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -44,7 +44,7 @@ public class ProbeService {
     }
 
     /**
-     * Add a probe factory.
+     * Adds a probe factory.
      *
      * @param probeFactory Factory&lt;QosProbe> instance
      * @return this for method chaining
@@ -66,7 +66,7 @@ public class ProbeService {
     }
 
     /**
-     * Creae a new list of {@link QosProbes}.
+     * Creates a new list of {@link QosProbes}.
      *
      * @return list of QosProbes
      */

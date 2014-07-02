@@ -24,7 +24,7 @@ public interface WpsClient {
     
     /**
      * Invoke the WpsClient to execute the given wpsRequest. The WpsClient
-     * should call WpsRequest.prepareRequest() at real execute Time.
+     * should call WpsRequest.prepareRequest() at real execution Time.
      * WpsRequest.prepareRequest() sets the now-time as a new Date() Object.
      *
      * e.g.      <code>
@@ -37,7 +37,7 @@ public interface WpsClient {
      *     }
      * </code>
      *
-     * The return value WpsResponse should also contains the accurate
+     * The return value WpsResponse should also contain the accurate
      * response-Time. Accurate response-time means the response time of the
      * Server and not the time after the WpsClient has succesfully processed the
      * execute-Method.

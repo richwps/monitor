@@ -16,8 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 
 /**
- * This Exception should be thrown if the wps server are offline, or if the
- * answer not of type XML.
+ * This Exception should be thrown if the wps server is offline, or the
+ * answer is not of type XML.
  *
  * Normally this Exception is never thrown, but used from a WPS Client.
  * Instances of this Class will be created if the WPS-Client detects that the

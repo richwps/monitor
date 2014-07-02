@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
@@ -33,7 +33,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsPro
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
@@ -49,9 +48,9 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
 /**
- * Builder pattern to build a Monitor-instance. Call first setupDefault() and
- * then personalize the build with the with-methods. If an exception occours,
- * the builder will catch the exception and rethrow its as a BuilderException.
+ * Builder pattern to build a Monitor-instance. First, call setupDefault() and
+ * then personalize the build with the with-methods. If an exception occurs, the
+ * builder will catch the exception and rethrow it as a BuilderException.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -68,12 +67,12 @@ public class MonitorBuilder {
     private JobFactoryService jobFactoryService;
 
     /**
-     * WpsClient-Factory
+     * WpsClient-Factory.
      */
     private WpsClientFactory wpsClientFactory;
 
     /**
-     * WpsClientConfig instance
+     * WpsClientConfig instance.
      */
     private WpsClientConfig wpsClientConfig;
 
@@ -98,12 +97,12 @@ public class MonitorBuilder {
     private WpsProcessDaoFactory wpsProcessDaoFactory;
 
     /**
-     * File object which should point to a *.properties file
+     * File object which should point to a *.properties file.
      */
     private File propertiesFile;
 
     /**
-     * Set the {@link ProbeService} instance.
+     * Sets the {@link ProbeService} instance.
      *
      * @param probeService ProbeService instance
      * @return MonitorBuilder instance
@@ -115,7 +114,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the properties filename which should be used.
+     * Sets the properties filename which should be used.
      *
      * @param fileName Properties filename
      * @return MonitorBuilder instance
@@ -133,7 +132,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link JobFactoryService}-instance.
+     * Sets the {@link JobFactoryService}-instance.
      *
      * @param jobFactoryService JobFactoryService instance
      * @return MonitorBuilder instance
@@ -145,7 +144,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link QosDaoFactory} instance.
+     * Sets the {@link QosDaoFactory} instance.
      *
      * @param qosDaoFactory QosDaoFactory instance
      * @return MonitorBuilder instance
@@ -157,7 +156,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link WpsDaoFactory} instance.
+     * Sets the {@link WpsDaoFactory} instance.
      *
      * @param wpsDaoFactory WpsDaoFactory instance
      * @return MonitorBuilder instance
@@ -169,7 +168,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link WpsProcessDaoFactory} instance.
+     * Sets the {@link WpsProcessDaoFactory} instance.
      *
      * @param wpsProcessDaoFactory WpsProcessDaoFactory instance
      * @return MonitorBuilder instance
@@ -181,8 +180,8 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link Factory&lt;QosDataAccess>} instance. Will be injected in a
-     * new QosDaoFactory instance.
+     * Sets the {@link Factory&lt;QosDataAccess>} instance. Will be injected in
+     * a new QosDaoFactory instance.
      *
      * @param defaultQosDaoFactory Factory&lt;QosDataAccess>
      * @return MonitorBuilder instance
@@ -194,8 +193,8 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link Factory&lt;WpsDataAccess>} instance. Will be injected in a
-     * new WpsDaoFactory instance.
+     * Sets the {@link Factory&lt;WpsDataAccess>} instance. Will be injected in
+     * a new WpsDaoFactory instance.
      *
      * @param defaultWpsDaoFactory Factory&lt;WpsDataAccess>
      * @return MonitorBuilder instance
@@ -207,7 +206,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link Factory&lt;WpsProcessDataAccess>} instance. Will be
+     * Sets the {@link Factory&lt;WpsProcessDataAccess>} instance. Will be
      * injected in a new WpsProcessDaoFactory instance.
      *
      * @param defaultWpsProcessDaoFactory Factory&lt;WpsProcessDataAccess>
@@ -220,20 +219,20 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link Factory&lt;WpsClient>} instance. Will be injected in a new
-     * WpsClientFactory instance.
+     * Sets the {@link Factory&lt;WpsClient>} instance. Will be injected in a
+     * new WpsClientFactory instance.
      *
      * @param wpsClientFactory
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsClientFactory(Factory<WpsClient> wpsClientFactory) {
-        this.wpsClientFactory = new WpsClientFactory(wpsClientFactory);
+        this.wpsClientFactory = new WpsClientFactory(wpsClientFactory, wpsClientConfig);
 
         return this;
     }
 
     /**
-     * Set the {@link WpsClientFactory} instance.
+     * Sets the {@link WpsClientFactory} instance.
      *
      * @param wpsClientFactory WpsClientFactory instance
      * @return MonitorBuilder instance
@@ -245,20 +244,26 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the {@link WpsClientConfig} instance. Calls setWpsClientConfig on the
-     * wpsClientFactory
+     * Sets the {@link WpsClientConfig} instance. Calls setWpsClientConfig on
+     * the wpsClientFactory
      *
      * @param config WpsClientConfig instance
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withWpsClientConfig(WpsClientConfig config) {
+        Validate.notNull(config, "config");
+
+        if (this.wpsClientFactory != null) {
+            this.wpsClientFactory.setWpsClientConfig(wpsClientConfig);
+        }
+
         this.wpsClientConfig = Validate.notNull(config, "config");
 
         return this;
     }
 
     /**
-     * Set the default {@link ProbeService} instance. {@link ProbeService} will
+     * Sets the default {@link ProbeService} instance. {@link ProbeService} will
      * be used.
      *
      * @return MonitorBuilder instance
@@ -268,7 +273,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default {@link QosDaoFactory} instance.
+     * Sets the default {@link QosDaoFactory} instance.
      * {@link QosDaoDefaultFactory} will be used.
      *
      * @return MonitorBuilder instance
@@ -278,7 +283,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default {@link WpsDaoFactory} instance.
+     * Sets the default {@link WpsDaoFactory} instance.
      * {@link WpsDaoDefaultFactory} will be used.
      *
      * @return MonitorBuilder instance
@@ -288,7 +293,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default {@link WpsProcessDaoFactory} instance.
+     * Sets the default {@link WpsProcessDaoFactory} instance.
      * {@link WpsProcessDaoDefaultFactory} will be used.
      *
      * @return MonitorBuilder instance
@@ -298,7 +303,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default {@link WpsClient} instance.
+     * Sets the default {@link WpsClient} instance.
      * {@link SimpleWpsClientFactory} will be used.
      *
      * @return MonitorBuilder instance
@@ -308,7 +313,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default {@link JobFactoryService} instance.
+     * Sets the default {@link JobFactoryService} instance.
      * {@link JobFactoryService} will be used.
      *
      * @return MonitorBuilder instance
@@ -318,7 +323,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Set the default properties file. monitor.properties will be used as
+     * Sets the default properties file. monitor.properties will be used as
      * filename.
      *
      * @return MonitorBuilder instance
@@ -345,7 +350,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Setups the default {@link SchedulerFactory} instance whith all
+     * Sets the default {@link SchedulerFactory} instance up whith all
      * dependencies.
      *
      * @return SchedulerFactory SchedulerFactory instance
@@ -371,7 +376,7 @@ public class MonitorBuilder {
      *
      * @return WpsDataAccess instance
      * @throws CreateException
-     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.BuilderException
+     * @throws BuilderException
      */
     public WpsDataAccess buildWpsDataAccess() throws CreateException, BuilderException {
         if (wpsDaoFactory == null) {
@@ -511,7 +516,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Setup the MonitorEventHandler
+     * Sets the MonitorEventHandler up.
      */
     private void setupEventHandler() {
         if (this.eventHandler == null) {

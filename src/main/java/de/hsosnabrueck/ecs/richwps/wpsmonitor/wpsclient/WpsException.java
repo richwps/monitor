@@ -19,13 +19,13 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
  * This Exception should be thrown if the XML response of a WPS server describes
  * a WPS-Exception answer.
  *
- * Normally this Exception is never thrown, but used from a WPS Client.
+ * Normally this Exception is never thrown, but used within a WPS Client.
  * Instances of this Class will be created if the WPS-Client detects a WPS
- * Exception answer and persist the instance in the WpsResponse-Object.
+ * Exception answer and stores the instance in the {@link WpsResponse}-Object.
  *
  * Otherwise the specific client implementation can have a method which throws
- * this execption, but, the client musst caught this exception and musst notice
- * this in a WpsResponseObject.
+ * this execption, but the client must catch this exception and must stores
+ * this in a {@link WpsResponse}Object.
  *
  * @see WpsResponse
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -37,6 +37,6 @@ public class WpsException extends Exception {
     }
 
     public WpsException() {
-        super("The Request produced an Exception!");
+        super("The Request produced an exception!");
     }
 }

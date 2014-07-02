@@ -65,7 +65,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
     
     /**
-     * reinit the form - all data will be rerequestet 
+     * reinit the form - all data will be re-requested. 
      */
     public void reInit() {
         init();
@@ -74,7 +74,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Listener - if a WpsProcess's job is paused
+     * Listener - if a WpsProcess's job is paused.
      */
     private void registerMonitoringPausedEvent() {
         try {
@@ -99,7 +99,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Getter for the edit dialog
+     * Getter for the edit dialog.
      * 
      * @return {@link WpsEntity} instance
      */
@@ -108,7 +108,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Updates a wps 
+     * Updates a wps.
      * 
      * @param wps WpsEntity instance
      */

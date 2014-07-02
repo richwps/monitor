@@ -22,10 +22,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.Con
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityConverter;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Builder to create a RestInterface instance with all necessary dependencies.
@@ -35,17 +31,17 @@ import java.util.Map;
 public class RestInterfaceBuilder {
 
     /**
-     * PresentateStrategy instance
+     * PresentateStrategy instance.
      */
     private PresentateStrategy strategy;
 
     /**
-     * MonitorControl instance
+     * MonitorControl instance.
      */
     private MonitorControl monitorControl;
 
     /**
-     * Converter Map
+     * Converter Map.
      */
     private ConverterFactoryMap converterMap;
 
@@ -57,7 +53,7 @@ public class RestInterfaceBuilder {
     }
 
     /**
-     * Set the converterMap instance.
+     * Sets the converterMap instance.
      * 
      * @param converterMap Map instance 
      * @return RestInterfaceBuilder instance
@@ -69,7 +65,7 @@ public class RestInterfaceBuilder {
     }
 
     /**
-     * Set the PresentateStrategy instance.
+     * Sets the PresentateStrategy instance.
      * 
      * @param strategy PresentateStrategy instance.
      * @return RestInterfaceBuilder instance
@@ -81,7 +77,7 @@ public class RestInterfaceBuilder {
     }
     
     /**
-     * Set the MonitorControl instance.
+     * Sets the MonitorControl instance.
      * 
      * @param monitorControl MonitorControl instance
      * @return RestInterfaceBuilder instance
@@ -112,7 +108,7 @@ public class RestInterfaceBuilder {
      * Build the {@link RestInterface}.
      * 
      * @return {@link RestInterface} instance
-     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.BuilderException 
+     * @throws BuilderException 
      */
     public RestInterface build() throws BuilderException {
         if(strategy == null || monitorControl == null) {

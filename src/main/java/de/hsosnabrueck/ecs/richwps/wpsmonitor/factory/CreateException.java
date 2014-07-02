@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.factory;
 
 /**
- * Will be thrown if an exception rised during the create process.
+ * Will be thrown if an exception occurs during the create process.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

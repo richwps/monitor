@@ -16,14 +16,14 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
 
 /**
- * Interface that need to be implement by Event listeners.
+ * Interface that needs to be implement by event listeners.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorEventListener {
 
     /**
-     * Execute method which handel the listener behavior
+     * Execute method which handles the listener behavior.
      *
      * @param event MonitorEvent-instance
      */

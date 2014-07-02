@@ -32,7 +32,7 @@ public class JpaPuConfig {
     public static String PERSISTENCE_UNIT;
     
     /**
-     * Set the persistenceUnitName
+     * Sets the persistenceUnitName
      * 
      * @param persistenceUnitName 
      */
@@ -41,7 +41,7 @@ public class JpaPuConfig {
     }
 
     /**
-     * Get PersistenceUnitName
+     * Gets PersistenceUnitName
      * 
      * @return Persistence unit name identifier
      */

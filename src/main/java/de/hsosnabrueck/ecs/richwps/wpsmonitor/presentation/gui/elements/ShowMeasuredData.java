@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Dialog to show the measured data. The measured data will shown in a
+ * Dialog to show the measured data. The measured data will be shown in a
  * {@link MeasuredDataPane} JPanel in the scoll area of this dialog.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>

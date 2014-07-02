@@ -15,7 +15,6 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
@@ -50,10 +49,10 @@ import org.quartz.TriggerKey;
 /**
  * Representation of the WpsMonitor. To control the Monitor, call
  * getMonitorControl. MonitorControl is a facade to control the monitor (e.g.
- * create a Wps, trigger or something else). Call start() or shutdown() to start
- * or stop the monitor. The monitor fires a monitor.shutdown-event if shutdown is
+ * create a WPS and trigger processes for it). Call start() or shutdown() to start
+ * or stop the monitor. The monitor fires a monitor.shutdown-event if shutdown() is
  * called. shutdown() will be called through a shutdownHook if the monitor is
- * not already shutted down. Also a cleanUp-job is registred, which will try
+ * not shut down already. Also a cleanUp-job is registred, which will try
  * to clean up old measurements. This behavior can be configured in the 
  * monitor.properties file.
  *
@@ -94,7 +93,7 @@ public class Monitor {
                     shutdown();
                 } catch (Exception ex) {
                     // catch all exceptions, because this is 
-                    // a criticall point of the JVM shutdown process 
+                    // a critical point of the JVM shutdown process 
                     log.error(ex);
                 }
             }

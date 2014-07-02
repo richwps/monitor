@@ -44,7 +44,7 @@ public class MessageDialogs {
     }
 
     /**
-     * Shows a error dialog
+     * Shows an error dialog.
      * 
      * @param frame Parentframe
      * @param title Title text
@@ -58,7 +58,7 @@ public class MessageDialogs {
     }
 
     /**
-     * private to prevent instatiation
+     * private to prevent instantiation.
      */
     private MessageDialogs() {
 

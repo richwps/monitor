@@ -32,7 +32,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
-import javax.persistence.Version;
 
 /**
  * Entity that group up various AbstractQosEntity objects by measurement
@@ -42,39 +41,40 @@ import javax.persistence.Version;
 @Entity
 @NamedQueries({
     /**
-     * Selects all MeasuredDataEntity objects be process
+     * Selects all MeasuredDataEntity objects by process and wps identifier.
      */
     @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :identifier AND "
             + "t.process.wps.identifier = :wpsIdentifier "
             + "ORDER BY t.createTime DESC"),
 
     /**
-     * Select all MeasuredDataEntity objects by wps
+     * Selects all MeasuredDataEntity objects by wps identifier.
      */
     @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier ORDER BY t.createTime DESC"),
 
     /**
-     * Delete all MeasuredDataEntity instances which are associated by the given
-     * :wpsIdentifier
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsIdentifier parameter.
      */
     @NamedQuery(name = "qos.deleteByWps", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :wpsIdentifier"),
 
     /**
-     * Delete all MeasuredDataEntity instances which are associated by the given
-     * :wpsIdentifier and :processIdentifier
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsIdentifier and :processIdentifier parameters.
      */
     @NamedQuery(name = "qos.deleteByWpsProcess", query = "DELETE FROM MeasuredDataEntity t WHERE "
             + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier"),
 
     /**
-     * Delete all MeasuredDataEntity instances which are associated by the given
-     * :wpsIdentifier and :processIdentifier and are older as :date
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsIdentifier and :processIdentifier parameters and are older as
+     * :date.
      */
     @NamedQuery(name = "qos.deleteByWpsProcessOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE "
             + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier AND t.createTime < :date"),
 
     /**
-     * Delete all MeasuredDataEntity instances which are older as :date
+     * Deletes all MeasuredDataEntity instances which are older as :date.
      */
     @NamedQuery(name = "qos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.createTime < :date")
 })

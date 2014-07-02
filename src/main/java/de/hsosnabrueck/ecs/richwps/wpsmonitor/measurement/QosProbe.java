@@ -21,11 +21,11 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**
  * QosProbes are designed to be executed by a {@link MeasureJob} instance. A
- * QosProbe implementation ca do calculations or other measurement operationes.
- * The result should be saved in a own entity which extends the
+ * QosProbe implementation can do calculations or other measurement operationes.
+ * The result should be saved in an own entity which extends the
  * {@link AbstractQosEntity}-class.
  *
- * The Job-instance extract and stores the measured datas.
+ * The Job-instance extracts and stores the measured data.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

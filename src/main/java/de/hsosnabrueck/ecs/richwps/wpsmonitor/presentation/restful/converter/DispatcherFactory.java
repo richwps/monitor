@@ -16,12 +16,10 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import java.util.Map;
 
 /**
- * Setups a EntityDispatcher with the configured converterMap which was set in
- * the MonitorBuilder instance
+ * Sets a EntityDispatcher up with the configured converterMap, which was set in
+ * the {@link RestInterfaceBuilder} instance.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

@@ -17,8 +17,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.util;
 
 /**
- * Exception which will be thrown if an exeception occours at the building 
- * process
+ * Exception which will be thrown if an exeception occurs in the building 
+ * process.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

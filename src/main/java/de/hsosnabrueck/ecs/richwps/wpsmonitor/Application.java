@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.ConfiguredEntityManagerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
@@ -37,7 +38,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes.ListWp
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseConverterFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import java.util.Locale;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;

@@ -25,7 +25,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * A Job implementation which delete old measured datas.
+ * A Job implementation which deletes the old measured data.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

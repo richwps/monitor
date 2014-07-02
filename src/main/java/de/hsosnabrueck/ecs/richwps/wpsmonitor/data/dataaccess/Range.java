@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 /**
- * Class to define a Range between offset and count; offset presentate the start
+ * Class to define a Range between "offset" and "count"; offset defines the start
  * value and count the total value of elements.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>

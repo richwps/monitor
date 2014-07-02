@@ -22,7 +22,7 @@ import java.awt.BorderLayout;
 import java.util.List;
 
 /**
- * Dialog to show and allows operations on {@link WpsProcessEntities} and
+ * Dialog to show and allow operations on {@link WpsProcessEntities} and
  * {@link WPsProcessEntity} Jobs.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -65,7 +65,7 @@ public class WpsProcessDialog extends javax.swing.JDialog {
     }
 
     /**
-     * reinit the dialog. Will rerequest the monitor for the necessary datas.
+     * reinit the dialog. Re-request the monitor for the necessary data.
      */
     public void reInit() {
         addProcessPane.removeAll();

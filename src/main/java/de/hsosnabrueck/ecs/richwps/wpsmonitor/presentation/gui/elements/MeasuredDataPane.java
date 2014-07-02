@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 /**
- * Panel which representate a MeasuredDataEntity.
+ * Panel which represents a MeasuredDataEntity.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

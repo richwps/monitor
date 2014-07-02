@@ -27,12 +27,12 @@ import java.net.URI;
 public class WpsProcessInfo {
 
     /**
-     * URI of the WPS-Server
+     * URI of the WPS-Server.
      */
     private URI wpsUri;
 
     /**
-     * Identifier of the Process
+     * Identifier of the Process.
      */
     private String processIdentifier;
 

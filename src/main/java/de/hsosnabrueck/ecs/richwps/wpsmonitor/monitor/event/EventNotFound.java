@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
 
 /**
- * Will be thrown if the given eventName not matched any registred eventName.
+ * Will be thrown if the given eventName does not match any registred eventName.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

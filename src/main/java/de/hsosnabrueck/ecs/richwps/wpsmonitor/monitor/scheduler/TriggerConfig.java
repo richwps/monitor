@@ -29,27 +29,27 @@ import org.quartz.TriggerKey;
 public class TriggerConfig {
 
     /**
-     * Interval Type (e.g Month)
+     * Interval Type (e.g Month).
      */
     private DateBuilder.IntervalUnit intervalType;
     
     /**
-     * Start Date instance
+     * Start Date instance.
      */
     private Date start;
     
     /**
-     * End Date instance
+     * End Date instance.
      */
     private Date end;
     
     /**
-     * Interval number
+     * Interval number.
      */
     private Integer interval;
     
     /**
-     * TriggerKey - can be null
+     * TriggerKey - can be null.
      */
     private TriggerKey triggerKey;
     

@@ -35,16 +35,16 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Job class which use a wps client with a request which is stored in the
- * {@link WpsProcessEntity} object to call a Wps Server. The WpsProcessEntity
+ * {@link Job} class which uses a wps client with a request which is stored in the
+ * {@link WpsProcessEntity} object to be sent to a Wps Server. The {@link WpsProcessEntity}
  * object is injected by the {@link MeasureJobFactory}.
  *
- * If occours no wps exception, then the registred QosProbe instances are
- * called. Otherwise a error flag is set, which is evaluated by
+ * If no wps exception occurs, then the registred QosProbe instances are
+ * called. Otherwise a error flag is set, which is evaluated by the
  * {@link MeasureJobListener}.
  *
  * The dependencies should be thread save or new instantiated by the
- * MeasureJobFactory.
+ * {@link MeasureJobFactory}.
  *
  * @see WpsProcessEntity
  * @see MeasureJobListener
@@ -86,7 +86,7 @@ public class MeasureJob implements Job {
             WpsRequest request = pair.getLeft();
             WpsResponse response = pair.getRight();
 
-            // if no execption occurs (except Connection exception), than call probes and persist Data 
+            // if no execption occurs (except Connection exception), then call probes and store Data 
             error = response.isOtherException() || response.isWpsException();
 
             if (!error) {
@@ -113,12 +113,12 @@ public class MeasureJob implements Job {
         toPersist.setData(measuredData);
         toPersist.setCreateTime(new Date());
 
-        log.debug("MeasureJob: persist {}", toPersist.getClass().getName());
+        log.debug("MeasureJob: store {}", toPersist.getClass().getName());
         dao.persist(toPersist);
     }
 
     /**
-     * call the probes with the request and response data
+     * Calls the probes with the request and response data.
      */
     private void callProbes(final WpsRequest request, final WpsResponse response) {
         for (QosProbe p : probes) {
@@ -127,7 +127,7 @@ public class MeasureJob implements Job {
     }
 
     /**
-     * Calls the WPS Server with the specified WPS client
+     * Calls the WPS Server with the specified WPS client.
      *
      * @return a pair consisting of WpsRequest and WpsResponse
      */
@@ -146,7 +146,7 @@ public class MeasureJob implements Job {
     }
 
     /**
-     * Extracts the Entities out of the probes
+     * Extracts the Entities out of the probes.
      *
      * @return List with the Entities
      */
@@ -162,7 +162,7 @@ public class MeasureJob implements Job {
 
     /**
      * Indicates, that this Job can't measure the speicified Wps Process because
-     * of a WpsException or an other Exception
+     * of a WpsException or an other Exception.
      *
      * @return true if the job can't measure the Wps Process
      */
@@ -181,7 +181,7 @@ public class MeasureJob implements Job {
     }
 
     /**
-     * Returns the WpsClient instance
+     * Returns the WpsClient instance.
      *
      * @return WpsClient instance
      */

@@ -54,7 +54,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Start the scheduler.
+     * Starts the scheduler.
      *
      * @throws SchedulerException
      */
@@ -63,7 +63,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Stop the scheduler.
+     * Stops the scheduler.
      *
      * @throws SchedulerException
      */
@@ -72,7 +72,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a job to the scheduler. If the jobKey is already exists, then quartz
+     * Adds a job to the scheduler. If the jobKey already exists, then quartz
      * will replace the old job by the new one.
      *
      * @param jobKey JobKey instance
@@ -102,7 +102,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a Wps measurement job.
+     * Adds a Wps measurement job.
      *
      * @param process WpsProcessEntity instance
      * @return The jobKey, name = wpsProcess identifier, group = wps identifier
@@ -113,8 +113,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a Wps measurement job; if the job is already exists, then the job
-     * will replaced.
+     * Adds a Wps measurement job; The job will be replaced if it already exists.
      *
      * @param wpsIdentifier Wps entity identifier
      * @param processIdentifier wpsprocess entity identifier
@@ -131,7 +130,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Add a trigger to a job; internally calendarIntervalSchedule is used.
+     * Adds a trigger to a job; internally calendarIntervalSchedule is used.
      *
      * @param jobKey To this job is the trigger added
      * @param config Config with schedule informations
@@ -143,7 +142,7 @@ public final class SchedulerControl {
         JobDetail forJob = scheduler.getJobDetail(Validate.notNull(jobKey, "jobKey"));
 
         if (forJob == null) {
-            throw new SchedulerException("addTriggerToJob failed because of no job was found for the given JobKey: " + jobKey.toString());
+            throw new SchedulerException("addTriggerToJob failed because no job was found for the given JobKey: " + jobKey.toString());
         }
 
         Trigger newTrigger = createTriggerWithStartAndEnd(forJob, config);
@@ -204,12 +203,12 @@ public final class SchedulerControl {
     }
 
     /**
-     * Will update all groupname of jobs with the groupname oldWpsIdentifier to
-     * the name of newWpsIdentifier. To make this possible, new jobs will be
-     * created and registred in the scheduler. Then triggers will be generated
-     * and added. The old ones will be removed.
+     * All of the jobs' groupnames with the groupname "oldWpsIdentifier" will be updated to
+     * the groupnames of newWpsIdentifier. New jobs will be created and registred 
+     * in the scheduler to make this possible. After that triggers will be regenerated
+     * and added to the new job. The old ones will be removed.
      *
-     * @param oldWpsIdentifier Old name to identifie the Jobs
+     * @param oldWpsIdentifier Old name to identify the Jobs
      * @param newWpsIdentifier New name which will replace the old one
      * @throws SchedulerException
      */
@@ -319,7 +318,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Remove all Jobs for the given wpsIdentifier (groupname).
+     * Removes all Jobs for the given wpsIdentifier (groupname).
      *
      * @param wpsIdentifier Wps identifier
      * @return true if is sucessfully removed
@@ -339,7 +338,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Updates a {@link Trigger} - {@link TriggerKey} need to be set in the
+     * Updates a {@link Trigger} - {@link TriggerKey} needs to be set in the
      * given {@link TriggerConfig} instance.
      *
      * @param config TriggerConfig instance
@@ -359,11 +358,11 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get all {@link TriggerKey}s which are associated with the given
+     * Gets all {@link TriggerKey}s which are associated with the given
      * {@link JobKey}.
      *
      * @param jobKey JobKey instance
-     * @return List of TriggerKey-instances that matches to the given JobKey
+     * @return List of TriggerKey-instances that matches the given JobKey
      * @throws SchedulerException
      */
     public synchronized List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
@@ -377,7 +376,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get all Trigger-objects which are associated with the given
+     * Gets all Trigger-objects which are associated with the given
      * {@link JobKey}.
      *
      * @param jobKey JobKey instance
@@ -389,7 +388,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get a list of TriggerConfig-instances which are associated with the given
+     * Gets a list of TriggerConfig-instances which are associated with the given
      * {@link JobKey}.
      *
      * @param jobKey JobKey instance
@@ -407,7 +406,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get a TriggerConfig instance for the given {@link TriggerKey}.
+     * Gets a TriggerConfig instance for the given {@link TriggerKey}.
      *
      * @param triggerKey TriggerKey instance
      * @return TriggerConfig instance
@@ -420,7 +419,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get a {@link TriggerConfig} instance for the given {@link Trigger}
+     * Gets a {@link TriggerConfig} instance for the given {@link Trigger}
      * instance.
      *
      * @param trigger Trigger instance
@@ -481,7 +480,7 @@ public final class SchedulerControl {
     }
 
     /**
-     * Get the {@link Scheduler} instance.
+     * Gets the {@link Scheduler} instance.
      *
      * @return Scheduler instance
      */

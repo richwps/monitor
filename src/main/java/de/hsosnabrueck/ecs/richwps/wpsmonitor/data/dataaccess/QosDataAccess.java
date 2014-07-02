@@ -27,7 +27,7 @@ import java.util.List;
 public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
 
     /**
-     * Get all {@link MeasuredDataEntity}-Objects that matches the given
+     * Gets all {@link MeasuredDataEntity}-Objects that match the given
      * (wpsIdentifier, processIdentifier) combination
      *
      * @param wpsIdentifier Wps Entity identifier
@@ -37,7 +37,7 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Get all {@link MeasuredDataEntity}-Objects that matches the given
+     * Gets all {@link MeasuredDataEntity}-Objects that match the given
      * wpsIdentifier
      *
      * @param wpsIdentifier Wps entity identifier
@@ -46,8 +46,8 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public List<MeasuredDataEntity> getByWps(final String wpsIdentifier);
 
     /**
-     * Get all {@link MeasuredDataEntity}-Objects in the specific range which is
-     * described by the given range object.
+     * Gets all {@link MeasuredDataEntity}-Objects in the specific range which
+     * is described by the given range object.
      *
      * @param wpsIdentifier Wps etity identifier
      * @param processIdentifier Process entity identifier
@@ -57,18 +57,18 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range);
 
     /**
-     * Get all {@link MeasuredDataEntity}-Objects that matches the given
-     * wpsIdentifier in the specific range which is described by the given range
-     * object.
+     * Gets all {@link MeasuredDataEntity}-Objects that match the given
+     * wpsIdentifier in the specific range which is described by the given
+     * range-object.
      *
      * @param identifier Wps entity Identifier
      * @param range Range Instance
-     * @return List of MeasuredDataEntity-Objects
+     * @return List of {@link MeasuredDataEntity}-Objects
      */
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range);
 
     /**
-     * Deletes all measured Qos-Data that matches the given Wps process which is
+     * Deletes all measured Qos-Data that match the given Wps process which is
      * identified by wpsIdentifier and processIdentifier.
      *
      * @param wpsIdentifier Wps entity identifier
@@ -78,7 +78,7 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier);
 
     /**
-     * Deletes all measured Qos-Data that matches the given Wps process which is
+     * Deletes all measured Qos-Data that match the given Wps process which is
      * identified by wpsIdentifier and processIdentifier.
      *
      * @param wpsIdentifier Wps entity identifier
@@ -89,7 +89,7 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifierfinal, final Date olderDate);
 
     /**
-     * Deletes all measured Qos-Data which are older as date.
+     * Deletes all measured Qos-Data which are older as "date".
      *
      * @param date Date instance
      * @return Affected rows

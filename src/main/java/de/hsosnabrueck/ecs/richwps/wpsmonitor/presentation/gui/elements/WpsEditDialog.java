@@ -22,9 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 /**
- * JDialog to edit WPS. Actions with this dialog has impcats of the scheduler
- * and the wps database. All jobs need to unsheduled and replaced with a 
- * new one which matched the changes of the wps identifier.
+ * JDialog to edit WPS. Actions with this dialog have an impact on the scheduler
+ * and the wps database. All jobs need to unscheduled and replaced with  
+ * new ones which match the changes of the wps identifier.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
@@ -28,6 +28,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
@@ -357,16 +358,92 @@ public class MonitorControlTest {
     @Test
     public void testUpdateWps_3args() {
         System.out.println("updateWps");
-
+        WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
+        wpsDao.persist(wpsProcess.getWps());
+        String oldWpsIdentifier = wpsProcess.getWps().getIdentifier();
+        
+        Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(wpsProcess);
+        
+        if(!createAndScheduleProcess) {
+            fail("Can't create and schedule process");
+        }
+        
+        WpsEntity newWps = getUnstoredProcessEntity().getWps();
+        mControl.updateWps(oldWpsIdentifier, newWps);
+        
+        JobKey k = new JobKey(wpsProcess.getIdentifier(), newWps.getIdentifier());
+        
+        try {
+            if(!monitor.getSchedulerControl().isJobRegistred(k)) {
+                fail("Job was not modified.");
+            }
+        } catch (SchedulerException ex) {
+            fail(ex.toString());
+        }
     }
 
     /**
      * Test of updateWps method, of class MonitorControl.
      */
     @Test
-    public void testUpdateWps_String_WpsEntity() {
+    public void testUpdateWpsAcceptedNotNullValues() {
         System.out.println("updateWps");
-
+        WpsProcessEntity unstoredProcessEntity = getUnstoredProcessEntity();
+        String wpsIdentifier = unstoredProcessEntity.getIdentifier();
+        URI uri = unstoredProcessEntity.getWps().getUri();
+        WpsEntity wps = getUnstoredProcessEntity().getWps();
+        
+        Boolean check = true;
+        try {
+            mControl.updateWps(null, wps);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(wpsIdentifier, null);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(null, null);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(null, null, null);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(wpsIdentifier, null, null);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(null, wpsIdentifier, null);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            mControl.updateWps(null, null, uri);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        Assert.assertTrue(check);
     }
 
     /**
@@ -374,8 +451,57 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteWps_String() {
-        System.out.println("deleteWps");
-
+        try { //todo ggf. noch testen ob die measured data ebenfalls geloescht wurden
+            System.out.println("deleteWps");
+            WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
+            Boolean createWps = mControl.createWps(wpsProcess.getWps());
+            WpsEntity find = wpsDao.find(wpsProcess.getWps().getIdentifier());
+            
+            if(!createWps) {
+                fail("Can't create WPS");
+            }
+            
+            TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
+            TriggerKey saveTrigger = mControl.saveTrigger(wpsProcess, triggerConfig);
+            
+            JobKey jobKey = new JobKey(wpsProcess.getIdentifier(), wpsProcess.getWps().getIdentifier());
+            
+            if(saveTrigger == null) {
+                fail("Can't save trigger");
+            }
+            
+            SchedulerControl schedulerControl = monitor.getSchedulerControl();
+            if(!schedulerControl.isJobRegistred(jobKey)) {
+                fail("Job key wasn't register at createAndScheduleJob call");
+            }
+            
+            if(!schedulerControl.isTriggerRegistred(saveTrigger)) {
+                fail("Trigger wasn't register at saveTrigger call");
+            }
+            
+            mControl.deleteWps(wpsProcess.getWps());
+            
+            if(schedulerControl.isJobRegistred(jobKey)) {
+                fail("Job key already registred after deleteWps!");
+            }
+            
+            if(schedulerControl.isTriggerRegistred(saveTrigger)) {
+                fail("TriggerKey already registred after deleteWps!");
+            }
+            
+            WpsProcessEntity processFind = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+            WpsEntity wpsFind = wpsDao.find(wpsProcess.getWps().getIdentifier());
+            
+            if(processFind != null) {
+                fail("Wps Process wasn't deleted");
+            }
+            
+            if(wpsFind != null) {
+                fail("Wps wasn't deleted");
+            }
+        } catch (SchedulerException ex) {
+            fail(ex.toString());
+        }
     }
 
     /**

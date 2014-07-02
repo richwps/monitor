@@ -24,28 +24,28 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * EventHandler system for monitor events like shutdown
+ * EventHandler system for monitor events, like shutdown.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorEventHandler {
 
     /**
-     * Map that maps eventlistener to the specific eventname
+     * Map that maps eventlisteners to their specific eventnames.
      */
-    private Map<String, List<MonitorEventListener>> events;
+    private final Map<String, List<MonitorEventListener>> events;
 
     private final static Logger log = LogManager.getLogger();
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public MonitorEventHandler() {
         events = new HashMap<String, List<MonitorEventListener>>();
     }
 
     /**
-     * Registers an eventname; does nothing if the eventname is allready exists
+     * Registers an eventname; does nothing if the eventname already exists.
      *
      * @param eventName Event Name which should be registred
      */
@@ -54,9 +54,9 @@ public class MonitorEventHandler {
             if (!events.containsKey(eventName)) {
                 events.put(eventName, new ArrayList<MonitorEventListener>());
 
-                log.debug("EventHandler: Register new Event {}", eventName);
+                log.debug("EventHandler: Register new event {}", eventName);
             } else {
-                log.debug("EventHandler: This EventManager already contains this Event with name {}.", eventName);
+                log.debug("EventHandler: This EventManager already contains an event with name {}.", eventName);
             }
         } else {
             log.debug("EventHandler: Parameter eventName was null.");
@@ -64,7 +64,7 @@ public class MonitorEventHandler {
     }
 
     /**
-     * Fires an event
+     * Fires an event.
      *
      * @param event MonitorEvent-instance
      */
@@ -76,12 +76,12 @@ public class MonitorEventHandler {
                 log.debug("EventHandler: Event {} fired! Execute: {}", event.getEventName(), listener.getClass().getName());
             }
         } else {
-            log.debug("EventHandler: No Event with the given Name {} is registred.", event.getEventName());
+            log.debug("EventHandler: No event with the given name {} is registred.", event.getEventName());
         }
     }
 
     /**
-     * Registers a listener for a specific event
+     * Registers a listener for a specific event.
      *
      * @param eventName name of the event which the listener should listen
      * @param eventToRegister EventListener instance
@@ -101,7 +101,7 @@ public class MonitorEventHandler {
     }
 
     /**
-     * Removes a given listener from the eventname
+     * Removes a given listener from the eventname.
      *
      * @param eventName name of the event
      * @param eventToRemove Eventlistener object which should be removed

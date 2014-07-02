@@ -20,29 +20,25 @@ import java.util.EnumMap;
 import org.quartz.DateBuilder;
 
 /**
- * A ComboBox item for interval type selection .
+ * A ComboBox item for interval type selection.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class IntervalComboBoxItem {
 
     private final DateBuilder.IntervalUnit dateKey;
-    private static EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
+    private static final EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
 
     /**
-     * Creates a intervale type item that matches the given dataKey.
+     * Creates an interval type item that matches the given dataKey.
      *
      * @param dateKey {@link DateBuilder.IntervalUnit} instance
      */
     public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
         this.dateKey = Validate.notNull(dateKey, "dateKey");
-
-        if (enumStringMap == null) {
-            initMap();
-        }
     }
 
-    private void initMap() {
+    static {
         enumStringMap = new EnumMap<DateBuilder.IntervalUnit, String>(DateBuilder.IntervalUnit.class);
 
         String[] fill = new String[]{
@@ -61,7 +57,6 @@ public class IntervalComboBoxItem {
         for (int i = 0; i < fill.length && i < dateValues.length; i++) {
             enumStringMap.put(dateValues[i], fill[i]);
         }
-
     }
 
     public String getLabel() {

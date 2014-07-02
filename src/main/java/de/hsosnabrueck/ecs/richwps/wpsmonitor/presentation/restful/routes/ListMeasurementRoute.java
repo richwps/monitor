@@ -62,7 +62,7 @@ public class ListMeasurementRoute extends MonitorRoute {
             if (format != null) {
                 if (format.equals("converted")) {
                     toPresentate = getConverted(measuredData);
-                } else if (format.equals("twice")) {
+                } else if (format.equals("both")) {
                     toPresentate = getRawAndConverted(measuredData);
                 }
             } 
@@ -89,7 +89,7 @@ public class ListMeasurementRoute extends MonitorRoute {
     }
 
     private Map<String, Object> getRawAndConverted(List<MeasuredDataEntity> measuredData) {
-        return getDispatch().dispatchTwice(measuredData);
+        return getDispatch().dispatchBoth(measuredData);
     }
 
     private Range getRange(String countValue) {

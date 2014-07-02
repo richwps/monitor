@@ -18,24 +18,24 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 import java.util.Date;
 
 /**
- * Class which contains all necessary datas to request a wps server.
+ * Class which contains all necessary data to request a wps server.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsRequest {
 
     /**
-     * raw xml request
+     * Raw xml request.
      */
     private final String rawRequest;
 
     /**
-     * informations to call the wps server
+     * Information to call the wps server.
      */
     private final WpsProcessInfo processInfo;
 
     /**
-     * time which the request was executed
+     * Time at which the request was executed.
      */
     private Date requestTime;
 
@@ -51,14 +51,14 @@ public class WpsRequest {
     }
 
     /**
-     * Sets the current time as request time
+     * Sets the current time as request time.
      */
     public void prepareRequest() {
         requestTime = new Date();
     }
 
     /**
-     * Indicates if this request was executed
+     * Indicates if this request was executed.
      *
      * @return true if already executed, otherwise false
      */

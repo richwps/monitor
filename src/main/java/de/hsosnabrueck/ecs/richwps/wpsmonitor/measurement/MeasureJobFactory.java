@@ -33,7 +33,7 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**
- * Create a new MeasureJob instance if the quartz scheduler starts a specific
+ * Creates a new MeasureJob instance if the quartz scheduler starts a specific
  * job.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -41,22 +41,22 @@ import org.quartz.spi.TriggerFiredBundle;
 public class MeasureJobFactory implements JobFactory {
 
     /**
-     * Probeservice instance
+     * Probeservice instance.
      */
     private final ProbeService probeService;
     
     /**
-     * Wps client factory - each job needs its own wps client
+     * Wps client factory - each job needs its own wps client.
      */
     private final WpsClientFactory wpsClientFactory;
     
     /**
-     * WpsProcessDataAccess instance
+     * WpsProcessDataAccess instance.
      */
     private final WpsProcessDataAccess processDao;
     
     /**
-     * QosDaoFactory instance to create a new data access for a new job
+     * QosDaoFactory instance to create a new data access for a new job.
      */
     private final QosDaoFactory qosDaoFactory;
 
@@ -99,11 +99,11 @@ public class MeasureJobFactory implements JobFactory {
         Job measureJob = null;
 
         try {
-            // jobs are eventually threads -
-            // EntityManager and Dao's are not Thread save! So give them an own EntityManager
+            // jobs are possibly threads -
+            // DAOs are maybe not Thread save! So give them an own DAO.
             QosDataAccess dao = qosDaoFactory.create();
 
-            // for which WpsProcessEntity will this process created?
+            // for which WpsProcessEntity will this process be created?
             WpsProcessEntity process = processDao.find(wpsAsGroupName, processAsJobName);
 
             measureJob = new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());

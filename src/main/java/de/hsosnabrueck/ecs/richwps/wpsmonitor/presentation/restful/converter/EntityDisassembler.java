@@ -30,8 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Disassemble the bulk of MeasuredDataEntity objects and assigns the objects to
- * the specific converters
+ * Disassembles the bulk of MeasuredDataEntity objects and assigns the objects to
+ * the specific converters.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -51,7 +51,7 @@ public class EntityDisassembler {
     }
 
     /**
-     * Dissassembles the given dataList to the specific Converters.
+     * Dissassembles the given dataList to the specific converters.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
@@ -63,7 +63,7 @@ public class EntityDisassembler {
     }
 
     /**
-     * Disassemble the given dataList to a default Converter.
+     * Disassembles the given dataList to a default converter.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
@@ -87,7 +87,7 @@ public class EntityDisassembler {
 
     /**
      * Mainloop which processes each disassemble process (very complex code ..
-     * teh hell of code).
+     * teh code of hell).
      *
      * @param converters EntityConverter list
      * @param dataList List of {@link MeasuredDataEntity} instances
@@ -102,7 +102,7 @@ public class EntityDisassembler {
             for (AbstractQosEntity abstractQosEntity : measureData) {
                 String converterEntityIndex = abstractQosEntity.getEntityName();
 
-                // if converters null, then use defaultConverter
+                // if converters is null, use defaultConverter
                 if (converters == null || !converters.containsKey(converterEntityIndex)) {
                     if (!finalConverters.containsKey(NO_CONVERTER_INDEX)) {
                         finalConverters.put(NO_CONVERTER_INDEX, getDummyConverter());
@@ -141,7 +141,7 @@ public class EntityDisassembler {
     }
 
     /**
-     * Creates new instances of the entity converters
+     * Creates new instances of the entity converters.
      *
      * @return Map of entity converters
      */

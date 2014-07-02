@@ -56,7 +56,7 @@ public class RouteRegister {
     }
 
     /**
-     * Register a MonitorRoute instance as GET-HttpOperation
+     * Registers a MonitorRoute instance as GET-HttpOperation.
      * 
      * @param routeObj MonitorRoute instance
      */
@@ -65,7 +65,7 @@ public class RouteRegister {
     }
 
     /**
-     * Register a MonitorRoute instance as POST-HttpOperation
+     * Registers a MonitorRoute instance as POST-HttpOperation.
      * 
      * @param routeObj MonitorRoute instance
      */
@@ -74,7 +74,7 @@ public class RouteRegister {
     }
 
     /**
-     * Register a MonitorRoute instance as DELETE-HttpOperation
+     * Registers a MonitorRoute instance as DELETE-HttpOperation.
      * 
      * @param routeObj MonitorRoute instance
      */
@@ -83,7 +83,7 @@ public class RouteRegister {
     }
 
     /**
-     * Register a MonitorRoute instance as PUT-HttpOperation
+     * Registers a MonitorRoute instance as PUT-HttpOperation.
      * 
      * @param routeObj MonitorRoute instance
      */
@@ -92,7 +92,7 @@ public class RouteRegister {
     }
 
     /**
-     * Register a MonitorRoute instance as OPTIONS-HttpOperation
+     * Registers a MonitorRoute instance as OPTIONS-HttpOperation.
      * 
      * @param routeObj MonitorRoute instance
      */

@@ -50,7 +50,7 @@ public class MonitorProperties extends javax.swing.JDialog {
     }
 
     /**
-     * Load {@link MonitorConfig} into the forms
+     * Load {@link MonitorConfig} into the forms.
      */
     private void init() {
         MonitorConfig config = monitorMainFrame.getMonitorReference()

@@ -24,7 +24,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful;
 public interface PresentateStrategy {
 
     /**
-     * Transformes the given Object instance into a String.
+     * Transforms the given Object instance into a String.
      * 
      * @param presentate Object instance
      * @return String

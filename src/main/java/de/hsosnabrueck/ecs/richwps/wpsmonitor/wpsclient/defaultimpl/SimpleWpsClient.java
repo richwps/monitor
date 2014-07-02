@@ -49,17 +49,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * A very simple WpsClient Implementation based on Apache HTTP Componenty Lib.
+ * A very simple WpsClient Implementation based on Apache HTTP Components Lib.
  * This WPS Client is developed to send a raw request over http-post method to a
  * wps server. After the request is executed, the client awaits a response.
  *
- * This implementation has no timeout and waits as long as possible. This is a
- * little bit problematic, because the scheduler can fail its fire time.
- *
  * This simple wps client can check the response for WPS-Errors. If the
- * WpsResponse not a valid XML String, then the client will interprete this as
+ * WpsResponse is not a valid XML String, the client will interprete this as
  * connection error, because the wps server seems to be unreachable (or no wps
- * server runs at this server)
+ * server runs at this server).
  *
  * @see WpsClient
  * @see WpsResponse
@@ -102,8 +99,7 @@ public class SimpleWpsClient implements WpsClient {
 
                 log.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
                 
-                // prepare request (init requestTime)
-                // and do request 
+                // prepare and do request (init requestTime)
                 wpsRequest.prepareRequest();
                 HttpResponse httpResponse = httpClient.execute(httpRequest);
                 responseTime = new Date();
@@ -188,7 +184,7 @@ public class SimpleWpsClient implements WpsClient {
             log.debug(ex);
         }
 
-        log.debug("Exception occours because of parsing the WpsResponse body. Interprete as ConnectionError.");
+        log.debug("Exception occured while parsing the WpsResponse body. Interpreting as ConnectionError.");
         throw new NoWpsResponse();
     }
 

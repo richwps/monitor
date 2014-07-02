@@ -18,26 +18,26 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient;
 import java.util.Date;
 
 /**
- * Presentate the response of a wps server. Contains the full response in
- * responseBody and the response Time. In addtion it contains possbile
- * Exceptions at execute Time of the specific request.
+ * Present the response of a wps server. Contains the full response in
+ * responseBody and the response Time. In addtion it contains possible
+ * exceptions at execute Time of the specific request.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsResponse {
 
     /**
-     * Exception Object, can be null
+     * Exception Object, can be null.
      */
     private Exception exception;
 
     /**
-     * Response time of the wps server
+     * Response time of the wps server.
      */
     private Date responseTime;
 
     /**
-     * Raw answer of the wps server
+     * Raw answer of the wps server.
      */
     private String responseBody;
 
@@ -89,7 +89,7 @@ public class WpsResponse {
     }
 
     /**
-     * Indicates if WpsException is occourred
+     * Indicates if WpsException has occurred.
      *
      * @return true if WpsException happened
      */
@@ -98,7 +98,7 @@ public class WpsResponse {
     }
 
     /**
-     * Indicates if ConnectionException is occourred
+     * Indicates if ConnectionException has occurred.
      *
      * @return true if ConnectionException happened
      */
@@ -107,7 +107,7 @@ public class WpsResponse {
     }
 
     /**
-     * Indicates if an other Exceptions is occourred
+     * Indicates if an other Exceptions has occurred.
      *
      * @return true if other Exception type as WpsEception or
      * ConnectionException happened
@@ -117,7 +117,7 @@ public class WpsResponse {
     }
 
     /**
-     * Returns the exception Message, if an exception occourred
+     * Returns the exception Message, if an exception occurred.
      *
      * @return The Exception Message
      */

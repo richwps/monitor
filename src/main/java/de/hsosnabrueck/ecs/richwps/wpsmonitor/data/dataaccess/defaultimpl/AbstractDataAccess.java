@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
 public abstract class AbstractDataAccess<T> {
 
     /**
-     * Indicates if auto commit is active By default, all operations starts a
+     * Indicates if auto commit is active By default, all operations start a
      * transaction and commit the transaction after all actions are down
      */
     protected Boolean autoCommit;
@@ -49,9 +49,9 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Gets an EntityManager instance. The ConfiguredEntityManagerFactory take
-     * cares of that every thread get its own EntityManager instance
-     *
+     * Gets an EntityManager instance. The ConfiguredEntityManagerFactory
+     * ensures that every thread gets its own EntityManager instance
+     * 
      * @return EntityManager instance
      */
     protected EntityManager getEntityManager() {
@@ -60,10 +60,10 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Persist an object.
+     * Stores an object.
      *
-     * @param o Entity instance to persist
-     * @return True is successfully persisted, otherwise false
+     * @param o Entity instance to store
+     * @return True if successfully stored, otherwise false
      */
     public Boolean persist(T o) {
         Boolean result = true;
@@ -106,14 +106,18 @@ public abstract class AbstractDataAccess<T> {
      */
     public void remove(final T o) {
         beginTransaction();
+        // remanage the entity
+        T mergedEntity = getEntityManager()
+                .merge(o);
+
         getEntityManager()
-                .remove(o);
+                .remove(mergedEntity);
 
         requestCommit();
     }
 
     /**
-     * Starts a transaction if no current transaction is active
+     * Starts a transaction if no current transaction is active.
      */
     protected void beginTransaction() {
         if (!getEntityManager().getTransaction().isActive()) {
@@ -124,9 +128,9 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Commits a transaction
+     * Commits a transaction.
      *
-     * @return Schould be alway true, if an exception is occourd, false is
+     * @return Should be alway true, if an exception occurs, false is
      * returned
      */
     public Boolean commit() {
@@ -146,9 +150,9 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Requests a commit; if autoCommit is activ, then it will be commited
+     * Requests a commit; if autoCommit is active, then it will be commited.
      *
-     * @return true or false, depended on commit return, or null if autocommit
+     * @return true or false, depends on commit return, or null if autocommit
      * is disabled
      */
     protected Boolean requestCommit() {
@@ -160,7 +164,7 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * If a transaction is activ, the result will reseted
+     * If a transaction is active, the result will be resetted.
      */
     public void rollback() {
         if (getEntityManager().getTransaction().isActive()) {
@@ -261,7 +265,7 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Helper Method to do a named query operation like update or delete.
+     * Helper Method to do a named query operation, like update or delete.
      *
      * @param queryName Name of the named query
      * @param parameters Parameter Map with &lt;ParameterNameInNamedQuery,
@@ -296,12 +300,12 @@ public abstract class AbstractDataAccess<T> {
             }
         }
     }
-    
+
     /**
      *
      */
     public void close() {
-        if(getEntityManager().isOpen()) {
+        if (getEntityManager().isOpen()) {
             getEntityManager().close();
         }
     }
