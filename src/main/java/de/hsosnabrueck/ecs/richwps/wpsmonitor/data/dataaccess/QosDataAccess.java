@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import java.util.Date;
 import java.util.List;
@@ -95,4 +96,6 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
      * @return Affected rows
      */
     public Integer deleteAllOlderAs(final Date date);
+    
+    public AbstractQosEntity findAbstractQosEntityByid(Long id);
 }

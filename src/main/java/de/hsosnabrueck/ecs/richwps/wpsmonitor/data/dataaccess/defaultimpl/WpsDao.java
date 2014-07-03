@@ -69,7 +69,6 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
     @Override
     public void remove(final WpsEntity o) {
-        beginTransaction();
 
         Validate.notNull(o, "WpsEntity");
         Validate.notNull(o.getIdentifier(), "WpsEntity Identifier");
@@ -77,6 +76,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("wpsIdentifier", o.getIdentifier());
 
+        beginTransaction();
         // first remove from AbstractQosEntity
         doNamedQuery("abstractQos.deleteByWps", parameters);
 
@@ -85,6 +85,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
         // delete all processes of wps
         doNamedQuery("wpsprocess.deleteByWps", parameters);
+
 
         super.remove(o);
         requestCommit();

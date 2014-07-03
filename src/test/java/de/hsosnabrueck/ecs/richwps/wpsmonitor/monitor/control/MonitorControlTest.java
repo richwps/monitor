@@ -22,14 +22,17 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.ConfiguredEntityManagerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.JpaPuConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ExampleQos;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -462,6 +465,7 @@ public class MonitorControlTest {
             if(!createWps) {
                 fail("Can't create WPS");
             }
+
             
             TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
             TriggerKey saveTrigger = mControl.saveTrigger(wpsProcess, triggerConfig);
@@ -481,7 +485,32 @@ public class MonitorControlTest {
                 fail("Trigger wasn't register at saveTrigger call");
             }
             
+            WpsProcessEntity dbWpsProcess = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+            ResponseEntity qos = new ResponseEntity();
+            qos.setResponseTime(10000);
+            MeasuredDataEntity mData = new MeasuredDataEntity();
+            mData.add(qos);
+            mData.setCreateTime(new Date());
+            mData.setProcess(dbWpsProcess);
+            
+            qosDao.persist(mData);
+            mData = qosDao.find(mData.getId());
+            Long qosId = mData.getData().get(0).getId();
+            AbstractQosEntity findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
+            
+            if(findAbstractQosEntity == null) {
+                fail("AbstractQosEntity wasn't stored in the database");
+            }
+            
+            
+            
+            
             mControl.deleteWps(wpsProcess.getWps());
+            findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
+            
+            if(findAbstractQosEntity != null) {
+                fail("Qos Entity are not deleted too");
+            }
             
             if(schedulerControl.isJobRegistred(jobKey)) {
                 fail("Job key already registred after deleteWps!");
@@ -510,9 +539,27 @@ public class MonitorControlTest {
      * Test of deleteWps method, of class MonitorControl.
      */
     @Test
-    public void testDeleteWps_WpsEntity() {
+    public void testDeleteWpsNotAcceptedNullValues() {
         System.out.println("deleteWps");
-
+        Boolean check = true;
+        
+        try {
+            WpsEntity en = null;
+            mControl.deleteWps(en);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            String identifier = null;
+            mControl.deleteWps(identifier);
+            check = false;
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        Assert.assertTrue(check);
     }
 
     /**
@@ -521,7 +568,7 @@ public class MonitorControlTest {
     @Test
     public void testDeleteProcess_String_String() {
         System.out.println("deleteProcess");
-
+        
     }
 
     /**

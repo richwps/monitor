@@ -93,7 +93,7 @@ public class MeasuredDataEntity implements Serializable {
     @OneToOne
     private WpsProcessEntity process;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "owner")
     private List<AbstractQosEntity> data;
 
     public MeasuredDataEntity() {

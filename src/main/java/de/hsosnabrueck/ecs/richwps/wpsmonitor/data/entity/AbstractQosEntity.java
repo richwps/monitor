@@ -16,12 +16,15 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 
 /**
  * General entity for qos-measurements. All qos entity musst extends this
@@ -35,27 +38,26 @@ import javax.persistence.NamedQuery;
      * Deletes all AbstractQosEntity instances which are associated with the
      * given :wpsIdentifier.
      */
-    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
-            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier)"),
+    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity q WHERE q.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier)"),
 
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
      * given :wpsIdentifier and :processIdentifier.
      */
     @NamedQuery(name = "abstractQos.deleteByWpsProcess", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
-            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)"),
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)"),
 
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
      * given :wpsIdentifier and :processIdentifier and are older as :date.
      */
     @NamedQuery(name = "abstractQos.deleteByWpsProcessOlderAs", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
-            + "IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
 
     /**
      * Deletes all AbstractQosEntity instances which are older as :date.
      */
-    @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.id IN(SELECT m.id FROM MeasuredDataEntity m WHERE m.createTime < :date)")
+    @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.createTime < :date)")
 })
 public abstract class AbstractQosEntity implements Serializable {
 
@@ -63,7 +65,12 @@ public abstract class AbstractQosEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
+    
+    
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private MeasuredDataEntity owner;
 
     /**
      * Important method to indicate which entity-type it is
@@ -103,5 +110,13 @@ public abstract class AbstractQosEntity implements Serializable {
     @Override
     public String toString() {
         return "de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
+    }
+
+    public MeasuredDataEntity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(MeasuredDataEntity owner) {
+        this.owner = owner;
     }
 }

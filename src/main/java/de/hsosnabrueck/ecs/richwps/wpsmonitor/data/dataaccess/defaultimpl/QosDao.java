@@ -17,12 +17,14 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityExistsException;
 
 /**
  * Default implementation of a QosDataAccess-interface.
@@ -30,6 +32,44 @@ import java.util.Map;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
+
+    @Override
+    public Boolean persist(MeasuredDataEntity mDataEntity) {
+
+        Boolean result = true;
+        beginTransaction();
+
+        try {
+            getEntityManager().persist(mDataEntity);
+            for (AbstractQosEntity e : mDataEntity.getData()) {
+                getEntityManager().persist(e);
+            }
+
+            
+
+            requestCommit();
+        } catch (EntityExistsException e) {
+            log.debug(e);
+
+            result = false;
+        }
+        
+        beginTransaction();
+        try {
+
+            for (AbstractQosEntity e : mDataEntity.getData()) {
+                getEntityManager().persist(e);
+            }
+
+            requestCommit();
+        } catch (EntityExistsException e) {
+            log.debug(e);
+
+            result = false;
+        }
+
+        return result;
+    }
 
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {
@@ -103,9 +143,15 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         Map<String, Object> parameters = new HashMap<String, Object>();
 
         parameters.put("date", Validate.notNull(date, "date"));
-        
+
         doNamedQuery("qos.deleteOlderAs", parameters);
-        
+
         return doNamedQuery("abstractQos.deleteOlderAs", parameters);
+    }
+
+    @Override
+    public AbstractQosEntity findAbstractQosEntityByid(Long id) {
+        Validate.notNull(id, "id");
+        return getEntityManager().find(AbstractQosEntity.class, id);
     }
 }

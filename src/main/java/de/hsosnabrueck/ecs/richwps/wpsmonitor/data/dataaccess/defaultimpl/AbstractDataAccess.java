@@ -39,7 +39,7 @@ public abstract class AbstractDataAccess<T> {
      * transaction and commit the transaction after all actions are down
      */
     protected Boolean autoCommit;
-    private final static Logger log = LogManager.getLogger();
+    protected final static Logger log = LogManager.getLogger();
 
     /**
      * Default constructor
@@ -281,8 +281,12 @@ public abstract class AbstractDataAccess<T> {
         assignParameters(query, parameters);
 
         Integer affectedRows = query.executeUpdate();
+        
+        
+        //getEntityManager().flush();
+        
         requestCommit();
-
+        
         return affectedRows;
     }
 
