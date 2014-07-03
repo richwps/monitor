@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.Hide;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,13 +65,15 @@ public abstract class AbstractQosEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Hide
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     
-    
+    /*
+    @Hide
     @OneToOne
     @JoinColumn(nullable = false)
-    private MeasuredDataEntity owner;
+    private MeasuredDataEntity owner;*/
 
     /**
      * Important method to indicate which entity-type it is
@@ -111,12 +114,12 @@ public abstract class AbstractQosEntity implements Serializable {
     public String toString() {
         return "de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
     }
-
+/*
     public MeasuredDataEntity getOwner() {
         return owner;
     }
 
     public void setOwner(MeasuredDataEntity owner) {
         this.owner = owner;
-    }
+    }*/
 }

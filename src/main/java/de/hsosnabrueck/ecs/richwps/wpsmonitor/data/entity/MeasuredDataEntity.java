@@ -82,6 +82,7 @@ public class MeasuredDataEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @Column(name = "measuredData_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -93,7 +94,8 @@ public class MeasuredDataEntity implements Serializable {
     @OneToOne
     private WpsProcessEntity process;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "owner_id", referencedColumnName = "measuredData_id")
     private List<AbstractQosEntity> data;
 
     public MeasuredDataEntity() {

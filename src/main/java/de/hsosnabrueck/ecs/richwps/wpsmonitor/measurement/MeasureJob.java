@@ -111,18 +111,11 @@ public class MeasureJob implements Job {
         MeasuredDataEntity toPersist = new MeasuredDataEntity();
         toPersist.setProcess(processEntity);
         toPersist.setCreateTime(new Date());
-        dao.persist(toPersist);
-        
-        for(AbstractQosEntity e : measuredData) {
-            e.setOwner(toPersist);
-        }
-        
         toPersist.setData(measuredData);
-        dao.update(toPersist);
         
+        dao.persist(toPersist);        
 
         log.debug("MeasureJob: store {}", toPersist.getClass().getName());
-        
     }
 
     /**

@@ -19,6 +19,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.Hide;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStrategy;
 import javax.persistence.Id;
 import javax.persistence.Version;
@@ -33,23 +34,10 @@ public class JsonPresentateStrategy implements PresentateStrategy {
     public String presentate(Object presentateObjects) {
         // make new gson object to support multithreading environment
         Gson gson = new GsonBuilder().setExclusionStrategies(
-                new ExclusionStrategy() {
-                    // ignore fields with version annotation
+                new ExclusionStrategy() { 
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getAnnotation(Version.class) != null;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> arg0) {
-                        return false;
-                    }
-                },
-                new ExclusionStrategy() {
-                    // ignore fields with version annotation
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getAnnotation(Id.class) != null;
+                        return f.getAnnotation(Hide.class) != null;
                     }
 
                     @Override

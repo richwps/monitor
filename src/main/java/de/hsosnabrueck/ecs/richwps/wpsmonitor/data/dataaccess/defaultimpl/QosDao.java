@@ -32,34 +32,35 @@ import javax.persistence.EntityExistsException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
-
+/*
     @Override
     public Boolean persist(MeasuredDataEntity mDataEntity) {
 
         Boolean result = true;
         beginTransaction();
-
-        try {
-            getEntityManager().persist(mDataEntity);
-            for (AbstractQosEntity e : mDataEntity.getData()) {
-                getEntityManager().persist(e);
-            }
-
-            
-
-            requestCommit();
-        } catch (EntityExistsException e) {
-            log.debug(e);
-
-            result = false;
-        }
         
-        beginTransaction();
+        /**
+         * Split mDataEntity into two objects, then persist the one half with 
+         * createDate and process and then persist the other half with 
+         * the data. But set the first half to the data entities
+         *//*
         try {
-
+            MeasuredDataEntity toPersist = new MeasuredDataEntity();
+            toPersist.setCreateTime(mDataEntity.getCreateTime());
+            toPersist.setProcess(mDataEntity.getProcess());
+            
+            getEntityManager().persist(toPersist);
+            
             for (AbstractQosEntity e : mDataEntity.getData()) {
+                e.setOwner(toPersist);
                 getEntityManager().persist(e);
             }
+            
+            toPersist.setData(mDataEntity.getData());
+            
+            getEntityManager().merge(toPersist);
+            
+            mDataEntity.setId(toPersist.getId());
 
             requestCommit();
         } catch (EntityExistsException e) {
@@ -69,7 +70,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         }
 
         return result;
-    }
+    }*/
 
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {

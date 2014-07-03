@@ -85,8 +85,9 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
             this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
             this.intervalField.setText(triggerConfig.getInterval().toString());
-
             this.triggerKey = triggerConfig.getTriggerKey();
+            
+            this.saveJob.setBackground(null);
         }
     }
 
@@ -260,6 +261,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                     );
                 } else {
                     this.triggerKey = newTrigger;
+                    this.saveJob.setBackground(null);
                 }
             } catch (NumberFormatException ex) {
                 MessageDialogs.showError(mainFrame,
