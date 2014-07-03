@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 
 /**
@@ -126,8 +127,9 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("WPS-Monitor Control Interface");
+        setTitle("WPS Monitor");
         setBackground(new java.awt.Color(255, 255, 255));
+        setIconImage(new ImageIcon(getClass().getResource("/icons/wpsmonitor-64x64.png")).getImage());
         setName("wpsGui"); // NOI18N
         setResizable(false);
 
@@ -261,7 +263,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
         aboutMenu.setText("Help");
 
-        aboutMenuItem.setText("About");
+        aboutMenuItem.setText("About WPS Monitor");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aboutMenuItemActionPerformed(evt);
@@ -281,9 +283,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 100, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

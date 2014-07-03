@@ -72,6 +72,8 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         this.wpsProcess = wpsProcess;
         this.parent = parent;
         
+        this.startDate.setDate(new Date());
+        
         saveJob.setBackground(new Color(255, 51, 51));
         init(triggerConfig);
     }

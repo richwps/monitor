@@ -15,7 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.routes;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.MonitorRoute;
+import java.util.List;
 import spark.Request;
 import spark.Response;
 
@@ -31,6 +33,11 @@ public class ListWpsProcessRoute extends MonitorRoute {
 
     @Override
     public Object handle(Request request, Response response) {
-        return "Hello World!";
+        
+        String wpsIdentifier = request.params(":wpsidentifier");
+        
+        List<WpsProcessEntity> processesOfWps = getMonitorControl().getProcessesOfWps(wpsIdentifier);
+        
+        return getStrategy().presentate(processesOfWps);
     }
 }

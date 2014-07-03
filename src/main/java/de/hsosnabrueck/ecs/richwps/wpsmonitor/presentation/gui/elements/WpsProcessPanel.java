@@ -44,7 +44,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private WpsMonitorGui mainFrame;
     private WpsProcessJobDialog wpsProcessJobDialog;
     private JPanel parent;
-    private ShowMeasuredData measuredDataDialog;
+    private ShowMeasuredDataDialog measuredDataDialog;
 
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
@@ -88,7 +88,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
     private void init() {
         this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess, true);
-        this.measuredDataDialog = new ShowMeasuredData(mainFrame, wpsProcess, true);
+        this.measuredDataDialog = new ShowMeasuredDataDialog(mainFrame, wpsProcess, true);
 
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());

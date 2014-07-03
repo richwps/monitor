@@ -20,6 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import javax.swing.ImageIcon;
 
 /**
  * JDialog to edit WPS. Actions with this dialog have an impact on the scheduler
@@ -55,6 +56,8 @@ public class WpsEditDialog extends javax.swing.JDialog {
                 .getUri()
                 .toString()
         );
+        
+        appendTitle(addParentPanel.getWps().getIdentifier());
     }
 
     /**
@@ -75,6 +78,7 @@ public class WpsEditDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit WPS");
+        setIconImage(new ImageIcon(getClass().getResource("/icons/edit.png")).getImage());
 
         identifierDecoText.setText("Identifier");
 
@@ -189,6 +193,10 @@ public class WpsEditDialog extends javax.swing.JDialog {
 
     private void showUriErrorDialog() {
         MessageDialogs.showError(this, "Malformed URI", "The entered URI is not valid!");
+    }
+    
+    private void appendTitle(String name) {
+        this.setTitle(getTitle() + " " + name);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -21,6 +21,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ShowMeasuredData extends javax.swing.JDialog {
+public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
     private final WpsMonitorGui monitorMainFrame;
     private final WpsProcessEntity wpsProcess;
@@ -44,7 +45,7 @@ public class ShowMeasuredData extends javax.swing.JDialog {
      * @param process WpsProcessEntity to select the right measured data
      * @param modal true for modal dialog
      */
-    public ShowMeasuredData(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
+    public ShowMeasuredDataDialog(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
@@ -95,8 +96,11 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         deleteOlderAsDate = new com.toedter.calendar.JDateChooser();
         refreshButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Show measured data of Process");
+        setIconImage(new ImageIcon(getClass().getResource("/icons/measure.png")).getImage());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Measured Data"));
 
@@ -129,6 +133,14 @@ public class ShowMeasuredData extends javax.swing.JDialog {
             }
         });
 
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -145,8 +157,10 @@ public class ShowMeasuredData extends javax.swing.JDialog {
                         .addComponent(deleteOlderAsDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(deleteByDateButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteAllButton)))
+                        .addGap(10, 10, 10)
+                        .addComponent(deleteAllButton)
+                        .addGap(10, 10, 10)
+                        .addComponent(closeButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -158,7 +172,8 @@ public class ShowMeasuredData extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(deleteAllButton)
-                        .addComponent(deleteByDateButton))
+                        .addComponent(deleteByDateButton)
+                        .addComponent(closeButton))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
@@ -229,8 +244,13 @@ public class ShowMeasuredData extends javax.swing.JDialog {
         recaptureData();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_closeButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton closeButton;
     private javax.swing.JButton deleteAllButton;
     private javax.swing.JButton deleteByDateButton;
     private com.toedter.calendar.JDateChooser deleteOlderAsDate;
