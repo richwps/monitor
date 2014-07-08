@@ -89,7 +89,7 @@ public class MeasureJob implements Job {
             // if no execption occurs (except Connection exception), then call probes and store Data 
             error = response.isOtherException() || response.isWpsException();
 
-            if (!error) {
+            if (!error && request.getRequestTime() != null) {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
             }
@@ -102,6 +102,10 @@ public class MeasureJob implements Job {
                     response.isConnectionException() ? "true" : "false",
                     response.isOtherException() ? "true" : "false"
             );
+            
+            if(request.getRequestTime() == null) {
+                log.error("RequestTime was not set in WpsRequest!");
+            }
         } catch (Exception ex) {
             log.warn(ex);
         }
