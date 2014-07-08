@@ -61,4 +61,9 @@ public class JaxbPresentateStrategy implements PresentateStrategy {
 
         return null;
     }
+
+    @Override
+    public String getMimeType() {
+        return "application/xml";
+    }
 }

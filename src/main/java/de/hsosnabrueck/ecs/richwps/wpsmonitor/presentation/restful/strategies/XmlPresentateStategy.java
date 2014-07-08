@@ -32,4 +32,9 @@ public class XmlPresentateStategy implements PresentateStrategy {
         return xStream.toXML(presentate);
     }
 
+    @Override
+    public String getMimeType() {
+        return "application/xml";
+    }
+
 }

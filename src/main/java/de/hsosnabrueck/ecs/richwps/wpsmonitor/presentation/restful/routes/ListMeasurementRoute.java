@@ -70,7 +70,9 @@ public class ListMeasurementRoute extends MonitorRoute {
             if(toPresentate == null) {
                 toPresentate = getRaw(measuredData);
             }
-
+            
+            response.type(getStrategy().getMimeType());
+            
             return getStrategy()
                     .presentate(toPresentate);
         } catch (IllegalArgumentException exception) {

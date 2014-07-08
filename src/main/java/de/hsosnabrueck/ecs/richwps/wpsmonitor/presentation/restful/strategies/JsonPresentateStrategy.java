@@ -51,4 +51,9 @@ public class JsonPresentateStrategy implements PresentateStrategy {
 
         return gson.toJson(presentateObjects);
     }
+
+    @Override
+    public String getMimeType() {
+        return "application/json";
+    }
 }

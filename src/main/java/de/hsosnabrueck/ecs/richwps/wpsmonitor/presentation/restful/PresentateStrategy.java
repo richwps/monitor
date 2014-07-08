@@ -30,4 +30,11 @@ public interface PresentateStrategy {
      * @return String
      */
     public String presentate(Object presentate);
+    
+    /**
+     * Returns the mimeTime of the specific strategy.
+     * 
+     * @return String
+     */
+    public String getMimeType();
 }
