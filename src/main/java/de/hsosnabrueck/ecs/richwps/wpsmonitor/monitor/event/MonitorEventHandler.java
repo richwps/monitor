@@ -119,4 +119,13 @@ public class MonitorEventHandler {
 
         log.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
     }
+    
+    /**
+     * Merges the given EventHandler-instance with this EventHandler instance.
+     * 
+     * @param toMerge EventHandler instance.
+     */
+    public void merge(MonitorEventHandler toMerge) {
+        events.putAll(toMerge.events);
+    }
 }
