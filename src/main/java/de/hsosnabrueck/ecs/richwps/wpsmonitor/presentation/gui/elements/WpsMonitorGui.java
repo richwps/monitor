@@ -17,26 +17,36 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.quartz.SchedulerException;
 
 /**
  * Main frame of the monitor GUI. The monitor gets the Monitor instance as
  * constructor dependency. The monitor GUI allows to add, remove or edit WPS,
- * WPSProcesses and Triggers. You can also show and remove the measured data of the
- * wps process. You can stop and resume the monitoring of wps processes.
+ * WPSProcesses and Triggers. You can also show and remove the measured data of
+ * the wps process. You can stop and resume the monitoring of wps processes.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsMonitorGui extends javax.swing.JFrame {
 
     private final Monitor monitor;
+
+    private static final Logger log = LogManager.getLogger();
 
     /**
      * Creates new form WpsMonitorGui instance.
@@ -59,6 +69,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         List<WpsEntity> wpsList = monitor.getMonitorControl()
                 .getWpsList();
 
+        wpsAddPanel.removeAll();
         for (WpsEntity wps : wpsList) {
             createAndAddWpsPanel(wps);
         }
@@ -108,7 +119,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
         javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         javax.swing.JLabel wpsIdentifierDecoText = new javax.swing.JLabel();
         wpsToAddField = new javax.swing.JTextField();
@@ -120,6 +131,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         wpsAddPanel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu monitorMenu = new javax.swing.JMenu();
+        restartButton = new javax.swing.JMenuItem();
         javax.swing.JMenuItem settingsMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator1 = new javax.swing.JPopupMenu.Separator();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -216,20 +228,20 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -238,6 +250,15 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         );
 
         monitorMenu.setText("Monitor");
+
+        restartButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        restartButton.setText("Restart");
+        restartButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restartButtonActionPerformed(evt);
+            }
+        });
+        monitorMenu.add(restartButton);
 
         settingsMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/settings.png"))); // NOI18N
         settingsMenuItem.setText("Settings");
@@ -279,11 +300,11 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -377,9 +398,16 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         new About(this, true).setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
+    private void restartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartButtonActionPerformed
+        reInit();
+        monitor.restart();
+    }//GEN-LAST:event_restartButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem restartButton;
     private javax.swing.JPanel wpsAddPanel;
     private javax.swing.JScrollPane wpsScrollPane;
     private javax.swing.JTextField wpsToAddField;
