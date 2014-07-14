@@ -17,6 +17,11 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityConverter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -26,10 +31,13 @@ public class ResponseConverter extends EntityConverter {
 
     @Override
     public Object convert() {
-        Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE, average = 0, notAvailableCounter = 0;
-        Double availability = 0.;
-
-        for (AbstractQosEntity e : getEntities()) {
+        Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE, notAvailableCounter = 0;
+        Double availability = 0., average = 0.;
+        
+        List<AbstractQosEntity> entities = getEntities();
+        List<Integer> averageList = new ArrayList<Integer>();
+        
+        for (AbstractQosEntity e : entities) {
             if (e instanceof ResponseEntity) {
                 ResponseEntity responseEntity = (ResponseEntity) e;
 
@@ -43,26 +51,55 @@ public class ResponseConverter extends EntityConverter {
                     if (compare < best) {
                         best = compare;
                     }
-
-                    average += compare;
+                    
+                    averageList.add(compare);
                 } else {
                     ++notAvailableCounter;
                 }
             }
         }
         
-        if (!getEntities().isEmpty()) {
-            average = average / getEntities().size();
+        if (!getEntities().isEmpty()) {            
+
             Integer a, b;
-            a = getEntities().size();
+            a = entities.size();
             b = notAvailableCounter;
-            System.out.println("NotAvailable " + a);
-            availability = a - (100. * b / a);
+
+            availability = 100 - (100.0 * b / a);
+            average = computeMedian(averageList.toArray(new Integer[averageList.size()]));
         } else {
             return "No Data available";
         }
-
-        return new ResponseConverted(best, worst, average, availability);
+        
+        
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("availability", availability);
+        data.put("average", average);
+        data.put("worst", worst);
+        data.put("best", best);
+        
+        return data;
+    }
+    
+    private Double computeMedian(Integer[] values) {
+        Double median = null;
+        
+        if(values != null && values.length > 0) {
+            Integer index = values.length / 2;
+            double _median;
+            
+            Arrays.sort(values);
+            
+            if(index % 2 == 0) {
+                _median = (double)(values[index] + values[index - 1]) / 2;
+            } else {
+                _median = (double)values[index];
+            }
+            
+            median = _median; // better as (Double)(double) ..
+        }
+        
+        return median;
     }
 
     @Override
