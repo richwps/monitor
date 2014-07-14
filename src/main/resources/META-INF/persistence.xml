@@ -12,8 +12,7 @@
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="javax.persistence.jdbc.user" value=""/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
-      <property name="eclipselink.logging.level" value="FINE"/>
+      <!--<property name="eclipselink.logging.level" value="FINE"/>-->
       <!--<property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>-->
     </properties>
   </persistence-unit>

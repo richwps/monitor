@@ -28,12 +28,11 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 /**
- * General entity for qos-measurements. All qos entity musst extends this
+ * General entity for qos-measurements. All qos entity must extends this
  * entity. Otherwise they can't persisted in the database
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-@Entity
 @NamedQueries({
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
@@ -60,6 +59,7 @@ import javax.persistence.OneToOne;
      */
     @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.createTime < :date)")
 })
+@Entity
 public abstract class AbstractQosEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -456,15 +456,12 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized Boolean isPaused(final JobKey jobKey) throws SchedulerException {
-        for (String triggerGroup : scheduler.getPausedTriggerGroups()) {
-            Set<TriggerKey> triggerKeys = scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(triggerGroup));
-
-            for (TriggerKey triggerKey : triggerKeys) {
-                Trigger trigger = scheduler.getTrigger(triggerKey);
-
-                if (trigger.getJobKey().equals(jobKey)) {
-                    return true;
-                }
+        Set<String> pausedTriggerGroups = scheduler.getPausedTriggerGroups();
+        List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
+        
+        for(Trigger t : triggersOfJob) {
+            if(scheduler.getTriggerState(t.getKey()) == Trigger.TriggerState.PAUSED) {
+                return true;
             }
         }
 

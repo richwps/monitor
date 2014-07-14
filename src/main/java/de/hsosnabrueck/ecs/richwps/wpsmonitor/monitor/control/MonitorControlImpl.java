@@ -427,8 +427,6 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        WpsProcessDataAccess wpsProcessDao;
-
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
@@ -438,10 +436,7 @@ public class MonitorControlImpl implements MonitorControl {
             if (find != null) {
                 JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
 
-                assert find.isWpsException() && schedulerControl.isPaused(jobKey)
-                        || !find.isWpsException() && !schedulerControl.isPaused(jobKey);
-
-                return find.isWpsException();
+                return schedulerControl.isPaused(jobKey);
             }
         } catch (SchedulerException ex) {
             log.warn("MonitorControl: {}", ex);

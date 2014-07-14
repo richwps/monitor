@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -82,8 +84,8 @@ public class MeasuredDataEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "measuredData_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "measureddata_id")
     private Long id;
 
     @Column(nullable = false, updatable = false)
@@ -95,7 +97,7 @@ public class MeasuredDataEntity implements Serializable {
     private WpsProcessEntity process;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "owner_id", referencedColumnName = "measuredData_id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "measureddata_id")
     private List<AbstractQosEntity> data;
 
     public MeasuredDataEntity() {
