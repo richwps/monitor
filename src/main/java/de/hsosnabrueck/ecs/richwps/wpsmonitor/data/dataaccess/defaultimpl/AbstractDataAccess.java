@@ -49,13 +49,13 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Gets an EntityManager instance. The ConfiguredEntityManagerFactory
-     * ensures that every thread gets its own EntityManager instance
+     * Gets an EntityManager instance. The InitJpa
+ ensures that every thread gets its own EntityManager instance
      * 
      * @return EntityManager instance
      */
     protected EntityManager getEntityManager() {
-        return ConfiguredEntityManagerFactory
+        return InitJpa
                 .getThreadEntityManager();
     }
 
