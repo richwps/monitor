@@ -27,9 +27,9 @@ import org.apache.logging.log4j.Logger;
 /**
  * Representate the configuration of a {@link Monitor} instance. For this
  * purpose, the MonitorConfig will be used a extended version of the
- * {@link Properties} class. All configurations will be read out of a
- * properties file. If the save-method is called, all changed properties will be
- * written back into the properties file.
+ * {@link Properties} class. All configurations will be read out of a properties
+ * file. If the save-method is called, all changed properties will be written
+ * back into the properties file.
  *
  * If a config is not valid, then the default properties is used as fallback.
  *
@@ -40,6 +40,7 @@ public final class MonitorConfig {
     private Integer deleteIntervalInDays;
     private Calendar deleteTime;
     private Boolean deleteJobActiv;
+    private Integer wpsClientTimeout;
 
     private final Properties properties;
     private final File propertiesFile;
@@ -58,6 +59,7 @@ public final class MonitorConfig {
         defaultProperties.setProperty("qos.delete.afterdays", "360");
         defaultProperties.setProperty("qos.delete.attime", "9:00");
         defaultProperties.setProperty("qos.delete", "true");
+        defaultProperties.setProperty("wpsclient.timeout", "1");
     }
 
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
@@ -89,9 +91,10 @@ public final class MonitorConfig {
         Integer afterDays = properties.getIntegerProperty("qos.delete.afterdays");
         Calendar atTime = properties.getCalendarProperty("qos.delete.attime", "HH:mm");
         Boolean cleanupJobActive = properties.getBooleanProperty("qos.delete");
+        Integer wpsTimeout = properties.getIntegerProperty("wpsclient.timeout");
 
         if (afterDays == null) {
-            throw new MonitorConfigException("Properties error: qos.delete.afterdays need to be an integer value");
+            throw new MonitorConfigException("Properties error: qos.delete.afterdays needs to be an integer value");
         }
 
         if (atTime == null) {
@@ -99,12 +102,17 @@ public final class MonitorConfig {
         }
 
         if (cleanupJobActive == null) {
-            throw new MonitorConfigException("Properties error:qos.delete need to be a boolean value");
+            throw new MonitorConfigException("Properties error:qos.delete needs to be a boolean value");
+        }
+
+        if (wpsTimeout == null) {
+            throw new MonitorConfigException("Properties error:wpsclient.timeout needs to be a Integer value");
         }
 
         setDeleteIntervalInDays(afterDays);
         setDeleteJobActiv(cleanupJobActive);
         setDeleteTime(atTime);
+        setWpsClientTimeout(wpsTimeout);
     }
 
     private void assignVarsToPropertieObj() {
@@ -114,6 +122,7 @@ public final class MonitorConfig {
         properties.setProperty("qos.delete.afterdays", deleteIntervalInDays.toString());
         properties.setProperty("qos.delete.attime", hour.toString() + ":" + minute.toString());
         properties.setProperty("qos.delete", deleteJobActiv ? "true" : "false");
+        properties.setProperty("wpsclient.timeout", wpsClientTimeout.toString());
     }
 
     /**
@@ -156,8 +165,9 @@ public final class MonitorConfig {
     }
 
     /**
-     * Calendar instance which contains the point of time (HH:mm) when Qos measurement data
-     * should be deleted (Trigger-time of the cleanup job is meant here).
+     * Calendar instance which contains the point of time (HH:mm) when Qos
+     * measurement data should be deleted (Trigger-time of the cleanup job is
+     * meant here).
      *
      * @return Calendar instance
      */
@@ -166,8 +176,9 @@ public final class MonitorConfig {
     }
 
     /**
-     * Calendar instance which contains the point of time (HH:mm) when Qos measurement data
-     * should be deleted (Trigger-time of the cleanup job is meant here).
+     * Calendar instance which contains the point of time (HH:mm) when Qos
+     * measurement data should be deleted (Trigger-time of the cleanup job is
+     * meant here).
      *
      * @param deleteTime Calendar instance
      */
@@ -197,7 +208,46 @@ public final class MonitorConfig {
         }
     }
 
-    public Properties getProperties() {
-        return properties;
+    /**
+     * Can be used to set own properties. To reduce the chance to create name
+     * conflicts or to overwrite monitor properties, "custom."-String will be
+     * prepend.
+     *
+     * @param string Property name
+     * @param string1 Property value
+     * @return Previous Property
+     */
+    public synchronized Object setCustomProperty(String string, String string1) {
+        return properties.setProperty("custom." + string, string1);
+    }
+
+    /**
+     * "custom."-String will be prepend to string.
+     *
+     * @param string Property name
+     * @return Property
+     */
+    public String getCustomProperty(String string) {
+        return properties.getProperty("custom." + string);
+    }
+
+    /**
+     * Gets the WpsClient-Timeout value.
+     * 
+     * @return Integer instance
+     */
+    public Integer getWpsClientTimeout() {
+        return wpsClientTimeout;
+    }
+
+    /**
+     * Sets the WpsClient-Timeout value.
+     * 
+     * @param wpsClientTimeout Integer instance
+     */
+    public void setWpsClientTimeout(Integer wpsClientTimeout) {
+        if (wpsClientTimeout > 0) {
+            this.wpsClientTimeout = wpsClientTimeout;
+        }
     }
 }
