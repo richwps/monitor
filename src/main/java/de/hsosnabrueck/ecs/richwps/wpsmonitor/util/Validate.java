@@ -40,4 +40,18 @@ public class Validate {
 
         return var;
     }
+    
+    /**
+     * Checks if t is true.
+     * 
+     * @param t
+     * @param name Outputname for exception message
+     */
+    public static void isTrue(Boolean t, String name) {
+        notNull(t, name);
+        
+        if (!t) {
+            throw new IllegalArgumentException(name + " was not valid.");
+        }
+    }
 }
