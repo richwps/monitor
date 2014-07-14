@@ -18,6 +18,8 @@ A Monitoring System to monitor Web Processing Services (WPS)
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
+| monitor.start                           |                   |
+| monitor.restart                         |                   |
 | monitor.shutdown                        |                   |
 
 ### Events triggered by MonitorControl
