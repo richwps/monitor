@@ -105,6 +105,9 @@ public class MonitorBuilder {
      */
     private File propertiesFile;
     
+    /**
+     * Config object for the monitor instance
+     */
     private MonitorConfig monitorConfig;
 
     /**
