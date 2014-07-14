@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
