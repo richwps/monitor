@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.ConfiguredEntityManagerFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.InitJpa;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
@@ -66,16 +66,27 @@ public class Application {
     public void run() throws SchedulerException, Exception {
         Monitor monitor = setupMonitor();
 
-        // register JPA Shutdown
-        monitor.getEventHandler()
-                .registerListener("monitor.shutdown", new MonitorEventListener() {
+        // register JPA start
+        monitor.getEventHandler().registerListener("monitor.start",
+                new MonitorEventListener() {
 
                     @Override
                     public void execute(MonitorEvent event) {
-                        ConfiguredEntityManagerFactory.close();
+                        InitJpa.open();
                     }
                 }
-                );
+        );
+        
+        // register JPA Shutdown
+        monitor.getEventHandler().registerListener("monitor.shutdown",
+                new MonitorEventListener() {
+
+                    @Override
+                    public void execute(MonitorEvent event) {
+                        InitJpa.close();
+                    }
+                }
+        );
 
         log.trace("WpsMonitor is starting up ...");
         monitor.start();
@@ -119,7 +130,7 @@ public class Application {
                     .withStrategy(new JsonPresentateStrategy())
                     .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
                     .build();
-            
+
             restInterface
                     .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
                         @Override
@@ -151,7 +162,7 @@ public class Application {
         } catch (BuilderException ex) {
             log.error(ex);
         }
-        
+
         return restInterface;
     }
 }
