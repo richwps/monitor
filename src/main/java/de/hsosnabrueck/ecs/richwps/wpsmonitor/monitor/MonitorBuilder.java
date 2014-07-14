@@ -15,12 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
@@ -30,19 +26,27 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -100,6 +104,8 @@ public class MonitorBuilder {
      * File object which should point to a *.properties file.
      */
     private File propertiesFile;
+    
+    private MonitorConfig monitorConfig;
 
     /**
      * Sets the {@link ProbeService} instance.
@@ -333,6 +339,18 @@ public class MonitorBuilder {
 
         return this;
     }
+    
+    private void setupMonitorConfig() throws BuilderException {
+        if(propertiesFile == null) {
+            withDefaultPropertiesFile();
+        }
+        
+        try {
+            monitorConfig = new MonitorConfig(propertiesFile);
+        } catch (MonitorConfigException ex) {
+            throw new BuilderException(ex.toString());
+        }
+    }
 
     /**
      * Calls all default methods.
@@ -477,6 +495,27 @@ public class MonitorBuilder {
                 || propertiesFile == null);
     }
 
+    public MonitorControlImpl buildMonitorControl() throws BuilderException {
+        MonitorControlImpl control = null;
+
+        if (isValid()) {
+            try {
+                control = new MonitorControlImpl(buildSchedulerControl(),
+                        getEventHandler(),
+                        qosDaoFactory,
+                        wpsDaoFactory,
+                        wpsProcessDaoFactory
+                );
+            } catch (SchedulerException ex) {
+                throw new BuilderException(ex.toString());
+            } catch (CreateException ex) {
+                throw new BuilderException(ex.toString());
+            }
+        }
+
+        return control;
+    }
+
     /**
      * Build a {@link Monitor} instance with all necessary dependencies. This
      * MonitorBuilder instance will be a part of the Monitor-instance. Be aware
@@ -487,32 +526,23 @@ public class MonitorBuilder {
      */
     public Monitor build() throws BuilderException {
 
-        Monitor builded = null;
-
         try {
             if (!isValid()) {
                 throw new BuilderException("Builder state is not valid because of some dependencies are missing. Call setupDefault() first.");
             }
 
             setupEventHandler();
-
-            MonitorControlImpl monitorControl = new MonitorControlImpl(buildSchedulerControl(),
-                    getEventHandler(),
-                    qosDaoFactory,
-                    wpsDaoFactory,
-                    wpsProcessDaoFactory
-            );
-
-            builded = new Monitor(monitorControl, propertiesFile, eventHandler, this);
-        } catch (CreateException ex) {
-            throw new BuilderException(ex.toString());
-        } catch (SchedulerException ex) {
-            throw new BuilderException(ex.toString());
+            setupMonitorConfig();
+            
+            WpsClientConfig wpsClientConfig = new WpsClientConfig();
+            wpsClientConfig.setConnectionTimeout(monitorConfig.getWpsClientTimeout());
+            
+            withWpsClientConfig(wpsClientConfig);
+            
+            return new Monitor(this);
         } catch (MonitorConfigException ex) {
             throw new BuilderException(ex.toString());
         }
-
-        return builded;
     }
 
     /**
@@ -547,5 +577,17 @@ public class MonitorBuilder {
     public MonitorEventHandler getEventHandler() {
         setupEventHandler();
         return eventHandler;
+    }
+
+    public WpsClientConfig getWpsClientConfig() {
+        return wpsClientConfig;
+    }
+
+    public File getPropertiesFile() {
+        return propertiesFile;
+    }
+
+    public MonitorConfig getMonitorConfig() {
+        return monitorConfig;
     }
 }

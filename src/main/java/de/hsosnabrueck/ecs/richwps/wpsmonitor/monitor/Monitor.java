@@ -32,9 +32,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import java.io.File;
 import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,21 +49,23 @@ import org.quartz.TriggerKey;
 /**
  * Representation of the WpsMonitor. To control the Monitor, call
  * getMonitorControl. MonitorControl is a facade to control the monitor (e.g.
- * create a WPS and trigger processes for it). Call start() or shutdown() to start
- * or stop the monitor. The monitor fires a monitor.shutdown-event if shutdown() is
- * called. shutdown() will be called through a shutdownHook if the monitor is
- * not shut down already. Also a cleanUp-job is registred, which will try
- * to clean up old measurements. This behavior can be configured in the 
+ * create a WPS and trigger processes for it). Call start() or shutdown() to
+ * start or stop the monitor. The monitor fires a monitor.shutdown-event if
+ * shutdown() is called. shutdown() will be called through a shutdownHook if the
+ * monitor is not shut down already. Also a cleanUp-job is registred, which will
+ * try to clean up old measurements. This behavior can be configured in the
  * monitor.properties file.
+ *
+ * This instance initializt the Monitor with the MonitorBuilder instance.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Monitor {
 
-    private final MonitorControlImpl monitorControl;
-    private final MonitorBuilder builderInstance;
-    private final MonitorConfig config;
-    private final MonitorEventHandler eventHandler;
+    private MonitorControlImpl monitorControl;
+    private MonitorBuilder builderInstance;
+    private MonitorConfig config;
+    private MonitorEventHandler eventHandler;
 
     private final static Logger log;
 
@@ -71,15 +73,75 @@ public class Monitor {
         log = LogManager.getLogger();
     }
 
-    public Monitor(MonitorControlImpl monitorControl, File propertiesFile, MonitorEventHandler eventHandler,
-            MonitorBuilder builder) throws MonitorConfigException {
+    public Monitor(MonitorBuilder builder) throws MonitorConfigException {
+        Validate.notNull(builder, "builder");
+        Validate.isTrue(builder.isValid(), "builder");
 
-        this.monitorControl = Validate.notNull(monitorControl, "monitorControl");
-        this.builderInstance = Validate.notNull(builder, "builder");
-        this.eventHandler = Validate.notNull(eventHandler, "eventHandler");
-        this.config = new MonitorConfig(propertiesFile);
-
+        initMonitorWithBuilder(builder);
         initGeneral();
+    }
+
+    public void start() throws SchedulerException {
+        if (!isActive()) {
+            beforeStart();
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitor.start"));
+
+            monitorControl
+                    .getSchedulerControl()
+                    .start();
+
+            afterStart();
+        }
+    }
+
+    public void shutdown() throws SchedulerException {
+        if (isActive()) {
+            log.debug("Monitor shutdown.");
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitor.shutdown"));
+
+            config.save();
+            monitorControl.getSchedulerControl()
+                    .shutdown();
+        }
+    }
+
+    public void restart() {
+        try {
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitor.restart"));
+
+            shutdown();
+
+            initMonitorWithBuilder(builderInstance);
+            start();
+        } catch (SchedulerException ex) {
+            log.error(ex);
+        } catch (MonitorConfigException ex) {
+            log.error(ex);
+        }
+    }
+
+    private void initMonitorWithBuilder(MonitorBuilder builder) throws MonitorConfigException {
+        try {
+            this.monitorControl = builder.buildMonitorControl();
+            this.builderInstance = builder;
+            this.config = builder.getMonitorConfig();
+
+            // to prevent that all listeners must be reregistred after a restart
+            MonitorEventHandler tmpEventHandler = builder.getEventHandler();
+
+            if (eventHandler != null) {
+                this.eventHandler.merge(tmpEventHandler);
+            } else {
+                this.eventHandler = tmpEventHandler;
+            }
+        } catch (BuilderException ex) {
+            log.fatal(ex);
+        }
     }
 
     private void initGeneral() {
@@ -103,6 +165,8 @@ public class Monitor {
     private void initEventHandler() {
         eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
         eventHandler.registerEvent("measurement.wpsjob.wpsexception");
+        eventHandler.registerEvent("monitor.start");
+        eventHandler.registerEvent("monitor.restart");
         eventHandler.registerEvent("monitor.shutdown");
     }
 
@@ -197,33 +261,7 @@ public class Monitor {
         }
     }
 
-    public void start() throws SchedulerException {
-        if (!isActive()) {
-            beforeStart();
-
-            monitorControl
-                    .getSchedulerControl()
-                    .start();
-
-            afterStart();
-        }
-    }
-
-    public void shutdown() throws SchedulerException {
-        if (isActive()) {
-            log.debug("Monitor shutdown.");
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitor.shutdown"));
-
-            config.save();
-            monitorControl.getSchedulerControl()
-                    .shutdown();
-        }
-    }
-
     public MonitorControl getMonitorControl() {
-        log.debug("getMonitorControl called by {}", Thread.currentThread().getName());
         return monitorControl;
     }
 
