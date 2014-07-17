@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.QosProbe;
 
 /**

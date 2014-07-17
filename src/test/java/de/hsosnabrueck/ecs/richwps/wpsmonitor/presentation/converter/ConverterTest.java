@@ -15,16 +15,16 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.ConverterFactoryMap;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.EntityDispatcher;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.converter.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.ConverterFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.DispatcherFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.strategies.JsonPresentateStrategy;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.PresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

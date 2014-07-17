@@ -26,8 +26,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
@@ -38,10 +38,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryServic
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

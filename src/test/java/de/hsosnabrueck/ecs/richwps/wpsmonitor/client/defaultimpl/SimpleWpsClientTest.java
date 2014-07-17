@@ -15,13 +15,13 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.defaultimpl.SimpleWpsClientFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsClientFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsProcessInfo;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsRequest;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.wpsclient.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

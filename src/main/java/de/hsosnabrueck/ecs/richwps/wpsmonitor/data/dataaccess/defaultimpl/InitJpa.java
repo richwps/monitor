@@ -73,6 +73,9 @@ public abstract class InitJpa {
         if (emf.isOpen()) {
             log.debug("Close EntityManager Factory...");
             emf.close();
+            
+            entityStorage = null;
+            entityManagerList = null;
         }
     }
 

@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.restful.Hide;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.Hide;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;

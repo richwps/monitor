@@ -17,7 +17,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 
 /**
  * Default factory for a WpsDataAccess

@@ -58,12 +58,12 @@ public class Properties extends java.util.Properties {
             intValue = Integer.parseInt(propertyValue);
         } catch (NumberFormatException ex) {
             try {
-                log.warn(ex);
+                log.warn("Can't convert Property with Key \"{}\" to Integer. Try to convert default Property.", propertyKey);
 
                 propertyValue = defaultProperties.getProperty(propertyKey);
                 intValue = Integer.parseInt(propertyValue);
             } catch (NumberFormatException e) {
-                log.error(ex);
+                log.error("Can't convert Default-Property with Key \"{}\" to Integer.", propertyKey);
             }
         } catch (NullPointerException ex) {
             log.error(ex);
