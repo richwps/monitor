@@ -11,6 +11,8 @@ A Monitoring System to monitor Web Processing Services (WPS)
 * [Apache HTTP Components](http://hc.apache.org/) (used for a simple WpsClient)
 * [Apache Derby](http://db.apache.org/derby/)
 
+## Architecture
+![Software Architecture image](https://raw.githubusercontent.com/Fruchuxs/RichWPS-Monitor/master/projectfiles/softwarearchitecture.PNG)
 
 ## Monitor Events
 
