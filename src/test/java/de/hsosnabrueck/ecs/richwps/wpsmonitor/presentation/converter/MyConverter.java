@@ -16,17 +16,17 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**
  *
  * @author FloH
  */
-public class MyConverter extends EntityConverter {
+public class MyConverter extends QosMetric {
 
     @Override
-    public Object convert() {
+    public Object calculate() {
         ExampleQos q;
         Integer sum = 0;
 

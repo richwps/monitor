@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
@@ -26,9 +26,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
  */
 public class DispatcherFactory implements Factory<EntityDispatcher> {
 
-    private final ConverterFactoryMap converterMap;
+    private final MetricFactoryMap converterMap;
 
-    public DispatcherFactory(final ConverterFactoryMap converterMap) {
+    public DispatcherFactory(final MetricFactoryMap converterMap) {
         this.converterMap = Validate.notNull(converterMap, "converterMap");
     }
 

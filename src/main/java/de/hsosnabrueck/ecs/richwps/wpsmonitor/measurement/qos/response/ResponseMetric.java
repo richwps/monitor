@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,10 +27,10 @@ import java.util.Map;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ResponseConverter extends EntityConverter {
+public class ResponseMetric extends QosMetric {
 
     @Override
-    public Object convert() {
+    public Object calculate() {
         Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE, notAvailableCounter = 0;
         Double availability = 0., average = 0.;
         

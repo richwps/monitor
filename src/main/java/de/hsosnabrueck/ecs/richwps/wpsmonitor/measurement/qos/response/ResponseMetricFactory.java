@@ -17,17 +17,17 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ResponseConverterFactory implements Factory<EntityConverter> {
+public class ResponseMetricFactory implements Factory<QosMetric> {
 
     @Override
-    public EntityConverter create() throws CreateException {
-        return new ResponseConverter();
+    public QosMetric create() throws CreateException {
+        return new ResponseMetric();
     }
 
 }

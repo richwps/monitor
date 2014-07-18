@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
@@ -28,19 +28,19 @@ import java.util.Set;
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ConverterFactoryMap  {
-    private final Map<String, Set<Factory<EntityConverter>>> converterMap;
+public class MetricFactoryMap  {
+    private final Map<String, Set<Factory<QosMetric>>> converterMap;
 
-    public ConverterFactoryMap() {
-        this.converterMap = new HashMap<String, Set<Factory<EntityConverter>>>();
+    public MetricFactoryMap() {
+        this.converterMap = new HashMap<String, Set<Factory<QosMetric>>>();
     }
     
-    public ConverterFactoryMap add(final String index, final Factory<EntityConverter> converterFactory) {
+    public MetricFactoryMap add(final String index, final Factory<QosMetric> converterFactory) {
         Validate.notNull(index, "index");
         Validate.notNull(converterFactory, "converterFactory");
                 
         if(!converterMap.containsKey(index)) {
-            converterMap.put(index, new HashSet<Factory<EntityConverter>>());
+            converterMap.put(index, new HashSet<Factory<QosMetric>>());
         }
         
         converterMap.get(index).add(converterFactory);
@@ -48,11 +48,11 @@ public class ConverterFactoryMap  {
         return this;
     }
     
-    public Set<Factory<EntityConverter>> get(final String index) {
+    public Set<Factory<QosMetric>> get(final String index) {
         return converterMap.get(index);
     }
 
-    public Set<Map.Entry<String, Set<Factory<EntityConverter>>>> entrySet() {
+    public Set<Map.Entry<String, Set<Factory<QosMetric>>>> entrySet() {
         return converterMap.entrySet();
     }
 }

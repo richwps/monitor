@@ -15,9 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.ConverterFactoryMap;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityDispatcher;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -53,7 +53,7 @@ public class ConverterTest {
 
     @BeforeClass
     public static void setUpClass() {
-        ConverterFactoryMap converterMap = new ConverterFactoryMap();
+        MetricFactoryMap converterMap = new MetricFactoryMap();
         converterMap.add("exampleMeasurement", new MyConverterFactory());
 
         dispatchFactory = new DispatcherFactory(converterMap);

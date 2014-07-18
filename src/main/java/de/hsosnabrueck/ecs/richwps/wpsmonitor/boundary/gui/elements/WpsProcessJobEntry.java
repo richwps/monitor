@@ -260,7 +260,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                         .getMonitorControl()
                         .saveTrigger(wpsProcess, triggerConfig);
 
-                if (triggerConfig.isSaved()) {
+                if (!triggerConfig.isSaved()) {
                     MessageDialogs.showError(mainFrame,
                             "Error",
                             "Job was not created. Is Scheduler started? See the logs."

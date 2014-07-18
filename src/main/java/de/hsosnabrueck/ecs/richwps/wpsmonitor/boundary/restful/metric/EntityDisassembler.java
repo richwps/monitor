@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
@@ -37,15 +37,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class EntityDisassembler {
 
-    private final ConverterFactoryMap converterMap;
+    private final MetricFactoryMap converterMap;
     private final static Logger log = LogManager.getLogger();
     private final String NO_CONVERTER_INDEX;
 
-    public EntityDisassembler(final ConverterFactoryMap converterMap) {
+    public EntityDisassembler(final MetricFactoryMap converterMap) {
         this(converterMap, "raw");
     }
 
-    public EntityDisassembler(final ConverterFactoryMap converterMap, final String noConverterIndex) {
+    public EntityDisassembler(final MetricFactoryMap converterMap, final String noConverterIndex) {
         this.converterMap = Validate.notNull(converterMap, "converterMap");
         this.NO_CONVERTER_INDEX = noConverterIndex;
     }
@@ -56,8 +56,8 @@ public class EntityDisassembler {
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
-    public Map<String, EntityConverter> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
-        Map<String, Set<EntityConverter>> converters = createNewBunchOfConverters();
+    public Map<String, QosMetric> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
+        Map<String, Set<QosMetric>> converters = createNewBunchOfConverters();
 
         return disassembleLoop(dataList, converters);
     }
@@ -68,20 +68,20 @@ public class EntityDisassembler {
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
-    public Map<String, EntityConverter> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
+    public Map<String, QosMetric> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
         return disassembleLoop(dataList);
     }
 
-    public Map<String, EntityConverter> disassembleToConvertersWithRawData(final List<MeasuredDataEntity> dataList) {
-        Map<String, Set<EntityConverter>> converters = createNewBunchOfConverters();
+    public Map<String, QosMetric> disassembleToConvertersWithRawData(final List<MeasuredDataEntity> dataList) {
+        Map<String, Set<QosMetric>> converters = createNewBunchOfConverters();
 
-        Map<String, EntityConverter> merged = disassembleLoop(dataList, converters);
+        Map<String, QosMetric> merged = disassembleLoop(dataList, converters);
         merged.putAll(disassembleToDummyConverter(dataList));
 
         return merged;
     }
 
-    private Map<String, EntityConverter> disassembleLoop(final List<MeasuredDataEntity> dataList) {
+    private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList) {
         return disassembleLoop(dataList, null);
     }
 
@@ -89,12 +89,12 @@ public class EntityDisassembler {
      * Mainloop which processes each disassemble process (very complex code ..
      * teh code of hell).
      *
-     * @param converters EntityConverter list
+     * @param converters QosMetric list
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
-    private Map<String, EntityConverter> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<EntityConverter>> converters) {
-        Map<String, EntityConverter> finalConverters = new HashMap<String, EntityConverter>();
+    private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> converters) {
+        Map<String, QosMetric> finalConverters = new HashMap<String, QosMetric>();
 
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
@@ -112,9 +112,9 @@ public class EntityDisassembler {
                 } else {
 
                     // assign to the specific converter
-                    Set<EntityConverter> get = converters.get(converterEntityIndex);
+                    Set<QosMetric> get = converters.get(converterEntityIndex);
 
-                    for (EntityConverter conv : get) {
+                    for (QosMetric conv : get) {
                         conv.add(abstractQosEntity);
                         finalConverters.put(conv.getName(), conv);
                     }
@@ -125,11 +125,11 @@ public class EntityDisassembler {
         return finalConverters;
     }
 
-    private EntityConverter getDummyConverter() {
-        return new EntityConverter() {
+    private QosMetric getDummyConverter() {
+        return new QosMetric() {
 
             @Override
-            public Object convert() {
+            public Object calculate() {
                 return getEntities();
             }
 
@@ -145,19 +145,19 @@ public class EntityDisassembler {
      *
      * @return Map of entity converters
      */
-    private Map<String, Set<EntityConverter>> createNewBunchOfConverters() {
-        Map<String, Set<EntityConverter>> entityConverters = new HashMap<String, Set<EntityConverter>>();
+    private Map<String, Set<QosMetric>> createNewBunchOfConverters() {
+        Map<String, Set<QosMetric>> entityConverters = new HashMap<String, Set<QosMetric>>();
 
         for (Map.Entry e : converterMap.entrySet()) {
             try {
-                Set<Factory<EntityConverter>> converterFactoryList = (Set<Factory<EntityConverter>>) e.getValue();
+                Set<Factory<QosMetric>> converterFactoryList = (Set<Factory<QosMetric>>) e.getValue();
                 String entityName = (String) e.getKey();
 
                 if (!entityConverters.containsKey(entityName)) {
-                    entityConverters.put(entityName, new HashSet<EntityConverter>());
+                    entityConverters.put(entityName, new HashSet<QosMetric>());
                 }
 
-                for (Factory<EntityConverter> factory : converterFactoryList) {
+                for (Factory<QosMetric> factory : converterFactoryList) {
                     entityConverters.get(entityName).add(factory.create());
                 }
             } catch (CreateException ex) {

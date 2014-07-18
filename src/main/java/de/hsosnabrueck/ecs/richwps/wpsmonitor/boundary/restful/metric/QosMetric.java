@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Absract EntityConverter, which will be filled up with
- * {@link AbstractQosEntity}, which the specific converter instance takes care
- * of.
+ * Absract QosMetric, which will be filled up with {@link AbstractQosEntity},
+ * which the specific QosMetric instance takes care of.
  *
  * The assignment is evaluated over AbstractQosEntity's getEntityName-method.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class EntityConverter {
+public abstract class QosMetric {
 
     private final List<AbstractQosEntity> entities;
 
-    public EntityConverter() {
+    public QosMetric() {
         entities = new ArrayList<AbstractQosEntity>();
     }
 
@@ -55,15 +54,15 @@ public abstract class EntityConverter {
     }
 
     /**
-     * Starts the convert process.
+     * Starts the calculate process.
      *
      * @return Object which can be displayed over toString or JAXB or JSON ..
      */
-    public abstract Object convert();
-    
+    public abstract Object calculate();
+
     /**
-     * Gets the converter name.
-     * 
+     * Gets the name of the metric.
+     *
      * @return String
      */
     public abstract String getName();

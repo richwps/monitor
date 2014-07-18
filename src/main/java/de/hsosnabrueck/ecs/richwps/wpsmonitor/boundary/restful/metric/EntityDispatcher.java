@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Calls the convert method on the converter objects and dispatches the result
- * into a Map.
+ * Calls the calculate method on the converter objects and dispatches the result
+ into a Map.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -48,7 +48,7 @@ public class EntityDispatcher {
      * @return Map with Entity name as key and converted data as value
      */
     public Map<String, Object> dispatchToConverter(List<MeasuredDataEntity> data) {
-        Map<String, EntityConverter> disassemble = disassembler.disassembleToConverters(data);
+        Map<String, QosMetric> disassemble = disassembler.disassembleToConverters(data);
 
         return dispatch(disassemble);
     }
@@ -61,7 +61,7 @@ public class EntityDispatcher {
      * @return Map with Entity name as key and converted data as value
      */
     public Map<String, Object> dispatchData(List<MeasuredDataEntity> data) {
-        Map<String, EntityConverter> disassemble = disassembler.disassembleToDummyConverter(data);
+        Map<String, QosMetric> disassemble = disassembler.disassembleToDummyConverter(data);
 
         return dispatch(disassemble);
     }
@@ -73,16 +73,16 @@ public class EntityDispatcher {
      * @return Map with Entity name as key and converted data as value
      */
     public Map<String, Object> dispatchBoth(List<MeasuredDataEntity> data) {
-        Map<String, EntityConverter> disassemble = disassembler.disassembleToConvertersWithRawData(data);
+        Map<String, QosMetric> disassemble = disassembler.disassembleToConvertersWithRawData(data);
 
         return dispatch(disassemble);
     }
     
-    private Map<String, Object> dispatch(Map<String, EntityConverter> disassemble) {
+    private Map<String, Object> dispatch(Map<String, QosMetric> disassemble) {
         Map<String, Object> merged = new HashMap<String, Object>();
 
         for (Map.Entry e : disassemble.entrySet()) {
-            merged.put((String) e.getKey(), ((EntityConverter) e.getValue()).convert());
+            merged.put((String) e.getKey(), ((QosMetric) e.getValue()).calculate());
         }
         
         return merged;

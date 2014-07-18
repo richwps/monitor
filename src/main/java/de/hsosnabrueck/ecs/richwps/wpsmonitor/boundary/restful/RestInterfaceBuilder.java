@@ -18,9 +18,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.ConverterFactoryMap;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.DispatcherFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
@@ -43,13 +43,13 @@ public class RestInterfaceBuilder {
     /**
      * Converter Map.
      */
-    private ConverterFactoryMap converterMap;
+    private MetricFactoryMap converterMap;
 
     /**
      * Creates a new RestInterfaceBuilder instance.
      */
     public RestInterfaceBuilder() {
-        this.converterMap = new ConverterFactoryMap();
+        this.converterMap = new MetricFactoryMap();
     }
 
     /**
@@ -58,7 +58,7 @@ public class RestInterfaceBuilder {
      * @param converterMap Map instance 
      * @return RestInterfaceBuilder instance
      */
-    public RestInterfaceBuilder withConverterMap(ConverterFactoryMap converterMap) {
+    public RestInterfaceBuilder withConverterMap(MetricFactoryMap converterMap) {
         this.converterMap = Validate.notNull(converterMap, "converterMap");
 
         return this;
@@ -95,7 +95,7 @@ public class RestInterfaceBuilder {
      * @param converterFactory
      * @return RestInterfaceBuilder instance
      */
-    public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final Factory<EntityConverter> converterFactory) {
+    public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final Factory<QosMetric> converterFactory) {
         Validate.notNull(abstractQosEntityName, "abstractQosEntityName");
         Validate.notNull(converterFactory, "converterFactory");
                 

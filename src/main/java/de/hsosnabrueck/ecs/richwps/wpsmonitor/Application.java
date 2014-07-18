@@ -35,7 +35,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasur
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseConverterFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import java.util.Locale;
 import org.apache.logging.log4j.LogManager;
@@ -128,7 +128,7 @@ public class Application {
             restInterface = new RestInterfaceBuilder()
                     .withMonitorControl(monitor)
                     .withStrategy(new JsonPresentateStrategy())
-                    .addConverter("ResponseAvailabilityEntity", new ResponseConverterFactory())
+                    .addConverter("ResponseAvailabilityEntity", new ResponseMetricFactory())
                     .build();
 
             restInterface

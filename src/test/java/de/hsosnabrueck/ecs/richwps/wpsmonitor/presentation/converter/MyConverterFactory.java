@@ -16,17 +16,17 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.converter.EntityConverter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 
 /**
  *
  * @author FloH
  */
-public class MyConverterFactory implements Factory<EntityConverter> {
+public class MyConverterFactory implements Factory<QosMetric> {
  
     @Override
-    public EntityConverter create() {
+    public QosMetric create() {
         return new MyConverter();
     }
     
