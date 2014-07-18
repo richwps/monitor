@@ -23,7 +23,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
-import org.quartz.TriggerKey;
 
 /**
  * Facade to interact with the Monitor.
@@ -81,7 +80,7 @@ public interface MonitorControl {
      * @param config TriggerConfig instance
      * @return TriggerKey instance; the TriggerKey name can be random
      */
-    public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
+    public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
 
     /**
      * Creates and saves a trigger for the job which matches the JobKey name of
@@ -91,7 +90,7 @@ public interface MonitorControl {
      * @param config TriggerConfig instance
      * @return TriggerKey instance; the TriggerKey name can be random
      */
-    public TriggerKey saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
+    public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
 
     /**
      * Sets a test request string to {@link WpsProcessEntity} instance which
@@ -348,12 +347,12 @@ public interface MonitorControl {
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
 
     /**
-     * Deletes a trigger whith the given triggerKey.
+     * Deletes a trigger whith the given TriggerConfig.
      *
-     * @param triggerKey {@link TriggerKey} instance
+     * @param config {@link TriggerConfig} instance
      * @return true if successfully deleted
      */
-    public Boolean deleteTrigger(final TriggerKey triggerKey);
+    public Boolean deleteTrigger(TriggerConfig config);
 
     /**
      * Gets all WpsEntity instances.

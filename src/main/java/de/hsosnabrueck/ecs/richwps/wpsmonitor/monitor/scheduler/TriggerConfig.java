@@ -16,10 +16,9 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
-import org.quartz.DateBuilder;
-import org.quartz.TriggerKey;
 
 /**
  * Holds all necessary data to configure a {@link Trigger}.
@@ -27,11 +26,13 @@ import org.quartz.TriggerKey;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class TriggerConfig {
-
+    
+    public enum IntervalUnit { MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR }
+    
     /**
      * Interval Type (e.g Month).
      */
-    private DateBuilder.IntervalUnit intervalType;
+    private IntervalUnit intervalType;
     
     /**
      * Start Date instance.
@@ -51,16 +52,20 @@ public class TriggerConfig {
     /**
      * TriggerKey - can be null.
      */
-    private TriggerKey triggerKey;
+    private Pair<String, String> triggerKey;
+    
+    public TriggerConfig() {
+        
+    }
     
     public TriggerConfig(final Date start, final Date end, final Integer interval, 
-            final DateBuilder.IntervalUnit intervalType) {
+            final IntervalUnit intervalType) {
         
         this(start, end, interval, intervalType, null);
     }
     
     public TriggerConfig(final Date start, final Date end, final Integer interval, 
-            final DateBuilder.IntervalUnit intervalType, final TriggerKey triggerKey) {
+            final IntervalUnit intervalType, Pair<String, String> triggerKey) {
         
         this.start = Validate.notNull(start, "start");
         this.end = Validate.notNull(end, "end");
@@ -68,16 +73,38 @@ public class TriggerConfig {
         this.intervalType = Validate.notNull(intervalType, "intervalType");
         this.triggerKey = triggerKey;
     }
-
-    public DateBuilder.IntervalUnit getIntervalType() {
-        return intervalType;
+    
+    public TriggerConfig(TriggerConfig other) {
+        this.end = other.end;
+        this.interval = other.interval;
+        this.intervalType = other.intervalType;
+        this.start = other.start;
+        this.triggerKey = other.triggerKey;
     }
+
     public Date getStart() {
         return start;
     }
 
     public Date getEnd() {
         return end;
+    }
+
+    public IntervalUnit getIntervalType() {
+        return intervalType;
+    }
+
+    public void setIntervalType(IntervalUnit intervalType) {
+        this.intervalType = intervalType;
+    }
+
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public void setInterval(Integer interval) {
+        this.interval = interval;
     }
 
     public void setEnd(Date end) {
@@ -88,12 +115,40 @@ public class TriggerConfig {
         return interval;
     }
 
-    public TriggerKey getTriggerKey() {
+    public Pair<String, String> getTriggerKey() {
         return triggerKey;
     }
 
-    public void setTriggerKey(TriggerKey triggerKey) {
+    public void setTriggerKey(Pair<String, String> triggerKey) {
         this.triggerKey = triggerKey;
+    }
+
+    public void setTriggerKey(String keyName, String keyGroup) {
+        this.triggerKey = new Pair<String, String>(keyName, keyGroup);
+    }
+
+    public String getTriggerName() {
+        String name = null;
+        
+        if(triggerKey != null) {
+            name = triggerKey.getLeft();
+        }
+        
+        return name;
+    }
+
+    public String getTriggerGroup() {
+        String group = null;
+        
+        if(triggerKey != null) {
+            group = triggerKey.getRight();
+        }
+        
+        return group;
+    }
+    
+    public Boolean isSaved() {
+        return getTriggerKey() != null;
     }
 
     @Override

@@ -43,7 +43,7 @@ import org.quartz.TriggerKey;
 /**
  * Implementation of the MonitorControl interface. This implementation tries to
  * work like a request-response principe. That means, that every method call
- * creates a new DataAccess-instance. 
+ * creates a new DataAccess-instance.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -101,28 +101,26 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public TriggerKey saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config) {
-        TriggerKey result = null;
-
+    public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, TriggerConfig config) {
+        TriggerConfig newConfig = null;
+        
         try {
             if (isProcessExists(wpsIdentifier, processIdentifier)) {
                 if (config.getTriggerKey() == null) {
                     JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-
-                    result = schedulerControl.addTriggerToJob(jobKey, config);
+                    newConfig = schedulerControl.addTriggerToJob(jobKey, config);
                 } else {
-                    schedulerControl.updateTrigger(config);
-                    result = config.getTriggerKey();
+                    newConfig = schedulerControl.updateTrigger(config);
                 }
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.saveTrigger", config));
             }
         } catch (SchedulerException ex) {
             log.error(ex);
         }
 
-        eventHandler
-                .fireEvent(new MonitorEvent("monitorcontrol.saveTrigger", result));
-
-        return result;
+        return newConfig;
     }
 
     @Override
@@ -146,13 +144,15 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public Boolean deleteTrigger(TriggerKey triggerKey) {
+    public Boolean deleteTrigger(TriggerConfig config) {
         try {
-            schedulerControl.removeTrigger(triggerKey);
-
+            schedulerControl.removeTrigger(config);
+            
             eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.deleteTrigger", triggerKey));
+                    .fireEvent(new MonitorEvent("monitorcontrol.deleteTrigger", config));
         } catch (SchedulerException ex) {
+            log.warn(ex);
+            
             return false;
         }
 
@@ -262,8 +262,8 @@ public class MonitorControlImpl implements MonitorControl {
 
         WpsDataAccess wpsDao = null;
         WpsEntity wps = getWps(oldWpsIdentifier);
-        
-        if(wps.getIdentifier().equals(newWpsIdentifier) && wps.getUri().equals(newUri)) {
+
+        if (wps.getIdentifier().equals(newWpsIdentifier) && wps.getUri().equals(newUri)) {
             return wps;
         }
 
@@ -295,8 +295,9 @@ public class MonitorControlImpl implements MonitorControl {
 
     /**
      * The delete process can be called logically here, but the cascade delete
-     * behavior is already implemented in the specific data access implementations.
-     * If the call deleteProcess is called here, there is an unnecessary redundancy.
+     * behavior is already implemented in the specific data access
+     * implementations. If the call deleteProcess is called here, there is an
+     * unnecessary redundancy.
      */
     @Override
     public Boolean deleteWps(final String wpsIdentifier) {
@@ -556,7 +557,7 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public TriggerKey saveTrigger(WpsProcessEntity processEntity, TriggerConfig config) {
+    public TriggerConfig saveTrigger(WpsProcessEntity processEntity, TriggerConfig config) {
         Validate.notNull(processEntity, "processEntity");
 
         String wpsIdentifier = processEntity.getWps()
@@ -785,7 +786,7 @@ public class MonitorControlImpl implements MonitorControl {
                 .getIdentifier();
         String processIdentifier = processEntity
                 .getIdentifier();
-        
+
         return isProcessScheduled(wpsIdentifier, processIdentifier);
     }
 
@@ -793,13 +794,13 @@ public class MonitorControlImpl implements MonitorControl {
     public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier) {
         JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
         Boolean result = false;
-        
+
         try {
             result = schedulerControl.isJobRegistred(jobKey);
         } catch (SchedulerException ex) {
             log.warn(ex);
         }
-        
+
         return result;
     }
 }

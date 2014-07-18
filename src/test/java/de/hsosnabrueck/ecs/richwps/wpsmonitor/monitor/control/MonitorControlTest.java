@@ -16,10 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.InitJpa;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.JpaPuConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
@@ -31,18 +29,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseF
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter.ExampleQos;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -51,7 +44,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.quartz.DateBuilder;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
@@ -309,7 +301,7 @@ public class MonitorControlTest {
             fail("Can't create and schedule process.");
         }
         
-        return new TriggerConfig(new Date(), c.getTime(), 30, DateBuilder.IntervalUnit.MINUTE);
+        return new TriggerConfig(new Date(), c.getTime(), 30, TriggerConfig.IntervalUnit.MINUTE);
     }
     
     private Boolean checkIfSaved(TriggerKey tKey) {
@@ -333,8 +325,10 @@ public class MonitorControlTest {
         
         TriggerConfig t = getTriggerConfigAndCreateJob(pE);
         
-        TriggerKey saveTrigger = mControl.saveTrigger(pE, t);
-        Boolean checkIfSaved = checkIfSaved(saveTrigger);
+        TriggerConfig saveTrigger = mControl.saveTrigger(pE, t);
+        
+        TriggerKey key = new TriggerKey(saveTrigger.getTriggerName(), saveTrigger.getTriggerGroup());
+        Boolean checkIfSaved = checkIfSaved(key);
         
         Assert.assertTrue(checkIfSaved);
     }
@@ -469,13 +463,17 @@ public class MonitorControlTest {
 
             
             TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
-            TriggerKey saveTrigger = mControl.saveTrigger(wpsProcess, triggerConfig);
+            triggerConfig = mControl.saveTrigger(wpsProcess, triggerConfig);
+            
+            if(triggerConfig == null) {
+                fail("Can't save trigger");
+            }
+                    
+            TriggerKey saveTrigger = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
             
             JobKey jobKey = new JobKey(wpsProcess.getIdentifier(), wpsProcess.getWps().getIdentifier());
             
-            if(saveTrigger == null) {
-                fail("Can't save trigger");
-            }
+            
             
             SchedulerControl schedulerControl = monitor.getSchedulerControl();
             if(!schedulerControl.isJobRegistred(jobKey)) {

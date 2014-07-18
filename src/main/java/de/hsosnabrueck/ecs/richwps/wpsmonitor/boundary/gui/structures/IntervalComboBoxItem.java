@@ -15,9 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
-import org.quartz.DateBuilder;
 
 /**
  * A ComboBox item for interval type selection.
@@ -26,20 +26,20 @@ import org.quartz.DateBuilder;
  */
 public class IntervalComboBoxItem {
 
-    private final DateBuilder.IntervalUnit dateKey;
-    private static final EnumMap<DateBuilder.IntervalUnit, String> enumStringMap;
+    private final TriggerConfig.IntervalUnit dateKey;
+    private static final EnumMap<TriggerConfig.IntervalUnit, String> enumStringMap;
 
     /**
      * Creates an interval type item that matches the given dataKey.
      *
      * @param dateKey {@link DateBuilder.IntervalUnit} instance
      */
-    public IntervalComboBoxItem(DateBuilder.IntervalUnit dateKey) {
+    public IntervalComboBoxItem(TriggerConfig.IntervalUnit dateKey) {
         this.dateKey = Validate.notNull(dateKey, "dateKey");
     }
 
     static {
-        enumStringMap = new EnumMap<DateBuilder.IntervalUnit, String>(DateBuilder.IntervalUnit.class);
+        enumStringMap = new EnumMap<TriggerConfig.IntervalUnit, String>(TriggerConfig.IntervalUnit.class);
 
         String[] fill = new String[]{
             "Millisecond",
@@ -52,7 +52,7 @@ public class IntervalComboBoxItem {
             "Year"
         };
 
-        DateBuilder.IntervalUnit[] dateValues = DateBuilder.IntervalUnit.values();
+        TriggerConfig.IntervalUnit[] dateValues = TriggerConfig.IntervalUnit.values();
 
         for (int i = 0; i < fill.length && i < dateValues.length; i++) {
             enumStringMap.put(dateValues[i], fill[i]);
@@ -63,7 +63,7 @@ public class IntervalComboBoxItem {
         return enumStringMap.get(dateKey);
     }
 
-    public DateBuilder.IntervalUnit getFormatKey() {
+    public TriggerConfig.IntervalUnit getFormatKey() {
         return dateKey;
     }
 

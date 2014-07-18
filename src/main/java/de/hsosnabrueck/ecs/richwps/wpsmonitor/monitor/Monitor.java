@@ -265,11 +265,6 @@ public class Monitor {
         return monitorControl;
     }
 
-    public void setWpsClientConfig(final WpsClientConfig config) {
-        this.builderInstance
-                .withWpsClientConfig(config);
-    }
-
     public MonitorEventHandler getEventHandler() {
         return eventHandler;
     }
@@ -282,12 +277,13 @@ public class Monitor {
         return builderInstance;
     }
 
-    public ProbeService getProbeService() {
-        return builderInstance.getProbeService();
-    }
-
     public MonitorConfig getConfig() {
         return config;
+    }
+    
+    public ProbeService getProbeService() {
+        return builderInstance
+                .getProbeService();
     }
 
     public Boolean isActive() {

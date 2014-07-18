@@ -29,8 +29,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.text.DateFormatter;
-import org.quartz.DateBuilder;
-import org.quartz.TriggerKey;
 
 /**
  * Represents the GUI element for a job entry to create and add triggers
@@ -42,7 +40,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
     private WpsMonitorGui mainFrame;
     private WpsProcessEntity wpsProcess;
-    private TriggerKey triggerKey;
+    private TriggerConfig triggerConfig;
     private JPanel parent;
 
     /**
@@ -71,10 +69,15 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         this.mainFrame = mainFrame;
         this.wpsProcess = wpsProcess;
         this.parent = parent;
+        this.triggerConfig = triggerConfig;
         
         this.startDate.setDate(new Date());
         
         saveJob.setBackground(new Color(255, 51, 51));
+        init();
+    }
+    
+    private void init() {
         init(triggerConfig);
     }
 
@@ -87,9 +90,11 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
             this.intervalTypeCombooBox.setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
             this.intervalTypeCombooBox.getModel().setSelectedItem(new IntervalComboBoxItem(triggerConfig.getIntervalType()));
             this.intervalField.setText(triggerConfig.getInterval().toString());
-            this.triggerKey = triggerConfig.getTriggerKey();
+            this.triggerConfig = triggerConfig;
             
             this.saveJob.setBackground(null);
+        } else {
+            this.triggerConfig = new TriggerConfig();
         }
     }
 
@@ -108,13 +113,13 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
     private void initComboBox() {
         IntervalComboBoxItem[] items = new IntervalComboBoxItem[]{
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.SECOND),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MINUTE),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.HOUR),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.DAY),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.WEEK),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.MONTH),
-            new IntervalComboBoxItem(DateBuilder.IntervalUnit.YEAR)
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.SECOND),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.MINUTE),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.HOUR),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.DAY),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.WEEK),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.MONTH),
+            new IntervalComboBoxItem(TriggerConfig.IntervalUnit.YEAR)
         };
 
         intervalTypeCombooBox.setSelectedIndex(2);
@@ -245,24 +250,22 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
                 Date setStartDate = mergeDateAndTime(startDate.getDate(), time);
                 Date setEndDate = mergeDateAndTime(endDate.getDate(), time);
 
-                TriggerConfig tConfig = new TriggerConfig(setStartDate,
-                        setEndDate,
-                        interval,
-                        selectedItem.getFormatKey(),
-                        triggerKey
-                );
+                
+                triggerConfig.setStart(setStartDate);
+                triggerConfig.setEnd(setEndDate);
+                triggerConfig.setInterval(interval);
+                triggerConfig.setIntervalType(selectedItem.getFormatKey());
 
-                TriggerKey newTrigger = mainFrame.getMonitorReference()
+                triggerConfig = mainFrame.getMonitorReference()
                         .getMonitorControl()
-                        .saveTrigger(wpsProcess, tConfig);
+                        .saveTrigger(wpsProcess, triggerConfig);
 
-                if (newTrigger == null) {
+                if (triggerConfig.isSaved()) {
                     MessageDialogs.showError(mainFrame,
                             "Error",
                             "Job was not created. Is Scheduler started? See the logs."
                     );
                 } else {
-                    this.triggerKey = newTrigger;
                     this.saveJob.setBackground(null);
                 }
             } catch (NumberFormatException ex) {
@@ -288,18 +291,32 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         return calDate.getTime();
     }
     private void deleteJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
-        if (triggerKey != null) { //if triggerkey null, then this job was not saved
-            mainFrame.getMonitorReference()
+        if (triggerConfig.isSaved()) { 
+            Boolean deleteTrigger = mainFrame.getMonitorReference()
                     .getMonitorControl()
-                    .deleteTrigger(triggerKey);
+                    .deleteTrigger(triggerConfig);
+            
+            if(!deleteTrigger) {
+                MessageDialogs.showError(mainFrame,
+                        "Can't delete",
+                        "Can't delete Trigger."
+                );
+            } else {
+                removeVisual();
+            }
+        } else {
+            removeVisual();
         }
 
+         // repaint required, otherwise the last element will not disappear
+    }//GEN-LAST:event_deleteJobActionPerformed
+    
+    private void removeVisual() {
         parent.remove(this);
 
         parent.revalidate();
-        parent.repaint(); // repaint required, otherwise the last element will not disappear
-    }//GEN-LAST:event_deleteJobActionPerformed
-
+        parent.repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteJob;

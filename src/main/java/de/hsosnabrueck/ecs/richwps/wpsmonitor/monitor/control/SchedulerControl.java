@@ -136,10 +136,10 @@ public final class SchedulerControl {
      *
      * @param jobKey To this job is the trigger added
      * @param config Config with schedule informations
-     * @return The generated triggerkey (UUID will be used for the name part)
+     * @return A new TriggerConfig instance based on the given one but with a triggerkey
      * @throws SchedulerException
      */
-    public synchronized TriggerKey addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
+    public synchronized TriggerConfig addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
         // Get JobDetail
         JobDetail forJob = scheduler.getJobDetail(Validate.notNull(jobKey, "jobKey"));
 
@@ -150,8 +150,11 @@ public final class SchedulerControl {
         Trigger newTrigger = createTriggerWithStartAndEnd(forJob, config);
 
         scheduler.scheduleJob(newTrigger);
-
-        return newTrigger.getKey();
+        
+        TriggerConfig newConfig = new TriggerConfig(config);
+        newConfig.setTriggerKey(newTrigger.getKey().getName(), newTrigger.getKey().getGroup());
+        
+        return newConfig;
     }
 
     /**
@@ -245,13 +248,16 @@ public final class SchedulerControl {
         
         Trigger newTrigger;
         ScheduleBuilder scheduleBuilder = null;
+     
+        String jGroup = forJob.getKey().getGroup();
+        String tName = UUID.randomUUID().toString();
 
         // Build Trigger
         TriggerBuilder builder = org.quartz.TriggerBuilder.newTrigger()
                 .forJob(forJob)
                 .startAt(config.getStart())
                 .endAt(config.getEnd())
-                .withIdentity(UUID.randomUUID().toString(), forJob.getKey().getGroup());
+                .withIdentity(tName, jGroup);
 
         /**
          * enum IntervalType MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS,
@@ -308,6 +314,20 @@ public final class SchedulerControl {
     public synchronized void removeTrigger(final TriggerKey triggerKey) throws SchedulerException {
         scheduler.unscheduleJob(triggerKey);
     }
+    
+    /**
+     * Removes a trigger which is identified by the given {@link TriggerConfig}.
+     *
+     * @param triggerConfig {@link TriggerConfig} instance
+     * @throws SchedulerException
+     */
+    public synchronized void removeTrigger(final TriggerConfig triggerConfig) throws SchedulerException {
+        Validate.notNull(triggerConfig, "triggerConfig");
+        if(triggerConfig.getTriggerKey() != null) {
+            TriggerKey key = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
+            removeTrigger(key);
+        }
+    }
 
     /**
      * Removes a {@link Job} which is identified by the given {@link JobKey}.
@@ -344,19 +364,28 @@ public final class SchedulerControl {
      * given {@link TriggerConfig} instance.
      *
      * @param config TriggerConfig instance
+     * @return The new TriggerConfig
      * @throws SchedulerException
      */
-    public synchronized void updateTrigger(final TriggerConfig config) throws SchedulerException {
+    public synchronized TriggerConfig updateTrigger(final TriggerConfig config) throws SchedulerException {
         Validate.notNull(config, "config");
         Validate.notNull(config.getTriggerKey(), "config's TriggerKey");
+        
+        TriggerKey key = new TriggerKey(config.getTriggerName(), config.getTriggerGroup());
 
         JobDetail jobDetail = scheduler.getJobDetail(scheduler
-                .getTrigger(config.getTriggerKey())
+                .getTrigger(key)
                 .getJobKey()
         );
 
         // replace old trigger with a new one
-        scheduler.rescheduleJob(config.getTriggerKey(), createTriggerWithStartAndEnd(jobDetail, config));
+        Trigger newOne = createTriggerWithStartAndEnd(jobDetail, config);
+        scheduler.rescheduleJob(key, newOne);
+        
+        TriggerConfig updatedTrigger = new TriggerConfig(config);
+        updatedTrigger.setTriggerKey(newOne.getKey().getName(), newOne.getKey().getGroup());
+        
+        return updatedTrigger;
     }
 
     /**
@@ -440,9 +469,10 @@ public final class SchedulerControl {
                     trigger.getStartTime(),
                     trigger.getEndTime(),
                     calendarTrigger.getRepeatInterval(),
-                    repeatIntervalUnit,
-                    trigger.getKey()
-            );
+                    fromQuartzToConfig(repeatIntervalUnit));
+            
+            TriggerKey key = trigger.getKey();
+            triggerConfig.setTriggerKey(key.getName(), key.getGroup());
         }
 
         return triggerConfig;
@@ -489,5 +519,31 @@ public final class SchedulerControl {
 
     public JobFactoryService getJobFactoryService() {
         return jobFactoryService;
+    }
+    
+    private TriggerConfig.IntervalUnit fromQuartzToConfig(DateBuilder.IntervalUnit qU) {
+        TriggerConfig.IntervalUnit cU;
+        
+        switch(qU) {
+            case MILLISECOND:
+                return TriggerConfig.IntervalUnit.MILLISECOND;
+            case SECOND:
+                return TriggerConfig.IntervalUnit.SECOND;
+            case MINUTE:
+                return TriggerConfig.IntervalUnit.MINUTE;
+            case HOUR:
+                return TriggerConfig.IntervalUnit.HOUR;
+            case DAY:
+                return TriggerConfig.IntervalUnit.DAY;
+            case WEEK:
+                return TriggerConfig.IntervalUnit.WEEK;
+            case MONTH:
+                return TriggerConfig.IntervalUnit.MONTH;
+            case YEAR:
+                return TriggerConfig.IntervalUnit.YEAR;
+            default:
+                throw new AssertionError(qU.name());
+            
+        }
     }
 }
