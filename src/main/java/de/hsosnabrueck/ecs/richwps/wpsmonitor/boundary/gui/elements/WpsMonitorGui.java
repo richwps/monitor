@@ -15,18 +15,24 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.DataSourceDialog;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -45,21 +51,27 @@ import org.quartz.SchedulerException;
 public class WpsMonitorGui extends javax.swing.JFrame {
 
     private final Monitor monitor;
+    private final DataSourceDialog dsDialog;
 
     private static final Logger log = LogManager.getLogger();
 
+    public WpsMonitorGui(final Monitor monitor) {
+        this(monitor, new HashSet<DataDriver>());
+    }
+    
     /**
      * Creates new form WpsMonitorGui instance.
      *
      * @param monitor {@link Monitor} reference
+     * @param dataSources List of possible DataSources
      */
-    public WpsMonitorGui(final Monitor monitor) {
+    public WpsMonitorGui(final Monitor monitor, final Set<DataDriver> dataSources) {
         this.monitor = Validate.notNull(monitor, "monitor");
+        this.dsDialog = new DataSourceDialog(this, dataSources, this, true);
 
         initComponents();
         init();
-
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);   
     }
 
     /**
@@ -132,6 +144,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu monitorMenu = new javax.swing.JMenu();
         restartButton = new javax.swing.JMenuItem();
+        dataSourceMenuITem = new javax.swing.JMenuItem();
         javax.swing.JMenuItem settingsMenuItem = new javax.swing.JMenuItem();
         javax.swing.JPopupMenu.Separator jSeparator1 = new javax.swing.JPopupMenu.Separator();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -259,6 +272,14 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             }
         });
         monitorMenu.add(restartButton);
+
+        dataSourceMenuITem.setText("Show Data Drivers- ans Sources");
+        dataSourceMenuITem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dataSourceMenuITemActionPerformed(evt);
+            }
+        });
+        monitorMenu.add(dataSourceMenuITem);
 
         settingsMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/settings.png"))); // NOI18N
         settingsMenuItem.setText("Settings");
@@ -403,9 +424,14 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         monitor.restart();
     }//GEN-LAST:event_restartButtonActionPerformed
 
+    private void dataSourceMenuITemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataSourceMenuITemActionPerformed
+        this.dsDialog.setVisible(true);
+    }//GEN-LAST:event_dataSourceMenuITemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
     private javax.swing.JPanel controlPanel;
+    private javax.swing.JMenuItem dataSourceMenuITem;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem restartButton;
     private javax.swing.JPanel wpsAddPanel;

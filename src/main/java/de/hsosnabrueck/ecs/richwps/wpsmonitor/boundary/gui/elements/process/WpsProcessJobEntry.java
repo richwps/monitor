@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures.IntervalComboBoxItem;
 import java.awt.Color;
 import java.awt.Dimension;

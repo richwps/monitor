@@ -15,8 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import java.util.HashSet;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.LogManager;
@@ -63,7 +66,11 @@ public class GuiStarter {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                WpsMonitorGui wpsMonitorGui = new WpsMonitorGui(controlDependency);
+                // TODO only debug
+                HashSet<DataDriver> drivers = new HashSet<DataDriver>();
+                drivers.add(new SemanticProxyData());
+                
+                WpsMonitorGui wpsMonitorGui = new WpsMonitorGui(controlDependency, drivers);
                 wpsMonitorGui.setVisible(true);
             }
         });
