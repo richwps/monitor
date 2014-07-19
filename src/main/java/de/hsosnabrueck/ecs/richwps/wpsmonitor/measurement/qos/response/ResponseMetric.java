@@ -31,7 +31,7 @@ public class ResponseMetric extends QosMetric {
 
     @Override
     public Object calculate() {
-        Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE, notAvailableCounter = 0;
+        Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE;
         Double availability = 0., average = 0.;
         
         List<AbstractQosEntity> entities = getEntities();
@@ -53,19 +53,11 @@ public class ResponseMetric extends QosMetric {
                     }
                     
                     averageList.add(compare);
-                } else {
-                    ++notAvailableCounter;
-                }
+                } 
             }
         }
         
         if (!getEntities().isEmpty()) {            
-
-            Integer a, b;
-            a = entities.size();
-            b = notAvailableCounter;
-
-            availability = 100 - (100.0 * b / a);
             average = computeMedian(averageList.toArray(new Integer[averageList.size()]));
         } else {
             return "No Data available";
@@ -73,7 +65,6 @@ public class ResponseMetric extends QosMetric {
         
         
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("availability", availability);
         data.put("average", average);
         data.put("worst", worst);
         data.put("best", best);

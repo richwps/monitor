@@ -38,7 +38,7 @@ public class ListWpsProcessRoute extends MonitorRoute {
         
         List<WpsProcessEntity> processesOfWps = getMonitorControl().getProcessesOfWps(wpsIdentifier);
         
-        response.type(getStrategy().getMimeType());
+        response.type(getStrategy().getMimeType()); 
         
         return getStrategy().presentate(processesOfWps);
     }
