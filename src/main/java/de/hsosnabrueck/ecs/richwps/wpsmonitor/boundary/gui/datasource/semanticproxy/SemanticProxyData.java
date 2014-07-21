@@ -116,36 +116,6 @@ public class SemanticProxyData extends DataDriver implements DataSource {
         return result;
     }
 
-    @Override
-    public List<WpsProcessDescription> getProcessListOfWps(String wpsIdentifier) {
-        
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        List<WpsProcessDescription> result = null;
-        
-        try {
-            WPS wps = spClient.getWPS(new RDFID(wpsIdentifier));
-            result = new ArrayList<WpsProcessDescription>();
-            
-            for (Process process : wps.getProcesses()) {
-                WpsProcessDescription description = getDescription(process);
-                
-                if(description != null) {
-                    result.add(description);
-                }
-            }
-        } catch (ResourceNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SemanticProxyData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InternalSPException ex) {
-            java.util.logging.Logger.getLogger(SemanticProxyData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CommunicationException ex) {
-            java.util.logging.Logger.getLogger(SemanticProxyData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RDFException ex) {
-            java.util.logging.Logger.getLogger(SemanticProxyData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return result;
-    }
-
     private WpsProcessDescription getDescription(Process process) {
         WpsProcessDescription result = null;
         
