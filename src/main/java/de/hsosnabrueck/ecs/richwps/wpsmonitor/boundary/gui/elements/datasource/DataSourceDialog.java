@@ -13,44 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DataSourceDialog extends javax.swing.JDialog {
+
     private final Set<DataDriver> drivers;
     private final Set<DataSource> sources;
     private final WpsMonitorGui mainFrame;
-    
+
+    private final static Logger log = LogManager.getLogger();
+
     /**
      * Creates new form DataSourceDialog
      */
     public DataSourceDialog(WpsMonitorGui monitorMainFrame, Set<DataDriver> drivers, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        
+
         this.drivers = drivers;
         this.mainFrame = monitorMainFrame;
         this.sources = new HashSet<DataSource>();
-        
+
         initComponents();
         init();
         setLocationRelativeTo(parent);
     }
-    
+
     private void init() {
-        for(DataDriver driver : drivers) {
+        for (DataDriver driver : drivers) {
             driverAddPanel.add(new DataDriverPanel(this, driver));
         }
-        
+
+        readSources();
+
+        try {
+            mainFrame.getMonitorReference()
+                    .getEventHandler()
+                    .registerListener("monitor.shutdown", new MonitorEventListener() {
+
+                        @Override
+                        public void execute(MonitorEvent event) {
+                            storeSources();
+                        }
+                    });
+        } catch (EventNotFound ex) {
+            log.warn(ex);
+        }
+
         driverAddPanel.revalidate();
     }
 
@@ -73,6 +99,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
         showWpsOfSourcesButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Drivers"));
 
@@ -122,6 +149,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,17 +204,69 @@ public class DataSourceDialog extends javax.swing.JDialog {
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
-    
-    public void addDataSource(DataSource source) {
-        dataSourceAddPanel.add(new DataSourcePanel(mainFrame, source));
+
+    public void addDataSource(final DataSource source) {
+        dataSourceAddPanel.add(new DataSourcePanel(mainFrame, this, source));
         sources.add(source);
         dataSourceAddPanel.revalidate();
+    }
+    
+    public void removeDataSource(DataSource source) {
+        sources.remove(source);
+    }
+    
+    public void removeDataSource(final DataSource source, final DataSourcePanel panel) {
+        dataSourceAddPanel.remove(panel);
+        removeDataSource(source);
+        revalidate();
+    }
+
+    private void storeSources() {
+        MonitorConfig config = mainFrame.getMonitorReference()
+                .getConfig();
+
+        StringBuilder serializedDataSources = new StringBuilder();
+        for (DataSource s : sources) {
+            serializedDataSources.append(s.getUsedDriver());
+            serializedDataSources.append("||");
+            serializedDataSources.append(s.getRessource());
+            serializedDataSources.append(";;");
+        }
+
+        config.setCustomProperty("datasource", serializedDataSources.toString());
+    }
+
+    private void readSources() {
+        MonitorConfig config = mainFrame.getMonitorReference()
+                .getConfig();
+
+        String dataSources = config.getCustomProperty("datasource");
+
+        if (dataSources != null && !dataSources.isEmpty()) {
+            String[] dataSourcesArr = dataSources.split(";;");
+
+            for (String source : dataSourcesArr) {
+                String[] sourceResourceDriver = source.split("\\|\\|");
+                String driverName = sourceResourceDriver[0];
+                String resource = sourceResourceDriver[1];
+
+                for (DataDriver driver : drivers) {
+                    if (driver.getDriverName().equals(driverName)) {
+                        try {
+                            addDataSource(driver.create(resource));
+                        } catch (DataSourceException ex) {
+                            log.error(ex);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public Set<DataSource> getSources() {
         return sources;
     }
-    
+
     public void showWpsDialog() {
         new WpsDialog(mainFrame, sources, true).setVisible(true);
     }

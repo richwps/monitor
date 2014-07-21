@@ -26,7 +26,10 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="dataSourceMenuITem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Data Drivers- ans Sources"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/database.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Datasources- and Drivers"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dataSourceMenuITemActionPerformed"/>
@@ -204,10 +207,10 @@
                               <Component id="wpsToAddUriField" min="-2" pref="460" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="dataSourcesButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addWpsButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -291,7 +294,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Registred WPS Server"/>
+                <TitledBorder title="Registered WPS Server"/>
               </Border>
             </Property>
           </Properties>

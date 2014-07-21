@@ -55,21 +55,22 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     private static final Logger log = LogManager.getLogger();
     private SPClient spClient;
     private DataDriver driver;
+    private String resource;
 
     @Override
-    public void init(final DataDriver driver) throws DataSourceException {
+    public void init(final DataDriver driver, final String resource) throws DataSourceException {
         this.driver = driver;
+        this.resource = resource;
         
         connect();
     }
     
     private void connect() throws DataSourceException {
-        String path = driver.getResource();
         try {
-            Vocabulary.init(new URL(path + SP_VOCABULARY_PATH));
+            Vocabulary.init(new URL(resource + SP_VOCABULARY_PATH));
 
             spClient = SPClient.getInstance();
-            spClient.setRootURL(path + SP_ROOT);
+            spClient.setRootURL(resource + SP_ROOT);
 
         } catch (MalformedURLException ex) {
             log.error(ex);
@@ -155,7 +156,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
 
     @Override
     public String getRessource() {
-        return spClient.getRootURL();
+        return resource;
     }
 
     @Override

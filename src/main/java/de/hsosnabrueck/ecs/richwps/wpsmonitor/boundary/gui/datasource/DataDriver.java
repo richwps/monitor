@@ -26,18 +26,10 @@ public abstract class DataDriver {
     
     protected abstract DataSource createAdapter();
     
-    private String resource;
-    
     public final DataSource create(String resource) throws DataSourceException {
-        this.resource = resource;
-        
         DataSource adapter = createAdapter();
-        adapter.init(this);
+        adapter.init(this, resource);
         
         return adapter;
-    }
-
-    public final String getResource() {
-        return resource;
     }
 }

@@ -216,10 +216,10 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(dataSourcesButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addWpsButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(addWpsButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -238,7 +238,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        decoPanelWpsScroll.setBorder(javax.swing.BorderFactory.createTitledBorder("Registred WPS Server"));
+        decoPanelWpsScroll.setBorder(javax.swing.BorderFactory.createTitledBorder("Registered WPS Server"));
 
         wpsScrollPane.setBorder(null);
         wpsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -297,7 +297,8 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         });
         monitorMenu.add(restartButton);
 
-        dataSourceMenuITem.setText("Show Data Drivers- ans Sources");
+        dataSourceMenuITem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
+        dataSourceMenuITem.setText("Datasources- and Drivers");
         dataSourceMenuITem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dataSourceMenuITemActionPerformed(evt);

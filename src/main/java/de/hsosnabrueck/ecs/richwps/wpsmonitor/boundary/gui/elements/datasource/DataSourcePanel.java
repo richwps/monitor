@@ -26,12 +26,15 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGu
  */
 public class DataSourcePanel extends javax.swing.JPanel {
     private final DataSource source;
-    private final WpsMonitorGui parent;
+    private final WpsMonitorGui monitorMainFrame;
+    private final DataSourceDialog parent;
+    
     /**
      * Creates new form DataSourcePanel
      */
-    public DataSourcePanel(WpsMonitorGui parent, DataSource source) {
+    public DataSourcePanel(WpsMonitorGui monitorMainFrame, DataSourceDialog parent, DataSource source) {
         this.source = source;
+        this.monitorMainFrame = monitorMainFrame;
         this.parent = parent;
         
         initComponents();
@@ -62,8 +65,13 @@ public class DataSourcePanel extends javax.swing.JPanel {
 
         dataSourceLabel.setText("jLabel1");
 
-        deleteSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/database-delete.png"))); // NOI18N
         deleteSource.setText("Delete");
+        deleteSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSourceActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Driver used:");
 
@@ -90,7 +98,7 @@ public class DataSourcePanel extends javax.swing.JPanel {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dataSourceLabel)))
-                .addContainerGap(305, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,6 +132,10 @@ public class DataSourcePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void deleteSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSourceActionPerformed
+        parent.removeDataSource(source, this);
+    }//GEN-LAST:event_deleteSourceActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

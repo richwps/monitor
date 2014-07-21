@@ -24,7 +24,7 @@ import java.util.List;
  */
 public interface DataSource {
     public List<WpsDescription> getWpsList();
-    public void init(DataDriver driver) throws DataSourceException;
+    public void init(DataDriver driver, String resource) throws DataSourceException;
     public String getUsedDriver();
     public String getRessource();
 }
