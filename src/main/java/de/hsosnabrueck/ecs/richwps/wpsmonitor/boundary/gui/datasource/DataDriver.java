@@ -24,10 +24,10 @@ public abstract class DataDriver {
     public abstract String getExpectedResourceType();
     public abstract String getDriverName();
     
-    protected abstract DataSource createAdapter();
+    protected abstract DataSource createDataSource();
     
     public final DataSource create(String resource) throws DataSourceException {
-        DataSource adapter = createAdapter();
+        DataSource adapter = createDataSource();
         adapter.init(this, resource);
         
         return adapter;

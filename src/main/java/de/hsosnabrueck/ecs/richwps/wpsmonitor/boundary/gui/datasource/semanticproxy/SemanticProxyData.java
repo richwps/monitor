@@ -145,7 +145,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     }
 
     @Override
-    protected DataSource createAdapter() {
+    protected DataSource createDataSource() {
         return new SemanticProxyData();
     }
 
