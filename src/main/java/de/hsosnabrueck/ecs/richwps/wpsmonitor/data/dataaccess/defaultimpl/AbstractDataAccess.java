@@ -25,6 +25,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
  * Implementation of some default operations with an EntityManager instance.
@@ -49,9 +50,9 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Gets an EntityManager instance. The InitJpa
- ensures that every thread gets its own EntityManager instance
-     * 
+     * Gets an EntityManager instance. The InitJpa ensures that every thread
+     * gets its own EntityManager instance
+     *
      * @return EntityManager instance
      */
     protected EntityManager getEntityManager() {
@@ -69,15 +70,13 @@ public abstract class AbstractDataAccess<T> {
         Boolean result = true;
         beginTransaction();
 
-        try {
-            getEntityManager()
-                    .persist(o);
+        getEntityManager()
+                .persist(o);
 
-            requestCommit();
-        } catch (EntityExistsException e) {
-            log.debug(e);
-
-            result = false;
+        Boolean commitResult = requestCommit();
+        
+        if(commitResult != null) {
+            result = commitResult;
         }
 
         return result;
@@ -130,8 +129,7 @@ public abstract class AbstractDataAccess<T> {
     /**
      * Commits a transaction.
      *
-     * @return Should be alway true, if an exception occurs, false is
-     * returned
+     * @return Should be alway true, if an exception occurs, false is returned
      */
     public Boolean commit() {
         try {
@@ -152,8 +150,8 @@ public abstract class AbstractDataAccess<T> {
     /**
      * Requests a commit; if autoCommit is active, then it will be commited.
      *
-     * @return true or false, depends on commit return, or null if autocommit
-     * is disabled
+     * @return true or false, depends on commit return, or null if autocommit is
+     * disabled
      */
     protected Boolean requestCommit() {
         if (autoCommit) {
@@ -281,12 +279,10 @@ public abstract class AbstractDataAccess<T> {
         assignParameters(query, parameters);
 
         Integer affectedRows = query.executeUpdate();
-        
-        
+
         //getEntityManager().flush();
-        
         requestCommit();
-        
+
         return affectedRows;
     }
 

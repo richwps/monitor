@@ -51,19 +51,19 @@ public class EntityDisassembler {
     }
 
     /**
-     * Dissassembles the given dataList to the specific converters.
+     * Dissassembles the given dataList to the specific metrics.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
     public Map<String, QosMetric> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
-        Map<String, Set<QosMetric>> converters = createNewBunchOfConverters();
+        Map<String, Set<QosMetric>> metrics = createNewBunchOfConverters();
 
-        return disassembleLoop(dataList, converters);
+        return disassembleLoop(dataList, metrics);
     }
 
     /**
-     * Disassembles the given dataList to a default converter.
+     * Disassembles the given dataList to a default metric.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
@@ -72,10 +72,10 @@ public class EntityDisassembler {
         return disassembleLoop(dataList);
     }
 
-    public Map<String, QosMetric> disassembleToConvertersWithRawData(final List<MeasuredDataEntity> dataList) {
-        Map<String, Set<QosMetric>> converters = createNewBunchOfConverters();
+    public Map<String, QosMetric> disassembleToMetricssWithRawData(final List<MeasuredDataEntity> dataList) {
+        Map<String, Set<QosMetric>> metrics = createNewBunchOfConverters();
 
-        Map<String, QosMetric> merged = disassembleLoop(dataList, converters);
+        Map<String, QosMetric> merged = disassembleLoop(dataList, metrics);
         merged.putAll(disassembleToDummyConverter(dataList));
 
         return merged;
@@ -89,43 +89,43 @@ public class EntityDisassembler {
      * Mainloop which processes each disassemble process (very complex code ..
      * teh code of hell).
      *
-     * @param converters QosMetric list
+     * @param metrics QosMetric list
      * @param dataList List of {@link MeasuredDataEntity} instances
      * @return
      */
-    private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> converters) {
-        Map<String, QosMetric> finalConverters = new HashMap<String, QosMetric>();
+    private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> metrics) {
+        Map<String, QosMetric> finalMetrics = new HashMap<String, QosMetric>();
 
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
 
             for (AbstractQosEntity abstractQosEntity : measureData) {
                 String converterEntityIndex = abstractQosEntity.getEntityName();
-
+                Measurement measurement = new Measurement(abstractQosEntity, measuredDataEntity.getCreateTime());
                 // if converters is null, use defaultConverter
-                if (converters == null || !converters.containsKey(converterEntityIndex)) {
-                    if (!finalConverters.containsKey(NO_CONVERTER_INDEX)) {
-                        finalConverters.put(NO_CONVERTER_INDEX, getDummyConverter());
+                if (metrics == null || !metrics.containsKey(converterEntityIndex)) {
+                    if (!finalMetrics.containsKey(NO_CONVERTER_INDEX)) {
+                        finalMetrics.put(NO_CONVERTER_INDEX, getDummyMetric());
                     }
 
-                    finalConverters.get(NO_CONVERTER_INDEX).add(abstractQosEntity);
+                    finalMetrics.get(NO_CONVERTER_INDEX).add(measurement);
                 } else {
 
                     // assign to the specific converter
-                    Set<QosMetric> get = converters.get(converterEntityIndex);
+                    Set<QosMetric> get = metrics.get(converterEntityIndex);
 
                     for (QosMetric conv : get) {
-                        conv.add(abstractQosEntity);
-                        finalConverters.put(conv.getName(), conv);
+                        conv.add(measurement);
+                        finalMetrics.put(conv.getName(), conv);
                     }
                 }
             }
         }
 
-        return finalConverters;
+        return finalMetrics;
     }
 
-    private QosMetric getDummyConverter() {
+    private QosMetric getDummyMetric() {
         return new QosMetric() {
 
             @Override

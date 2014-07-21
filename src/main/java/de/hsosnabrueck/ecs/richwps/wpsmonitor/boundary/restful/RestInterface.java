@@ -190,6 +190,7 @@ public class RestInterface {
 
     /**
      * Sets the port Spark listens on.
+     * Works only before routes are added
      * 
      * @param port Port number
      */

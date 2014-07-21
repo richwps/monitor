@@ -182,4 +182,35 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     public String getUsedDriver() {
         return driver.getDriverName();
     }
+
+    @Override
+    public String getRessource() {
+        return spClient.getRootURL();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.spClient != null ? this.spClient.hashCode() : 0);
+        hash = 97 * hash + (this.driver != null ? this.driver.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SemanticProxyData other = (SemanticProxyData) obj;
+        if (this.spClient != other.spClient && (this.spClient == null || !this.spClient.equals(other.spClient))) {
+            return false;
+        }
+        if (this.driver != other.driver && (this.driver == null || !this.driver.equals(other.driver))) {
+            return false;
+        }
+        return true;
+    }
 }

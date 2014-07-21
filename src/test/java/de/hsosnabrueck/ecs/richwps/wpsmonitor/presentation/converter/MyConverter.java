@@ -16,8 +16,8 @@
 
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 
 /**
  *
@@ -30,8 +30,8 @@ public class MyConverter extends QosMetric {
         ExampleQos q;
         Integer sum = 0;
 
-        for(AbstractQosEntity e : getEntities()) {
-            q = (ExampleQos)e;
+        for(Measurement e : getEntities()) {
+            q = e.getEntity();
             sum += q.getValue();
         }
 

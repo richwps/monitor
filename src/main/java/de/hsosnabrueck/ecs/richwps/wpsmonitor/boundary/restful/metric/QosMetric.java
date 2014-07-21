@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,10 +30,10 @@ import java.util.List;
  */
 public abstract class QosMetric {
 
-    private final List<AbstractQosEntity> entities;
+    private final List<Measurement> entities;
 
     public QosMetric() {
-        entities = new ArrayList<AbstractQosEntity>();
+        entities = new ArrayList<Measurement>();
     }
 
     /**
@@ -40,7 +41,8 @@ public abstract class QosMetric {
      *
      * @param data AbstractQosEntity instance
      */
-    public void add(final AbstractQosEntity data) {
+    public void add(final Measurement data) {
+        
         entities.add(data);
     }
 
@@ -49,7 +51,7 @@ public abstract class QosMetric {
      *
      * @return List of AbstractQosEntity instances
      */
-    public List<AbstractQosEntity> getEntities() {
+    public List<Measurement> getEntities() {
         return entities;
     }
 

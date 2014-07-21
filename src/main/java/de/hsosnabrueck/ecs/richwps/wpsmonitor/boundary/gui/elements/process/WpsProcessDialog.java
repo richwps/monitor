@@ -240,6 +240,13 @@ public class WpsProcessDialog extends javax.swing.JDialog {
 
         return panel;
     }
+    
+    public void addProcess(String processName) {
+        WpsProcessEntity p = new WpsProcessEntity(processName, wps);
+        
+        WpsProcessPanel pPanel = createAndAddProcessPanel(p);
+        pPanel.saveProcess();
+    }
 
     private void processIdentifierInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processIdentifierInputActionPerformed
         createNewProcessButtonActionPerformed(evt);

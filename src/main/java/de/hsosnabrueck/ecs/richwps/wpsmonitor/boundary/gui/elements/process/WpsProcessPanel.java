@@ -418,13 +418,11 @@ public class WpsProcessPanel extends javax.swing.JPanel {
             clearError();
 
             if (!saved) {
-                inserted = mainFrame.getMonitorReference()
-                        .getMonitorControl()
-                        .createAndScheduleProcess(wpsProcess);
+                inserted = saveProcess();
             }
 
             if (inserted) {
-                inserted = mainFrame.getMonitorReference()
+                mainFrame.getMonitorReference()
                         .getMonitorControl()
                         .setTestRequest(wpsProcess, testRequest);
             }
@@ -434,16 +432,24 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         .getMonitorControl()
                         .resumeMonitoring(wpsProcess);
             }
-
-            if (inserted) {
-                triggerSaveState();
-            } else {
-                MessageDialogs.showError(mainFrame,
-                        "Error",
-                        "Can't register Process to this WPS. Maybe the Process is already registred.");
-            }
         }
     }//GEN-LAST:event_saveProcessButtonActionPerformed
+
+    public Boolean saveProcess() {
+        Boolean inserted = mainFrame.getMonitorReference()
+                .getMonitorControl()
+                .createAndScheduleProcess(wpsProcess);
+
+        if (inserted) {
+            triggerSaveState();
+        } else {
+            MessageDialogs.showError(mainFrame,
+                    "Error",
+                    "Can't register Process to this WPS. Maybe the Process is already registred.");
+        }
+
+        return inserted;
+    }
 
     private void deleteProcessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
         if (saved) {

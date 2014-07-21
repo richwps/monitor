@@ -28,7 +28,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +63,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
     public WpsMonitorGui(final Monitor monitor) {
         this(monitor, new HashSet<DataDriver>());
     }
-    
+
     /**
      * Creates new form WpsMonitorGui instance.
      *
@@ -71,7 +76,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
 
         initComponents();
         init();
-        setLocationRelativeTo(null);   
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -138,6 +143,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         javax.swing.JLabel wpsUrlDecoText = new javax.swing.JLabel();
         wpsToAddUriField = new javax.swing.JTextField();
         addWpsButton = new javax.swing.JButton();
+        dataSourcesButton = new javax.swing.JButton();
         javax.swing.JPanel decoPanelWpsScroll = new javax.swing.JPanel();
         wpsScrollPane = new javax.swing.JScrollPane();
         wpsAddPanel = new javax.swing.JPanel();
@@ -152,9 +158,11 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("WPS Monitor");
+        setTitle("WPS Monitor - Admin Interface");
         setBackground(new java.awt.Color(255, 255, 255));
         setIconImage(new ImageIcon(getClass().getResource("/icons/wpsmonitor-64x64.png")).getImage());
+        setMaximumSize(new java.awt.Dimension(852, 2147483647));
+        setMinimumSize(new java.awt.Dimension(852, 0));
         setName("wpsGui"); // NOI18N
         setResizable(false);
 
@@ -184,21 +192,34 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             }
         });
 
+        dataSourcesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
+        dataSourcesButton.setText("Add through registred Data Source");
+        dataSourcesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dataSourcesButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wpsIdentifierDecoText)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wpsToAddField, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(wpsUrlDecoText)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addWpsButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(wpsIdentifierDecoText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpsToAddField, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(wpsUrlDecoText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(dataSourcesButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addWpsButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -209,7 +230,10 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                     .addComponent(wpsIdentifierDecoText)
                     .addComponent(wpsToAddField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(wpsUrlDecoText)
-                    .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wpsToAddUriField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dataSourcesButton)
                     .addComponent(addWpsButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -237,7 +261,7 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             decoPanelWpsScrollLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelWpsScrollLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wpsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+                .addComponent(wpsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -248,8 +272,8 @@ public class WpsMonitorGui extends javax.swing.JFrame {
             .addGroup(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         controlPanelLayout.setVerticalGroup(
@@ -258,8 +282,8 @@ public class WpsMonitorGui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(decoPanelWpsScroll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         monitorMenu.setText("Monitor");
@@ -325,37 +349,66 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public WpsPanel addWps(String identifier, String uri) {
+        return addWps(identifier, uri, null);
+    }
+
+    public WpsPanel getPanel(String identifier) {
+        WpsPanel result = null;
+
+        for (Component c : wpsAddPanel.getComponents()) {
+            if (c instanceof WpsPanel) {
+                WpsPanel search = (WpsPanel) c;
+
+                if (search.getWps().getIdentifier().equals(
+                        search.getWps().getIdentifier())) {
+
+                    result = search;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public WpsPanel addWps(String identifier, String uri, Frame frame) {
+        WpsPanel panel = null;
+
+        try {
+            WpsEntity wps = new WpsEntity(identifier, uri);
+
+            Boolean isWpsCreated = monitor
+                    .getMonitorControl()
+                    .createWps(wps);
+
+            if (isWpsCreated) {
+                resetAddWpsFields();
+                panel = createAndAddWpsPanel(wps);
+            } else {
+                MessageDialogs.showError(frame,
+                        "Error",
+                        "Can't register Wps. Maybe the Wps is already registred."
+                );
+            }
+        } catch (MalformedURLException ex) {
+            showUriConvertError();
+        } catch (URISyntaxException ex) {
+            showUriConvertError();
+        }
+
+        return panel;
+    }
+
     private void addWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addWpsButtonActionPerformed
         if (isCreateFieldsNotEmpty()) {
-            try {
-                WpsEntity wps = new WpsEntity(getWpsToAddField().getText(),
-                        getWpsToAddUriField().getText()
-                );
-
-                Boolean isWpsCreated = monitor
-                        .getMonitorControl()
-                        .createWps(wps);
-
-                if (isWpsCreated) {
-                    resetAddWpsFields();
-                    createAndAddWpsPanel(wps);
-                } else {
-                    MessageDialogs.showError(this,
-                            "Error",
-                            "Can't register Wps. Maybe the Wps is already registred."
-                    );
-                }
-            } catch (MalformedURLException ex) {
-                showUriConvertError();
-            } catch (URISyntaxException ex) {
-                showUriConvertError();
-            }
+            addWps(getWpsToAddField().getText(),
+                    getWpsToAddUriField().getText());
         } else {
             MessageDialogs.showError(this,
                     "Error",
@@ -364,9 +417,11 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
 
-    private void createAndAddWpsPanel(WpsEntity wps) {
+    private WpsPanel createAndAddWpsPanel(WpsEntity wps) {
         WpsPanel panel = createWpsPanel(wps);
         addWpsPanel(panel);
+
+        return panel;
     }
 
     private WpsPanel createWpsPanel(WpsEntity wps) {
@@ -428,10 +483,15 @@ public class WpsMonitorGui extends javax.swing.JFrame {
         this.dsDialog.setVisible(true);
     }//GEN-LAST:event_dataSourceMenuITemActionPerformed
 
+    private void dataSourcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataSourcesButtonActionPerformed
+        this.dsDialog.showWpsDialog();
+    }//GEN-LAST:event_dataSourcesButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWpsButton;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JMenuItem dataSourceMenuITem;
+    private javax.swing.JButton dataSourcesButton;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem restartButton;
     private javax.swing.JPanel wpsAddPanel;

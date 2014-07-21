@@ -14,38 +14,31 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import java.net.URI;
-import java.util.Set;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
+import java.util.Date;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDescription {
-    private final URI wpsUri;
-    private final Set<WpsProcessDescription> processes;
-
-    public WpsDescription(URI wpsUri, Set<WpsProcessDescription> processes) {
-        this.wpsUri = wpsUri;
-        this.processes = processes;
+public class Measurement {
+    private final AbstractQosEntity values;
+    private final Date measurementDate;
+    
+    public Measurement(final AbstractQosEntity entity, final Date date) {
+        this.values = Validate.notNull(entity, "entity");
+        this.measurementDate = Validate.notNull(date, "date");
     }
     
-    public URI getUri() {
-        return wpsUri;
-    }
-
-    public Set<WpsProcessDescription> getProcesses() {
-        return processes;
-    }
-
-    public boolean add(WpsProcessDescription e) {
-        return processes.add(e);
+    public <T> T getEntity() {
+        return (T)values.getClass()
+                .cast(values);
     }
     
-    @Override
-    public String toString() {
-        return wpsUri.toString();
+    public Date getDate() {
+        return measurementDate;
     }
 }

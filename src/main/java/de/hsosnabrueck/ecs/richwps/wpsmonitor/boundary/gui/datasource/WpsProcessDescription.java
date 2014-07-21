@@ -42,7 +42,7 @@ public class WpsProcessDescription {
         return title;
     }
 
-    public String getStrAbstract() {
+    public String getAbstract() {
         return strAbstract;
     }
 
@@ -52,6 +52,6 @@ public class WpsProcessDescription {
 
     @Override
     public String toString() {
-        return "Identifier: " + identifier + ", title: " + title;
+        return "Identifier: " + identifier +  "\nAbstract: " + strAbstract;
     }
 }

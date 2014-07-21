@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import java.util.ArrayList;
@@ -31,65 +32,68 @@ public class ResponseMetric extends QosMetric {
 
     @Override
     public Object calculate() {
-        Integer worst = Integer.MIN_VALUE, best = Integer.MAX_VALUE;
-        Double availability = 0., average = 0.;
-        
-        List<AbstractQosEntity> entities = getEntities();
+        Integer worst = null, best = null;
+        Double median;
+
         List<Integer> averageList = new ArrayList<Integer>();
-        
-        for (AbstractQosEntity e : entities) {
-            if (e instanceof ResponseEntity) {
-                ResponseEntity responseEntity = (ResponseEntity) e;
 
-                Integer compare = responseEntity.getResponseTime();
+        for (Measurement measured : getEntities()) {
+            ResponseEntity responseEntity = measured.getEntity();
+            Integer compare = responseEntity.getResponseTime();
 
-                if (compare != null) {
-                    if (compare > worst) {
-                        worst = compare;
-                    }
+            if (compare != null) {
+                if (worst == null) {
+                    worst = 0;
+                }
 
-                    if (compare < best) {
-                        best = compare;
-                    }
-                    
-                    averageList.add(compare);
-                } 
+                if (best == null) {
+                    best = 0;
+                }
+
+                if (compare > worst) {
+                    worst = compare;
+                }
+
+                if (compare < best) {
+                    best = compare;
+                }
+
+                averageList.add(compare);
             }
         }
-        
-        if (!getEntities().isEmpty()) {            
-            average = computeMedian(averageList.toArray(new Integer[averageList.size()]));
+
+        if (!getEntities().isEmpty()) {
+            median = computeMedian(averageList.toArray(new Integer[averageList.size()]));
         } else {
             return "No Data available";
         }
-        
-        
+
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("average", average);
+        data.put("median", median);
         data.put("worst", worst);
         data.put("best", best);
-        
+
         return data;
     }
-    
+
     private Double computeMedian(Integer[] values) {
         Double median = null;
-        
-        if(values != null && values.length > 0) {
+
+        if (values != null && values.length > 0) {
             Integer index = values.length / 2;
             double _median;
-            
+
             Arrays.sort(values);
-            
-            if(index % 2 == 0) {
-                _median = (double)(values[index] + values[index - 1]) / 2;
+
+            if (index % 2 == 0) {
+                _median = (double) (values[index] + values[index - 1]) / 2;
             } else {
-                _median = (double)values[index];
+                _median = (double) values[index];
             }
-            
+
             median = _median; // better as (Double)(double) ..
         }
-        
+
         return median;
     }
 

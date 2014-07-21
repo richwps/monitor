@@ -44,12 +44,18 @@ public class RestInterfaceBuilder {
      * Converter Map.
      */
     private MetricFactoryMap converterMap;
+    
+    /**
+     * Port for Jetty
+     */
+    private Integer port;
 
     /**
      * Creates a new RestInterfaceBuilder instance.
      */
     public RestInterfaceBuilder() {
         this.converterMap = new MetricFactoryMap();
+        this.port = 4567;
     }
 
     /**
@@ -61,6 +67,14 @@ public class RestInterfaceBuilder {
     public RestInterfaceBuilder withConverterMap(MetricFactoryMap converterMap) {
         this.converterMap = Validate.notNull(converterMap, "converterMap");
 
+        return this;
+    }
+    
+    public RestInterfaceBuilder withPort(Integer port) {
+        if(port != null && port > 1000) {
+            this.port = port;
+        }
+        
         return this;
     }
 
@@ -117,6 +131,8 @@ public class RestInterfaceBuilder {
         
         DispatcherFactory dispatchFactory = new DispatcherFactory(converterMap);
         RestInterface rest = new RestInterface(strategy, monitorControl, dispatchFactory);
+        
+        rest.setPort(port);
 
         return rest;
     }

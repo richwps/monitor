@@ -83,7 +83,7 @@ public class ListMeasurementRoute extends MonitorRoute {
     }
 
     private Map<String, Object> getConverted(List<MeasuredDataEntity> measuredData) {
-        return getDispatch().dispatchToConverter(measuredData);
+        return getDispatch().dispatchToMetric(measuredData);
     }
 
     private Map<String, Object> getRaw(List<MeasuredDataEntity> measuredData) {

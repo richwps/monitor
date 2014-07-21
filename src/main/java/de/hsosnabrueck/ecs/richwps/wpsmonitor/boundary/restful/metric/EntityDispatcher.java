@@ -41,20 +41,20 @@ public class EntityDispatcher {
     }
 
     /**
-     * Dispatches the converters into a Map. Entities which have no registered
-     * converter will be ignored.
+     * Dispatches the metrics into a Map. Entities which have no registered
+     * metric will be ignored.
      *
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
-    public Map<String, Object> dispatchToConverter(List<MeasuredDataEntity> data) {
+    public Map<String, Object> dispatchToMetric(List<MeasuredDataEntity> data) {
         Map<String, QosMetric> disassemble = disassembler.disassembleToConverters(data);
 
         return dispatch(disassemble);
     }
     
     /**
-     * Dispatches data into a map. Registered converter will be ignored. A raw 
+     * Dispatches data into a map. Registered metrics will be ignored. A raw 
      * output will be generated.
      * 
      * @param data List of {@link MeasuredDataEntity} instances
@@ -67,13 +67,13 @@ public class EntityDispatcher {
     }
     
     /**
-     * Dispatches the converter and all data into a map.
+     * Dispatches the metrics and all data into a map.
      * 
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
     public Map<String, Object> dispatchBoth(List<MeasuredDataEntity> data) {
-        Map<String, QosMetric> disassemble = disassembler.disassembleToConvertersWithRawData(data);
+        Map<String, QosMetric> disassemble = disassembler.disassembleToMetricssWithRawData(data);
 
         return dispatch(disassemble);
     }

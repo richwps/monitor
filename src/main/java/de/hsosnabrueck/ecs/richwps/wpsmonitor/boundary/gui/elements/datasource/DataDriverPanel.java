@@ -60,8 +60,11 @@ public class DataDriverPanel extends javax.swing.JPanel {
         resourceField = new javax.swing.JTextField();
         expectedType = new javax.swing.JLabel();
 
+        setMaximumSize(new java.awt.Dimension(32767, 163));
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Driver"));
 
+        drivername.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         drivername.setText("jLabel2");
 
         addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
@@ -71,8 +74,6 @@ public class DataDriverPanel extends javax.swing.JPanel {
                 addSourceButtonActionPerformed(evt);
             }
         });
-
-        resourceField.setText("jTextField1");
 
         expectedType.setText("jLabel1");
 
@@ -104,9 +105,8 @@ public class DataDriverPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(expectedType)
                     .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(addSourceButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(addSourceButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

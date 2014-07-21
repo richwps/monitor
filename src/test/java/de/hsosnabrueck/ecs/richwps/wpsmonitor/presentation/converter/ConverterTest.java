@@ -91,14 +91,14 @@ public class ConverterTest {
 
     @Test
     public void testDispatchResultIsNotNull() {
-        Assert.assertTrue("check if the dispatch result is not null", dispatch.dispatchToConverter(data) != null);
+        Assert.assertTrue("check if the dispatch result is not null", dispatch.dispatchToMetric(data) != null);
     }
 
     @Test
     public void testDispatchResult() {
         Assert.assertTrue("check if the dispatch result is a List and the List is not empty",
-                dispatch.dispatchToConverter(data).getClass().equals(HashMap.class)
-                && dispatch.dispatchToConverter(data).size() > 0);
+                dispatch.dispatchToMetric(data).getClass().equals(HashMap.class)
+                && dispatch.dispatchToMetric(data).size() > 0);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ConverterTest {
 
         try {
             PresentateStrategy json = new JsonPresentateStrategy();
-            json.presentate(dispatch.dispatchToConverter(data));
+            json.presentate(dispatch.dispatchToMetric(data));
         } catch (Exception e) {
             failed = true;
             message = e.getMessage();
@@ -121,7 +121,7 @@ public class ConverterTest {
     @Test
     public void testJsonStrategyOutput() {
         Assert.assertTrue(
-                new JsonPresentateStrategy().presentate(dispatch.dispatchToConverter(data))
+                new JsonPresentateStrategy().presentate(dispatch.dispatchToMetric(data))
                 .equals("{\n"
                         + "  \"MyTestConverter\": {\n"
                         + "    \"sum\": 84\n"
@@ -136,6 +136,6 @@ public class ConverterTest {
 
         t.setUp();
         PresentateStrategy json = new JsonPresentateStrategy();
-        System.out.println(json.presentate(t.dispatch.dispatchToConverter(t.data)));
+        System.out.println(json.presentate(t.dispatch.dispatchToMetric(t.data)));
     }
 }

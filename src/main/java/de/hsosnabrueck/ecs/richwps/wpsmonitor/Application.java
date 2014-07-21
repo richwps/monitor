@@ -128,6 +128,7 @@ public class Application {
             restInterface = new RestInterfaceBuilder()
                     .withMonitorControl(monitor)
                     .withStrategy(new JsonPresentateStrategy())
+                    .withPort(1111)
                     .addConverter("ResponseAvailabilityEntity", new ResponseMetricFactory())
                     .build();
 
@@ -159,7 +160,7 @@ public class Application {
                     .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                     .addRoute(HttpOperation.GET, new ListWpsRoute());
             
-            restInterface.setPort(11111);
+            //restInterface.setPort(11111);
         } catch (BuilderException ex) {
             log.error(ex);
         }

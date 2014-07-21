@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 
-import java.net.URI;
-import java.util.Set;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- *
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDescription {
-    private final URI wpsUri;
-    private final Set<WpsProcessDescription> processes;
+public class WpsTreeNode extends DefaultMutableTreeNode {
 
-    public WpsDescription(URI wpsUri, Set<WpsProcessDescription> processes) {
-        this.wpsUri = wpsUri;
-        this.processes = processes;
-    }
+    /**
+     * Indicates which type this node is - this is important
+     * for the selection
+     */
+    public static enum NodeType { DRIVER, WPS, PROCESS }
+    public NodeType type;
     
-    public URI getUri() {
-        return wpsUri;
+    public WpsTreeNode(Object obj, NodeType type) {
+        super(obj);
+        this.type = type;
     }
 
-    public Set<WpsProcessDescription> getProcesses() {
-        return processes;
-    }
+    public NodeType getType() {
+        return type;
+    }    
 
-    public boolean add(WpsProcessDescription e) {
-        return processes.add(e);
-    }
-    
     @Override
     public String toString() {
-        return wpsUri.toString();
+        return super.getUserObject().toString();
+    }
+    
+    public <T> T getDescription() {
+        return (T)userObject.getClass().cast(userObject);
     }
 }

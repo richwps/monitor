@@ -35,7 +35,8 @@ public class DataSourcePanel extends javax.swing.JPanel {
         this.parent = parent;
         
         initComponents();
-        this.dataSource.setText(source.getUsedDriver());
+        this.dataSourceLabel.setText(source.getUsedDriver());
+        this.resourceLabel.setText(source.getRessource());
     }  
 
 
@@ -49,52 +50,61 @@ public class DataSourcePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
-        dataSource = new javax.swing.JLabel();
+        dataSourceLabel = new javax.swing.JLabel();
         deleteSource = new javax.swing.JButton();
-        showWpsButton = new javax.swing.JButton();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
+        resourceLabel = new javax.swing.JLabel();
+
+        setMaximumSize(new java.awt.Dimension(32767, 116));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        dataSource.setText("jLabel1");
+        dataSourceLabel.setText("jLabel1");
 
         deleteSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteSource.setText("Delete");
 
-        showWpsButton.setText("Show WPS");
-        showWpsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showWpsButtonActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Driver used:");
+
+        jLabel2.setText("Resource:");
+
+        resourceLabel.setText("jLabel3");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(dataSource)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-                .addComponent(showWpsButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(deleteSource)
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(resourceLabel))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dataSourceLabel)))
+                .addContainerGap(305, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dataSource)
-                    .addComponent(deleteSource)
-                    .addComponent(showWpsButton)
+                    .addComponent(dataSourceLabel)
                     .addComponent(jLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(resourceLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteSource))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -115,14 +125,10 @@ public class DataSourcePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void showWpsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWpsButtonActionPerformed
-        new ShowWpsDialog(source, parent, true).setVisible(true);
-    }//GEN-LAST:event_showWpsButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel dataSource;
+    private javax.swing.JLabel dataSourceLabel;
     private javax.swing.JButton deleteSource;
-    private javax.swing.JButton showWpsButton;
+    private javax.swing.JLabel resourceLabel;
     // End of variables declaration//GEN-END:variables
 }
