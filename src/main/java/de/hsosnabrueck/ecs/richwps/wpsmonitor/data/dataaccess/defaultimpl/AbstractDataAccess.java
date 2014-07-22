@@ -40,24 +40,25 @@ public abstract class AbstractDataAccess<T> {
      * transaction and commit the transaction after all actions are down
      */
     protected Boolean autoCommit;
+    private final Jpa jpa;
     protected final static Logger log = LogManager.getLogger();
 
     /**
      * Default constructor
      */
-    public AbstractDataAccess() {
+    public AbstractDataAccess(final Jpa jpa) {
         this.autoCommit = true;
+        this.jpa = jpa;
     }
 
     /**
-     * Gets an EntityManager instance. The InitJpa ensures that every thread
-     * gets its own EntityManager instance
+     * Gets an EntityManager instance. The Jpa ensures that every thread
+ gets its own EntityManager instance
      *
      * @return EntityManager instance
      */
     protected EntityManager getEntityManager() {
-        return InitJpa
-                .getThreadEntityManager();
+        return jpa.getThreadEntityManager();
     }
 
     /**

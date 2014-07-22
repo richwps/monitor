@@ -63,9 +63,11 @@ public class QosDaoTest {
 
     @BeforeClass
     public static void setUpClass() {
-        qosFactory = new QosDaoFactory(new QosDaoDefaultFactory());
-        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory());
-        wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory());
+        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        
+        qosFactory = new QosDaoFactory(new QosDaoDefaultFactory(jpa));
+        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
+        wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(jpa));
     }
 
     @AfterClass

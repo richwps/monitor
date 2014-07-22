@@ -32,6 +32,10 @@ import javax.persistence.EntityExistsException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements QosDataAccess {
+
+    public QosDao(final Jpa jpa) {
+        super(jpa);
+    }
 /*
     @Override
     public Boolean persist(MeasuredDataEntity mDataEntity) {

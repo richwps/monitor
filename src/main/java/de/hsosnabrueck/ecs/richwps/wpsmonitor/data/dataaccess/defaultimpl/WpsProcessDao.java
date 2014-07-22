@@ -30,6 +30,10 @@ import java.util.Map;
  */
 public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implements WpsProcessDataAccess {
 
+    public WpsProcessDao(final Jpa jpa) {
+        super(jpa);
+    }
+
     @Override
     public Boolean persist(WpsProcessEntity e) {
         if (find(e.getWps().getIdentifier(), e.getIdentifier()) != null) {

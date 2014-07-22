@@ -15,6 +15,12 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
@@ -23,30 +29,29 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.Jpa;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -59,6 +64,8 @@ import org.quartz.SchedulerException;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorBuilder {
+
+    private final static Logger log = LogManager.getLogger();
 
     /**
      * Probe service.
@@ -104,11 +111,17 @@ public class MonitorBuilder {
      * File object which should point to a *.properties file.
      */
     private File propertiesFile;
-    
+
     /**
      * Config object for the monitor instance
      */
     private MonitorConfig monitorConfig;
+
+    /**
+     * Jpa instance which holds the EntityManagerFactory - will be used if the
+     * default dataaccess implementation is used
+     */
+    private Jpa jpaInstance;
 
     /**
      * Sets the {@link ProbeService} instance.
@@ -282,13 +295,51 @@ public class MonitorBuilder {
     }
 
     /**
+     * Sets the Persistence Unit Name.
+     *
+     * @param pu Persistence unit name for jpa
+     * @return MonitorBuilder instance
+     */
+    public MonitorBuilder withPersistenceUnit(String pu) throws BuilderException {
+        if (jpaInstance != null) {
+            throw new BuilderException("Persistence unit was already set.");
+        }
+        jpaInstance = new Jpa(pu);
+
+        return this;
+    }
+
+    /**
+     * Sets the default Persistence unit name
+     *
+     * @return MonitorBuilder instance
+     */
+    public MonitorBuilder withDefaultPersistenceUnit() throws BuilderException {
+        withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitor_pu");
+
+        return this;
+    }
+
+    private Jpa initJpaInstanceIfNotSet() {
+        if (jpaInstance == null) {
+            try {
+                withDefaultPersistenceUnit();
+            } catch (BuilderException ex) {
+                log.error(ex);
+            }
+        }
+
+        return jpaInstance;
+    }
+
+    /**
      * Sets the default {@link QosDaoFactory} instance.
      * {@link QosDaoDefaultFactory} will be used.
      *
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withDefaultQosDaoFactory() {
-        return withQosDaoFactory(new QosDaoDefaultFactory());
+        return withQosDaoFactory(new QosDaoDefaultFactory(initJpaInstanceIfNotSet()));
     }
 
     /**
@@ -298,7 +349,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withDefaultWpsDaoFactory() {
-        return withWpsDaoFactory(new WpsDaoDefaultFactory());
+        return withWpsDaoFactory(new WpsDaoDefaultFactory(initJpaInstanceIfNotSet()));
     }
 
     /**
@@ -308,7 +359,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withDefaultWpsProcessDaoFactory() {
-        return withWpsProcessDaoFactory(new WpsProcessDaoDefaultFactory());
+        return withWpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(initJpaInstanceIfNotSet()));
     }
 
     /**
@@ -342,12 +393,12 @@ public class MonitorBuilder {
 
         return this;
     }
-    
+
     private void setupMonitorConfig() throws BuilderException {
-        if(propertiesFile == null) {
+        if (propertiesFile == null) {
             withDefaultPropertiesFile();
         }
-        
+
         try {
             monitorConfig = new MonitorConfig(propertiesFile);
         } catch (MonitorConfigException ex) {
@@ -359,10 +410,12 @@ public class MonitorBuilder {
      * Calls all default methods.
      *
      * @return MonitorBuilder instance
+     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException
      */
-    public MonitorBuilder setupDefault() {
+    public MonitorBuilder setupDefault() throws BuilderException {
         return withDefaultProbeService()
                 .withDefaultWpsClient()
+                .withDefaultPersistenceUnit()
                 .withDefaultQosDaoFactory()
                 .withDefaultWpsDaoFactory()
                 .withDefaultWpsProcessDaoFactory()
@@ -536,15 +589,47 @@ public class MonitorBuilder {
 
             setupEventHandler();
             setupMonitorConfig();
-            
-            WpsClientConfig wpsClientConfig = new WpsClientConfig();
+
+            /*            WpsClientConfig wpsClientConfig = new WpsClientConfig();
             wpsClientConfig.setConnectionTimeout(monitorConfig.getWpsClientTimeout());
             
             withWpsClientConfig(wpsClientConfig);
+            */
+            registerJpaListenersIfUsed();
             
             return new Monitor(this);
         } catch (MonitorConfigException ex) {
             throw new BuilderException(ex.toString());
+        }
+    }
+
+    private void registerJpaListenersIfUsed() {
+        if (jpaInstance != null) {
+            try {
+                // register JPA start
+                eventHandler.registerListener("monitor.start",
+                        new MonitorEventListener() {
+                            
+                            @Override
+                            public void execute(MonitorEvent event) {
+                                jpaInstance.open();
+                            }
+                        }
+                );
+                
+                // register JPA Shutdown
+                eventHandler.registerListener("monitor.shutdown",
+                        new MonitorEventListener() {
+                            
+                            @Override
+                            public void execute(MonitorEvent event) {
+                                jpaInstance.close();
+                            }
+                        }
+                );
+            } catch (EventNotFound ex) {
+                log.error(ex);
+            }
         }
     }
 
@@ -555,6 +640,12 @@ public class MonitorBuilder {
         if (this.eventHandler == null) {
             this.eventHandler = buildEventHandler();
         }
+        
+        eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
+        eventHandler.registerEvent("measurement.wpsjob.wpsexception");
+        eventHandler.registerEvent("monitor.start");
+        eventHandler.registerEvent("monitor.restart");
+        eventHandler.registerEvent("monitor.shutdown");
     }
 
     public ProbeService getProbeService() {

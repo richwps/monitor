@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Default factory for QosDataAccess
@@ -24,9 +25,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDaoDefaultFactory implements Factory<QosDataAccess> {
+    private final Jpa jpaInstance;
 
+    public QosDaoDefaultFactory(final Jpa jpaInstance) {
+        this.jpaInstance = Validate.notNull(jpaInstance, "jpaInstance");
+    }
+    
     @Override
     public QosDataAccess create() {
-        return new QosDao();
+        return new QosDao(jpaInstance);
     }
 }

@@ -18,7 +18,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.JpaPuConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
@@ -66,7 +65,7 @@ public class MonitorControlTest {
 
     @BeforeClass
     public static void setUpClass() {
-        JpaPuConfig.setPersistenceUnitName("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+
     }
 
     @AfterClass
@@ -77,6 +76,7 @@ public class MonitorControlTest {
     public void setUp() {
         try {
             monitor = new MonitorBuilder()
+                    .withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu")
                     .setupDefault()
                     .build();
 

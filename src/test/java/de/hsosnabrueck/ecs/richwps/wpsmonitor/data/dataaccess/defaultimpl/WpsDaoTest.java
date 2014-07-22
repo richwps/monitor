@@ -51,7 +51,9 @@ public class WpsDaoTest {
 
     @BeforeClass
     public static void setUpClass() {
-        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory());
+        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        
+        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
     }
 
     @AfterClass

@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -27,42 +28,32 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class InitJpa {
+public final class Jpa {
 
-    private static EntityManagerFactory emf;
+    private EntityManagerFactory emf;
 
-    private static ThreadLocal<EntityManager> entityStorage;
-    private static List<EntityManager> entityManagerList;
+    private ThreadLocal<EntityManager> entityStorage;
+    private List<EntityManager> entityManagerList;
 
     private static final Logger log = LogManager.getLogger();
+    private final String puUnit;
 
-    static {
-        open();
+    public Jpa(String puUnit) {
+        this.puUnit = Validate.notNull(puUnit, "puUnit");
     }
     
-    public static void open() {
+    public void open() {
         if(emf == null || !emf.isOpen()) {
-            emf = Persistence.createEntityManagerFactory(JpaPuConfig.PERSISTENCE_UNIT);
+            emf = Persistence.createEntityManagerFactory(puUnit); 
             entityStorage = new ThreadLocal<EntityManager>();
             entityManagerList = new ArrayList<EntityManager>();
         }
     }
 
-    private final Object finalizerGuardian = new Object() {
-        @Override
-        protected void finalize() throws Throwable {
-            try {
-                close();
-            } finally {
-                super.finalize();
-            }
-        }
-    };
-
     /**
      * Closes the entitymanager factory and all used entitymanagers
      */
-    public static void close() {
+    public void close() {
         for (EntityManager e : entityManagerList) {
             if (e.isOpen()) {
                 log.debug("Close EntityManager...");
@@ -82,7 +73,7 @@ public abstract class InitJpa {
     @Override
     public void finalize() throws Throwable {
         try {
-            InitJpa.close();
+            close();
         } finally {
             super.finalize();
         }
@@ -93,7 +84,7 @@ public abstract class InitJpa {
      *
      * @return EntityManager instance
      */
-    public static EntityManager getThreadEntityManager() {
+    public EntityManager getThreadEntityManager() {
         EntityManager em = entityStorage.get();
 
         if (em == null || !em.isOpen()) {
@@ -110,7 +101,18 @@ public abstract class InitJpa {
      *
      * @return EntityManager instance
      */
-    public static EntityManager createEntityManager() {
+    public EntityManager createEntityManager() {
         return emf.createEntityManager();
     }
+    
+    private final Object finalizerGuardian = new Object() {
+        @Override
+        protected void finalize() throws Throwable {
+            try {
+                close();
+            } finally {
+                super.finalize();
+            }
+        }
+    };
 }

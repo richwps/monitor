@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 /**
@@ -21,15 +20,23 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class DataDriver {
+
     public abstract String getExpectedResourceType();
+
     public abstract String getDriverName();
-    
+
     protected abstract DataSource createDataSource();
-    
+
     public final DataSource create(String resource) throws DataSourceException {
-        DataSource adapter = createDataSource();
-        adapter.init(this, resource);
-        
-        return adapter;
+        try {
+            DataSource adapter = createDataSource();
+            adapter.init(this, resource);
+
+            return adapter;
+        } catch (Error ex) {
+            throw new DataSourceException(ex.toString());
+        } catch(Exception ex) {
+            throw new DataSourceException(ex.toString());
+        }
     }
 }

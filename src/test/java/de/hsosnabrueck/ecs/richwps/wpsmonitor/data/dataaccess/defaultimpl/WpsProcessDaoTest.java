@@ -56,9 +56,10 @@ public class WpsProcessDaoTest {
 
     @BeforeClass
     public static void setUpClass() {
-
-        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory());
-        wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory());
+        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        
+        wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
+        wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(jpa));
     }
 
     @AfterClass

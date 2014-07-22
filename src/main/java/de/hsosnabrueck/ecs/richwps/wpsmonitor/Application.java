@@ -17,9 +17,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.InitJpa;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
@@ -66,27 +63,6 @@ public class Application {
     public void run() throws SchedulerException, Exception {
         Monitor monitor = setupMonitor();
 
-        // register JPA start
-        monitor.getEventHandler().registerListener("monitor.start",
-                new MonitorEventListener() {
-
-                    @Override
-                    public void execute(MonitorEvent event) {
-                        InitJpa.open();
-                    }
-                }
-        );
-        
-        // register JPA Shutdown
-        monitor.getEventHandler().registerListener("monitor.shutdown",
-                new MonitorEventListener() {
-
-                    @Override
-                    public void execute(MonitorEvent event) {
-                        InitJpa.close();
-                    }
-                }
-        );
 
         log.trace("WpsMonitor is starting up ...");
         monitor.start();

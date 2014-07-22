@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Default Factory for WpsProcessDataAccess.
@@ -25,8 +26,14 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
  */
 public class WpsProcessDaoDefaultFactory implements Factory<WpsProcessDataAccess> {
 
+    private final Jpa jpaInstance;
+
+    public WpsProcessDaoDefaultFactory(Jpa jpaInstance) {
+        this.jpaInstance = Validate.notNull(jpaInstance, "jpaInstance");
+    }
+
     @Override
     public WpsProcessDataAccess create() {
-        return new WpsProcessDao();
+        return new WpsProcessDao(jpaInstance);
     }
 }

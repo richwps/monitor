@@ -78,7 +78,7 @@ public class Monitor {
         Validate.isTrue(builder.isValid(), "builder");
 
         initMonitorWithBuilder(builder);
-        initGeneral();
+        registerShutdownHook();
     }
 
     public void start() throws SchedulerException {
@@ -144,9 +144,7 @@ public class Monitor {
         }
     }
 
-    private void initGeneral() {
-        initEventHandler();
-
+    private void registerShutdownHook() {
         // Shutdown Hook
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -160,14 +158,6 @@ public class Monitor {
                 }
             }
         });
-    }
-
-    private void initEventHandler() {
-        eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
-        eventHandler.registerEvent("measurement.wpsjob.wpsexception");
-        eventHandler.registerEvent("monitor.start");
-        eventHandler.registerEvent("monitor.restart");
-        eventHandler.registerEvent("monitor.shutdown");
     }
 
     private void cleanupJob() throws SchedulerException {

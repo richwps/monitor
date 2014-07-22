@@ -30,6 +30,10 @@ import java.util.Map;
  */
 public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAccess {
 
+    public WpsDao(final Jpa jpa) {
+        super(jpa);
+    }
+
     /**
      * Finds a WpsEntity instance by the wpsIdentifier String.
      *
