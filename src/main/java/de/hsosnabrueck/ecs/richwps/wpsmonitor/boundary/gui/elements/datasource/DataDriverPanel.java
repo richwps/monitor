@@ -76,6 +76,12 @@ public class DataDriverPanel extends javax.swing.JPanel {
             }
         });
 
+        resourceField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSourceButtonActionPerformed(evt);
+            }
+        });
+
         expectedType.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -93,7 +99,7 @@ public class DataDriverPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(expectedType)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                         .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -135,6 +141,8 @@ public class DataDriverPanel extends javax.swing.JPanel {
         try {
             DataSource dataSource = driver.create(resource);
             parent.addDataSource(dataSource);
+            
+            resourceField.setText("");
         } catch (DataSourceException ex) {
             MessageDialogs.showError(this, "Error", ex.toString());
         }

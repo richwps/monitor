@@ -52,6 +52,6 @@ public class WpsProcessDescription {
 
     @Override
     public String toString() {
-        return "Identifier: " + identifier +  "\nAbstract: " + strAbstract;
+        return "Identifier: " + identifier +  " \nAbstract: " + strAbstract;
     }
 }
