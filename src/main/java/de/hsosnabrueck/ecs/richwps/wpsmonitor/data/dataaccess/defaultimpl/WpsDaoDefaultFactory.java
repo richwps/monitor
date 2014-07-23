@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
@@ -22,10 +21,11 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Default factory for a WpsDataAccess
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDaoDefaultFactory implements Factory<WpsDataAccess> {
+
     private final Jpa jpaInstance;
 
     public WpsDaoDefaultFactory(Jpa jpaInstance) {

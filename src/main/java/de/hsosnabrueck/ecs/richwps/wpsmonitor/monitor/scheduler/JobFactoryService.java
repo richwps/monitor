@@ -46,7 +46,7 @@ public class JobFactoryService implements JobFactory {
 
     private final Map<Class<? extends Job>, JobFactory> classFactoryMap;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public JobFactoryService() {
         this.classFactoryMap = new HashMap<Class<? extends Job>, JobFactory>();

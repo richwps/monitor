@@ -34,10 +34,10 @@ public class CleanUpJob implements Job {
     private final QosDataAccess qosDao;
     private final Date olderAs;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
-     * 
+     *
      * @param qosDao QosDataAccess instance
      * @param olderAs Date instance
      */
@@ -48,7 +48,7 @@ public class CleanUpJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        log.debug("Cleanup Job: deleteAllOlderAs {}", olderAs);
+        LOG.debug("Cleanup Job: deleteAllOlderAs {}", olderAs);
         qosDao.deleteAllOlderAs(olderAs);
     }
 

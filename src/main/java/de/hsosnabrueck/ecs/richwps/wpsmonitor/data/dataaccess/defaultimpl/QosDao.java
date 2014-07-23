@@ -36,45 +36,6 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
     public QosDao(final Jpa jpa) {
         super(jpa);
     }
-/*
-    @Override
-    public Boolean persist(MeasuredDataEntity mDataEntity) {
-
-        Boolean result = true;
-        beginTransaction();
-        
-        /**
-         * Split mDataEntity into two objects, then persist the one half with 
-         * createDate and process and then persist the other half with 
-         * the data. But set the first half to the data entities
-         *//*
-        try {
-            MeasuredDataEntity toPersist = new MeasuredDataEntity();
-            toPersist.setCreateTime(mDataEntity.getCreateTime());
-            toPersist.setProcess(mDataEntity.getProcess());
-            
-            getEntityManager().persist(toPersist);
-            
-            for (AbstractQosEntity e : mDataEntity.getData()) {
-                e.setOwner(toPersist);
-                getEntityManager().persist(e);
-            }
-            
-            toPersist.setData(mDataEntity.getData());
-            
-            getEntityManager().merge(toPersist);
-            
-            mDataEntity.setId(toPersist.getId());
-
-            requestCommit();
-        } catch (EntityExistsException e) {
-            log.debug(e);
-
-            result = false;
-        }
-
-        return result;
-    }*/
 
     @Override
     public MeasuredDataEntity find(final Object primaryKey) {

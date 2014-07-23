@@ -25,12 +25,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class QosDaoDefaultFactory implements Factory<QosDataAccess> {
+
     private final Jpa jpaInstance;
 
     public QosDaoDefaultFactory(final Jpa jpaInstance) {
         this.jpaInstance = Validate.notNull(jpaInstance, "jpaInstance");
     }
-    
+
     @Override
     public QosDataAccess create() {
         return new QosDao(jpaInstance);

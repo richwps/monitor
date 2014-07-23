@@ -20,7 +20,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * Entity for WpsProcesses.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity

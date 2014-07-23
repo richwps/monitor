@@ -26,8 +26,8 @@ import java.util.List;
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
 
     /**
-     * Finds a {@link WpsProcessEntity}-object that matches the given wpsIdentifier &&
-     * processIdentifier.
+     * Finds a {@link WpsProcessEntity}-object that matches the given
+     * wpsIdentifier && processIdentifier.
      *
      * @param wpsIdentifier Identifier of wps-entity
      * @param processIdentifier Identifier of wpsProcess-entity
@@ -49,9 +49,10 @@ public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
      * @param wpsIdentifier Identifier of wps-entity.
      */
     public void deleteProcessesOfWps(final String wpsIdentifier);
-    
+
     /**
      * Removes a stored {@link WpsProcessEntity}
+     *
      * @param wpsIdentifier Wps entity identifier
      * @param processIdentifier WpsProcess entity identifier
      */

@@ -31,7 +31,7 @@ public class Properties extends java.util.Properties {
 
     protected Properties defaultProperties;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public Properties() {
         super();
@@ -58,15 +58,15 @@ public class Properties extends java.util.Properties {
             intValue = Integer.parseInt(propertyValue);
         } catch (NumberFormatException ex) {
             try {
-                log.warn("Can't convert Property with Key \"{}\" to Integer. Try to convert default Property.", propertyKey);
+                LOG.warn("Can't convert Property with Key \"{}\" to Integer. Try to convert default Property.", propertyKey);
 
                 propertyValue = defaultProperties.getProperty(propertyKey);
                 intValue = Integer.parseInt(propertyValue);
             } catch (NumberFormatException e) {
-                log.error("Can't convert Default-Property with Key \"{}\" to Integer.", propertyKey);
+                LOG.error("Can't convert Default-Property with Key \"{}\" to Integer.", propertyKey);
             }
         } catch (NullPointerException ex) {
-            log.error(ex);
+            LOG.error("Propertie was null. Exception was: {}", ex);
         }
 
         return intValue;
@@ -89,7 +89,7 @@ public class Properties extends java.util.Properties {
                 boolValue = _getBooleanProperty(defaultProperties, propertyKey);
             }
         } catch (NullPointerException ex) {
-            log.error(ex);
+            LOG.error("Propertie was null. Exception was: {}", ex);
         }
 
         return boolValue;
@@ -99,9 +99,9 @@ public class Properties extends java.util.Properties {
         String propertyValue = prop.getProperty(propertyKey);
         Boolean boolValue = null;
 
-        if (propertyValue.equalsIgnoreCase("true")) {
+        if ("true".equalsIgnoreCase(propertyValue)) {
             boolValue = true;
-        } else if (propertyValue.equalsIgnoreCase("false")) {
+        } else if ("false".equalsIgnoreCase(propertyValue)) {
             boolValue = false;
         }
 
@@ -126,7 +126,7 @@ public class Properties extends java.util.Properties {
                 result = _getDateProperty(defaultProperties, propertyKey, dateFormat);
             }
         } catch (NullPointerException ex) {
-            log.error(ex);
+            LOG.error("Propertie was null. Exception was: {}", ex);
         }
 
         return result;
@@ -149,7 +149,7 @@ public class Properties extends java.util.Properties {
             result = Calendar.getInstance();
             result.setTime(dateProperty);
         } catch (NullPointerException ex) {
-            log.error(ex);
+            LOG.error("Propertie was null. Exception was: {}", ex);
         }
 
         return result;
@@ -162,7 +162,7 @@ public class Properties extends java.util.Properties {
         try {
             result = new SimpleDateFormat(dateFormat).parse(property);
         } catch (ParseException ex) {
-            log.warn(ex);
+            LOG.warn("Can't parse the Date. Exception was: {}", ex);
         }
 
         return result;

@@ -26,7 +26,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * Creates a new Quartz {@link Scheduler} instance.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SchedulerFactory implements Factory<Scheduler> {
@@ -36,7 +36,7 @@ public class SchedulerFactory implements Factory<Scheduler> {
 
     /**
      * Constructor.
-     * 
+     *
      * @param jobFactoryService {@link JobFactoryService} instance
      * @param jobListeners List of {@link JobListener}s
      */
@@ -51,8 +51,8 @@ public class SchedulerFactory implements Factory<Scheduler> {
             Scheduler result = StdSchedulerFactory.getDefaultScheduler();
 
             result.setJobFactory(jobFactoryService);
-            
-            for(JobListener listener : jobListeners) {
+
+            for (JobListener listener : jobListeners) {
                 result.getListenerManager()
                         .addJobListener(listener);
             }

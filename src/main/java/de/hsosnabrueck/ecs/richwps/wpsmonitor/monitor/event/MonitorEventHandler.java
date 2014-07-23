@@ -35,7 +35,7 @@ public class MonitorEventHandler {
      */
     private final Map<String, List<MonitorEventListener>> events;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Default constructor.
@@ -54,12 +54,12 @@ public class MonitorEventHandler {
             if (!events.containsKey(eventName)) {
                 events.put(eventName, new ArrayList<MonitorEventListener>());
 
-                log.debug("EventHandler: Register new event {}", eventName);
+                LOG.debug("EventHandler: Register new event {}", eventName);
             } else {
-                log.debug("EventHandler: This EventManager already contains an event with name {}.", eventName);
+                LOG.debug("EventHandler: This EventManager already contains an event with name {}.", eventName);
             }
         } else {
-            log.debug("EventHandler: Parameter eventName was null.");
+            LOG.debug("EventHandler: Parameter eventName was null.");
         }
     }
 
@@ -73,10 +73,10 @@ public class MonitorEventHandler {
             for (MonitorEventListener listener : events.get(event.getEventName())) {
                 listener.execute(event);
 
-                log.debug("EventHandler: Event {} fired! Execute: {}", event.getEventName(), listener.getClass().getName());
+                LOG.debug("EventHandler: Event {} fired! Execute: {}", event.getEventName(), listener.getClass().getName());
             }
         } else {
-            log.debug("EventHandler: No event with the given name {} is registred.", event.getEventName());
+            LOG.debug("EventHandler: No event with the given name {} is registred.", event.getEventName());
         }
     }
 
@@ -89,7 +89,7 @@ public class MonitorEventHandler {
      */
     public void registerListener(final String eventName, final MonitorEventListener eventToRegister) throws EventNotFound {
         if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
-            log.debug("EventHandler: registerListener: Event {} not found!", eventName);
+            LOG.debug("EventHandler: registerListener: Event {} not found!", eventName);
 
             throw new EventNotFound(eventName);
         }
@@ -97,7 +97,7 @@ public class MonitorEventHandler {
         events.get(eventName)
                 .add(Validate.notNull(eventToRegister, "eventToRegister"));
 
-        log.debug("EventHandler: Register new Listener: {}", eventToRegister.getClass().getName());
+        LOG.debug("EventHandler: Register new Listener: {}", eventToRegister.getClass().getName());
     }
 
     /**
@@ -109,7 +109,7 @@ public class MonitorEventHandler {
      */
     public void removeListener(final String eventName, final MonitorEventListener eventToRemove) throws EventNotFound {
         if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
-            log.debug("EventHandler: removeListener: Event {} not found!", eventName);
+            LOG.debug("EventHandler: removeListener: Event {} not found!", eventName);
 
             throw new EventNotFound(eventName);
         }
@@ -117,12 +117,12 @@ public class MonitorEventHandler {
         events.get(eventName)
                 .remove(Validate.notNull(eventToRemove, "eventToRemove"));
 
-        log.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
+        LOG.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
     }
-    
+
     /**
      * Merges the given EventHandler-instance with this EventHandler instance.
-     * 
+     *
      * @param toMerge EventHandler instance.
      */
     public void merge(MonitorEventHandler toMerge) {

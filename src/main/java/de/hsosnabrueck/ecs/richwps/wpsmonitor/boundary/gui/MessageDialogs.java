@@ -20,14 +20,14 @@ import javax.swing.JOptionPane;
 
 /**
  * Helper class for JOptionPane dialogs.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MessageDialogs {
 
     /**
      * Shows a question dialog with YES_NO_OPTION.
-     * 
+     *
      * @param frame Parentframe
      * @param title Title text
      * @param question Question text
@@ -39,16 +39,16 @@ public class MessageDialogs {
                 question,
                 title,
                 JOptionPane.YES_NO_OPTION);
-        
+
         return n == JOptionPane.YES_OPTION;
     }
 
     /**
      * Shows an error dialog.
-     * 
+     *
      * @param frame Parentframe
      * @param title Title text
-     * @param message  Error message text
+     * @param message Error message text
      */
     public static void showError(Component frame, String title, String message) {
         JOptionPane.showMessageDialog(frame,

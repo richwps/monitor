@@ -45,7 +45,7 @@ public class MeasureJobListener implements JobListener {
      */
     private final MonitorEventHandler eventHandler;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
@@ -80,8 +80,8 @@ public class MeasureJobListener implements JobListener {
     /**
      * Starts a new worker thread which handles the jobWasExecuted-Event because
      * within this event some DataAcces-interactions are happening which can
-     * slow down the system because the listener runs in the mainthread and
-     * the jobs runs in its own thread.
+     * slow down the system because the listener runs in the mainthread and the
+     * jobs runs in its own thread.
      *
      * @see JobExecutedHandlerThread
      * @param context JobExecutionContext contexten, injected by quartz
@@ -95,7 +95,7 @@ public class MeasureJobListener implements JobListener {
                 handleJobWasExecuted.start();
             }
         } catch (CreateException ex) {
-            log.error(ex);
+            LOG.error("Can't create wpsProcessDao to handel the JobWasExecuted Event. Exception was: {}", ex);
         }
     }
 

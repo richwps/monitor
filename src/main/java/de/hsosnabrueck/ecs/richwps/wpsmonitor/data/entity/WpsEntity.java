@@ -33,12 +33,11 @@ import javax.persistence.NamedQuery;
     /**
      * Selects a specific wps that matches the given identifier parameter.
      */
-    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier"),
-})
+    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier"),})
 public class WpsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -15,15 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.GuiStarter;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.HttpOperation;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.RestInterfaceBuilder;
@@ -32,9 +27,18 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasur
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.SchedulerException;
@@ -45,43 +49,46 @@ import org.quartz.SchedulerException;
  */
 public class Application {
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
-    public static void main(String[] args) throws Exception {
+    public Application() {
+    }
+
+    public static void main(String[] args) {
         Locale.setDefault(Locale.GERMANY);
 
         try {
             new Application().run();
         } catch (Exception ex) {
-            log.fatal(ex);
+            LOG.fatal("Can't run() WpsMonitor. Exception was: {}", ex);
         }
     }
 
-    public Application() {
-    }
-
-    public void run() throws SchedulerException, Exception {
+    public void run() throws SchedulerException, BuilderException {
         Monitor monitor = setupMonitor();
 
-
-        log.trace("WpsMonitor is starting up ...");
+        LOG.trace("WpsMonitor is starting up ...");
         monitor.start();
 
-        log.trace("Start REST Interface ...");
+        LOG.trace("Start REST Interface ...");
         RestInterface rest = setupRest(monitor.getMonitorControl());
         rest.start();
 
-        log.trace("Start GUI ...");
-        GuiStarter.start(monitor);
+        LOG.trace("Setup DataDriver Set ...");
+        Set<DataDriver> drivers = new HashSet<DataDriver>();
+        drivers.add(new SemanticProxyData());
+
+        LOG.trace("Start GUI ...");
+        GuiStarter.start(monitor, drivers);
     }
 
     /**
      * Setup the Monitor-instance
      *
      * @return Monitor instance
-     * @throws Exception
+     * @throws BuilderException
      */
-    public Monitor setupMonitor() throws Exception {
+    public Monitor setupMonitor() throws BuilderException {
         Monitor monitor = new MonitorBuilder()
                 .setupDefault()
                 .build();
@@ -105,7 +112,7 @@ public class Application {
                     .withMonitorControl(monitor)
                     .withStrategy(new JsonPresentateStrategy())
                     .withPort(1111)
-                    .addConverter("ResponseAvailabilityEntity", new ResponseMetricFactory())
+                    .addMetric("ResponseAvailabilityEntity", new ResponseMetricFactory())
                     .build();
 
             restInterface
@@ -135,10 +142,9 @@ public class Application {
                     })
                     .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                     .addRoute(HttpOperation.GET, new ListWpsRoute());
-            
-            //restInterface.setPort(11111);
+
         } catch (BuilderException ex) {
-            log.error(ex);
+            LOG.error("Can't build RestInterface Instance. Exception was: {}", ex);
         }
 
         return restInterface;

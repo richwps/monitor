@@ -27,8 +27,9 @@ import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 
 /**
- * Helper Thread for the {@link MeasureJobListener}. This approach tries to
- * take the load off the main thread in which the {@link MeasureJobListener} is working.
+ * Helper Thread for the {@link MeasureJobListener}. This approach tries to take
+ * the load off the main thread in which the {@link MeasureJobListener} is
+ * working.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -38,14 +39,12 @@ public class JobExecutedHandlerThread extends Thread {
     private final WpsProcessDataAccess wpsProcessDao;
     private final MonitorEventHandler eventHandler;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public JobExecutedHandlerThread(final JobExecutionContext scheduler, final MonitorEventHandler eventHandler, final WpsProcessDataAccess wpsProcessDao) {
         this.executionContext = scheduler;
         this.wpsProcessDao = wpsProcessDao;
         this.eventHandler = eventHandler;
-
-        //super.setName("JobExecutedHandler");
     }
 
     @Override
@@ -56,7 +55,7 @@ public class JobExecutedHandlerThread extends Thread {
             MeasureJob specificJob = (MeasureJob) generalJob;
             WpsProcessEntity process = specificJob.getProcessEntity();
 
-            log.debug("MeasureJobListener: Fire scheduler.job.wasexecuted Event!");
+            LOG.debug("MeasureJobListener: Fire scheduler.job.wasexecuted Event!");
             eventHandler
                     .fireEvent(new MonitorEvent("scheduler.wpsjob.wasexecuted", process));
 
@@ -65,7 +64,7 @@ public class JobExecutedHandlerThread extends Thread {
                 WpsProcessEntity find = wpsProcessDao.find(process.getWps().getIdentifier(), process.getIdentifier());
                 // check if no thread was faster
                 if (!find.isWpsException()) {
-                    log.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
+                    LOG.debug("MeasureJobListener: Can't measure process {}, because of WpsException || otherException!"
                             + " try to pause this job.", process);
 
                     JobKey jobKey = new JobKey(process.getIdentifier(), process.getWps().getIdentifier());
@@ -86,11 +85,11 @@ public class JobExecutedHandlerThread extends Thread {
                         eventHandler
                                 .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
 
-                        log.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
+                        LOG.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
                         eventHandler
                                 .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));
                     } catch (SchedulerException ex) {
-                        log.error(ex);
+                        LOG.error("Scheduler Exception occourd while pausing a job. Exception was: {}", ex);
                     }
                 }
             }

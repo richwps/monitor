@@ -96,6 +96,6 @@ public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
      * @return Affected rows
      */
     public Integer deleteAllOlderAs(final Date date);
-    
+
     public AbstractQosEntity findAbstractQosEntityByid(Long id);
 }

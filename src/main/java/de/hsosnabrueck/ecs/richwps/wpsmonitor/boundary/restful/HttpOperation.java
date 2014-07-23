@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
 /**
  * Enum of possible HTTP operations.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public enum HttpOperation {

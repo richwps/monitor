@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsTreeNode extends DefaultMutableTreeNode {
 
     /**
-     * Indicates which type this node is - this is important
-     * for the selection
+     * Indicates which type this node is - this is important for the selection
      */
-    public static enum NodeType { DRIVER, WPS, PROCESS }
+    public static enum NodeType {
+
+        DRIVER, WPS, PROCESS
+    }
     public NodeType type;
-    
+
     public WpsTreeNode(Object obj, NodeType type) {
         super(obj);
         this.type = type;
@@ -38,14 +39,14 @@ public class WpsTreeNode extends DefaultMutableTreeNode {
 
     public NodeType getType() {
         return type;
-    }    
+    }
 
     @Override
     public String toString() {
         return super.getUserObject().toString();
     }
-    
+
     public <T> T getDescription() {
-        return (T)userObject.getClass().cast(userObject);
+        return (T) userObject.getClass().cast(userObject);
     }
 }

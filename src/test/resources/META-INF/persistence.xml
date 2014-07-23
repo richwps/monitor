@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu" transaction-type="RESOURCE_LOCAL">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity</class>
-    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity</class>
-    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity</class>
-    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
-    <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity</class>
-    <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:derby:Database/MonitoredDataTest;create=true"/>
-      <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-      <property name="javax.persistence.jdbc.user" value=""/>
-      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-	  <property name="eclipselink.logging.level" value="FINE"/>
-    </properties>
-  </persistence-unit>
+    <persistence-unit name="de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity</class>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity</class>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity</class>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby:Database/MonitoredDataTest;create=true"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="javax.persistence.jdbc.user" value=""/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+        </properties>
+    </persistence-unit>
 </persistence>

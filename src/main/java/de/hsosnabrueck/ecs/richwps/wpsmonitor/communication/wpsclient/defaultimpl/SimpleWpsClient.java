@@ -66,13 +66,13 @@ import org.xml.sax.SAXException;
 public class SimpleWpsClient implements WpsClient {
 
     private String wpsExceptionMessage;
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
     private HttpClient httpClient;
 
     @Override
     public void init(final WpsClientConfig config) {
-        log.debug("Init WpsClient with {}", config);
-        
+        LOG.debug("Init WpsClient with {}", config);
+
         Integer timeout = config.getConnectionTimeout();
 
         RequestConfig.Builder requestBuilder = RequestConfig.custom()
@@ -97,22 +97,22 @@ public class SimpleWpsClient implements WpsClient {
                 // build http request
                 HttpPost httpRequest = buildRequest(wpsRequest);
 
-                log.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
-                
+                LOG.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
+
                 // prepare and do request (init requestTime)
                 wpsRequest.prepareRequest();
                 HttpResponse httpResponse = httpClient.execute(httpRequest);
                 responseTime = new Date();
-                
-                log.debug("Response received.");
+
+                LOG.debug("Response received.");
 
                 // get response body
                 HttpEntity responseEntity = httpResponse.getEntity();
                 responseBody = EntityUtils.toString(responseEntity);
             } catch (UnsupportedEncodingException ex) {
-                log.debug(ex);
+                LOG.warn("Apache HTTP Client: Encoding not supported. Exception was: {}", ex);
             } catch (IOException ex) {
-                log.debug(ex);
+                LOG.warn("Apache HTTP Client I/O Error. Exception was: {}", ex);
             }
 
             // create response Object
@@ -126,12 +126,12 @@ public class SimpleWpsClient implements WpsClient {
                     if (isWpsException(responseBody)) {
                         WpsException ex;
 
-                        if (wpsExceptionMessage == null || wpsExceptionMessage.equals("")) {
+                        if (wpsExceptionMessage == null || "".equals(wpsExceptionMessage)) {
                             ex = new WpsException();
                         } else {
                             ex = new WpsException(wpsExceptionMessage);
 
-                            log.debug(wpsExceptionMessage);
+                            LOG.debug(wpsExceptionMessage);
                         }
 
                         response.setException(ex);
@@ -175,16 +175,16 @@ public class SimpleWpsClient implements WpsClient {
                 return false;
             }
         } catch (SAXException ex) {
-            log.debug(ex);
+            LOG.debug("SAX Exception occourd at parse WPS Response. Exception was: {}", ex);
         } catch (IOException ex) {
-            log.debug(ex);
+            LOG.debug("I/O Exception occourd at parse WPS Response. Exception was: {}", ex);
         } catch (ParserConfigurationException ex) {
-            log.debug(ex);
+            LOG.debug("Parse Exception occourd at parse WPS Response. Exception was: {}", ex);
         } catch (DOMException ex) {
-            log.debug(ex);
+            LOG.debug("DOM Exception occourd at parse WPS Response. Exception was: {}", ex);
         }
 
-        log.debug("Exception occured while parsing the WpsResponse body. Interpreting as ConnectionError.");
+        LOG.debug("Exception occured while parsing the WpsResponse body. Interpreting as ConnectionError.");
         throw new NoWpsResponse();
     }
 

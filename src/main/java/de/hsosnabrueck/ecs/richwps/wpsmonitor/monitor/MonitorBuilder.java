@@ -65,7 +65,7 @@ import org.quartz.SchedulerException;
  */
 public class MonitorBuilder {
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Probe service.
@@ -144,7 +144,7 @@ public class MonitorBuilder {
     public MonitorBuilder withPropertiesFile(String fileName) {
         File pFile = null;
 
-        if (fileName != null && !fileName.trim().equals("")) {
+        if (fileName != null && !"".equals(fileName.trim())) {
             pFile = new File(fileName);
         }
 
@@ -325,7 +325,7 @@ public class MonitorBuilder {
             try {
                 withDefaultPersistenceUnit();
             } catch (BuilderException ex) {
-                log.error(ex);
+                LOG.error("Can't init JPA Exception was {}", ex);
             }
         }
 
@@ -402,7 +402,7 @@ public class MonitorBuilder {
         try {
             monitorConfig = new MonitorConfig(propertiesFile);
         } catch (MonitorConfigException ex) {
-            throw new BuilderException(ex.toString());
+            throw new BuilderException(ex);
         }
     }
 
@@ -563,9 +563,9 @@ public class MonitorBuilder {
                         wpsProcessDaoFactory
                 );
             } catch (SchedulerException ex) {
-                throw new BuilderException(ex.toString());
+                throw new BuilderException(ex);
             } catch (CreateException ex) {
-                throw new BuilderException(ex.toString());
+                throw new BuilderException(ex);
             }
         }
 
@@ -590,16 +590,17 @@ public class MonitorBuilder {
             setupEventHandler();
             setupMonitorConfig();
 
-            /*            WpsClientConfig wpsClientConfig = new WpsClientConfig();
+            if (wpsClientConfig != null) {
+                withWpsClientConfig(new WpsClientConfig());
+            }
+
             wpsClientConfig.setConnectionTimeout(monitorConfig.getWpsClientTimeout());
-            
-            withWpsClientConfig(wpsClientConfig);
-            */
+
             registerJpaListenersIfUsed();
-            
+
             return new Monitor(this);
         } catch (MonitorConfigException ex) {
-            throw new BuilderException(ex.toString());
+            throw new BuilderException(ex);
         }
     }
 
@@ -609,18 +610,18 @@ public class MonitorBuilder {
                 // register JPA start
                 eventHandler.registerListener("monitor.start",
                         new MonitorEventListener() {
-                            
+
                             @Override
                             public void execute(MonitorEvent event) {
                                 jpaInstance.open();
                             }
                         }
                 );
-                
+
                 // register JPA Shutdown
                 eventHandler.registerListener("monitor.shutdown",
                         new MonitorEventListener() {
-                            
+
                             @Override
                             public void execute(MonitorEvent event) {
                                 jpaInstance.close();
@@ -628,7 +629,7 @@ public class MonitorBuilder {
                         }
                 );
             } catch (EventNotFound ex) {
-                log.error(ex);
+                LOG.error("Can't register the JPA listener. Exception was {}", ex);
             }
         }
     }
@@ -640,7 +641,7 @@ public class MonitorBuilder {
         if (this.eventHandler == null) {
             this.eventHandler = buildEventHandler();
         }
-        
+
         eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
         eventHandler.registerEvent("measurement.wpsjob.wpsexception");
         eventHandler.registerEvent("monitor.start");

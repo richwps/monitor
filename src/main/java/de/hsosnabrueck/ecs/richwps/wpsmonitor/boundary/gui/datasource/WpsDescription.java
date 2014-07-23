@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 import java.net.URI;
@@ -24,6 +23,7 @@ import java.util.Set;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDescription {
+
     private final URI wpsUri;
     private final Set<WpsProcessDescription> processes;
 
@@ -31,7 +31,7 @@ public class WpsDescription {
         this.wpsUri = wpsUri;
         this.processes = processes;
     }
-    
+
     public URI getUri() {
         return wpsUri;
     }
@@ -43,7 +43,7 @@ public class WpsDescription {
     public boolean add(WpsProcessDescription e) {
         return processes.add(e);
     }
-    
+
     @Override
     public String toString() {
         return wpsUri.toString();

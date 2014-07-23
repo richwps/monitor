@@ -21,14 +21,13 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface WpsClient {
-    
+
     /**
      * Invoke the WpsClient to execute the given wpsRequest. The WpsClient
      * should call WpsRequest.prepareRequest() at real execution Time.
      * WpsRequest.prepareRequest() sets the now-time as a new Date() Object.
      *
-     * e.g.      
-     * <code><pre>
+     * e.g.      <code><pre>
      *     public void execute(final WpsRequest request) {
      *          // prepare client
      *          // do some stuff
@@ -49,6 +48,6 @@ public interface WpsClient {
      * @return The Answer from the called server
      */
     public WpsResponse execute(final WpsRequest wpsRequest);
-    
+
     public void init(final WpsClientConfig config);
 }

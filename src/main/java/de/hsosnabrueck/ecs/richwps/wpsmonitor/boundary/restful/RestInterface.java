@@ -60,10 +60,9 @@ public class RestInterface {
      * routes.
      */
     private final DispatcherFactory dispatchFactory;
-    
+
     /**
-     * Alternate port for Spark.
-     * As default Port 4567 is used.
+     * Alternate port for Spark. As default Port 4567 is used.
      */
     private Integer port;
 
@@ -71,9 +70,9 @@ public class RestInterface {
      * Map which stores the MonitorRoute instances for the right
      * {@link HttpOperation}.
      */
-    private EnumMap<HttpOperation, Set<MonitorRoute>> routeMap;
+    private Map<HttpOperation, Set<MonitorRoute>> routeMap;
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Creates a new RestInterface instance.
@@ -117,7 +116,8 @@ public class RestInterface {
 
     /**
      * Creates a MonitorRoute instance which will call <code>MonitorRoute instance =
-     * monitorRouteFactory.create()</code> and <code>instance.init()</code> at each request.
+     * monitorRouteFactory.create()</code> and <code>instance.init()</code> at
+     * each request.
      *
      * @param operation {@link HttpOperation} instance
      * @param monitorRouteFactory Factory&lt;MonitorRoute> instance
@@ -141,8 +141,7 @@ public class RestInterface {
                         // init route at every request
                         result = initRoute(newRoute)
                                 .handle(request, response);
-                    } catch (CreateException ex) {
-                        log.error(ex); // should never happened
+                    } catch (CreateException ex) { // should never happened
                         response.status(500);
                     }
 
@@ -152,7 +151,7 @@ public class RestInterface {
 
             addRoute(operation, route);
         } catch (CreateException ex) {
-            log.error(ex);
+            LOG.error("Can't register Stateless-route. Exception was: {}", ex);
         }
 
         return this;
@@ -189,13 +188,12 @@ public class RestInterface {
     }
 
     /**
-     * Sets the port Spark listens on.
-     * Works only before routes are added
-     * 
+     * Sets the port Spark listens on. Works only before routes are added
+     *
      * @param port Port number
      */
     public void setPort(Integer port) {
-        if(port != null && port > 0) {
+        if (port != null && port > 0) {
             this.port = port;
         }
     }

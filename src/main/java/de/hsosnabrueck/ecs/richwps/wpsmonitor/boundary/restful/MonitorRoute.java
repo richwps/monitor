@@ -22,8 +22,8 @@ import spark.Route;
 /**
  * Abstract class for routes in Spark. However the route objects need some
  * dependencies: {@link MonitorControl}, {@link EntityDispatcher} and the
- * {@link PresentateStrategy} instance. This class is abstract because of the 
- * init method, which is called before a route is registered through the 
+ * {@link PresentateStrategy} instance. This class is abstract because of the
+ * init method, which is called before a route is registered through the
  * {@link RouteRegister} class.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -43,7 +43,7 @@ public abstract class MonitorRoute extends Route {
 
     /**
      * Initialize a route instance with the necessary dependencies.
-     * 
+     *
      * @param monitorControl {@link MonitorControl} instance
      * @param dispatch {@link EntityDispatcher} instance
      * @param strategy {@link PresentateStrategy} instance
@@ -66,8 +66,6 @@ public abstract class MonitorRoute extends Route {
         return strategy;
     }
 
-    // was used for spark 2.0 wrapper implementation
-    //public abstract String getRoute();
     public String getRoute() {
         return route;
     }

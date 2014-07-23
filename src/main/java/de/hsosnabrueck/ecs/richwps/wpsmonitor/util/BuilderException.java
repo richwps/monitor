@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.util;
 
 /**
- * Exception which will be thrown if an exeception occurs in the building 
+ * Exception which will be thrown if an exeception occurs in the building
  * process.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class BuilderException extends Exception {
 
+    public BuilderException(Exception ex) {
+        super(ex);
+    }
+
     public BuilderException(String msg) {
         super(msg);
     }
-    
 }

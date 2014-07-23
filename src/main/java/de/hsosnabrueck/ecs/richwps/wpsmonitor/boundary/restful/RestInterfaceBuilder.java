@@ -44,7 +44,7 @@ public class RestInterfaceBuilder {
      * Converter Map.
      */
     private MetricFactoryMap converterMap;
-    
+
     /**
      * Port for Jetty
      */
@@ -60,8 +60,8 @@ public class RestInterfaceBuilder {
 
     /**
      * Sets the converterMap instance.
-     * 
-     * @param converterMap Map instance 
+     *
+     * @param converterMap Map instance
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder withConverterMap(MetricFactoryMap converterMap) {
@@ -69,18 +69,18 @@ public class RestInterfaceBuilder {
 
         return this;
     }
-    
+
     public RestInterfaceBuilder withPort(Integer port) {
-        if(port != null && port > 1000) {
+        if (port != null && port > 1000) {
             this.port = port;
         }
-        
+
         return this;
     }
 
     /**
      * Sets the PresentateStrategy instance.
-     * 
+     *
      * @param strategy PresentateStrategy instance.
      * @return RestInterfaceBuilder instance
      */
@@ -89,10 +89,10 @@ public class RestInterfaceBuilder {
 
         return this;
     }
-    
+
     /**
      * Sets the MonitorControl instance.
-     * 
+     *
      * @param monitorControl MonitorControl instance
      * @return RestInterfaceBuilder instance
      */
@@ -103,35 +103,35 @@ public class RestInterfaceBuilder {
     }
 
     /**
-     * Adds a converter factory instance.
-     * 
+     * Adds a Metric factory instance.
+     *
      * @param abstractQosEntityName
-     * @param converterFactory
+     * @param metricFactory
      * @return RestInterfaceBuilder instance
      */
-    public RestInterfaceBuilder addConverter(final String abstractQosEntityName, final Factory<QosMetric> converterFactory) {
+    public RestInterfaceBuilder addMetric(final String abstractQosEntityName, final Factory<QosMetric> metricFactory) {
         Validate.notNull(abstractQosEntityName, "abstractQosEntityName");
-        Validate.notNull(converterFactory, "converterFactory");
-                
-        converterMap.add(abstractQosEntityName, converterFactory);
-        
+        Validate.notNull(metricFactory, "converterFactory");
+
+        converterMap.add(abstractQosEntityName, metricFactory);
+
         return this;
     }
 
     /**
      * Build the {@link RestInterface}.
-     * 
+     *
      * @return {@link RestInterface} instance
-     * @throws BuilderException 
+     * @throws BuilderException
      */
     public RestInterface build() throws BuilderException {
-        if(strategy == null || monitorControl == null) {
+        if (strategy == null || monitorControl == null) {
             throw new BuilderException("Strategy and MonitorControl instances must be set.");
         }
-        
+
         DispatcherFactory dispatchFactory = new DispatcherFactory(converterMap);
         RestInterface rest = new RestInterface(strategy, monitorControl, dispatchFactory);
-        
+
         rest.setPort(port);
 
         return rest;

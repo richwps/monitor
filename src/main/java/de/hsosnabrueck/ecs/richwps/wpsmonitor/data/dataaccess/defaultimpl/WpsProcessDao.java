@@ -62,7 +62,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
         List<WpsProcessEntity> resultList = getBy("wpsprocess.get", parameters, WpsProcessEntity.class);
         WpsProcessEntity result = null;
 
-        if (resultList.size() > 0) {
+        if (!resultList.isEmpty()) {
             result = resultList.get(0);
         }
 
@@ -100,7 +100,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
                 || o.getWps() == null
                 || o.getWps().getIdentifier() == null
                 || o.getIdentifier() == null) {
-            
+
             Validate.notNull(null, "Given WpsProcessEntity");
         }
 
@@ -113,7 +113,7 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
         // remove from MeasuredDataEntity
         doNamedQuery("qos.deleteByWpsProcess", parameters);
-        
+
         super.remove(o);
         requestCommit();
     }

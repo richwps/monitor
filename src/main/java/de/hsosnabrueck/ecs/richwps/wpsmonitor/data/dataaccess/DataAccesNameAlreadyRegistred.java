@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 /**
@@ -21,5 +20,5 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DataAccesNameAlreadyRegistred extends Exception {
-    
+
 }

@@ -49,7 +49,7 @@ public class WpsProcessDaoTest {
     private static WpsDaoFactory wpsFactory;
     private static WpsProcessDaoFactory wpsProcessFactory;
 
-    private final static Integer GENERATE_COUNT = 5;
+    private static final Integer GENERATE_COUNT = 5;
 
     private String wpsIdentifier;
     private String processIdentifier;
@@ -57,7 +57,7 @@ public class WpsProcessDaoTest {
     @BeforeClass
     public static void setUpClass() {
         Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
-        
+
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
         wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(jpa));
     }
@@ -163,7 +163,7 @@ public class WpsProcessDaoTest {
                     .getIdentifier()
                     .equals(wpsIdentifier);
         }
-        
+
         Assert.assertTrue(all != null && all.size() == GENERATE_COUNT && isValid);
     }
 
@@ -173,9 +173,9 @@ public class WpsProcessDaoTest {
     @Test
     public void testDeleteProcessesFromWps() {
         wpsProcessDao.deleteProcessesOfWps(wpsIdentifier);
-        
+
         List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsIdentifier);
-        
+
         Assert.assertTrue(all.isEmpty());
     }
 

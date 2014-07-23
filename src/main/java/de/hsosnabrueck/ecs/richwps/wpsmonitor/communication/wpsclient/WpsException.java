@@ -24,8 +24,8 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient;
  * Exception answer and stores the instance in the {@link WpsResponse}-Object.
  *
  * Otherwise the specific client implementation can have a method which throws
- * this execption, but the client must catch this exception and must stores
- * this in a {@link WpsResponse}Object.
+ * this execption, but the client must catch this exception and must stores this
+ * in a {@link WpsResponse}Object.
  *
  * @see WpsResponse
  * @author Florian Vogelpohl <floriantobias@gmail.com>

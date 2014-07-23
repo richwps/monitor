@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -25,19 +24,20 @@ import java.util.Date;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Measurement {
+
     private final AbstractQosEntity values;
     private final Date measurementDate;
-    
+
     public Measurement(final AbstractQosEntity entity, final Date date) {
         this.values = Validate.notNull(entity, "entity");
         this.measurementDate = Validate.notNull(date, "date");
     }
-    
+
     public <T> T getEntity() {
-        return (T)values.getClass()
+        return (T) values.getClass()
                 .cast(values);
     }
-    
+
     public Date getDate() {
         return measurementDate;
     }

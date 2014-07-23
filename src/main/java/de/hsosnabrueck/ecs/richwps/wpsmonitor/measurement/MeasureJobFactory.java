@@ -35,7 +35,7 @@ import org.quartz.spi.TriggerFiredBundle;
 /**
  * Creates a new MeasureJob instance if the quartz scheduler starts a specific
  * job.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobFactory implements JobFactory {
@@ -44,35 +44,37 @@ public class MeasureJobFactory implements JobFactory {
      * Probeservice instance.
      */
     private final ProbeService probeService;
-    
+
     /**
      * Wps client factory - each job needs its own wps client.
      */
     private final WpsClientFactory wpsClientFactory;
-    
+
     /**
      * WpsProcessDataAccess instance.
      */
     private final WpsProcessDataAccess processDao;
-    
+
     /**
      * QosDaoFactory instance to create a new data access for a new job.
      */
     private final QosDaoFactory qosDaoFactory;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
-     * 
+     *
      * @param probeService Probeservice instance
      * @param processDao WpsProcessDataAccess instance
-     * @param qosDaoFactory QosDaoFactory instance to create a new data access for a new job
-     * @param wpsClientFactory Wps client factory - each job should have its own WPS client instance
+     * @param qosDaoFactory QosDaoFactory instance to create a new data access
+     * for a new job
+     * @param wpsClientFactory Wps client factory - each job should have its own
+     * WPS client instance
      */
     public MeasureJobFactory(final ProbeService probeService, final WpsProcessDataAccess processDao,
             final QosDaoFactory qosDaoFactory, final WpsClientFactory wpsClientFactory) {
-        
+
         this.probeService = Validate.notNull(probeService, "probeService");
         this.processDao = Validate.notNull(processDao, "processDao");
         this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
@@ -108,7 +110,7 @@ public class MeasureJobFactory implements JobFactory {
 
             measureJob = new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
         } catch (CreateException ex) {
-            log.fatal(ex);
+            LOG.fatal("Fatal exception occourd. Can't create one of the Dependencies. Without these dependencies i can't do my work. Exception was: {}", ex);
         }
 
         return measureJob;

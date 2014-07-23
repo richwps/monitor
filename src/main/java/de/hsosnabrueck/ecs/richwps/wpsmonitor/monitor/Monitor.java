@@ -67,11 +67,9 @@ public class Monitor {
     private MonitorConfig config;
     private MonitorEventHandler eventHandler;
 
-    private final static Logger log;
+    private static final Logger LOG = LogManager.getLogger();
 
-    static {
-        log = LogManager.getLogger();
-    }
+    ;
 
     public Monitor(MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");
@@ -91,14 +89,12 @@ public class Monitor {
             monitorControl
                     .getSchedulerControl()
                     .start();
-
-            afterStart();
         }
     }
 
     public void shutdown() throws SchedulerException {
         if (isActive()) {
-            log.debug("Monitor shutdown.");
+            LOG.debug("Monitor shutdown.");
 
             eventHandler
                     .fireEvent(new MonitorEvent("monitor.shutdown"));
@@ -119,9 +115,9 @@ public class Monitor {
             initMonitorWithBuilder(builderInstance);
             start();
         } catch (SchedulerException ex) {
-            log.error(ex);
+            LOG.error("Scheduler Exception at monitor restart. Exception was: {}", ex);
         } catch (MonitorConfigException ex) {
-            log.error(ex);
+            LOG.error("Monitor configuration exception at monitor restart. Exception was {}", ex);
         }
     }
 
@@ -140,7 +136,7 @@ public class Monitor {
                 this.eventHandler = tmpEventHandler;
             }
         } catch (BuilderException ex) {
-            log.fatal(ex);
+            LOG.fatal("Builder exception at initialising procedure of the monitor instance. Execution aborted. Exception was {}", ex);
         }
     }
 
@@ -154,13 +150,13 @@ public class Monitor {
                 } catch (Exception ex) {
                     // catch all exceptions, because this is 
                     // a critical point of the JVM shutdown process 
-                    log.error(ex);
+                    LOG.error("Unknown Exception occourd at shutdown hook. Exception was {}", ex);
                 }
             }
         });
     }
 
-    private void cleanupJob() throws SchedulerException {
+    private void cleanupJob() {
         try {
             SchedulerControl schedulerControl = monitorControl.getSchedulerControl();
             String schedulerName = schedulerControl.getScheduler()
@@ -192,33 +188,27 @@ public class Monitor {
             if (!config.isDeleteJobActiv()) {
                 schedulerControl.pauseJob(jobKey);
             }
-        } catch (Exception ex) {
-            log.error(ex);
+        } catch (SchedulerException ex) {
+            LOG.error("Exception occourd at configuring the CleanUpJob. Exception was {}", ex);
         }
     }
 
-    private Trigger getCleanupTrigger(final TriggerKey triggerKey, final JobKey jobKey) throws Exception {
+    private Trigger getCleanupTrigger(final TriggerKey triggerKey, final JobKey jobKey) {
         Integer hour = config.getDeleteTime()
                 .get(Calendar.HOUR_OF_DAY);
         Integer minute = config.getDeleteTime()
                 .get(Calendar.MINUTE);
 
-        Trigger cleanupTrigger = TriggerBuilder.newTrigger()
+        return TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
                 .forJob(jobKey)
                 .startAt(DateBuilder.todayAt(hour, minute, 0))
                 .withSchedule(CalendarIntervalScheduleBuilder.calendarIntervalSchedule()
                         .withIntervalInDays(1)
                 ).build();
-
-        return cleanupTrigger;
     }
 
-    private void afterStart() throws SchedulerException {
-
-    }
-
-    private void beforeStart() throws SchedulerException {
+    private void beforeStart() {
         setupJobFactories();
         cleanupJob();
     }
@@ -245,9 +235,9 @@ public class Monitor {
             jobFactoryService.register(MeasureJob.class, measureJobFactory);
             jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
         } catch (CreateException ex) {
-            log.fatal(ex);
+            LOG.fatal("Can't setup the Jobfactories. Execution aborted. Exception was {}", ex);
         } catch (Exception ex) {
-            log.fatal(ex);
+            LOG.fatal("Can't setup the Jobfactories. Execution aborted. Exception was {}", ex);
         }
     }
 
@@ -270,7 +260,7 @@ public class Monitor {
     public MonitorConfig getConfig() {
         return config;
     }
-    
+
     public ProbeService getProbeService() {
         return builderInstance
                 .getProbeService();
@@ -287,7 +277,7 @@ public class Monitor {
         } catch (SchedulerException ex) {
             active = false;
 
-            log.error(ex);
+            LOG.error("Can't check if the Scheduler is active. Exception was {}", ex);
         }
 
         return active;

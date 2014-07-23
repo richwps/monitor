@@ -47,12 +47,12 @@ public class WpsDaoTest {
 
     private static WpsDaoFactory wpsFactory;
 
-    private final static Integer GENERATE_COUNT = 20;
+    private static final Integer GENERATE_COUNT = 20;
 
     @BeforeClass
     public static void setUpClass() {
         Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
-        
+
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
     }
 
@@ -104,12 +104,12 @@ public class WpsDaoTest {
     @Test
     public void testGet() {
         List<WpsEntity> get = wpsDao.get(new Range(null, GENERATE_COUNT / 2));
-        
+
         Boolean isValid = true;
-        for(WpsEntity e : get) {
+        for (WpsEntity e : get) {
             isValid = isValid && e != null;
         }
-        
+
         Assert.assertTrue(get.size() == GENERATE_COUNT / 2 && isValid);
     }
 
@@ -119,12 +119,12 @@ public class WpsDaoTest {
     @Test
     public void testGetAll() {
         List<WpsEntity> get = wpsDao.getAll();
-        
+
         Boolean isValid = true;
-        for(WpsEntity e : get) {
+        for (WpsEntity e : get) {
             isValid = isValid && e != null;
         }
-        
+
         Assert.assertTrue(isValid && get.size() >= GENERATE_COUNT);
     }
 

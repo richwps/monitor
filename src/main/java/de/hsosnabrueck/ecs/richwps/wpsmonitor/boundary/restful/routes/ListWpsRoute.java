@@ -35,9 +35,8 @@ public class ListWpsRoute extends MonitorRoute {
     public Object handle(Request request, Response response) {
         List<WpsEntity> wpsList = getMonitorControl().getWpsList();
 
-        
         response.type(getStrategy().getMimeType());
-        
+
         return getStrategy().presentate(wpsList);
     }
 

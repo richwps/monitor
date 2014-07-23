@@ -115,7 +115,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Adds a Wps measurement job; The job will be replaced if it already exists.
+     * Adds a Wps measurement job; The job will be replaced if it already
+     * exists.
      *
      * @param wpsIdentifier Wps entity identifier
      * @param processIdentifier wpsprocess entity identifier
@@ -136,7 +137,8 @@ public final class SchedulerControl {
      *
      * @param jobKey To this job is the trigger added
      * @param config Config with schedule informations
-     * @return A new TriggerConfig instance based on the given one but with a triggerkey
+     * @return A new TriggerConfig instance based on the given one but with a
+     * triggerkey
      * @throws SchedulerException
      */
     public synchronized TriggerConfig addTriggerToJob(final JobKey jobKey, final TriggerConfig config) throws SchedulerException {
@@ -150,10 +152,10 @@ public final class SchedulerControl {
         Trigger newTrigger = createTriggerWithStartAndEnd(forJob, config);
 
         scheduler.scheduleJob(newTrigger);
-        
+
         TriggerConfig newConfig = new TriggerConfig(config);
         newConfig.setTriggerKey(newTrigger.getKey().getName(), newTrigger.getKey().getGroup());
-        
+
         return newConfig;
     }
 
@@ -208,10 +210,11 @@ public final class SchedulerControl {
     }
 
     /**
-     * All of the jobs' groupnames with the groupname "oldWpsIdentifier" will be updated to
-     * the groupnames of newWpsIdentifier. New jobs will be created and registred 
-     * in the scheduler to make this possible. After that triggers will be regenerated
-     * and added to the new job. The old ones will be removed.
+     * All of the jobs' groupnames with the groupname "oldWpsIdentifier" will be
+     * updated to the groupnames of newWpsIdentifier. New jobs will be created
+     * and registred in the scheduler to make this possible. After that triggers
+     * will be regenerated and added to the new job. The old ones will be
+     * removed.
      *
      * @param oldWpsIdentifier Old name to identify the Jobs
      * @param newWpsIdentifier New name which will replace the old one
@@ -245,10 +248,10 @@ public final class SchedulerControl {
     private synchronized Trigger createTriggerWithStartAndEnd(final JobDetail forJob, final TriggerConfig config) {
         Validate.notNull(forJob, "forJob");
         Validate.notNull(config, "config");
-        
+
         Trigger newTrigger;
-        ScheduleBuilder scheduleBuilder = null;
-     
+        
+
         String jGroup = forJob.getKey().getGroup();
         String tName = UUID.randomUUID().toString();
 
@@ -259,10 +262,21 @@ public final class SchedulerControl {
                 .endAt(config.getEnd())
                 .withIdentity(tName, jGroup);
 
+        ScheduleBuilder scheduleBuilder = getScheduleBuilder(config);
+        
+        newTrigger = builder
+                .withSchedule(scheduleBuilder)
+                .build();
+
+        return newTrigger;
+    }
+    
+    private ScheduleBuilder getScheduleBuilder(final TriggerConfig config) {
         /**
          * enum IntervalType MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS,
          * MONTHS
          */
+        ScheduleBuilder scheduleBuilder = null;
         Integer interval = config.getInterval();
 
         switch (config.getIntervalType()) {
@@ -296,13 +310,11 @@ public final class SchedulerControl {
                         .calendarIntervalSchedule()
                         .withIntervalInMonths(interval);
                 break;
+            default:
+                throw new AssertionError(config.getIntervalType().name());
         }
-
-        newTrigger = builder
-                .withSchedule(scheduleBuilder)
-                .build();
-
-        return newTrigger;
+        
+        return scheduleBuilder;
     }
 
     /**
@@ -314,7 +326,7 @@ public final class SchedulerControl {
     public synchronized void removeTrigger(final TriggerKey triggerKey) throws SchedulerException {
         scheduler.unscheduleJob(triggerKey);
     }
-    
+
     /**
      * Removes a trigger which is identified by the given {@link TriggerConfig}.
      *
@@ -323,7 +335,7 @@ public final class SchedulerControl {
      */
     public synchronized void removeTrigger(final TriggerConfig triggerConfig) throws SchedulerException {
         Validate.notNull(triggerConfig, "triggerConfig");
-        if(triggerConfig.getTriggerKey() != null) {
+        if (triggerConfig.getTriggerKey() != null) {
             TriggerKey key = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
             removeTrigger(key);
         }
@@ -350,7 +362,7 @@ public final class SchedulerControl {
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsIdentifier));
         Boolean result = false;
 
-        if (jobKeys.size() > 0) {
+        if (!jobKeys.isEmpty()) {
             List<JobKey> toDelete = new ArrayList<JobKey>(jobKeys);
 
             result = scheduler.deleteJobs(toDelete);
@@ -370,7 +382,7 @@ public final class SchedulerControl {
     public synchronized TriggerConfig updateTrigger(final TriggerConfig config) throws SchedulerException {
         Validate.notNull(config, "config");
         Validate.notNull(config.getTriggerKey(), "config's TriggerKey");
-        
+
         TriggerKey key = new TriggerKey(config.getTriggerName(), config.getTriggerGroup());
 
         JobDetail jobDetail = scheduler.getJobDetail(scheduler
@@ -381,10 +393,10 @@ public final class SchedulerControl {
         // replace old trigger with a new one
         Trigger newOne = createTriggerWithStartAndEnd(jobDetail, config);
         scheduler.rescheduleJob(key, newOne);
-        
+
         TriggerConfig updatedTrigger = new TriggerConfig(config);
         updatedTrigger.setTriggerKey(newOne.getKey().getName(), newOne.getKey().getGroup());
-        
+
         return updatedTrigger;
     }
 
@@ -419,8 +431,8 @@ public final class SchedulerControl {
     }
 
     /**
-     * Gets a list of TriggerConfig-instances which are associated with the given
-     * {@link JobKey}.
+     * Gets a list of TriggerConfig-instances which are associated with the
+     * given {@link JobKey}.
      *
      * @param jobKey JobKey instance
      * @return List of trigger configs
@@ -470,7 +482,7 @@ public final class SchedulerControl {
                     trigger.getEndTime(),
                     calendarTrigger.getRepeatInterval(),
                     fromQuartzToConfig(repeatIntervalUnit));
-            
+
             TriggerKey key = trigger.getKey();
             triggerConfig.setTriggerKey(key.getName(), key.getGroup());
         }
@@ -488,9 +500,9 @@ public final class SchedulerControl {
     public synchronized Boolean isPaused(final JobKey jobKey) throws SchedulerException {
         Set<String> pausedTriggerGroups = scheduler.getPausedTriggerGroups();
         List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
-        
-        for(Trigger t : triggersOfJob) {
-            if(scheduler.getTriggerState(t.getKey()) == Trigger.TriggerState.PAUSED) {
+
+        for (Trigger t : triggersOfJob) {
+            if (scheduler.getTriggerState(t.getKey()) == Trigger.TriggerState.PAUSED) {
                 return true;
             }
         }
@@ -520,11 +532,11 @@ public final class SchedulerControl {
     public JobFactoryService getJobFactoryService() {
         return jobFactoryService;
     }
-    
+
     private TriggerConfig.IntervalUnit fromQuartzToConfig(DateBuilder.IntervalUnit qU) {
         TriggerConfig.IntervalUnit cU;
-        
-        switch(qU) {
+
+        switch (qU) {
             case MILLISECOND:
                 return TriggerConfig.IntervalUnit.MILLISECOND;
             case SECOND:
@@ -543,7 +555,7 @@ public final class SchedulerControl {
                 return TriggerConfig.IntervalUnit.YEAR;
             default:
                 throw new AssertionError(qU.name());
-            
+
         }
     }
 }

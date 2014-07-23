@@ -31,18 +31,18 @@ public interface WpsDataAccess extends DataAccess<WpsEntity> {
      * @return List of WpsEntity objects
      */
     public List<WpsEntity> getAll();
-    
+
     /**
      * Finds a WpsEntity instance by its identifier String.
-     * 
+     *
      * @param wpsIdentifier WpsIdentifier String
      * @return WpsEntity instance
      */
     public WpsEntity find(String wpsIdentifier);
-    
+
     /**
      * Removes a stored {@link WpsEntity}.
-     * 
+     *
      * @param wpsIdentifier Wps entity identifier
      */
     public void remove(final String wpsIdentifier);

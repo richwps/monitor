@@ -33,13 +33,13 @@ public class ListWpsProcessRoute extends MonitorRoute {
 
     @Override
     public Object handle(Request request, Response response) {
-        
+
         String wpsIdentifier = request.params(":wpsidentifier");
-        
+
         List<WpsProcessEntity> processesOfWps = getMonitorControl().getProcessesOfWps(wpsIdentifier);
-        
-        response.type(getStrategy().getMimeType()); 
-        
+
+        response.type(getStrategy().getMimeType());
+
         return getStrategy().presentate(processesOfWps);
     }
 }

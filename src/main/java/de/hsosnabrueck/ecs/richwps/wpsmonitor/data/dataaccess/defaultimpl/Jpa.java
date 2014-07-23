@@ -35,16 +35,16 @@ public final class Jpa {
     private ThreadLocal<EntityManager> entityStorage;
     private List<EntityManager> entityManagerList;
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
     private final String puUnit;
 
     public Jpa(String puUnit) {
         this.puUnit = Validate.notNull(puUnit, "puUnit");
     }
-    
+
     public void open() {
-        if(emf == null || !emf.isOpen()) {
-            emf = Persistence.createEntityManagerFactory(puUnit); 
+        if (emf == null || !emf.isOpen()) {
+            emf = Persistence.createEntityManagerFactory(puUnit);
             entityStorage = new ThreadLocal<EntityManager>();
             entityManagerList = new ArrayList<EntityManager>();
         }
@@ -56,26 +56,17 @@ public final class Jpa {
     public void close() {
         for (EntityManager e : entityManagerList) {
             if (e.isOpen()) {
-                log.debug("Close EntityManager...");
+                LOG.debug("Close EntityManager...");
                 e.close();
             }
         }
 
         if (emf.isOpen()) {
-            log.debug("Close EntityManager Factory...");
+            LOG.debug("Close EntityManager Factory...");
             emf.close();
-            
+
             entityStorage = null;
             entityManagerList = null;
-        }
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            super.finalize();
         }
     }
 
@@ -104,7 +95,7 @@ public final class Jpa {
     public EntityManager createEntityManager() {
         return emf.createEntityManager();
     }
-    
+
     private final Object finalizerGuardian = new Object() {
         @Override
         protected void finalize() throws Throwable {

@@ -21,15 +21,16 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Encapsulates the Spark API.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RouteRegister {
-    private static final Logger log = LogManager.getLogger();
-    
+
+    private static final Logger LOG = LogManager.getLogger();
+
     /**
      * Register a Route.
-     * 
+     *
      * @param operation {@link HttpOperation} value
      * @param routeObj {@link MonitorRoute} instance
      */
@@ -57,7 +58,7 @@ public class RouteRegister {
 
     /**
      * Registers a MonitorRoute instance as GET-HttpOperation.
-     * 
+     *
      * @param routeObj MonitorRoute instance
      */
     public void get(final MonitorRoute routeObj) {
@@ -66,7 +67,7 @@ public class RouteRegister {
 
     /**
      * Registers a MonitorRoute instance as POST-HttpOperation.
-     * 
+     *
      * @param routeObj MonitorRoute instance
      */
     public void post(final MonitorRoute routeObj) {
@@ -75,7 +76,7 @@ public class RouteRegister {
 
     /**
      * Registers a MonitorRoute instance as DELETE-HttpOperation.
-     * 
+     *
      * @param routeObj MonitorRoute instance
      */
     public void delete(final MonitorRoute routeObj) {
@@ -84,7 +85,7 @@ public class RouteRegister {
 
     /**
      * Registers a MonitorRoute instance as PUT-HttpOperation.
-     * 
+     *
      * @param routeObj MonitorRoute instance
      */
     public void put(final MonitorRoute routeObj) {
@@ -93,7 +94,7 @@ public class RouteRegister {
 
     /**
      * Registers a MonitorRoute instance as OPTIONS-HttpOperation.
-     * 
+     *
      * @param routeObj MonitorRoute instance
      */
     public void options(final MonitorRoute routeObj) {

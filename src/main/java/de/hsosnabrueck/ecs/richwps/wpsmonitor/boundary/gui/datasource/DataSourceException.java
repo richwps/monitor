@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 /**
@@ -25,5 +24,9 @@ public class DataSourceException extends Exception {
     public DataSourceException(String toString) {
         super(toString);
     }
-    
+
+    public DataSourceException(Throwable ex) {
+        super(ex);
+    }
+
 }

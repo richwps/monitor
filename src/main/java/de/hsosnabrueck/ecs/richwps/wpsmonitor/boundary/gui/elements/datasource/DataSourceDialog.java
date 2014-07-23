@@ -18,14 +18,26 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,14 +49,14 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
     private final Set<DataDriver> drivers;
     private final Set<DataSource> sources;
-    private final WpsMonitorGui mainFrame;
+    private final WpsMonitorAdminGui mainFrame;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Creates new form DataSourceDialog
      */
-    public DataSourceDialog(WpsMonitorGui monitorMainFrame, Set<DataDriver> drivers, java.awt.Frame parent, boolean modal) {
+    public DataSourceDialog(WpsMonitorAdminGui monitorMainFrame, Set<DataDriver> drivers, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
         this.drivers = drivers;
@@ -74,7 +86,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                         }
                     });
         } catch (EventNotFound ex) {
-            log.warn(ex);
+            LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event. Exception was: {}", ex);
         }
 
         driverAddPanel.revalidate();
@@ -89,106 +101,106 @@ public class DataSourceDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
-        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
-        driverAddPanel = new javax.swing.JPanel();
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
-        javax.swing.JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
-        dataSourceAddPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
-        showWpsOfSourcesButton = new javax.swing.JButton();
+        JPanel jPanel1 = new JPanel();
+        JScrollPane jScrollPane1 = new JScrollPane();
+        driverAddPanel = new JPanel();
+        JPanel jPanel2 = new JPanel();
+        JScrollPane jScrollPane2 = new JScrollPane();
+        dataSourceAddPanel = new JPanel();
+        closeButton = new JButton();
+        showWpsOfSourcesButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Drivers"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Data Drivers"));
 
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        driverAddPanel.setLayout(new javax.swing.BoxLayout(driverAddPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        driverAddPanel.setLayout(new BoxLayout(driverAddPanel, BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(driverAddPanel);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Sources"));
+        jPanel2.setBorder(BorderFactory.createTitledBorder("Data Sources"));
 
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        dataSourceAddPanel.setLayout(new javax.swing.BoxLayout(dataSourceAddPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        dataSourceAddPanel.setLayout(new BoxLayout(dataSourceAddPanel, BoxLayout.PAGE_AXIS));
         jScrollPane2.setViewportView(dataSourceAddPanel);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
         showWpsOfSourcesButton.setText("Show WPS of Sources");
-        showWpsOfSourcesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        showWpsOfSourcesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 showWpsOfSourcesButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(showWpsOfSourcesButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(closeButton)
                     .addComponent(showWpsOfSourcesButton))
                 .addContainerGap())
@@ -197,11 +209,11 @@ public class DataSourceDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void showWpsOfSourcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWpsOfSourcesButtonActionPerformed
+    private void showWpsOfSourcesButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showWpsOfSourcesButtonActionPerformed
         showWpsDialog();
     }//GEN-LAST:event_showWpsOfSourcesButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
@@ -210,11 +222,11 @@ public class DataSourceDialog extends javax.swing.JDialog {
         sources.add(source);
         dataSourceAddPanel.revalidate();
     }
-    
+
     public void removeDataSource(DataSource source) {
         sources.remove(source);
     }
-    
+
     public void removeDataSource(final DataSource source, final DataSourcePanel panel) {
         dataSourceAddPanel.remove(panel);
         removeDataSource(source);
@@ -255,7 +267,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                         try {
                             addDataSource(driver.create(resource));
                         } catch (DataSourceException ex) {
-                            log.error(ex);
+                            LOG.error("Can't restore the DataSource of MonitorConfig custom properties. Exception was: ", ex);
                         }
                     }
                 }
@@ -272,9 +284,9 @@ public class DataSourceDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel dataSourceAddPanel;
-    private javax.swing.JPanel driverAddPanel;
-    private javax.swing.JButton showWpsOfSourcesButton;
+    private JButton closeButton;
+    private JPanel dataSourceAddPanel;
+    private JPanel driverAddPanel;
+    private JButton showWpsOfSourcesButton;
     // End of variables declaration//GEN-END:variables
 }

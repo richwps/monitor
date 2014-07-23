@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
@@ -25,29 +24,30 @@ import java.util.Set;
 
 /**
  * Encapsulates a complex datastructure.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MetricFactoryMap  {
+public class MetricFactoryMap {
+
     private final Map<String, Set<Factory<QosMetric>>> converterMap;
 
     public MetricFactoryMap() {
         this.converterMap = new HashMap<String, Set<Factory<QosMetric>>>();
     }
-    
+
     public MetricFactoryMap add(final String index, final Factory<QosMetric> converterFactory) {
         Validate.notNull(index, "index");
         Validate.notNull(converterFactory, "converterFactory");
-                
-        if(!converterMap.containsKey(index)) {
+
+        if (!converterMap.containsKey(index)) {
             converterMap.put(index, new HashSet<Factory<QosMetric>>());
         }
-        
+
         converterMap.get(index).add(converterFactory);
-        
+
         return this;
     }
-    
+
     public Set<Factory<QosMetric>> get(final String index) {
         return converterMap.get(index);
     }

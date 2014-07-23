@@ -30,7 +30,7 @@ import org.quartz.spi.TriggerFiredBundle;
 
 /**
  * Factory for the CleanUp-Job.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public final class CleanUpJobFactory implements JobFactory {
@@ -38,7 +38,7 @@ public final class CleanUpJobFactory implements JobFactory {
     private final QosDaoFactory qosDaoFactory;
     private Integer olderAs;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public CleanUpJobFactory(final QosDaoFactory qosDaoFactory, final Integer olderAs) {
         this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
@@ -55,14 +55,15 @@ public final class CleanUpJobFactory implements JobFactory {
         try {
             newJobInstance = new CleanUpJob(qosDaoFactory.create(), cal.getTime());
         } catch (CreateException ex) {
-            log.fatal(ex);
+            LOG.error("Can't create the qosDao-dependencie. This is necessary for the CleanUpJob. Execution aborted. Exception was: {}", ex);
+
         }
 
         return newJobInstance;
     }
 
     public void setOlderAs(Integer olderAs) {
-        if(olderAs == null || olderAs > 0) {
+        if (olderAs == null || olderAs > 0) {
             this.olderAs = olderAs;
         }
     }

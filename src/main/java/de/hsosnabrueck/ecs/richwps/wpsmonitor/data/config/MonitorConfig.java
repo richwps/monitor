@@ -45,11 +45,11 @@ public final class MonitorConfig {
     private final Properties properties;
     private final File propertiesFile;
 
-    private final static Logger log;
-    private final static Properties defaultProperties;
+    private static final Logger LOG = LogManager.getLogger();
+    ;
+    private static final Properties defaultProperties;
 
     static {
-        log = LogManager.getLogger();
         defaultProperties = new Properties();
 
         initDefaultProperties();
@@ -80,9 +80,9 @@ public final class MonitorConfig {
 
                 properties.load(fileInputStream);
             } catch (FileNotFoundException ex) {
-                log.error(ex);
+                LOG.error("Properties File not found. Exception was: {}", ex);
             } catch (IOException ex) {
-                log.error(ex);
+                LOG.error("I/O Exception while reading properties file. Exception was: {}", ex);
             }
         }
     }
@@ -138,7 +138,7 @@ public final class MonitorConfig {
 
             properties.store(new FileOutputStream(propertiesFile), null);
         } catch (IOException ex) {
-            log.error(ex);
+            LOG.error("I/O Exception while writing the properties file. Exception was: {}", ex);
         }
     }
 
@@ -233,7 +233,7 @@ public final class MonitorConfig {
 
     /**
      * Gets the WpsClient-Timeout value.
-     * 
+     *
      * @return Integer instance
      */
     public Integer getWpsClientTimeout() {
@@ -242,7 +242,7 @@ public final class MonitorConfig {
 
     /**
      * Sets the WpsClient-Timeout value.
-     * 
+     *
      * @param wpsClientTimeout Integer instance
      */
     public void setWpsClientTimeout(Integer wpsClientTimeout) {

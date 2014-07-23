@@ -46,8 +46,8 @@ import org.junit.Test;
  */
 public class SimpleWpsClientTest {
 
-    private final static String WPS_URI = "http://localhost:8080/wps/WebProcessingService";
-    private final static String TEST_REQUEST_FILE = "/request.xml";
+    private static final String WPS_URI = "http://localhost:8080/wps/WebProcessingService";
+    private static final String TEST_REQUEST_FILE = "/request.xml";
     private static WpsClientFactory wpsClientFactory;
 
     private static String rawRequest;
@@ -131,33 +131,33 @@ public class SimpleWpsClientTest {
         WpsResponse response = doDefaultRequest();
         Assert.assertTrue(!response.isException() && response.getResponseBody() != null && !response.getResponseBody().equals(""));
     }
-    
+
     private WpsResponse doDefaultRequest() {
         WpsRequest request = new WpsRequest(rawRequest, info);
-        
+
         return client.execute(request);
     }
-    
+
     @Test
     public void testRequestDateIsSetFromClient() {
         WpsRequest request = new WpsRequest(rawRequest, info);
         request.prepareRequest();
-        
+
         Date dateRef = request.getRequestTime();
-        
+
         client.execute(request);
-        
+
         Assert.assertTrue(!request.getRequestTime().equals(dateRef));
     }
-    
-    @Test 
+
+    @Test
     public void responseDateIsSet() {
         WpsResponse response = doDefaultRequest();
-        
+
         Assert.assertTrue(response.getResponseTime() != null);
     }
-    
-    @Test 
+
+    @Test
     public void testExceptionIdentification() {
         WpsRequest request = new WpsRequest("", info);
         WpsResponse response = client.execute(request);

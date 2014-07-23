@@ -15,14 +15,26 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
+import com.toedter.calendar.JDateChooser;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.LayoutStyle;
+import javax.swing.WindowConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,19 +46,19 @@ import org.apache.logging.log4j.Logger;
  */
 public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
-    private final WpsMonitorGui monitorMainFrame;
+    private final WpsMonitorAdminGui monitorMainFrame;
     private final WpsProcessEntity wpsProcess;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
-     * 
+     *
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param process WpsProcessEntity to select the right measured data
      * @param modal true for modal dialog
      */
-    public ShowMeasuredDataDialog(WpsMonitorGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
+    public ShowMeasuredDataDialog(WpsMonitorAdminGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
         super(monitorMainFrame, modal);
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
@@ -61,7 +73,7 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
     public void recaptureData() {
         Range range = new Range(null, 100);
 
-        log.debug("Recapture Data from process {}", wpsProcess);
+        LOG.debug("Recapture Data from process {}", wpsProcess);
 
         List<MeasuredDataEntity> measuredData = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
@@ -89,74 +101,74 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
-        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
-        measuredDataAddPanel = new javax.swing.JPanel();
-        deleteAllButton = new javax.swing.JButton();
-        deleteByDateButton = new javax.swing.JButton();
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        deleteOlderAsDate = new com.toedter.calendar.JDateChooser();
-        refreshButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
+        JPanel jPanel1 = new JPanel();
+        JScrollPane jScrollPane1 = new JScrollPane();
+        measuredDataAddPanel = new JPanel();
+        deleteAllButton = new JButton();
+        deleteByDateButton = new JButton();
+        JLabel jLabel1 = new JLabel();
+        deleteOlderAsDate = new JDateChooser();
+        refreshButton = new JButton();
+        closeButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Show measured data of Process");
         setIconImage(new ImageIcon(getClass().getResource("/icons/measure.png")).getImage());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Measured Data"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Measured Data"));
 
-        measuredDataAddPanel.setLayout(new javax.swing.BoxLayout(measuredDataAddPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        measuredDataAddPanel.setLayout(new BoxLayout(measuredDataAddPanel, BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(measuredDataAddPanel);
 
-        deleteAllButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteAllButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteAllButton.setText("Delete All");
-        deleteAllButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        deleteAllButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 deleteAllButtonActionPerformed(evt);
             }
         });
 
-        deleteByDateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteByDateButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteByDateButton.setText("Delete");
-        deleteByDateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        deleteByDateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 deleteByDateButtonActionPerformed(evt);
             }
         });
 
         jLabel1.setText("Delete all older as");
 
-        refreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        refreshButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
         refreshButton.setText("Refresh");
-        refreshButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
             }
         });
 
-        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(refreshButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteOlderAsDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deleteOlderAsDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(deleteByDateButton)
                         .addGap(10, 10, 10)
                         .addComponent(deleteAllButton)
@@ -165,38 +177,38 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 470, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(deleteAllButton)
                         .addComponent(deleteByDateButton)
                         .addComponent(closeButton))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(refreshButton))
-                        .addComponent(deleteOlderAsDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(deleteOlderAsDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -204,10 +216,10 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
     /**
      * Action behavior for the deleteAllButton button.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
-    private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
+    private void deleteAllButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
         this.monitorMainFrame
                 .getMonitorReference()
                 .getMonitorControl()
@@ -218,10 +230,10 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
     /**
      * Action behavior for the deleteByDateButton.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
-    private void deleteByDateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteByDateButtonActionPerformed
+    private void deleteByDateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteByDateButtonActionPerformed
         if (deleteOlderAsDate.getDate() == null) {
             MessageDialogs.showError(this, "Error", "Please select a valid Date!");
         } else {
@@ -238,24 +250,23 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
     /**
      * Action behavior for the refreh button.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+    private void refreshButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         recaptureData();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JButton deleteAllButton;
-    private javax.swing.JButton deleteByDateButton;
-    private com.toedter.calendar.JDateChooser deleteOlderAsDate;
-    private javax.swing.JPanel measuredDataAddPanel;
-    private javax.swing.JButton refreshButton;
+    private JButton closeButton;
+    private JButton deleteAllButton;
+    private JButton deleteByDateButton;
+    private JDateChooser deleteOlderAsDate;
+    private JPanel measuredDataAddPanel;
+    private JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }

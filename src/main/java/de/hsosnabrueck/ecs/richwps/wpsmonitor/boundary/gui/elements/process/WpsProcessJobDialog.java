@@ -15,12 +15,23 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,19 +42,19 @@ import org.apache.logging.log4j.Logger;
  */
 public class WpsProcessJobDialog extends javax.swing.JDialog {
 
-    private final WpsMonitorGui mainframe;
+    private final WpsMonitorAdminGui mainframe;
     private final WpsProcessEntity wpsProcess;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Creates new form WpsProcessJobDialog.
      *
-     * @param mainFrame Reference to the WpsMonitorGui of this gui
+     * @param mainFrame Reference to the WpsMonitorAdminGui of this gui
      * @param wpsProcess WpsProcessEntity instance to request the right trigger
      * @param modal true for modal form
      */
-    public WpsProcessJobDialog(WpsMonitorGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
+    public WpsProcessJobDialog(WpsMonitorAdminGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
         super(mainFrame, modal);
         initComponents();
 
@@ -60,12 +71,12 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
                 .getMonitorControl()
                 .getTriggers(wpsProcess);
 
-        log.debug("init WpsProcessJobDialog");
+        LOG.debug("init WpsProcessJobDialog");
         for (TriggerConfig config : triggers) {
             WpsProcessJobEntry jobEntryPane = createNewJobEntryPane();
             jobEntryPane.reInit(config);
 
-            log.debug("reInit jobEntryPane with {}", config.toString());
+            LOG.debug("reInit jobEntryPane with {}", config.toString());
 
             addJobEntryPane(jobEntryPane);
         }
@@ -80,32 +91,32 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        newJobButton = new javax.swing.JButton();
-        jobScrollPane = new javax.swing.JScrollPane();
-        addJobPane = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
-        closeButton = new javax.swing.JButton();
+        newJobButton = new JButton();
+        jobScrollPane = new JScrollPane();
+        addJobPane = new JPanel();
+        JLabel jLabel1 = new JLabel();
+        JLabel jLabel2 = new JLabel();
+        JLabel jLabel3 = new JLabel();
+        JLabel jLabel4 = new JLabel();
+        closeButton = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add, remove or edit Process Job");
         setIconImage(new ImageIcon(getClass().getResource("/icons/time.png")).getImage());
         setResizable(false);
 
-        newJobButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/time.png"))); // NOI18N
+        newJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/time.png"))); // NOI18N
         newJobButton.setText("New Job");
-        newJobButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        newJobButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 newJobButtonActionPerformed(evt);
             }
         });
 
-        jobScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jobScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jobScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jobScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        addJobPane.setLayout(new javax.swing.BoxLayout(addJobPane, javax.swing.BoxLayout.PAGE_AXIS));
+        addJobPane.setLayout(new BoxLayout(addJobPane, BoxLayout.PAGE_AXIS));
         jobScrollPane.setViewportView(addJobPane);
 
         jLabel1.setText("Start");
@@ -116,33 +127,33 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
         jLabel4.setText("Interval");
 
-        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(newJobButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(closeButton))
                             .addComponent(jobScrollPane)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(77, 77, 77)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(147, 147, 147)
                         .addComponent(jLabel4)
@@ -152,18 +163,18 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jobScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jobScrollPane, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(newJobButton)
                     .addComponent(closeButton))
                 .addContainerGap())
@@ -172,12 +183,12 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
+    private void newJobButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
         WpsProcessJobEntry newJobEntry = createNewJobEntryPane();
         addJobEntryPane(newJobEntry);
     }//GEN-LAST:event_newJobButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
@@ -206,9 +217,9 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel addJobPane;
-    private javax.swing.JButton closeButton;
-    private javax.swing.JScrollPane jobScrollPane;
-    private javax.swing.JButton newJobButton;
+    private JPanel addJobPane;
+    private JButton closeButton;
+    private JScrollPane jobScrollPane;
+    private JButton newJobButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -34,9 +34,9 @@ public abstract class DataDriver {
 
             return adapter;
         } catch (Error ex) {
-            throw new DataSourceException(ex.toString());
-        } catch(Exception ex) {
-            throw new DataSourceException(ex.toString());
+            throw new DataSourceException(ex);
+        } catch (Exception ex) {
+            throw new DataSourceException(ex);
         }
     }
 }

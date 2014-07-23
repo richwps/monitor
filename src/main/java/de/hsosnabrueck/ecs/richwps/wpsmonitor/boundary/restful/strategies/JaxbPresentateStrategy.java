@@ -17,7 +17,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 import java.io.StringWriter;
-import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -33,13 +32,13 @@ public class JaxbPresentateStrategy implements PresentateStrategy {
 
     private JAXBContext xmlContext;
 
-    final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public JaxbPresentateStrategy(Class[] classes) {
         try {
             xmlContext = JAXBContext.newInstance(classes);
         } catch (JAXBException ex) {
-            log.error(ex);
+            LOG.error("Can't create JAXBContext in Strategy. Exception was: {}", ex);
         }
     }
 
@@ -54,9 +53,9 @@ public class JaxbPresentateStrategy implements PresentateStrategy {
 
             return writer.toString();
         } catch (PropertyException ex) {
-            log.error(ex);
+            LOG.error("Can't set property of Marshaller. Exception was: {}", ex);
         } catch (JAXBException ex) {
-            java.util.logging.Logger.getLogger(JaxbPresentateStrategy.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Can't create Marshaller or marshalling the Object instace to presentate. Exception was: {}", ex);
         }
 
         return null;

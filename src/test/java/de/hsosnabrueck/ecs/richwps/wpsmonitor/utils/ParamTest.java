@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
@@ -32,23 +31,22 @@ public class ParamTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNotNullThrowsException() {
         System.out.println("notNull");
-        
+
         Validate.notNull(null, "Null test");
     }
-    
+
     @Test
     public void testNotNullThrowsNoException() {
         System.out.println("notNull");
         String str = "Hello World!";
-        
+
         try {
-        Validate.notNull(str, "Null test");
-        } catch(IllegalArgumentException ex) {
+            Validate.notNull(str, "Null test");
+        } catch (IllegalArgumentException ex) {
             Assert.assertTrue(false);
         }
-        
+
         Assert.assertTrue(true);
     }
-    
-    
+
 }

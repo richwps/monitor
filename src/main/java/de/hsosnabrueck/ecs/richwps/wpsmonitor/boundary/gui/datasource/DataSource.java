@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 import java.util.List;
@@ -23,8 +22,12 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface DataSource {
+
     public List<WpsDescription> getWpsList();
+
     public void init(DataDriver driver, String resource) throws DataSourceException;
+
     public String getUsedDriver();
+
     public String getRessource();
 }

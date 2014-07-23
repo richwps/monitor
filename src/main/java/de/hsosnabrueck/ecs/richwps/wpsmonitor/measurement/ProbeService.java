@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 public class ProbeService {
 
     private final List<Factory<QosProbe>> probeFactories;
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public ProbeService() {
         probeFactories = new ArrayList<Factory<QosProbe>>();
@@ -77,7 +77,7 @@ public class ProbeService {
             try {
                 factoredObjects.add(probeFactory.create());
             } catch (CreateException ex) {
-                log.warn(ex);
+                LOG.warn("Can't create QosProb-Instancee. Exception was: {}", ex);
             }
         }
 

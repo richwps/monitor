@@ -33,7 +33,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.*; 
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,16 +47,16 @@ public class QosDaoTest {
     private QosDataAccess qosDao;
     private WpsDataAccess wpsDao;
     private WpsProcessDataAccess wpsProcessDao;
-    
+
     private Long[] insertedIds;
 
     private static QosDaoFactory qosFactory;
     private static WpsDaoFactory wpsFactory;
     private static WpsProcessDaoFactory wpsProcessFactory;
-    
-    private final static Integer GENERATE_COUNT = 5;
-    private final static String WPS_PROCESS_NAME = "testCaseScenario_SimpleBuffer";
-    private final static String WPS_NAME = "testCaseScenario_localWps";
+
+    private static final Integer GENERATE_COUNT = 5;
+    private static final String WPS_PROCESS_NAME = "testCaseScenario_SimpleBuffer";
+    private static final String WPS_NAME = "testCaseScenario_localWps";
 
     public QosDaoTest() {
     }
@@ -64,7 +64,7 @@ public class QosDaoTest {
     @BeforeClass
     public static void setUpClass() {
         Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
-        
+
         qosFactory = new QosDaoFactory(new QosDaoDefaultFactory(jpa));
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
         wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(jpa));
@@ -79,21 +79,21 @@ public class QosDaoTest {
         try {
             qosDao = qosFactory.create();
             qosDao.setAutoCommit(false);
-            
+
             wpsDao = wpsFactory.create();
             wpsDao.setAutoCommit(false);
-            
+
             wpsProcessDao = wpsProcessFactory.create();
             wpsProcessDao.setAutoCommit(false);
 
             insertedIds = new Long[GENERATE_COUNT];
-            
+
             WpsEntity wps = genWps();
             WpsProcessEntity process = genProcess(wps);
-            
+
             wpsDao.persist(wps);
             wpsProcessDao.persist(process);
-            
+
             for (int i = 0; i < GENERATE_COUNT; i++) {
                 MeasuredDataEntity generatedData = genDataEn(process);
                 qosDao.persist(generatedData);
@@ -116,7 +116,7 @@ public class QosDaoTest {
 
         en.setCreateTime(new Date());
         en.setProcess(process);
-        
+
         return en;
     }
 
@@ -157,21 +157,21 @@ public class QosDaoTest {
     public void testGetByWps_String_Range() {
         System.out.println("getByWps");
         Range r = new Range(null, GENERATE_COUNT);
-        
+
         List<MeasuredDataEntity> byWps = qosDao.getByWps(WPS_NAME, r);
-        
-        if(byWps == null) {
+
+        if (byWps == null) {
             fail("qosDao.getByWps returns null value");
         }
-        
+
         Boolean assertWpsIdentical = true;
-        for(MeasuredDataEntity e : byWps) {
+        for (MeasuredDataEntity e : byWps) {
             assertWpsIdentical = assertWpsIdentical && e.getProcess()
                     .getWps()
                     .getIdentifier()
                     .equals(WPS_NAME);
         }
-        
+
         Assert.assertTrue(assertWpsIdentical && byWps.size() == GENERATE_COUNT);
     }
 
@@ -182,14 +182,14 @@ public class QosDaoTest {
     public void testGetByProcess_3args() {
         Range r = new Range(null, GENERATE_COUNT);
         List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME, r);
-        
+
         Boolean assertWpsIdentical = true;
-        for(MeasuredDataEntity e : byProcess) {
+        for (MeasuredDataEntity e : byProcess) {
             assertWpsIdentical = assertWpsIdentical && e.getProcess()
                     .getIdentifier()
                     .equals(WPS_PROCESS_NAME);
         }
-        
+
         Assert.assertTrue(assertWpsIdentical && byProcess.size() == GENERATE_COUNT);
     }
 }

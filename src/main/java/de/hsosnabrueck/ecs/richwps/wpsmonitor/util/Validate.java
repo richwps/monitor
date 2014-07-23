@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.util;
 
 /**
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Validate {
@@ -27,7 +27,7 @@ public class Validate {
 
     /**
      * Checks if a Parameter is null.
-     * 
+     *
      * @param <T> Return type
      * @param var Check if null
      * @param name Outputname for exception message
@@ -40,16 +40,16 @@ public class Validate {
 
         return var;
     }
-    
+
     /**
      * Checks if t is true.
-     * 
+     *
      * @param t
      * @param name Outputname for exception message
      */
     public static void isTrue(Boolean t, String name) {
         notNull(t, name);
-        
+
         if (!t) {
             throw new IllegalArgumentException(name + " was not valid.");
         }

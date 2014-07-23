@@ -35,12 +35,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * {@link Job} class which uses a wps client with a request which is stored in the
- * {@link WpsProcessEntity} object to be sent to a Wps Server. The {@link WpsProcessEntity}
- * object is injected by the {@link MeasureJobFactory}.
+ * {@link Job} class which uses a wps client with a request which is stored in
+ * the {@link WpsProcessEntity} object to be sent to a Wps Server. The
+ * {@link WpsProcessEntity} object is injected by the {@link MeasureJobFactory}.
  *
- * If no wps exception occurs, then the registred QosProbe instances are
- * called. Otherwise a error flag is set, which is evaluated by the
+ * If no wps exception occurs, then the registred QosProbe instances are called.
+ * Otherwise a error flag is set, which is evaluated by the
  * {@link MeasureJobListener}.
  *
  * The dependencies should be thread save or new instantiated by the
@@ -60,7 +60,7 @@ public class MeasureJob implements Job {
     protected List<QosProbe> probes;
     protected Boolean error;
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
@@ -94,7 +94,7 @@ public class MeasureJob implements Job {
                 persistMeasuredData(getMeasuredDatas());
             }
 
-            log.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
+            LOG.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     context.getJobDetail().getKey(),
                     context.getTrigger().getKey(),
                     processEntity.toString(),
@@ -102,12 +102,12 @@ public class MeasureJob implements Job {
                     response.isConnectionException() ? "true" : "false",
                     response.isOtherException() ? "true" : "false"
             );
-            
-            if(request.getRequestTime() == null) {
-                log.error("RequestTime was not set in WpsRequest!");
+
+            if (request.getRequestTime() == null) {
+                LOG.error("RequestTime was not set in WpsRequest!");
             }
         } catch (Exception ex) {
-            log.warn(ex);
+            LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler. Exception was: {}", ex);
         }
     }
 
@@ -116,10 +116,10 @@ public class MeasureJob implements Job {
         toPersist.setProcess(processEntity);
         toPersist.setCreateTime(new Date());
         toPersist.setData(measuredData);
-        
-        dao.persist(toPersist);        
 
-        log.debug("MeasureJob: store {}", toPersist.getClass().getName());
+        dao.persist(toPersist);
+
+        LOG.debug("MeasureJob: store {}", toPersist.getClass().getName());
     }
 
     /**
@@ -160,8 +160,8 @@ public class MeasureJob implements Job {
 
         for (QosProbe p : probes) {
             AbstractQosEntity measuredData = p.getMeasuredData();
-            
-            if(measuredData != null) {
+
+            if (measuredData != null) {
                 measuredDatas.add(measuredData);
             }
         }

@@ -13,33 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DataDriverPanel extends javax.swing.JPanel {
+
     private final DataSourceDialog parent;
     private final DataDriver driver;
-    
+
     /**
      * Creates new form DataAdapterPanel
      */
     public DataDriverPanel(DataSourceDialog parent, DataDriver driver) {
         this.parent = parent;
         this.driver = driver;
-        
+
         initComponents();
         init();
     }
-    
+
     private void init() {
         drivername.setText(driver.getDriverName());
         expectedType.setText(driver.getExpectedResourceType());
@@ -54,43 +66,43 @@ public class DataDriverPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
-        drivername = new javax.swing.JLabel();
-        addSourceButton = new javax.swing.JButton();
-        resourceField = new javax.swing.JTextField();
-        expectedType = new javax.swing.JLabel();
+        JPanel jPanel1 = new JPanel();
+        drivername = new JLabel();
+        addSourceButton = new JButton();
+        resourceField = new JTextField();
+        expectedType = new JLabel();
 
-        setMaximumSize(new java.awt.Dimension(32767, 163));
+        setMaximumSize(new Dimension(32767, 163));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Driver"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Driver"));
 
-        drivername.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        drivername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/database-connect.png"))); // NOI18N
+        drivername.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        drivername.setIcon(new ImageIcon(getClass().getResource("/icons/database-connect.png"))); // NOI18N
         drivername.setText("jLabel2");
 
-        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/database-add.png"))); // NOI18N
+        addSourceButton.setIcon(new ImageIcon(getClass().getResource("/icons/database-add.png"))); // NOI18N
         addSourceButton.setText("Create new Data Source");
-        addSourceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addSourceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 addSourceButtonActionPerformed(evt);
             }
         });
 
-        resourceField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        resourceField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 addSourceButtonActionPerformed(evt);
             }
         });
 
         expectedType.setText("jLabel1");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addSourceButton))
@@ -99,60 +111,59 @@ public class DataDriverPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(expectedType)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                        .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addComponent(resourceField, GroupLayout.PREFERRED_SIZE, 380, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(drivername)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(expectedType)
-                    .addComponent(resourceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(resourceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addSourceButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
+    private void addSourceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
         String resource = resourceField.getText();
-        
+
         try {
             DataSource dataSource = driver.create(resource);
             parent.addDataSource(dataSource);
-            
+
             resourceField.setText("");
         } catch (DataSourceException ex) {
             MessageDialogs.showError(this, "Error", ex.toString());
         }
     }//GEN-LAST:event_addSourceButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addSourceButton;
-    private javax.swing.JLabel drivername;
-    private javax.swing.JLabel expectedType;
-    private javax.swing.JTextField resourceField;
+    private JButton addSourceButton;
+    private JLabel drivername;
+    private JLabel expectedType;
+    private JTextField resourceField;
     // End of variables declaration//GEN-END:variables
 }

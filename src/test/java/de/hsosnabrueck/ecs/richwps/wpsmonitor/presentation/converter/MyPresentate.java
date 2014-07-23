@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 /**
@@ -21,6 +20,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
  * @author FloH
  */
 public class MyPresentate {
+
     private Integer sum;
 
     public MyPresentate() {
@@ -33,6 +33,5 @@ public class MyPresentate {
     public Integer getSum() {
         return sum;
     }
-    
-    
+
 }

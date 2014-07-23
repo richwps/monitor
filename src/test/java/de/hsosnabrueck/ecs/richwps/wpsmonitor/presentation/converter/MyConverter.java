@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
@@ -30,12 +29,11 @@ public class MyConverter extends QosMetric {
         ExampleQos q;
         Integer sum = 0;
 
-        for(Measurement e : getEntities()) {
+        for (Measurement e : getEntities()) {
             q = e.getEntity();
             sum += q.getValue();
         }
 
-        
         return new MyPresentate(sum);
     }
 
@@ -43,5 +41,5 @@ public class MyConverter extends QosMetric {
     public String getName() {
         return "MyTestConverter";
     }
-    
+
 }

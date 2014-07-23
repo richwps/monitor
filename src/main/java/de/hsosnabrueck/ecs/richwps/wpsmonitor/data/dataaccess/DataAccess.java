@@ -21,8 +21,8 @@ import java.util.List;
  * Primary Interface for {@link DataAccess}-Objects
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
- * @param <T> Type of Entity which the {@link DataAccess} implementation should take
- * care of
+ * @param <T> Type of Entity which the {@link DataAccess} implementation should
+ * take care of
  */
 public interface DataAccess<T> {
 
@@ -89,11 +89,10 @@ public interface DataAccess<T> {
      * @param value false to deactivate autocommit, otherwise true
      */
     public void setAutoCommit(Boolean value);
-    
+
     /**
-     * Should be called if the DataAccess is no longer needed.
-     * The specific implementation of the DataAccess interface need to decide 
-     * what is to do.
+     * Should be called if the DataAccess is no longer needed. The specific
+     * implementation of the DataAccess interface need to decide what is to do.
      */
     public void close();
 }

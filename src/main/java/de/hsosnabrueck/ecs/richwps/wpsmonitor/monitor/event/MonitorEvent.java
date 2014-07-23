@@ -37,8 +37,8 @@ public class MonitorEvent {
     private final Date triggerDate;
 
     /**
-     * Message for the listeners; The listener must know of which type the message
-     * is.
+     * Message for the listeners; The listener must know of which type the
+     * message is.
      */
     private Object msg;
 

@@ -34,7 +34,7 @@ public class JsonPresentateStrategy implements PresentateStrategy {
     public String presentate(Object presentateObjects) {
         // make new gson object to support multithreading environment
         Gson gson = new GsonBuilder().setExclusionStrategies(
-                new ExclusionStrategy() { 
+                new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
                         return f.getAnnotation(Hide.class) != null;

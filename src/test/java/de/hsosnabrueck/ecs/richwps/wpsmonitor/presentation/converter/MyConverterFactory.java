@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
@@ -24,10 +23,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
  * @author FloH
  */
 public class MyConverterFactory implements Factory<QosMetric> {
- 
+
     @Override
     public QosMetric create() {
         return new MyConverter();
     }
-    
+
 }

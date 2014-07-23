@@ -35,8 +35,7 @@ public class DispatcherFactory implements Factory<EntityDispatcher> {
     @Override
     public EntityDispatcher create() {
         EntityDisassembler entityDisassembler = new EntityDisassembler(converterMap);
-        EntityDispatcher entityDispatcher = new EntityDispatcher(entityDisassembler);
 
-        return entityDispatcher;
+        return new EntityDispatcher(entityDisassembler);
     }
 }

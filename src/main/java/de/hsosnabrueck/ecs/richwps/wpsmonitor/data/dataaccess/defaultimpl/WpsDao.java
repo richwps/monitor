@@ -47,7 +47,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
         List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
 
-        if (wpsEntities != null && wpsEntities.size() > 0) {
+        if (wpsEntities != null && !wpsEntities.isEmpty()) {
             return wpsEntities.get(0);
         }
 
@@ -89,7 +89,6 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
         // delete all processes of wps
         doNamedQuery("wpsprocess.deleteByWps", parameters);
-
 
         super.remove(o);
         requestCommit();

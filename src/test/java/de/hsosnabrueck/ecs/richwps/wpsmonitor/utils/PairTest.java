@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
@@ -29,24 +28,25 @@ import static org.junit.Assert.*;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class PairTest {
+
     private Pair<String, Integer> instance;
-    
+
     public PairTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         instance = new Pair<String, Integer>("Zahl", 5);
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -60,7 +60,7 @@ public class PairTest {
 
         Object expResult = "Zahl";
         Object result = instance.getLeft();
-        
+
         assertEquals(expResult, result);
     }
 
@@ -73,7 +73,7 @@ public class PairTest {
 
         Object expResult = 5;
         Object result = instance.getRight();
-        
+
         assertEquals(expResult, result);
     }
 
@@ -86,7 +86,7 @@ public class PairTest {
 
         String expResult = "Zahl.5";
         String result = instance.toString();
-        
+
         assertEquals(expResult, result);
     }
 
@@ -96,8 +96,8 @@ public class PairTest {
     @Test
     public void testEquals() {
         System.out.println("equals");
-        
+
         assertEquals(new Pair<String, Integer>("Zahl", 5), instance);
     }
-    
+
 }

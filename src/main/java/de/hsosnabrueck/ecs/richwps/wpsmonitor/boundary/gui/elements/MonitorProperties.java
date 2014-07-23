@@ -17,13 +17,24 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.LayoutStyle;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.NumberFormatter;
 
@@ -34,7 +45,7 @@ import javax.swing.text.NumberFormatter;
  */
 public class MonitorProperties extends javax.swing.JDialog {
 
-    private final WpsMonitorGui monitorMainFrame;
+    private final WpsMonitorAdminGui monitorMainFrame;
 
     /**
      * Constructor.
@@ -42,7 +53,7 @@ public class MonitorProperties extends javax.swing.JDialog {
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param modal true for modal dialog
      */
-    public MonitorProperties(WpsMonitorGui monitorMainFrame, boolean modal) {
+    public MonitorProperties(WpsMonitorAdminGui monitorMainFrame, boolean modal) {
         super(monitorMainFrame, modal);
 
         this.monitorMainFrame = monitorMainFrame;
@@ -78,45 +89,45 @@ public class MonitorProperties extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        saveButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
+        saveButton = new JButton();
+        cancelButton = new JButton();
+        JPanel jPanel2 = new JPanel();
+        JLabel jLabel4 = new JLabel();
         SpinnerModel numberModelForTimeout = new SpinnerNumberModel(10, 0, null, 1);
-        timeoutSpinner = new javax.swing.JSpinner(numberModelForTimeout);
-        javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        timeoutSpinner = new JSpinner(numberModelForTimeout);
+        JLabel jLabel5 = new JLabel();
+        JLabel jLabel6 = new JLabel();
+        JPanel jPanel1 = new JPanel();
         spinnerTime = new Date();
         SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);
-        timeSpinner = new javax.swing.JSpinner(sm);
-        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        deleteIsActiveCheckbox = new javax.swing.JCheckBox();
-        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
+        timeSpinner = new JSpinner(sm);
+        JLabel jLabel1 = new JLabel();
+        JLabel jLabel3 = new JLabel();
+        deleteIsActiveCheckbox = new JCheckBox();
+        JLabel jLabel2 = new JLabel();
         SpinnerModel numberModelForDelete = new SpinnerNumberModel(10, 0, null, 1);
-        dateDeleteSpinner = new javax.swing.JSpinner(numberModelForDelete);
+        dateDeleteSpinner = new JSpinner(numberModelForDelete);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Settings");
 
-        saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
+        saveButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 saveButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
+        cancelButton.setIcon(new ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("WPS-Client Timeout"));
+        jPanel2.setBorder(BorderFactory.createTitledBorder("WPS-Client Timeout"));
 
         jLabel4.setText("Timeout after");
 
@@ -126,33 +137,33 @@ public class MonitorProperties extends javax.swing.JDialog {
 
         jLabel5.setText("Minutes.");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
-                .addComponent(timeoutSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(timeoutSpinner, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(timeoutSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timeoutSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel6.setText("Changes are applied after a restart.");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Delete QoS Data"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Delete QoS Data"));
 
         JSpinner.DateEditor de = new JSpinner.DateEditor(timeSpinner, "HH:mm");
         DateFormatter formatter = (DateFormatter)de.getTextField().getFormatter();
@@ -172,69 +183,69 @@ public class MonitorProperties extends javax.swing.JDialog {
         JFormattedTextField numberModelForDeleteTxt = ((JSpinner.NumberEditor) dateDeleteSpinner.getEditor()).getTextField();
         ((NumberFormatter) numberModelForDeleteTxt.getFormatter()).setAllowsInvalid(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(deleteIsActiveCheckbox)
                 .addGap(6, 6, 6)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(dateDeleteSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dateDeleteSpinner, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(timeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
                     .addComponent(deleteIsActiveCheckbox)
                     .addComponent(jLabel2)
-                    .addComponent(dateDeleteSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dateDeleteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveButton))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(cancelButton))
                 .addContainerGap())
@@ -243,12 +254,12 @@ public class MonitorProperties extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+    private void saveButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         MonitorConfig config = monitorMainFrame.getMonitorReference()
                 .getConfig();
 
         try {
-            Integer deleteInterval = (Integer)dateDeleteSpinner.getValue();
+            Integer deleteInterval = (Integer) dateDeleteSpinner.getValue();
             Date time = (Date) timeSpinner.getValue();
             Calendar cal = Calendar.getInstance();
             cal.setTime(time);
@@ -256,8 +267,8 @@ public class MonitorProperties extends javax.swing.JDialog {
             config.setDeleteIntervalInDays(deleteInterval);
             config.setDeleteJobActiv(deleteIsActiveCheckbox.isSelected());
             config.setDeleteTime(cal);
-            
-            config.setWpsClientTimeout(((Integer)timeoutSpinner.getValue()) * 1000 * 60);
+
+            config.setWpsClientTimeout(((Integer) timeoutSpinner.getValue()) * 1000 * 60);
 
             if (!config.getDeleteIntervalInDays().equals(deleteInterval)) {
                 throw new NumberFormatException();
@@ -269,19 +280,17 @@ public class MonitorProperties extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void cancelButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JSpinner dateDeleteSpinner;
-    private javax.swing.JCheckBox deleteIsActiveCheckbox;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JButton saveButton;
-    private javax.swing.JSpinner timeSpinner;
+    private JButton cancelButton;
+    private JSpinner dateDeleteSpinner;
+    private JCheckBox deleteIsActiveCheckbox;
+    private JButton saveButton;
+    private JSpinner timeSpinner;
     private Date spinnerTime;
-    private javax.swing.JSpinner timeoutSpinner;
+    private JSpinner timeoutSpinner;
     // End of variables declaration//GEN-END:variables
 }

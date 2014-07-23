@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient;
 
 /**
@@ -21,16 +20,17 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsClientConfig {
+
     /**
      * Timeout in ms
      */
     private Integer connectionTimeout;
-    
+
     /**
      * Will set the timeout to 10 s
      */
     public WpsClientConfig() {
-       connectionTimeout = 10000;
+        connectionTimeout = 10000;
     }
 
     public Integer getConnectionTimeout() {

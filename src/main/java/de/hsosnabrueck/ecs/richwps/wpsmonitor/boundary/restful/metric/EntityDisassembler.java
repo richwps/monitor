@@ -30,15 +30,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Disassembles the bulk of MeasuredDataEntity objects and assigns the objects to
- * the specific converters.
+ * Disassembles the bulk of MeasuredDataEntity objects and assigns the objects
+ * to the specific converters.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class EntityDisassembler {
 
     private final MetricFactoryMap converterMap;
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
     private final String NO_CONVERTER_INDEX;
 
     public EntityDisassembler(final MetricFactoryMap converterMap) {
@@ -161,7 +161,7 @@ public class EntityDisassembler {
                     entityConverters.get(entityName).add(factory.create());
                 }
             } catch (CreateException ex) {
-                log.warn(ex);
+                LOG.warn("Can't create QoSMetric Instance for EntityDisassembler. Exception was: {}", ex);
             }
         }
 

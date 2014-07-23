@@ -17,60 +17,64 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import java.util.HashSet;
+import java.util.Set;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Sets a look and feel up and starts the monitor gui with the montior
- * as dependency.
+ * Sets a look and feel up and starts the monitor gui with the montior-instance
+ * and DataDrivers - if exists - as dependency.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class GuiStarter {
 
-    private final static Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     public static void start(final Monitor controlDependency) {
-        /* Create and display the form */
+        start(controlDependency, null);
+    }
 
+    /**
+     *
+     * @param controlDependency
+     * @param drivers
+     */
+    public static void start(final Monitor controlDependency, final Set<DataDriver> drivers) {
         try {
             // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException e) {
             try {
-                log.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
+                LOG.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); // Fallback
             } catch (ClassNotFoundException ex) {
-                log.error(ex);
+                LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
             } catch (InstantiationException ex) {
-                log.error(ex);
+                LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
             } catch (IllegalAccessException ex) {
-                log.error(ex);
+                LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
             } catch (UnsupportedLookAndFeelException ex) {
-                log.error(ex);
+                LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
             }
         } catch (ClassNotFoundException ex) {
-            log.error(ex);
+            LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
         } catch (InstantiationException ex) {
-            log.error(ex);
+            LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
         } catch (IllegalAccessException ex) {
-            log.error(ex);
+            LOG.error("Can't load SystemLookAndFeel. Exception was: {}", ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                // TODO only debug
-                HashSet<DataDriver> drivers = new HashSet<DataDriver>();
-                drivers.add(new SemanticProxyData());
-                
-                WpsMonitorGui wpsMonitorGui = new WpsMonitorGui(controlDependency, drivers);
+                WpsMonitorAdminGui wpsMonitorGui = new WpsMonitorAdminGui(controlDependency, drivers);
                 wpsMonitorGui.setVisible(true);
             }
         });

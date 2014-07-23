@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
@@ -27,51 +26,52 @@ import java.util.Map;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DataAccessService {
+
     private final Map<String, Factory<? extends DataAccess>> dataAccessFactories;
-    private final static ThreadLocal<DataAccess> threadDaos;
+    private static final ThreadLocal<DataAccess> threadDaos;
 
     static {
         threadDaos = new ThreadLocal<DataAccess>();
     }
-    
+
     public DataAccessService() {
         dataAccessFactories = new HashMap<String, Factory<? extends DataAccess>>();
     }
-    
+
     public void registerDataAccess(final String accessName, final Factory<? extends DataAccess> daoFactory) throws DataAccesNameAlreadyRegistred {
-        if(dataAccessFactories.containsKey(accessName)) {
+        if (dataAccessFactories.containsKey(accessName)) {
             throw new DataAccesNameAlreadyRegistred();
         }
-        
+
         dataAccessFactories.put(accessName, Validate.notNull(daoFactory, "daoFactory"));
     }
-    
+
     public Boolean isNameRegistred(final String accessName) {
         return dataAccessFactories.containsKey(accessName);
     }
-    
+
     public <T> T getNewDataAcces(final String accessName) throws CreateException {
         DataAccess dao = dataAccessFactories
                 .get(accessName)
                 .create();
-        
+
         return castSpecific(dao);
     }
-    
+
     public <T> T getThreadDataAccess(final String accessName) throws CreateException {
         DataAccess dao = threadDaos.get();
-        
-        if(dao == null) {
+
+        if (dao == null) {
             dao = getNewDataAcces(accessName);
-            
+
             threadDaos.set(dao);
         }
-        
+
         return castSpecific(dao);
     }
-    
+
     private <T> T castSpecific(Object returnValue) {
-        return (T)returnValue
+        return (T) returnValue
                 .getClass()
                 .cast(returnValue);
     }

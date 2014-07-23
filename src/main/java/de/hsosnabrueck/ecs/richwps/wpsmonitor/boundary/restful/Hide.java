@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -23,14 +22,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 /**
- * Annotation which marks fields which should not be displayed in the
- * REST interface.
- * 
+ * Annotation which marks fields which should not be displayed in the REST
+ * interface.
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface Hide {
-    
+
 }

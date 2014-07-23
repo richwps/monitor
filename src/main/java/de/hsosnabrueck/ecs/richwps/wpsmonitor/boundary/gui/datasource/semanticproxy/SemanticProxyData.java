@@ -52,7 +52,8 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     private static final String SP_VOCABULARY_PATH = "/semanticproxy/resources/vocab";
     private static final String SP_ROOT = "/semanticproxy/resources";
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
+
     private SPClient spClient;
     private DataDriver driver;
     private String resource;
@@ -61,10 +62,10 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     public void init(final DataDriver driver, final String resource) throws DataSourceException {
         this.driver = driver;
         this.resource = resource;
-        
+
         connect();
     }
-    
+
     private void connect() throws DataSourceException {
         try {
             Vocabulary.init(new URL(resource + SP_VOCABULARY_PATH));
@@ -73,11 +74,11 @@ public class SemanticProxyData extends DataDriver implements DataSource {
             spClient.setRootURL(resource + SP_ROOT);
 
         } catch (MalformedURLException ex) {
-            log.error(ex);
+            LOG.error("Can't execute connect-Method. The given URL is not valid. Exception was: {}", ex);
 
             throw new DataSourceException("The given URL is not valid!");
         } catch (Exception ex) {
-            log.error(ex);
+            LOG.error("Can't execute connect-Method. Uknow Exception occours. Exception was: {}", ex);
 
             throw new DataSourceException("Uknow Exception occured:\n " + ex.toString());
         }
@@ -93,45 +94,37 @@ public class SemanticProxyData extends DataDriver implements DataSource {
             for (WPS wps : net.getWPSs()) {
                 URI uri = new URI(wps.getEndpoint());
                 Set<WpsProcessDescription> processes = new HashSet<WpsProcessDescription>();
-                
-                for(Process process : wps.getProcesses()) {
+
+                for (Process process : wps.getProcesses()) {
                     processes.add(getDescription(process));
                 }
-                
+
                 WpsDescription wpsDescription = new WpsDescription(uri, processes);
 
                 result.add(wpsDescription);
             }
         } catch (ResourceNotFoundException ex) {
-            log.error(ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
         } catch (InternalSPException ex) {
-            log.error(ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
         } catch (CommunicationException ex) {
-            log.error(ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
         } catch (RDFException ex) {
-            log.error(ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
         } catch (URISyntaxException ex) {
-            log.error(ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
         }
 
         return result;
     }
 
-    private WpsProcessDescription getDescription(Process process) {
-        WpsProcessDescription result = null;
-        
-        try {
-            String title = process.getTitle();
-            String strAbstract = process.getAbstract();
-            String identifier = process.getIdentifier();
-            String version = process.getProcessVersion();
-            
-            result = new WpsProcessDescription(identifier, title, strAbstract, version);
-        } catch (RDFException ex) {
-            java.util.logging.Logger.getLogger(SemanticProxyData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return result;
+    private WpsProcessDescription getDescription(Process process) throws RDFException {
+        String title = process.getTitle();
+        String strAbstract = process.getAbstract();
+        String identifier = process.getIdentifier();
+        String version = process.getProcessVersion();
+
+        return new WpsProcessDescription(identifier, title, strAbstract, version);
     }
 
     @Override

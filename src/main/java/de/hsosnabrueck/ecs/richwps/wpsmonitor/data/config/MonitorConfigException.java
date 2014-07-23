@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config;
 
 /**
- * Exception which will be thrown if a configuration error occours. This case 
+ * Exception which will be thrown if a configuration error occours. This case
  * should never happen, because of the default-config directives.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorConfigException extends Exception {
@@ -27,5 +26,5 @@ public class MonitorConfigException extends Exception {
     public MonitorConfigException(String msg) {
         super(msg);
     }
-    
+
 }

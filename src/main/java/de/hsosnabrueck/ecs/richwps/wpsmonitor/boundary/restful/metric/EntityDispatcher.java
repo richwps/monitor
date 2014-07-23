@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Calls the calculate method on the converter objects and dispatches the result
- into a Map.
+ * into a Map.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -52,11 +52,11 @@ public class EntityDispatcher {
 
         return dispatch(disassemble);
     }
-    
+
     /**
-     * Dispatches data into a map. Registered metrics will be ignored. A raw 
+     * Dispatches data into a map. Registered metrics will be ignored. A raw
      * output will be generated.
-     * 
+     *
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
@@ -65,10 +65,10 @@ public class EntityDispatcher {
 
         return dispatch(disassemble);
     }
-    
+
     /**
      * Dispatches the metrics and all data into a map.
-     * 
+     *
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
@@ -77,14 +77,14 @@ public class EntityDispatcher {
 
         return dispatch(disassemble);
     }
-    
+
     private Map<String, Object> dispatch(Map<String, QosMetric> disassemble) {
         Map<String, Object> merged = new HashMap<String, Object>();
 
         for (Map.Entry e : disassemble.entrySet()) {
             merged.put((String) e.getKey(), ((QosMetric) e.getValue()).calculate());
         }
-        
+
         return merged;
     }
 }

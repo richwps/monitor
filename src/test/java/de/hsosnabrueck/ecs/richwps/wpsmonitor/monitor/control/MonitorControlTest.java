@@ -217,7 +217,7 @@ public class MonitorControlTest {
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(unstoredProcessEntity);
         Assert.assertTrue(registred && checkIsCreateAndScheduledProcess);
     }
-    
+
     /**
      * Test of createAndScheduleProcess method, of class MonitorControl.
      */
@@ -296,14 +296,14 @@ public class MonitorControlTest {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DATE, 1);
-        
-        if(!mControl.createAndScheduleProcess(p)) {
+
+        if (!mControl.createAndScheduleProcess(p)) {
             fail("Can't create and schedule process.");
         }
-        
+
         return new TriggerConfig(new Date(), c.getTime(), 30, TriggerConfig.IntervalUnit.MINUTE);
     }
-    
+
     private Boolean checkIfSaved(TriggerKey tKey) {
         try {
             return monitor.getSchedulerControl()
@@ -319,21 +319,19 @@ public class MonitorControlTest {
     @Test
     public void testSaveTrigger_WpsProcessEntity_TriggerConfig() {
         System.out.println("saveTrigger");
-        
+
         WpsProcessEntity pE = getUnstoredProcessEntity();
         wpsDao.persist(pE.getWps());
-        
+
         TriggerConfig t = getTriggerConfigAndCreateJob(pE);
-        
+
         TriggerConfig saveTrigger = mControl.saveTrigger(pE, t);
-        
+
         TriggerKey key = new TriggerKey(saveTrigger.getTriggerName(), saveTrigger.getTriggerGroup());
         Boolean checkIfSaved = checkIfSaved(key);
-        
+
         Assert.assertTrue(checkIfSaved);
     }
-    
-    
 
     /**
      * Test of setTestRequest method, of class MonitorControl.
@@ -343,14 +341,13 @@ public class MonitorControlTest {
         System.out.println("setTestRequest");
         WpsProcessEntity storedEntity = getStoredEntity();
         mControl.setTestRequest(storedEntity, "hello world");
-        
+
         wpsProcessDao.update(storedEntity);
-        
+
         WpsProcessEntity find = wpsProcessDao.find(storedEntity.getWps().getIdentifier(), storedEntity.getIdentifier());
-        
+
         Assert.assertTrue(find != null && find.getRawRequest().equals("hello world"));
     }
-
 
     /**
      * Test of updateWps method, of class MonitorControl.
@@ -361,20 +358,20 @@ public class MonitorControlTest {
         WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
         wpsDao.persist(wpsProcess.getWps());
         String oldWpsIdentifier = wpsProcess.getWps().getIdentifier();
-        
+
         Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(wpsProcess);
-        
-        if(!createAndScheduleProcess) {
+
+        if (!createAndScheduleProcess) {
             fail("Can't create and schedule process");
         }
-        
+
         WpsEntity newWps = getUnstoredProcessEntity().getWps();
         mControl.updateWps(oldWpsIdentifier, newWps);
-        
+
         JobKey k = new JobKey(wpsProcess.getIdentifier(), newWps.getIdentifier());
-        
+
         try {
-            if(!monitor.getSchedulerControl().isJobRegistred(k)) {
+            if (!monitor.getSchedulerControl().isJobRegistred(k)) {
                 fail("Job was not modified.");
             }
         } catch (SchedulerException ex) {
@@ -392,57 +389,57 @@ public class MonitorControlTest {
         String wpsIdentifier = unstoredProcessEntity.getIdentifier();
         URI uri = unstoredProcessEntity.getWps().getUri();
         WpsEntity wps = getUnstoredProcessEntity().getWps();
-        
+
         Boolean check = true;
         try {
             mControl.updateWps(null, wps);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(wpsIdentifier, null);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(null, null);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(null, null, null);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(wpsIdentifier, null, null);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(null, wpsIdentifier, null);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             mControl.updateWps(null, null, uri);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         Assert.assertTrue(check);
     }
 
@@ -456,34 +453,31 @@ public class MonitorControlTest {
             WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
             Boolean createWps = mControl.createWps(wpsProcess.getWps());
             WpsEntity find = wpsDao.find(wpsProcess.getWps().getIdentifier());
-            
-            if(!createWps) {
+
+            if (!createWps) {
                 fail("Can't create WPS");
             }
 
-            
             TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
             triggerConfig = mControl.saveTrigger(wpsProcess, triggerConfig);
-            
-            if(triggerConfig == null) {
+
+            if (triggerConfig == null) {
                 fail("Can't save trigger");
             }
-                    
+
             TriggerKey saveTrigger = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
-            
+
             JobKey jobKey = new JobKey(wpsProcess.getIdentifier(), wpsProcess.getWps().getIdentifier());
-            
-            
-            
+
             SchedulerControl schedulerControl = monitor.getSchedulerControl();
-            if(!schedulerControl.isJobRegistred(jobKey)) {
+            if (!schedulerControl.isJobRegistred(jobKey)) {
                 fail("Job key wasn't register at createAndScheduleJob call");
             }
-            
-            if(!schedulerControl.isTriggerRegistred(saveTrigger)) {
+
+            if (!schedulerControl.isTriggerRegistred(saveTrigger)) {
                 fail("Trigger wasn't register at saveTrigger call");
             }
-            
+
             WpsProcessEntity dbWpsProcess = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
             ResponseEntity qos = new ResponseEntity();
             qos.setResponseTime(10000);
@@ -491,42 +485,39 @@ public class MonitorControlTest {
             mData.add(qos);
             mData.setCreateTime(new Date());
             mData.setProcess(dbWpsProcess);
-            
+
             qosDao.persist(mData);
             mData = qosDao.find(mData.getId());
             Long qosId = mData.getData().get(0).getId();
             AbstractQosEntity findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-            
-            if(findAbstractQosEntity == null) {
+
+            if (findAbstractQosEntity == null) {
                 fail("AbstractQosEntity wasn't stored in the database");
             }
-            
-            
-            
-            
+
             mControl.deleteWps(wpsProcess.getWps());
             findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-            
-            if(findAbstractQosEntity != null) {
+
+            if (findAbstractQosEntity != null) {
                 fail("Qos Entity are not deleted too");
             }
-            
-            if(schedulerControl.isJobRegistred(jobKey)) {
+
+            if (schedulerControl.isJobRegistred(jobKey)) {
                 fail("Job key already registred after deleteWps!");
             }
-            
-            if(schedulerControl.isTriggerRegistred(saveTrigger)) {
+
+            if (schedulerControl.isTriggerRegistred(saveTrigger)) {
                 fail("TriggerKey already registred after deleteWps!");
             }
-            
+
             WpsProcessEntity processFind = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
             WpsEntity wpsFind = wpsDao.find(wpsProcess.getWps().getIdentifier());
-            
-            if(processFind != null) {
+
+            if (processFind != null) {
                 fail("Wps Process wasn't deleted");
             }
-            
-            if(wpsFind != null) {
+
+            if (wpsFind != null) {
                 fail("Wps wasn't deleted");
             }
         } catch (SchedulerException ex) {
@@ -541,23 +532,23 @@ public class MonitorControlTest {
     public void testDeleteWpsNotAcceptedNullValues() {
         System.out.println("deleteWps");
         Boolean check = true;
-        
+
         try {
             WpsEntity en = null;
             mControl.deleteWps(en);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         try {
             String identifier = null;
             mControl.deleteWps(identifier);
             check = false;
-        } catch(IllegalArgumentException ex) {
-            
+        } catch (IllegalArgumentException ex) {
+
         }
-        
+
         Assert.assertTrue(check);
     }
 
@@ -567,7 +558,7 @@ public class MonitorControlTest {
     @Test
     public void testDeleteProcess_String_String() {
         System.out.println("deleteProcess");
-        
+
     }
 
     /**

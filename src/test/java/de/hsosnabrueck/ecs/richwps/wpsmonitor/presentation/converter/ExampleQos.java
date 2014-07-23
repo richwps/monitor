@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
@@ -22,7 +21,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
  *
  * @author FloH
  */
-public class ExampleQos extends AbstractQosEntity{
+public class ExampleQos extends AbstractQosEntity {
+
     private String result;
     private Integer value;
 
@@ -54,5 +54,5 @@ public class ExampleQos extends AbstractQosEntity{
     public void setValue(Integer value) {
         this.value = value;
     }
-    
+
 }

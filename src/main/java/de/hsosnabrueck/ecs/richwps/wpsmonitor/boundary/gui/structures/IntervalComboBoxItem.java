@@ -18,6 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * A ComboBox item for interval type selection.
@@ -27,7 +28,7 @@ import java.util.EnumMap;
 public class IntervalComboBoxItem {
 
     private final TriggerConfig.IntervalUnit dateKey;
-    private static final EnumMap<TriggerConfig.IntervalUnit, String> enumStringMap;
+    private static final Map<TriggerConfig.IntervalUnit, String> enumStringMap;
 
     /**
      * Creates an interval type item that matches the given dataKey.

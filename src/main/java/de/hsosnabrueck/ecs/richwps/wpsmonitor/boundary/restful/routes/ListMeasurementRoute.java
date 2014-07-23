@@ -32,7 +32,8 @@ import spark.Response;
  */
 public class ListMeasurementRoute extends MonitorRoute {
 
-    public static final Logger log = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
+    private static final Integer DEFAULT_COUNT_OF_RANGE = 100;
 
     public ListMeasurementRoute(final String alias) {
         super(alias);
@@ -53,29 +54,28 @@ public class ListMeasurementRoute extends MonitorRoute {
             List<MeasuredDataEntity> measuredData = getMonitorControl()
                     .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
 
-            log.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}",
+            LOG.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}",
                     wpsIdentifier, processIdentifier, count
             );
 
             Map<String, Object> toPresentate = null;
 
-            if (format != null) {
-                if (format.equals("converted")) {
-                    toPresentate = getConverted(measuredData);
-                } else if (format.equals("both")) {
-                    toPresentate = getRawAndConverted(measuredData);
-                }
-            } 
-            
-            if(toPresentate == null) {
+            if ("converted".equals(format)) {
+                toPresentate = getConverted(measuredData);
+            } else if ("both".equals(format)) {
+                toPresentate = getRawAndConverted(measuredData);
+            }
+
+            if (toPresentate == null) {
                 toPresentate = getRaw(measuredData);
             }
-            
+
             response.type(getStrategy().getMimeType());
-            
+
             return getStrategy()
                     .presentate(toPresentate);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException ex) {
+            LOG.warn("A value was null. Exception was: {}", ex);
             response.status(404);
         }
 
@@ -95,22 +95,18 @@ public class ListMeasurementRoute extends MonitorRoute {
     }
 
     private Range getRange(String countValue) {
-        Range range = null;
+        Integer countInt;
 
-        if (countValue != null) {
+        if (countValue == null) {
+            countInt = DEFAULT_COUNT_OF_RANGE;
+        } else {
             try {
-                Integer countInt = Integer.parseInt(countValue);
-                range = new Range(null, countInt);
+                countInt = Integer.parseInt(countValue);
             } catch (NumberFormatException e) {
-
+                countInt = DEFAULT_COUNT_OF_RANGE;
             }
         }
 
-        return range;
+        return new Range(null, countInt);
     }
-    /* // removed; was used for spark 2.0 framework
-     @Override
-     public String getRoute() {
-     return "/measurement/wps/:wps/process/:process/count/:count";
-     }*/
 }

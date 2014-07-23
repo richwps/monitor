@@ -25,15 +25,15 @@ public interface PresentateStrategy {
 
     /**
      * Transforms the given Object instance into a String.
-     * 
+     *
      * @param presentate Object instance
      * @return String
      */
     public String presentate(Object presentate);
-    
+
     /**
      * Returns the mimeTime of the specific strategy.
-     * 
+     *
      * @return String
      */
     public String getMimeType();

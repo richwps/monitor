@@ -28,8 +28,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 /**
- * General entity for qos-measurements. All qos entity must extends this
- * entity. Otherwise they can't persisted in the database
+ * General entity for qos-measurements. All qos entity must extends this entity.
+ * Otherwise they can't persisted in the database
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -68,12 +68,6 @@ public abstract class AbstractQosEntity implements Serializable {
     @Hide
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    
-    /*
-    @Hide
-    @OneToOne
-    @JoinColumn(nullable = false)
-    private MeasuredDataEntity owner;*/
 
     /**
      * Important method to indicate which entity-type it is
@@ -114,12 +108,4 @@ public abstract class AbstractQosEntity implements Serializable {
     public String toString() {
         return "de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
     }
-/*
-    public MeasuredDataEntity getOwner() {
-        return owner;
-    }
-
-    public void setOwner(MeasuredDataEntity owner) {
-        this.owner = owner;
-    }*/
 }

@@ -1,69 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns:ExceptionReport version="1.0.0" xmlns:ns="http://www.opengis.net/ows/1.1"><ns:Exception exceptionCode="NoApplicableCode"><ns:ExceptionText>There went something wrong with parsing the POST data: Premature end of file.</ns:ExceptionText></ns:Exception><ns:Exception exceptionCode="JAVA_StackTrace"><ns:ExceptionText>org.n52.wps.server.handler.RequestHandler.&lt;init>:240
-org.n52.wps.server.WebProcessingService.doPost:315
-javax.servlet.http.HttpServlet.service:707
-org.n52.wps.server.WebProcessingService.service:345
-javax.servlet.http.HttpServlet.service:790
-org.apache.catalina.core.StandardWrapper.service:1682
-org.apache.catalina.core.StandardWrapperValve.invoke:318
-org.apache.catalina.core.StandardContextValve.invoke:160
-org.apache.catalina.core.StandardPipeline.doInvoke:734
-org.apache.catalina.core.StandardPipeline.invoke:673
-com.sun.enterprise.web.WebPipeline.invoke:99
-org.apache.catalina.core.StandardHostValve.invoke:174
-org.apache.catalina.connector.CoyoteAdapter.doService:357
-org.apache.catalina.connector.CoyoteAdapter.service:260
-com.sun.enterprise.v3.services.impl.ContainerMapper.service:188
-org.glassfish.grizzly.http.server.HttpHandler.runService:191
-org.glassfish.grizzly.http.server.HttpHandler.doHandle:168
-org.glassfish.grizzly.http.server.HttpServerFilter.handleRead:189
-org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute:119
-org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter:288
-org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart:206
-org.glassfish.grizzly.filterchain.DefaultFilterChain.execute:136
-org.glassfish.grizzly.filterchain.DefaultFilterChain.process:114
-org.glassfish.grizzly.ProcessorExecutor.execute:77
-org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent:838
-org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent:113
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0:115
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100:55
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run:135
-org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork:564
-org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run:544
-java.lang.Thread.run:745
-</ns:ExceptionText></ns:Exception><ns:Exception exceptionCode="JAVA_RootCause"><ns:ExceptionText>Premature end of file.</ns:ExceptionText><ns:ExceptionText>org.apache.xerces.parsers.DOMParser.parse:-1
-org.apache.xerces.jaxp.DocumentBuilderImpl.parse:-1
-javax.xml.parsers.DocumentBuilder.parse:121
-org.n52.wps.server.handler.RequestHandler.&lt;init>:194
-org.n52.wps.server.WebProcessingService.doPost:315
-javax.servlet.http.HttpServlet.service:707
-org.n52.wps.server.WebProcessingService.service:345
-javax.servlet.http.HttpServlet.service:790
-org.apache.catalina.core.StandardWrapper.service:1682
-org.apache.catalina.core.StandardWrapperValve.invoke:318
-org.apache.catalina.core.StandardContextValve.invoke:160
-org.apache.catalina.core.StandardPipeline.doInvoke:734
-org.apache.catalina.core.StandardPipeline.invoke:673
-com.sun.enterprise.web.WebPipeline.invoke:99
-org.apache.catalina.core.StandardHostValve.invoke:174
-org.apache.catalina.connector.CoyoteAdapter.doService:357
-org.apache.catalina.connector.CoyoteAdapter.service:260
-com.sun.enterprise.v3.services.impl.ContainerMapper.service:188
-org.glassfish.grizzly.http.server.HttpHandler.runService:191
-org.glassfish.grizzly.http.server.HttpHandler.doHandle:168
-org.glassfish.grizzly.http.server.HttpServerFilter.handleRead:189
-org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute:119
-org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter:288
-org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart:206
-org.glassfish.grizzly.filterchain.DefaultFilterChain.execute:136
-org.glassfish.grizzly.filterchain.DefaultFilterChain.process:114
-org.glassfish.grizzly.ProcessorExecutor.execute:77
-org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent:838
-org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent:113
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0:115
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100:55
-org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run:135
-org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork:564
-org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run:544
-java.lang.Thread.run:745
-</ns:ExceptionText></ns:Exception></ns:ExceptionReport>
+<ns:ExceptionReport version="1.0.0" xmlns:ns="http://www.opengis.net/ows/1.1">
+    <ns:Exception exceptionCode="NoApplicableCode">
+        <ns:ExceptionText>There went something wrong with parsing the POST data: Premature end of file.</ns:ExceptionText>
+    </ns:Exception>
+    <ns:Exception exceptionCode="JAVA_StackTrace">
+        <ns:ExceptionText>org.n52.wps.server.handler.RequestHandler.&lt;init>:240
+            org.n52.wps.server.WebProcessingService.doPost:315
+            javax.servlet.http.HttpServlet.service:707
+            org.n52.wps.server.WebProcessingService.service:345
+            javax.servlet.http.HttpServlet.service:790
+            org.apache.catalina.core.StandardWrapper.service:1682
+            org.apache.catalina.core.StandardWrapperValve.invoke:318
+            org.apache.catalina.core.StandardContextValve.invoke:160
+            org.apache.catalina.core.StandardPipeline.doInvoke:734
+            org.apache.catalina.core.StandardPipeline.invoke:673
+            com.sun.enterprise.web.WebPipeline.invoke:99
+            org.apache.catalina.core.StandardHostValve.invoke:174
+            org.apache.catalina.connector.CoyoteAdapter.doService:357
+            org.apache.catalina.connector.CoyoteAdapter.service:260
+            com.sun.enterprise.v3.services.impl.ContainerMapper.service:188
+            org.glassfish.grizzly.http.server.HttpHandler.runService:191
+            org.glassfish.grizzly.http.server.HttpHandler.doHandle:168
+            org.glassfish.grizzly.http.server.HttpServerFilter.handleRead:189
+            org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute:119
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter:288
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart:206
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.execute:136
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.process:114
+            org.glassfish.grizzly.ProcessorExecutor.execute:77
+            org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent:838
+            org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent:113
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0:115
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100:55
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run:135
+            org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork:564
+            org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run:544
+            java.lang.Thread.run:745
+        </ns:ExceptionText>
+    </ns:Exception>
+    <ns:Exception exceptionCode="JAVA_RootCause">
+        <ns:ExceptionText>Premature end of file.</ns:ExceptionText>
+        <ns:ExceptionText>org.apache.xerces.parsers.DOMParser.parse:-1
+            org.apache.xerces.jaxp.DocumentBuilderImpl.parse:-1
+            javax.xml.parsers.DocumentBuilder.parse:121
+            org.n52.wps.server.handler.RequestHandler.&lt;init>:194
+            org.n52.wps.server.WebProcessingService.doPost:315
+            javax.servlet.http.HttpServlet.service:707
+            org.n52.wps.server.WebProcessingService.service:345
+            javax.servlet.http.HttpServlet.service:790
+            org.apache.catalina.core.StandardWrapper.service:1682
+            org.apache.catalina.core.StandardWrapperValve.invoke:318
+            org.apache.catalina.core.StandardContextValve.invoke:160
+            org.apache.catalina.core.StandardPipeline.doInvoke:734
+            org.apache.catalina.core.StandardPipeline.invoke:673
+            com.sun.enterprise.web.WebPipeline.invoke:99
+            org.apache.catalina.core.StandardHostValve.invoke:174
+            org.apache.catalina.connector.CoyoteAdapter.doService:357
+            org.apache.catalina.connector.CoyoteAdapter.service:260
+            com.sun.enterprise.v3.services.impl.ContainerMapper.service:188
+            org.glassfish.grizzly.http.server.HttpHandler.runService:191
+            org.glassfish.grizzly.http.server.HttpHandler.doHandle:168
+            org.glassfish.grizzly.http.server.HttpServerFilter.handleRead:189
+            org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute:119
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter:288
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart:206
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.execute:136
+            org.glassfish.grizzly.filterchain.DefaultFilterChain.process:114
+            org.glassfish.grizzly.ProcessorExecutor.execute:77
+            org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent:838
+            org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent:113
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0:115
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.access$100:55
+            org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run:135
+            org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork:564
+            org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run:544
+            java.lang.Thread.run:745
+        </ns:ExceptionText>
+    </ns:Exception>
+</ns:ExceptionReport>

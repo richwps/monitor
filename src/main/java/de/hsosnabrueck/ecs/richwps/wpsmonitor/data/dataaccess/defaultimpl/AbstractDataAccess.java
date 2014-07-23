@@ -25,7 +25,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
  * Implementation of some default operations with an EntityManager instance.
@@ -41,10 +40,12 @@ public abstract class AbstractDataAccess<T> {
      */
     protected Boolean autoCommit;
     private final Jpa jpa;
-    protected final static Logger log = LogManager.getLogger();
+    protected static final Logger LOG = LogManager.getLogger();
 
     /**
      * Default constructor
+     *
+     * @param jpa JPA instance
      */
     public AbstractDataAccess(final Jpa jpa) {
         this.autoCommit = true;
@@ -52,8 +53,8 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     * Gets an EntityManager instance. The Jpa ensures that every thread
- gets its own EntityManager instance
+     * Gets an EntityManager instance. The Jpa ensures that every thread gets
+     * its own EntityManager instance
      *
      * @return EntityManager instance
      */
@@ -75,8 +76,8 @@ public abstract class AbstractDataAccess<T> {
                 .persist(o);
 
         Boolean commitResult = requestCommit();
-        
-        if(commitResult != null) {
+
+        if (commitResult != null) {
             result = commitResult;
         }
 
@@ -140,7 +141,7 @@ public abstract class AbstractDataAccess<T> {
                         .commit();
             }
         } catch (Exception ex) {
-            log.debug(ex);
+            LOG.debug("Exception occourd at commiting Changes to the database. Exception was: {}", ex);
 
             return false;
         }
@@ -281,7 +282,6 @@ public abstract class AbstractDataAccess<T> {
 
         Integer affectedRows = query.executeUpdate();
 
-        //getEntityManager().flush();
         requestCommit();
 
         return affectedRows;

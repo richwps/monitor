@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 /**
@@ -21,6 +20,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsProcessDescription {
+
     private final String identifier;
     private final String title;
     private final String strAbstract;
@@ -32,7 +32,6 @@ public class WpsProcessDescription {
         this.strAbstract = strAbstract;
         this.version = version;
     }
-    
 
     public String getIdentifier() {
         return identifier;
@@ -52,6 +51,6 @@ public class WpsProcessDescription {
 
     @Override
     public String toString() {
-        return "Identifier: " + identifier +  " \nAbstract: " + strAbstract;
+        return "Identifier: " + identifier + " \nAbstract: " + strAbstract;
     }
 }
