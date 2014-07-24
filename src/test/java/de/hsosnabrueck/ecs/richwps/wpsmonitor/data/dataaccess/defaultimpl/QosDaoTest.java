@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
@@ -22,12 +23,13 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.junit.After;
@@ -57,13 +59,16 @@ public class QosDaoTest {
     private static final Integer GENERATE_COUNT = 5;
     private static final String WPS_PROCESS_NAME = "testCaseScenario_SimpleBuffer";
     private static final String WPS_NAME = "testCaseScenario_localWps";
+    
+    private static Jpa jpa;
 
     public QosDaoTest() {
     }
 
     @BeforeClass
     public static void setUpClass() {
-        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa.open();
 
         qosFactory = new QosDaoFactory(new QosDaoDefaultFactory(jpa));
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
@@ -72,6 +77,7 @@ public class QosDaoTest {
 
     @AfterClass
     public static void tearDownClass() {
+        jpa.close();
     }
 
     @Before
@@ -94,8 +100,8 @@ public class QosDaoTest {
             wpsDao.persist(wps);
             wpsProcessDao.persist(process);
 
-            for (int i = 0; i < GENERATE_COUNT; i++) {
-                MeasuredDataEntity generatedData = genDataEn(process);
+            for (int i = 1; i <= GENERATE_COUNT; i++) {
+                MeasuredDataEntity generatedData = genDataEn(process, -i);
                 qosDao.persist(generatedData);
                 insertedIds[i] = generatedData.getId();
             }
@@ -111,9 +117,12 @@ public class QosDaoTest {
         wpsProcessDao.rollback();
     }
 
-    private MeasuredDataEntity genDataEn(WpsProcessEntity process) {
+    private MeasuredDataEntity genDataEn(WpsProcessEntity process, Integer addDay) {
         MeasuredDataEntity en = new MeasuredDataEntity();
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, addDay);
         en.setCreateTime(new Date());
         en.setProcess(process);
 
@@ -154,7 +163,7 @@ public class QosDaoTest {
      * Test of getByWps method, of class QosDao.
      */
     @Test
-    public void testGetByWps_String_Range() {
+    public void testGetByWps() {
         System.out.println("getByWps");
         Range r = new Range(null, GENERATE_COUNT);
 
@@ -179,7 +188,7 @@ public class QosDaoTest {
      * Test of getByProcess method, of class QosDao.
      */
     @Test
-    public void testGetByProcess_3args() {
+    public void testGetByProcess() {
         Range r = new Range(null, GENERATE_COUNT);
         List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME, r);
 
@@ -191,5 +200,76 @@ public class QosDaoTest {
         }
 
         Assert.assertTrue(assertWpsIdentical && byProcess.size() == GENERATE_COUNT);
+    }
+
+    /**
+     * Test of getByProcess method, of class QosDao.
+     */
+    @Test
+    public void testGetByProcess_NullValue() {
+        Range r = new Range(null, GENERATE_COUNT);
+        
+        try {
+            qosDao.getByProcess(null, WPS_PROCESS_NAME, r);
+            fail("Exception was not thrown by wpsidentifier as null value");
+        } catch(IllegalArgumentException ex) {
+            
+        }
+        
+        try {
+            qosDao.getByProcess(WPS_NAME, null, r);
+            fail("Exception was not thrown by processidentifier as null value");
+        } catch(IllegalArgumentException ex) {
+            
+        }
+    }
+
+    /**
+     * Test of deleteByProcess method, of class QosDao.
+     */
+    @Test
+    public void testDeleteByProcess() {
+        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        
+        if(byProcess.isEmpty()) {
+            fail("No MeasuredDataEntity");
+        }
+        
+        Integer deleteByProcess = qosDao.deleteByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        
+        Assert.assertTrue(deleteByProcess.equals(GENERATE_COUNT) && byProcess.isEmpty());
+    }
+
+    /**
+     * Test of deleteByProcess method, of class QosDao.
+     */
+    @Test
+    public void testDeleteByProcess_olderAs() {
+        System.out.println("deleteByProcess");
+        String wpsIdentifier = "";
+        String processIdentifier = "";
+        Date olderDate = null;
+        QosDao instance = null;
+        Integer expResult = null;
+        Integer result = instance.deleteByProcess(wpsIdentifier, processIdentifier, olderDate);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of deleteAllOlderAs method, of class QosDao.
+     */
+    @Test
+    public void testDeleteAllOlderAs() {
+        System.out.println("deleteAllOlderAs");
+        Date date = null;
+        QosDao instance = null;
+        Integer expResult = null;
+        Integer result = instance.deleteAllOlderAs(date);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

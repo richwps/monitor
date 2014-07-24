@@ -36,6 +36,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -79,20 +80,24 @@ public class Monitor {
         registerShutdownHook();
     }
 
-    public void start() throws SchedulerException {
+    public void start() throws MonitorException {
         if (!isActive()) {
             beforeStart();
 
             eventHandler
                     .fireEvent(new MonitorEvent("monitor.start"));
 
-            monitorControl
-                    .getSchedulerControl()
-                    .start();
+            try {
+                monitorControl
+                        .getSchedulerControl()
+                        .start();
+            } catch (SchedulerException ex) {
+                throw new MonitorException("Can't start monitor.", ex);
+            }
         }
     }
 
-    public void shutdown() throws SchedulerException {
+    public void shutdown() throws MonitorException {
         if (isActive()) {
             LOG.debug("Monitor shutdown.");
 
@@ -100,25 +105,23 @@ public class Monitor {
                     .fireEvent(new MonitorEvent("monitor.shutdown"));
 
             config.save();
-            monitorControl.getSchedulerControl()
-                    .shutdown();
+            try {
+                monitorControl.getSchedulerControl()
+                        .shutdown();
+            } catch (SchedulerException ex) {
+                throw new MonitorException("Can't shutdown monitor.", ex);
+            }
         }
     }
 
-    public void restart() {
-        try {
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitor.restart"));
+    public void restart() throws MonitorException, MonitorConfigException {
+        eventHandler
+                .fireEvent(new MonitorEvent("monitor.restart"));
 
-            shutdown();
+        shutdown();
 
-            initMonitorWithBuilder(builderInstance);
-            start();
-        } catch (SchedulerException ex) {
-            LOG.error("Scheduler Exception at monitor restart.", ex);
-        } catch (MonitorConfigException ex) {
-            LOG.error("Monitor configuration exception at monitor restart. ", ex);
-        }
+        initMonitorWithBuilder(builderInstance);
+        start();
     }
 
     private void initMonitorWithBuilder(MonitorBuilder builder) throws MonitorConfigException {
@@ -136,9 +139,7 @@ public class Monitor {
                 this.eventHandler = tmpEventHandler;
             }
         } catch (BuilderException ex) {
-            LOG.fatal("Builder exception at initialising procedure of the monitor instance. Execution aborted. ", ex);
-            
-            throw new AssertionError();
+            throw new AssertionError("Builder exception at initialising procedure of the monitor instance. Execution aborted. ", ex);
         }
     }
 
@@ -237,9 +238,7 @@ public class Monitor {
             jobFactoryService.register(MeasureJob.class, measureJobFactory);
             jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
         } catch (CreateException ex) {
-            LOG.fatal("Can't setup the Jobfactories. Execution aborted. ", ex);
-            
-            throw new AssertionError();
+            throw new AssertionError("Can't setup the Jobfactories. Execution aborted. ", ex);
         }
     }
 

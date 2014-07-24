@@ -55,6 +55,11 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form DataSourceDialog
+     *
+     * @param monitorMainFrame
+     * @param drivers
+     * @param parent
+     * @param modal
      */
     public DataSourceDialog(WpsMonitorAdminGui monitorMainFrame, Set<DataDriver> drivers, java.awt.Frame parent, boolean modal) {
         super(parent, modal);

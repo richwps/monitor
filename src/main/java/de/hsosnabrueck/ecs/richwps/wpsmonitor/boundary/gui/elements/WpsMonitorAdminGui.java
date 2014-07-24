@@ -19,8 +19,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.DataSourceDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,6 +38,7 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -486,7 +489,13 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
     private void restartButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_restartButtonActionPerformed
         reInit();
-        monitor.restart();
+        try {
+            monitor.restart();
+        } catch (MonitorException ex) {
+            MessageDialogs.showError(this, "Can't restart Monitor", "Monitor Exception! Exception was: " + ex.toString());
+        } catch (MonitorConfigException ex) {
+            MessageDialogs.showError(this, "Can't restart Monitor", "Configuration Exception! Exception was: " + ex.toString());
+        }
     }//GEN-LAST:event_restartButtonActionPerformed
 
     private void dataSourceMenuITemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dataSourceMenuITemActionPerformed

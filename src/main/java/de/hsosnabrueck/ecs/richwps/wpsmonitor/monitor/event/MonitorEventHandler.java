@@ -104,10 +104,10 @@ public class MonitorEventHandler {
      * Removes a given listener from the eventname.
      *
      * @param eventName name of the event
-     * @param eventToRemove Eventlistener object which should be removed
+     * @param listenerToRemove Eventlistener object which should be removed
      * @throws EventNotFound If the event is not found
      */
-    public void removeListener(final String eventName, final MonitorEventListener eventToRemove) throws EventNotFound {
+    public void removeListener(final String eventName, final MonitorEventListener listenerToRemove) throws EventNotFound {
         if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
             LOG.debug("EventHandler: removeListener: Event {} not found!", eventName);
 
@@ -115,9 +115,9 @@ public class MonitorEventHandler {
         }
 
         events.get(eventName)
-                .remove(Validate.notNull(eventToRemove, "eventToRemove"));
+                .remove(Validate.notNull(listenerToRemove, "eventToRemove"));
 
-        LOG.debug("EventHandler: Remove Listener: {}", eventToRemove.getClass().getName());
+        LOG.debug("EventHandler: Remove Listener: {}", listenerToRemove.getClass().getName());
     }
 
     /**

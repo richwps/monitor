@@ -93,6 +93,10 @@ public final class Jpa {
      * @return EntityManager instance
      */
     public EntityManager createEntityManager() {
+        if(!emf.isOpen()) {
+            throw new AssertionError("EntityManagerFactory is not opened!");
+        }
+        
         return emf.createEntityManager();
     }
 

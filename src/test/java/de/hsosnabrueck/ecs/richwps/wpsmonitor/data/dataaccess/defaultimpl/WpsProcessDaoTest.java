@@ -179,4 +179,47 @@ public class WpsProcessDaoTest {
         Assert.assertTrue(all.isEmpty());
     }
 
+
+    /**
+     * Test of find method, of class WpsProcessDao.
+     */
+    @Test
+    public void testFind_String_String() {
+        System.out.println("find");
+        String wpsIdentifier = "";
+        String processIdentifier = "";
+        WpsProcessDao instance = null;
+        WpsProcessEntity expResult = null;
+        WpsProcessEntity result = instance.find(wpsIdentifier, processIdentifier);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of deleteProcessesOfWps method, of class WpsProcessDao.
+     */
+    @Test
+    public void testDeleteProcessesOfWps() {
+        System.out.println("deleteProcessesOfWps");
+        String wpsIdentifier = "";
+        WpsProcessDao instance = null;
+        instance.deleteProcessesOfWps(wpsIdentifier);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of remove method, of class WpsProcessDao.
+     */
+    @Test
+    public void testRemove_String_String() {
+        System.out.println("remove");
+        String wpsIdentifier = "";
+        String processIdentifier = "";
+        WpsProcessDao instance = null;
+        instance.remove(wpsIdentifier, processIdentifier);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

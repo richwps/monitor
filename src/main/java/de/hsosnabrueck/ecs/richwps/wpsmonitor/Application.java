@@ -34,6 +34,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseF
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.util.HashSet;
@@ -41,9 +42,11 @@ import java.util.Locale;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.SchedulerException;
 
 /**
+ * The Main Class of the WPS-Monitor. Here are the Monitor, Admin GUI and REST
+ * Service are build and started. If a fatal error occoured, the application
+ * exits.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -59,29 +62,34 @@ public class Application {
 
         try {
             new Application().run();
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             LOG.fatal("Can't run() WpsMonitor.", ex);
-
-            throw new AssertionError();
+            Runtime.getRuntime().exit(1); // exit the application
         }
     }
 
-    public void run() throws SchedulerException, BuilderException {
-        Monitor monitor = setupMonitor();
+    public void run() {
+        try {
+            Monitor monitor = setupMonitor();
 
-        LOG.trace("WpsMonitor is starting up ...");
-        monitor.start();
+            LOG.trace("WpsMonitor is starting up ...");
+            monitor.start();
 
-        LOG.trace("Start REST Interface ...");
-        RestInterface rest = setupRest(monitor.getMonitorControl());
-        rest.start();
+            LOG.trace("Start REST Interface ...");
+            RestInterface rest = setupRest(monitor.getMonitorControl());
+            rest.start();
 
-        LOG.trace("Setup DataDriver Set ...");
-        Set<DataDriver> drivers = new HashSet<DataDriver>();
-        drivers.add(new SemanticProxyData());
+            LOG.trace("Setup DataDriver Set ...");
+            Set<DataDriver> drivers = new HashSet<DataDriver>();
+            drivers.add(new SemanticProxyData());
 
-        LOG.trace("Start GUI ...");
-        GuiStarter.start(monitor, drivers);
+            LOG.trace("Start GUI ...");
+            GuiStarter.start(monitor, drivers);
+        } catch (MonitorException ex) {
+            throw new AssertionError("Can't start the monitor!", ex);
+        } catch (BuilderException ex) {
+            throw new AssertionError("Can't build the monitor!", ex);
+        }
     }
 
     /**
@@ -109,7 +117,7 @@ public class Application {
      * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException
      */
     public RestInterface setupRest(MonitorControl monitor) throws BuilderException {
-        
+
         // create RESTful service
         RestInterface restInterface = new RestInterfaceBuilder()
                 .withMonitorControl(monitor)

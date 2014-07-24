@@ -128,4 +128,31 @@ public class WpsDaoTest {
         Assert.assertTrue(isValid && get.size() >= GENERATE_COUNT);
     }
 
+    /**
+     * Test of find method, of class WpsDao.
+     */
+    @Test
+    public void testFind_String() {
+        System.out.println("find");
+        String wpsIdentifier = "";
+        WpsDao instance = null;
+        WpsEntity expResult = null;
+        WpsEntity result = instance.find(wpsIdentifier);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of remove method, of class WpsDao.
+     */
+    @Test
+    public void testRemove_String() {
+        System.out.println("remove");
+        String wpsIdentifier = "";
+        WpsDao instance = null;
+        instance.remove(wpsIdentifier);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

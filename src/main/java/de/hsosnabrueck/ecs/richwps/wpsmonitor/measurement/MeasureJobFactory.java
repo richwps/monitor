@@ -110,9 +110,7 @@ public class MeasureJobFactory implements JobFactory {
 
             measureJob = new MeasureJob(probeService.buildProbes(), process, dao, wpsClientFactory.create());
         } catch (CreateException ex) {
-            LOG.fatal("Fatal exception occourd. Can't create one of the Dependencies. Without these dependencies i can't do my work.", ex);
-            
-            throw new AssertionError();
+            throw new AssertionError("Fatal exception occourd. Can't create one of the Dependencies. Without these dependencies i can't do my work.", ex);
         }
 
         return measureJob;

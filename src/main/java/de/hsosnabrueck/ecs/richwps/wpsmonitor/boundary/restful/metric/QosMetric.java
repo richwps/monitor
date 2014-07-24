@@ -41,8 +41,7 @@ public abstract class QosMetric {
      *
      * @param data AbstractQosEntity instance
      */
-    public void add(final Measurement data) {
-
+    public final void add(final Measurement data) {
         entities.add(data);
     }
 
