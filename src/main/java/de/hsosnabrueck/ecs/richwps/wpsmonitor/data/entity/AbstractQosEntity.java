@@ -57,7 +57,7 @@ import javax.persistence.OneToOne;
     /**
      * Deletes all AbstractQosEntity instances which are older as :date.
      */
-    @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE t.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.createTime < :date)")
+    @NamedQuery(name = "abstractQos.deleteOlderAs", query = "DELETE FROM AbstractQosEntity t WHERE t.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.createTime < :date)")
 })
 @Entity
 public abstract class AbstractQosEntity implements Serializable {
