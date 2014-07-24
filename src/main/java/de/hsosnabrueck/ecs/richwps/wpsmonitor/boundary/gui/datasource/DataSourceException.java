@@ -16,6 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 /**
+ * This exception can be thrown if a DataSource implementation wants to
+ * signalize an exception.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

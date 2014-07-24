@@ -16,17 +16,53 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 /**
+ * DataDriver is an abstract factory class with some abstract methods. The idea
+ * behind this class is, that you can create any DataDrive-Implementations which
+ * can be used to create specific DataSource-Instances by the given resource
+ * String.
+ *
+ * The expected content of thy resource type should be signalize through the
+ * getExpectedResourceType-method. E.g. if you write a DataDriver for
+ * file-acces, the resource string should be a path to a file. For a Database it
+ * should be a jdbc connection string - and so on.
+ *
+ * Every driver need to have a name.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public abstract class DataDriver {
 
+    /**
+     * Signalize the expected type of the resource string of the create method.
+     * E.g. a jdbc connection string, file path or an url
+     *
+     * @return String which indicates the expexted resource string type
+     */
     public abstract String getExpectedResourceType();
 
+    /**
+     * Gets the name of the driver.
+     *
+     * @return String
+     */
     public abstract String getDriverName();
 
+    /**
+     * Creation of the DataSource instance
+     *
+     * @return DataSource instance
+     */
     protected abstract DataSource createDataSource();
 
+    /**
+     * Creates a new DataSource Instance
+     *
+     * @param resource resource string; jdbc string, url or something which is
+     * expected by the specific DataSource
+     * @return DataSource instance which is created by the protected method
+     * createDataSource
+     * @throws DataSourceException
+     */
     public final DataSource create(String resource) throws DataSourceException {
         try {
             DataSource adapter = createDataSource();
