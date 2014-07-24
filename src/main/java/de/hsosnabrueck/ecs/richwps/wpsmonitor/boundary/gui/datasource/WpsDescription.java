@@ -15,33 +15,93 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Class to describe WPS.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDescription {
 
+    /**
+     * Identifier of the Wps
+     */
+    private final String identifier;
+    
+    /**
+     * URI to the WPS-Server
+     */
     private final URI wpsUri;
-    private final Set<WpsProcessDescription> processes;
 
-    public WpsDescription(URI wpsUri, Set<WpsProcessDescription> processes) {
-        this.wpsUri = wpsUri;
-        this.processes = processes;
+    /**
+     * Set of {@link WpsProcessDescription} instances.
+     */
+    private final Set<WpsProcessDescription> processes;
+    
+    public WpsDescription(final String identifier, final URI wpsUri) {
+        this(identifier, wpsUri, null);
     }
 
+    /**
+     * Creates an imutable WpsDescription instance with a set of
+     * WpsProcessDescription-Instances and the URI which should point to the
+     * described WPS.
+     *
+     * @param identifier Identifier of the WPS
+     * @param wpsUri URI instance
+     * @param processes Set of WpsProcessDescription instances
+     */
+    public WpsDescription(final String identifier, final URI wpsUri, final Set<WpsProcessDescription> processes) {
+        this.identifier = Validate.notNull(identifier, "identifier");
+        this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
+        
+        
+        if(processes == null) {
+            this.processes = new HashSet<WpsProcessDescription>();
+        } else {
+            this.processes = processes;
+        }
+    }
+
+    /**
+     * Get the URI of the WPS.
+     * 
+     * @return URI instance.
+     */
     public URI getUri() {
         return wpsUri;
     }
 
+    /**
+     * Get the Set of {@link WpsProcessDescription} Instances.
+     * 
+     * @return Set of {@link WpsProcessDescription} Instances.
+     */
     public Set<WpsProcessDescription> getProcesses() {
         return processes;
     }
 
+    /**
+     * Add a {@link WpsProcessDescription} instance to the internal set.
+     * 
+     * @param e WpsProcessDescription Instance
+     * @return true if successfully added
+     */
     public boolean add(WpsProcessDescription e) {
         return processes.add(e);
+    }
+
+    /**
+     * Gets the identifier of the WPS.
+     * 
+     * @return String
+     */
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
