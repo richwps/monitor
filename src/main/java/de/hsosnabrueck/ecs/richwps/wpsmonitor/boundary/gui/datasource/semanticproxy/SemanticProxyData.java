@@ -74,11 +74,11 @@ public class SemanticProxyData extends DataDriver implements DataSource {
             spClient.setRootURL(resource + SP_ROOT);
 
         } catch (MalformedURLException ex) {
-            LOG.error("Can't execute connect-Method. The given URL is not valid. Exception was: {}", ex);
+            LOG.error("Can't execute connect-Method. The given URL is not valid.", ex);
 
             throw new DataSourceException("The given URL is not valid!");
         } catch (Exception ex) {
-            LOG.error("Can't execute connect-Method. Uknow Exception occours. Exception was: {}", ex);
+            LOG.error("Can't execute connect-Method. Uknow Exception occours.", ex);
 
             throw new DataSourceException("Uknow Exception occured:\n " + ex.toString());
         }
@@ -98,24 +98,31 @@ public class SemanticProxyData extends DataDriver implements DataSource {
                 for (Process process : wps.getProcesses()) {
                     processes.add(getDescription(process));
                 }
-
-                WpsDescription wpsDescription = new WpsDescription(uri, processes);
+                
+                String wpsIdentifier = generateWpsIdentifier(uri.toString());
+                WpsDescription wpsDescription = new WpsDescription(wpsIdentifier, uri, processes);
 
                 result.add(wpsDescription);
             }
         } catch (ResourceNotFoundException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         } catch (InternalSPException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         } catch (CommunicationException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         } catch (RDFException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         } catch (URISyntaxException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client. Exception was: {}", ex);
+            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         }
 
         return result;
+    }
+
+    private String generateWpsIdentifier(String uri) {
+        String withoutHttp = uri.substring(7);
+
+        return withoutHttp.substring(0, withoutHttp.indexOf("/"));
     }
 
     private WpsProcessDescription getDescription(Process process) throws RDFException {
