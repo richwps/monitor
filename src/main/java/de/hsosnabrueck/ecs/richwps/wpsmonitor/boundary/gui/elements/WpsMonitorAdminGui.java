@@ -377,9 +377,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
             if (c instanceof WpsPanel) {
                 WpsPanel search = (WpsPanel) c;
 
-                if (search.getWps().getIdentifier().equals(
-                        search.getWps().getIdentifier())) {
-
+                if (search.getWps().getIdentifier().equals(identifier)) {
                     result = search;
                 }
             }
@@ -477,7 +475,8 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
                 .showQuestionDialog(this, "Close Monitor?", "Are you sure to close this Application? The Monitor will be stoped.");
 
         if (yes) {
-            System.exit(0);
+            dispose();
+            Runtime.getRuntime().exit(0);
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
