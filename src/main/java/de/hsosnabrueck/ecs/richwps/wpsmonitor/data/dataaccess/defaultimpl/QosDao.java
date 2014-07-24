@@ -81,9 +81,12 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
 
-        doNamedQuery("qos.deleteByWpsProcess", parameters);
-
-        return doNamedQuery("abstractQos.deleteByWpsProcess", parameters);
+        
+        doNamedQuery("abstractQos.deleteByWpsProcess", parameters);
+        Integer result = doNamedQuery("qos.deleteByWpsProcess", parameters);
+        
+        
+        return result;
     }
 
     @Override
@@ -109,10 +112,10 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         Map<String, Object> parameters = new HashMap<String, Object>();
 
         parameters.put("date", Validate.notNull(date, "date"));
+        
+        doNamedQuery("abstractQos.deleteOlderAs", parameters);
 
-        doNamedQuery("qos.deleteOlderAs", parameters);
-
-        return doNamedQuery("abstractQos.deleteOlderAs", parameters);
+        return doNamedQuery("qos.deleteOlderAs", parameters);
     }
 
     @Override

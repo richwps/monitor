@@ -16,13 +16,14 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import com.toedter.calendar.JDateChooser;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -90,6 +91,7 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
         }
 
         measuredDataAddPanel.revalidate();
+        repaint();
     }
 
     /**
@@ -237,7 +239,7 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
         if (deleteOlderAsDate.getDate() == null) {
             MessageDialogs.showError(this, "Error", "Please select a valid Date!");
         } else {
-            Date olderAs = deleteOlderAsDate.getDate();
+            Date olderAs = getZeroTimeDate();
 
             this.monitorMainFrame
                     .getMonitorReference()
@@ -247,7 +249,19 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
             recaptureData();
         }
     }//GEN-LAST:event_deleteByDateButtonActionPerformed
-
+    
+    private Date getZeroTimeDate() {
+        Date result = deleteOlderAsDate.getDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(result);
+        
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        return cal.getTime();
+    }
     /**
      * Action behavior for the refreh button.
      *

@@ -103,7 +103,7 @@ public class QosDaoTest {
             for (int i = 1; i <= GENERATE_COUNT; i++) {
                 MeasuredDataEntity generatedData = genDataEn(process, -i);
                 qosDao.persist(generatedData);
-                insertedIds[i] = generatedData.getId();
+                insertedIds[i-1] = generatedData.getId();
             }
         } catch (CreateException ex) {
             fail("Can't create DAO!");
@@ -123,7 +123,8 @@ public class QosDaoTest {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_MONTH, addDay);
-        en.setCreateTime(new Date());
+        
+        en.setCreateTime(cal.getTime());
         en.setProcess(process);
 
         return en;
@@ -246,16 +247,14 @@ public class QosDaoTest {
      */
     @Test
     public void testDeleteByProcess_olderAs() {
-        System.out.println("deleteByProcess");
-        String wpsIdentifier = "";
-        String processIdentifier = "";
-        Date olderDate = null;
-        QosDao instance = null;
-        Integer expResult = null;
-        Integer result = instance.deleteByProcess(wpsIdentifier, processIdentifier, olderDate);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Integer substract = GENERATE_COUNT / 2;
+        Date date = getDate(-substract);
+        
+        Integer deleteAllOlderAs = qosDao.deleteByProcess(WPS_NAME, WPS_PROCESS_NAME, date);
+        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        
+        Integer expectedCount = (GENERATE_COUNT - substract);
+        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && byProcess.size() == (GENERATE_COUNT - expectedCount));
     }
 
     /**
@@ -263,13 +262,30 @@ public class QosDaoTest {
      */
     @Test
     public void testDeleteAllOlderAs() {
-        System.out.println("deleteAllOlderAs");
-        Date date = null;
-        QosDao instance = null;
-        Integer expResult = null;
-        Integer result = instance.deleteAllOlderAs(date);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Integer substract = GENERATE_COUNT / 2;
+
+        Date date = getDate(-substract);
+        Integer deleteAllOlderAs = qosDao.deleteAllOlderAs(date);
+        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        
+        Integer expectedCount = (GENERATE_COUNT - substract);
+        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && byProcess.size() == (GENERATE_COUNT - expectedCount));
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteAllOlderAs_NullValue() {
+        qosDao.deleteAllOlderAs(null);
+    }
+    
+    private Date getDate(Integer substract){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, substract);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        return cal.getTime();
     }
 }
