@@ -86,7 +86,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                         }
                     });
         } catch (EventNotFound ex) {
-            LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event. Exception was: {}", ex);
+            LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event.", ex);
         }
 
         driverAddPanel.revalidate();
@@ -231,6 +231,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
         dataSourceAddPanel.remove(panel);
         removeDataSource(source);
         revalidate();
+        repaint();
     }
 
     private void storeSources() {
@@ -267,7 +268,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                         try {
                             addDataSource(driver.create(resource));
                         } catch (DataSourceException ex) {
-                            LOG.error("Can't restore the DataSource of MonitorConfig custom properties. Exception was: ", ex);
+                            LOG.error("Can't restore the DataSource of MonitorConfig custom properties. : ", ex);
                         }
                     }
                 }
