@@ -55,7 +55,7 @@ public final class CleanUpJobFactory implements JobFactory {
         try {
             newJobInstance = new CleanUpJob(qosDaoFactory.create(), cal.getTime());
         } catch (CreateException ex) {
-            LOG.error("Can't create the qosDao-dependencie. This is necessary for the CleanUpJob. Execution aborted. Exception was: {}", ex);
+            LOG.error("Can't create the qosDao-dependencie. This is necessary for the CleanUpJob. Execution aborted.", ex);
 
         }
 

@@ -95,7 +95,7 @@ public class MeasureJobListener implements JobListener {
                 handleJobWasExecuted.start();
             }
         } catch (CreateException ex) {
-            LOG.error("Can't create wpsProcessDao to handel the JobWasExecuted Event. Exception was: {}", ex);
+            LOG.error("Can't create wpsProcessDao to handel the JobWasExecuted Event.", ex);
         }
     }
 

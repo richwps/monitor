@@ -98,10 +98,10 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
         parameters.put("date", olderDate);
+        
+        doNamedQuery("abstractQos.deleteByWpsProcessOlderAs", parameters);
 
-        doNamedQuery("qos.deleteByWpsProcessOlderAs", parameters);
-
-        return doNamedQuery("abstractQos.deleteByWpsProcessOlderAs", parameters);
+        return doNamedQuery("qos.deleteByWpsProcessOlderAs", parameters);
     }
 
     @Override

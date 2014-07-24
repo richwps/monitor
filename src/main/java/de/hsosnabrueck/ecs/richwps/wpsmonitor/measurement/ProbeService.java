@@ -77,7 +77,7 @@ public class ProbeService {
             try {
                 factoredObjects.add(probeFactory.create());
             } catch (CreateException ex) {
-                LOG.warn("Can't create QosProb-Instancee. Exception was: {}", ex);
+                LOG.warn("Can't create QosProb-Instancee.", ex);
             }
         }
 

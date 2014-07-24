@@ -325,7 +325,7 @@ public class MonitorBuilder {
             try {
                 withDefaultPersistenceUnit();
             } catch (BuilderException ex) {
-                LOG.error("Can't init JPA Exception was {}", ex);
+                LOG.error("Can't init JPA ", ex);
             }
         }
 
@@ -590,7 +590,7 @@ public class MonitorBuilder {
             setupEventHandler();
             setupMonitorConfig();
 
-            if (wpsClientConfig != null) {
+            if (wpsClientConfig == null) {
                 withWpsClientConfig(new WpsClientConfig());
             }
 
@@ -629,7 +629,7 @@ public class MonitorBuilder {
                         }
                 );
             } catch (EventNotFound ex) {
-                LOG.error("Can't register the JPA listener. Exception was {}", ex);
+                LOG.error("Can't register the JPA listener. ", ex);
             }
         }
     }

@@ -38,7 +38,7 @@ public class JaxbPresentateStrategy implements PresentateStrategy {
         try {
             xmlContext = JAXBContext.newInstance(classes);
         } catch (JAXBException ex) {
-            LOG.error("Can't create JAXBContext in Strategy. Exception was: {}", ex);
+            LOG.error("Can't create JAXBContext in Strategy.", ex);
         }
     }
 
@@ -53,9 +53,9 @@ public class JaxbPresentateStrategy implements PresentateStrategy {
 
             return writer.toString();
         } catch (PropertyException ex) {
-            LOG.error("Can't set property of Marshaller. Exception was: {}", ex);
+            LOG.error("Can't set property of Marshaller.", ex);
         } catch (JAXBException ex) {
-            LOG.error("Can't create Marshaller or marshalling the Object instace to presentate. Exception was: {}", ex);
+            LOG.error("Can't create Marshaller or marshalling the Object instace to presentate.", ex);
         }
 
         return null;

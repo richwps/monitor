@@ -107,7 +107,7 @@ public class MeasureJob implements Job {
                 LOG.error("RequestTime was not set in WpsRequest!");
             }
         } catch (Exception ex) {
-            LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler. Exception was: {}", ex);
+            LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler.", ex);
         }
     }
 

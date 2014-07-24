@@ -89,7 +89,7 @@ public class JobExecutedHandlerThread extends Thread {
                         eventHandler
                                 .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));
                     } catch (SchedulerException ex) {
-                        LOG.error("Scheduler Exception occourd while pausing a job. Exception was: {}", ex);
+                        LOG.error("Scheduler Exception occourd while pausing a job.", ex);
                     }
                 }
             }

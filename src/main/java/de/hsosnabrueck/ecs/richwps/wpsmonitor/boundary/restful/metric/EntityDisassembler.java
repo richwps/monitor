@@ -161,7 +161,7 @@ public class EntityDisassembler {
                     entityConverters.get(entityName).add(factory.create());
                 }
             } catch (CreateException ex) {
-                LOG.warn("Can't create QoSMetric Instance for EntityDisassembler. Exception was: {}", ex);
+                LOG.warn("Can't create QoSMetric Instance for EntityDisassembler.", ex);
             }
         }
 

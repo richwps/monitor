@@ -141,7 +141,7 @@ public abstract class AbstractDataAccess<T> {
                         .commit();
             }
         } catch (Exception ex) {
-            LOG.debug("Exception occourd at commiting Changes to the database. Exception was: {}", ex);
+            LOG.debug("Exception occourd at commiting Changes to the database.", ex);
 
             return false;
         }
@@ -303,7 +303,8 @@ public abstract class AbstractDataAccess<T> {
     }
 
     /**
-     *
+     * Calls the close-Method on the used EntityManager-Instance, if the
+     * EntityManager instance is open
      */
     public void close() {
         if (getEntityManager().isOpen()) {

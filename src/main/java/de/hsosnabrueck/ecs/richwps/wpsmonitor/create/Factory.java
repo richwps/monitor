@@ -27,7 +27,7 @@ public interface Factory<T> {
      * Create an instance of type &lt;T>
      *
      * @return The new instance of &lt;T>
-     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.factory.CreateException
+     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException
      */
     public T create() throws CreateException;
 }

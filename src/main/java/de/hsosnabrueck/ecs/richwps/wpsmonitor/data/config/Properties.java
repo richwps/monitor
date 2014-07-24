@@ -66,7 +66,7 @@ public class Properties extends java.util.Properties {
                 LOG.error("Can't convert Default-Property with Key \"{}\" to Integer.", propertyKey);
             }
         } catch (NullPointerException ex) {
-            LOG.error("Propertie was null. Exception was: {}", ex);
+            LOG.error("Propertie was null.", ex);
         }
 
         return intValue;
@@ -89,7 +89,7 @@ public class Properties extends java.util.Properties {
                 boolValue = _getBooleanProperty(defaultProperties, propertyKey);
             }
         } catch (NullPointerException ex) {
-            LOG.error("Propertie was null. Exception was: {}", ex);
+            LOG.error("Propertie was null.", ex);
         }
 
         return boolValue;
@@ -126,7 +126,7 @@ public class Properties extends java.util.Properties {
                 result = _getDateProperty(defaultProperties, propertyKey, dateFormat);
             }
         } catch (NullPointerException ex) {
-            LOG.error("Propertie was null. Exception was: {}", ex);
+            LOG.error("Propertie was null.", ex);
         }
 
         return result;
@@ -149,7 +149,7 @@ public class Properties extends java.util.Properties {
             result = Calendar.getInstance();
             result.setTime(dateProperty);
         } catch (NullPointerException ex) {
-            LOG.error("Propertie was null. Exception was: {}", ex);
+            LOG.error("Propertie was null.", ex);
         }
 
         return result;
@@ -162,7 +162,7 @@ public class Properties extends java.util.Properties {
         try {
             result = new SimpleDateFormat(dateFormat).parse(property);
         } catch (ParseException ex) {
-            LOG.warn("Can't parse the Date. Exception was: {}", ex);
+            LOG.warn("Can't parse the Date.", ex);
         }
 
         return result;

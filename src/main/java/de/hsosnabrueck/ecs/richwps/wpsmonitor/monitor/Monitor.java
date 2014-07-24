@@ -115,9 +115,9 @@ public class Monitor {
             initMonitorWithBuilder(builderInstance);
             start();
         } catch (SchedulerException ex) {
-            LOG.error("Scheduler Exception at monitor restart. Exception was: {}", ex);
+            LOG.error("Scheduler Exception at monitor restart.", ex);
         } catch (MonitorConfigException ex) {
-            LOG.error("Monitor configuration exception at monitor restart. Exception was {}", ex);
+            LOG.error("Monitor configuration exception at monitor restart. ", ex);
         }
     }
 
@@ -136,7 +136,9 @@ public class Monitor {
                 this.eventHandler = tmpEventHandler;
             }
         } catch (BuilderException ex) {
-            LOG.fatal("Builder exception at initialising procedure of the monitor instance. Execution aborted. Exception was {}", ex);
+            LOG.fatal("Builder exception at initialising procedure of the monitor instance. Execution aborted. ", ex);
+            
+            throw new AssertionError();
         }
     }
 
@@ -150,7 +152,7 @@ public class Monitor {
                 } catch (Exception ex) {
                     // catch all exceptions, because this is 
                     // a critical point of the JVM shutdown process 
-                    LOG.error("Unknown Exception occourd at shutdown hook. Exception was {}", ex);
+                    LOG.error("Unknown Exception occourd at shutdown hook. ", ex);
                 }
             }
         });
@@ -189,7 +191,7 @@ public class Monitor {
                 schedulerControl.pauseJob(jobKey);
             }
         } catch (SchedulerException ex) {
-            LOG.error("Exception occourd at configuring the CleanUpJob. Exception was {}", ex);
+            LOG.error("Exception occourd at configuring the CleanUpJob. ", ex);
         }
     }
 
@@ -235,9 +237,9 @@ public class Monitor {
             jobFactoryService.register(MeasureJob.class, measureJobFactory);
             jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
         } catch (CreateException ex) {
-            LOG.fatal("Can't setup the Jobfactories. Execution aborted. Exception was {}", ex);
-        } catch (Exception ex) {
-            LOG.fatal("Can't setup the Jobfactories. Execution aborted. Exception was {}", ex);
+            LOG.fatal("Can't setup the Jobfactories. Execution aborted. ", ex);
+            
+            throw new AssertionError();
         }
     }
 
@@ -277,7 +279,7 @@ public class Monitor {
         } catch (SchedulerException ex) {
             active = false;
 
-            LOG.error("Can't check if the Scheduler is active. Exception was {}", ex);
+            LOG.error("Can't check if the Scheduler is active. ", ex);
         }
 
         return active;

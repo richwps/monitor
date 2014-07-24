@@ -169,7 +169,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
                         }
                     });
         } catch (EventNotFound ex) {
-            LOG.warn("Can't register WpsProcessPanel Listener at EventHandler. Exception was: {}", ex);
+            LOG.warn("Can't register WpsProcessPanel Listener at EventHandler.", ex);
         }
     }
 
@@ -187,7 +187,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
             response = wpsClient.execute(request);
         } catch (CreateException ex) {
-            LOG.error("Can't create WpsClient instance in doTestRequest-method. Exception was: ", ex);
+            LOG.error("Can't create WpsClient instance in doTestRequest-method. : ", ex);
         }
 
         return response;

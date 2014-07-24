@@ -110,9 +110,9 @@ public class SimpleWpsClient implements WpsClient {
                 HttpEntity responseEntity = httpResponse.getEntity();
                 responseBody = EntityUtils.toString(responseEntity);
             } catch (UnsupportedEncodingException ex) {
-                LOG.warn("Apache HTTP Client: Encoding not supported. Exception was: {}", ex);
+                LOG.warn("Apache HTTP Client: Encoding not supported.", ex);
             } catch (IOException ex) {
-                LOG.warn("Apache HTTP Client I/O Error. Exception was: {}", ex);
+                LOG.warn("Apache HTTP Client I/O Error.", ex);
             }
 
             // create response Object
@@ -175,13 +175,13 @@ public class SimpleWpsClient implements WpsClient {
                 return false;
             }
         } catch (SAXException ex) {
-            LOG.debug("SAX Exception occourd at parse WPS Response. Exception was: {}", ex);
+            LOG.debug("SAX Exception occourd at parse WPS Response.", ex);
         } catch (IOException ex) {
-            LOG.debug("I/O Exception occourd at parse WPS Response. Exception was: {}", ex);
+            LOG.debug("I/O Exception occourd at parse WPS Response.", ex);
         } catch (ParserConfigurationException ex) {
-            LOG.debug("Parse Exception occourd at parse WPS Response. Exception was: {}", ex);
+            LOG.debug("Parse Exception occourd at parse WPS Response.", ex);
         } catch (DOMException ex) {
-            LOG.debug("DOM Exception occourd at parse WPS Response. Exception was: {}", ex);
+            LOG.debug("DOM Exception occourd at parse WPS Response.", ex);
         }
 
         LOG.debug("Exception occured while parsing the WpsResponse body. Interpreting as ConnectionError.");

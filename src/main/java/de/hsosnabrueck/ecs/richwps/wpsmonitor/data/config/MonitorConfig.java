@@ -80,9 +80,9 @@ public final class MonitorConfig {
 
                 properties.load(fileInputStream);
             } catch (FileNotFoundException ex) {
-                LOG.error("Properties File not found. Exception was: {}", ex);
+                LOG.error("Properties File not found.", ex);
             } catch (IOException ex) {
-                LOG.error("I/O Exception while reading properties file. Exception was: {}", ex);
+                LOG.error("I/O Exception while reading properties file.", ex);
             }
         }
     }
@@ -138,7 +138,7 @@ public final class MonitorConfig {
 
             properties.store(new FileOutputStream(propertiesFile), null);
         } catch (IOException ex) {
-            LOG.error("I/O Exception while writing the properties file. Exception was: {}", ex);
+            LOG.error("I/O Exception while writing the properties file.", ex);
         }
     }
 

@@ -75,7 +75,7 @@ public class ListMeasurementRoute extends MonitorRoute {
             return getStrategy()
                     .presentate(toPresentate);
         } catch (IllegalArgumentException ex) {
-            LOG.warn("A value was null. Exception was: {}", ex);
+            LOG.warn("A value was null.", ex);
             response.status(404);
         }
 

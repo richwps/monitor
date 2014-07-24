@@ -151,7 +151,7 @@ public class RestInterface {
 
             addRoute(operation, route);
         } catch (CreateException ex) {
-            LOG.error("Can't register Stateless-route. Exception was: {}", ex);
+            LOG.error("Can't register Stateless-route.", ex);
         }
 
         return this;
