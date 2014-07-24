@@ -178,87 +178,65 @@ public class WpsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void addToMonitorButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addToMonitorButtonActionPerformed
-        Map<URI, List<WpsProcessDescription>> processMap = assignSelectionsToMap(wpsTree.getSelectionPaths());
+        Map<String, WpsDescription> wpsDescriptions = assignSelectionsToMap(wpsTree.getSelectionPaths());
 
-        for (Map.Entry entry : processMap.entrySet()) {
-            URI wpsUri = (URI) entry.getKey();
-            String wpsIdentifier = generateWpsName(wpsUri.toString());
-            WpsPanel wpsPanel = mainFrame.getPanel(wpsIdentifier);
+        for (Map.Entry e : wpsDescriptions.entrySet()) {
+            WpsDescription desc = (WpsDescription) e.getValue();
+            String identifier = (String) e.getKey();
+
+            WpsPanel wpsPanel = mainFrame.getPanel(identifier);
 
             if (wpsPanel == null) {
-                wpsPanel = mainFrame.addWps(wpsIdentifier, wpsUri.toString());
+                wpsPanel = mainFrame.addWps(identifier, desc.getUri().toString());
             }
 
             if (wpsPanel != null) {
-                for (WpsProcessDescription desc : (List<WpsProcessDescription>) entry.getValue()) {
+                for (WpsProcessDescription pDesc : desc.getProcesses()) {
                     WpsProcessDialog processDialog = wpsPanel.getWpsProcessDialog();
-                    processDialog.addProcess(desc.getIdentifier());
+                    processDialog.addProcess(pDesc.getIdentifier());
                 }
             }
         }
     }//GEN-LAST:event_addToMonitorButtonActionPerformed
 
-    private Map<URI, List<WpsProcessDescription>> assignSelectionsToMap(TreePath[] selections) {
-        Map<URI, List<WpsProcessDescription>> processMap = new HashMap<URI, List<WpsProcessDescription>>();
-        Set<WpsTreeNode> cache = new HashSet<WpsTreeNode>();
+    private Map<String, WpsDescription> assignSelectionsToMap(TreePath[] selections) {
+        Map<String, WpsDescription> wpsDescriptions = new HashMap<String, WpsDescription>();
 
         for (TreePath p : selections) {
             if (p.getLastPathComponent() instanceof WpsTreeNode) {
                 WpsTreeNode node = (WpsTreeNode) p.getLastPathComponent();
 
                 WpsTreeNode wps;
+
                 if (node.getType() == WpsTreeNode.NodeType.PROCESS) {
                     wps = (WpsTreeNode) node.getParent();
                 } else {
                     wps = node;
                 }
 
-                WpsDescription wpsDesc = wps.getDescription();
+                WpsDescription wpsDesc;
 
-                if (!processMap.containsKey(wpsDesc.getUri())) {
-                    processMap.put(wpsDesc.getUri(), new ArrayList<WpsProcessDescription>());
+                if (node.getType() == WpsTreeNode.NodeType.WPS) {
+                    wpsDesc = wps.getDescription();
+                } else {
+                    WpsDescription tmpDesc = wps.getDescription();
+                    wpsDesc = new WpsDescription(tmpDesc.getIdentifier(), tmpDesc.getUri());
+                }
+
+                String identifier = wpsDesc.getIdentifier();
+                if (!wpsDescriptions.containsKey(identifier)) {
+                    wpsDescriptions.put(identifier, wpsDesc);
                 }
 
                 if (node.getType() == WpsTreeNode.NodeType.PROCESS) {
                     WpsProcessDescription processDesc = node.getDescription();
-                    processMap.get(wpsDesc.getUri()).add(processDesc);
-                }
-
-                if (node.getType() == WpsTreeNode.NodeType.WPS) {
-                    cache.add(node);
+                    wpsDescriptions.get(identifier).add(processDesc);
                 }
             }
         }
 
-        // check if the selected wps not inserted by its processes
-        // add all processes of the selected wps if no process is selected
-        // of this wps
-        for (WpsTreeNode node : cache) {
-            WpsDescription desc = node.getDescription();
-
-            for (int i = 0; i < node.getChildCount(); i++) {
-                WpsTreeNode childAt = (WpsTreeNode) node.getChildAt(i);
-                WpsProcessDescription pDesc = childAt.getDescription();
-
-                processMap.get(desc.getUri()).add(pDesc);
-            }
-        }
-
-        return processMap;
+        return wpsDescriptions;
     }
-
-    private String generateWpsName(String uri) {
-        String withoutHttp = uri.substring(7);
-
-        return withoutHttp.substring(0, withoutHttp.indexOf("/"));
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton addToMonitorButton;
-    private JButton closeButton;
-    private JScrollPane treeScrollPane;
-    private JTree wpsTree;
-    // End of variables declaration//GEN-END:variables
 
     private void initTree(Set<DataSource> sources) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Data Sources");
@@ -284,4 +262,11 @@ public class WpsDialog extends javax.swing.JDialog {
         wpsTree = new JTree(root);
         treeScrollPane.setViewportView(wpsTree);
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton addToMonitorButton;
+    private JButton closeButton;
+    private JScrollPane treeScrollPane;
+    private JTree wpsTree;
+    // End of variables declaration//GEN-END:variables
 }
