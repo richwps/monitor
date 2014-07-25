@@ -16,9 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -46,6 +43,10 @@ public final class Jpa {
         this.puUnit = Validate.notNull(puUnit, "puUnit");
     }
 
+    /**
+     * Etablish the connection to the database and set ups the entitymanager
+     * factory.
+     */
     public void open() {
         if (emf == null || !emf.isOpen()) {
             emf = Persistence.createEntityManagerFactory(puUnit);
