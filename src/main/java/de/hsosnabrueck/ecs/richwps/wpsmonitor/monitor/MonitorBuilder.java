@@ -35,7 +35,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDao
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
@@ -49,7 +48,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobListener;
@@ -670,7 +668,9 @@ public class MonitorBuilder {
     }
 
     public MonitorEventHandler getEventHandler() {
-        setupEventHandler();
+        if (this.eventHandler == null) {
+            setupEventHandler();
+        }
         return eventHandler;
     }
 
