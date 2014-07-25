@@ -16,6 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,18 +26,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * This class encapsulates the EntityManagerFactory instance for the given
+ * Persistence Unit. You can order a thread EntityManager and you get only one
+ * EntityManager instance for your thread.
+ *
+ * The Jpa class stores the EntityManager instances as
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public final class Jpa {
 
+    private final String puUnit;
     private EntityManagerFactory emf;
-
     private ThreadLocal<EntityManager> entityStorage;
-    private List<EntityManager> entityManagerList;
 
     private static final Logger LOG = LogManager.getLogger();
-    private final String puUnit;
 
     public Jpa(String puUnit) {
         this.puUnit = Validate.notNull(puUnit, "puUnit");
@@ -46,7 +50,6 @@ public final class Jpa {
         if (emf == null || !emf.isOpen()) {
             emf = Persistence.createEntityManagerFactory(puUnit);
             entityStorage = new ThreadLocal<EntityManager>();
-            entityManagerList = new ArrayList<EntityManager>();
         }
     }
 
@@ -54,19 +57,11 @@ public final class Jpa {
      * Closes the entitymanager factory and all used entitymanagers
      */
     public void close() {
-        for (EntityManager e : entityManagerList) {
-            if (e.isOpen()) {
-                LOG.debug("Close EntityManager...");
-                e.close();
-            }
-        }
-
         if (emf.isOpen()) {
             LOG.debug("Close EntityManager Factory...");
             emf.close();
 
             entityStorage = null;
-            entityManagerList = null;
         }
     }
 
@@ -81,7 +76,6 @@ public final class Jpa {
         if (em == null || !em.isOpen()) {
             em = createEntityManager();
             entityStorage.set(em);
-            entityManagerList.add(em);
         }
 
         return em;
@@ -93,21 +87,10 @@ public final class Jpa {
      * @return EntityManager instance
      */
     public EntityManager createEntityManager() {
-        if(!emf.isOpen()) {
+        if (!emf.isOpen()) {
             throw new AssertionError("EntityManagerFactory is not opened!");
         }
-        
+
         return emf.createEntityManager();
     }
-
-    private final Object finalizerGuardian = new Object() {
-        @Override
-        protected void finalize() throws Throwable {
-            try {
-                close();
-            } finally {
-                super.finalize();
-            }
-        }
-    };
 }
