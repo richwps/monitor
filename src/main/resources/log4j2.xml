@@ -2,12 +2,24 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36}%n%msg%n%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %highlight{%-5level} %logger{3} %msg%n%n"/>
         </Console>
+        <File name="ErrorFile" fileName="logs/error.log" bufferedIO="true" immediateFlush="true">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
+        </File>
+        <File name="FatalFile" fileName="logs/fatal.log" bufferedIO="true" immediateFlush="true">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
+        </File>
+        <File name="WarnFile" fileName="logs/warn.log" bufferedIO="true" immediateFlush="true">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
+        </File>
     </Appenders>
     <Loggers>
         <Root level="all">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="ErrorFile" level="error" />
+            <AppenderRef ref="FatalFile" level="fatal" />
+            <AppenderRef ref="WarnFile" level="warn" />
         </Root>
     </Loggers>
 </Configuration>
