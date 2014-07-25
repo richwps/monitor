@@ -39,8 +39,8 @@ public final class Jpa {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public Jpa(String puUnit) {
-        this.puUnit = Validate.notNull(puUnit, "puUnit");
+    public Jpa(String persistenceUnit) {
+        this.puUnit = Validate.notNull(persistenceUnit, "puUnit");
     }
 
     /**
