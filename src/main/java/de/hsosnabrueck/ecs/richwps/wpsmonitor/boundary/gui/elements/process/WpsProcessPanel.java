@@ -15,8 +15,6 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessJobDialog;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.ShowMeasuredDataDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
@@ -187,7 +185,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
 
             response = wpsClient.execute(request);
         } catch (CreateException ex) {
-            LOG.error("Can't create WpsClient instance in doTestRequest-method. : ", ex);
+            LOG.error("Can't create WpsClient instance in doTestRequest-method.", ex);
         }
 
         return response;
@@ -229,16 +227,12 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }
 
     public void processRequestException(WpsProcessEntity process) {
-        LOG.debug("Exception event triggered by {}", process);
-
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
         }
     }
 
     public void monitoringPauseEvent(WpsProcessEntity process) {
-        LOG.debug("Pause event triggered by {}", process);
-
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             rescheduleButton.setEnabled(true);
         }
