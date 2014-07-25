@@ -108,6 +108,8 @@ public class MeasureJob implements Job {
             }
         } catch (Exception ex) {
             LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler.", ex);
+        } finally {
+            dao.close();
         }
     }
 
@@ -118,8 +120,6 @@ public class MeasureJob implements Job {
         toPersist.setData(measuredData);
 
         dao.persist(toPersist);
-
-        LOG.debug("MeasureJob: store {}", toPersist.getClass().getName());
     }
 
     /**
