@@ -113,6 +113,7 @@ public class SimpleWpsClient implements WpsClient {
                 LOG.warn("Apache HTTP Client: Encoding not supported.", ex);
             } catch (IOException ex) {
                 LOG.warn("Apache HTTP Client I/O Error.", ex);
+                responseBody = null; // set null to indicate ConnectionException!
             }
 
             // create response Object
