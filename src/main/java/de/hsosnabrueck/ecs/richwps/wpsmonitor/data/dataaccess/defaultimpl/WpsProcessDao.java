@@ -78,11 +78,11 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public void deleteProcessesOfWps(String wpsIdentifier) {
+    public Integer deleteProcessesOfWps(String wpsIdentifier) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
 
-        doNamedQuery("wpsprocess.deleteByWps", parameters);
+        return doNamedQuery("wpsprocess.deleteByWps", parameters);
     }
 
     @Override

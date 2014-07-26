@@ -37,27 +37,28 @@ import static org.junit.Assert.*;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDaoTest {
+    
+    private WpsDataAccess wpsDao;
+    private String insertedIds[];
 
+    private static Jpa jpa;
+    private static WpsDaoFactory wpsFactory;
+    private static final Integer GENERATE_COUNT = 20;
+    
     public WpsDaoTest() {
     }
 
-    private WpsDataAccess wpsDao;
-
-    private String insertedIds[];
-
-    private static WpsDaoFactory wpsFactory;
-
-    private static final Integer GENERATE_COUNT = 20;
-
     @BeforeClass
     public static void setUpClass() {
-        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa.open();
 
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
     }
 
     @AfterClass
     public static void tearDownClass() {
+        jpa.close();
     }
 
     @Before
@@ -97,7 +98,7 @@ public class WpsDaoTest {
 
         Assert.assertTrue(wps != null && wps.getId().equals(wps.getId()));
     }
-
+    
     /**
      * Test of get method, of class WpsDao.
      */
@@ -133,14 +134,10 @@ public class WpsDaoTest {
      */
     @Test
     public void testFind_String() {
-        System.out.println("find");
-        String wpsIdentifier = "";
-        WpsDao instance = null;
-        WpsEntity expResult = null;
-        WpsEntity result = instance.find(wpsIdentifier);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WpsEntity findById = wpsDao.find(insertedIds[0]);
+        WpsEntity findByIdentifier = wpsDao.find(findById.getIdentifier());
+
+        Assert.assertTrue(findByIdentifier != null && findById.equals(findByIdentifier));
     }
 
     /**
@@ -148,11 +145,10 @@ public class WpsDaoTest {
      */
     @Test
     public void testRemove_String() {
-        System.out.println("remove");
-        String wpsIdentifier = "";
-        WpsDao instance = null;
-        instance.remove(wpsIdentifier);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WpsEntity findById = wpsDao.find(insertedIds[0]);
+        wpsDao.remove(findById.getIdentifier());
+
+        WpsEntity compare = wpsDao.find(insertedIds[0]);
+        Assert.assertTrue(compare == null);
     }
 }

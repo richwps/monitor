@@ -42,6 +42,8 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
      */
     @Override
     public WpsEntity find(String wpsIdentifier) {
+        Validate.notNull(wpsIdentifier, "wpsIdentifier");
+        
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("identifier", wpsIdentifier);
 

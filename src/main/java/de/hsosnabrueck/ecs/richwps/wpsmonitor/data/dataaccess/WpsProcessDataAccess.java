@@ -47,8 +47,9 @@ public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
      * Deletes all processes from the wps that match the given wpsIdentifier.
      *
      * @param wpsIdentifier Identifier of wps-entity.
+     * @return Affected rows
      */
-    public void deleteProcessesOfWps(final String wpsIdentifier);
+    public Integer deleteProcessesOfWps(final String wpsIdentifier);
 
     /**
      * Removes a stored {@link WpsProcessEntity}

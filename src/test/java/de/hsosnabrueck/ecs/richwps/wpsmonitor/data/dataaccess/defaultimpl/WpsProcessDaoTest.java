@@ -46,6 +46,7 @@ public class WpsProcessDaoTest {
 
     private Long[] insertedIds;
 
+    private static Jpa jpa;
     private static WpsDaoFactory wpsFactory;
     private static WpsProcessDaoFactory wpsProcessFactory;
 
@@ -56,7 +57,8 @@ public class WpsProcessDaoTest {
 
     @BeforeClass
     public static void setUpClass() {
-        Jpa jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa = new Jpa("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu");
+        jpa.open();
 
         wpsFactory = new WpsDaoFactory(new WpsDaoDefaultFactory(jpa));
         wpsProcessFactory = new WpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(jpa));
@@ -64,6 +66,7 @@ public class WpsProcessDaoTest {
 
     @AfterClass
     public static void tearDownClass() {
+        jpa.close();
     }
 
     @Before
@@ -185,15 +188,25 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testFind_String_String() {
-        System.out.println("find");
-        String wpsIdentifier = "";
-        String processIdentifier = "";
-        WpsProcessDao instance = null;
-        WpsProcessEntity expResult = null;
-        WpsProcessEntity result = instance.find(wpsIdentifier, processIdentifier);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
+        WpsProcessEntity findByStrings = wpsProcessDao.find(findById.getWps().getIdentifier(), findById.getIdentifier());
+        
+        Assert.assertTrue(findById.equals(findByStrings));
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFind_String_String_firstParamNull() {
+        wpsProcessDao.find(null, processIdentifier);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFind_String_String_secondParamNull() {
+        wpsProcessDao.find(wpsIdentifier, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFind_String_String_allParamNull() {
+        wpsProcessDao.find(null, null);
     }
 
     /**
@@ -201,25 +214,26 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testDeleteProcessesOfWps() {
-        System.out.println("deleteProcessesOfWps");
-        String wpsIdentifier = "";
-        WpsProcessDao instance = null;
-        instance.deleteProcessesOfWps(wpsIdentifier);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
+        wpsProcessDao.deleteProcessesOfWps(findById.getWps().getIdentifier());
+        List<WpsProcessEntity> all = wpsProcessDao.getAll(findById.getWps().getIdentifier());
+        
+        Assert.assertTrue(all.isEmpty());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteProcessesOfWps_allParamNull() {
+        wpsProcessDao.deleteProcessesOfWps(null);
+    }
+    
     /**
      * Test of remove method, of class WpsProcessDao.
      */
     @Test
     public void testRemove_String_String() {
-        System.out.println("remove");
-        String wpsIdentifier = "";
-        String processIdentifier = "";
-        WpsProcessDao instance = null;
-        instance.remove(wpsIdentifier, processIdentifier);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        wpsProcessDao.remove(wpsIdentifier, processIdentifier);
+        WpsProcessEntity findById = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        
+        Assert.assertTrue(findById == null);
     }
 }

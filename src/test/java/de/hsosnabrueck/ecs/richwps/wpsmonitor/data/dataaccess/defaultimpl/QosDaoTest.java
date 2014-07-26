@@ -29,6 +29,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -126,6 +127,11 @@ public class QosDaoTest {
         
         en.setCreateTime(cal.getTime());
         en.setProcess(process);
+        
+        TestQosEntity te = new TestQosEntity();
+        te.setSomeValue(100000);
+        
+        en.add(te);
 
         return en;
     }
@@ -151,10 +157,6 @@ public class QosDaoTest {
      */
     @Test
     public void testFind() {
-        if (insertedIds == null || insertedIds[0] == null) {
-            fail("Inserted ID is null!");
-        }
-
         MeasuredDataEntity find = qosDao.find(insertedIds[0]);
 
         Assert.assertTrue(find != null);
@@ -202,27 +204,49 @@ public class QosDaoTest {
 
         Assert.assertTrue(assertWpsIdentical && byProcess.size() == GENERATE_COUNT);
     }
-
-    /**
-     * Test of getByProcess method, of class QosDao.
-     */
-    @Test
-    public void testGetByProcess_NullValue() {
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteByProcess_NullValue_firstParam() {
         Range r = new Range(null, GENERATE_COUNT);
+        qosDao.getByProcess(null, WPS_PROCESS_NAME, r);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteByProcess_NullValue_secondParam() {
+        Range r = new Range(null, GENERATE_COUNT);
+        qosDao.getByProcess(WPS_NAME, null, r);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteByProcess_NullValue_allParams() {
+        Range r = new Range(null, GENERATE_COUNT);
+        qosDao.getByProcess(null, null, r);
+    }
+    
+    private List<Long> getListOfAbstractQosEntitiesId(List<MeasuredDataEntity> dataList) {
+        List<Long> result = new ArrayList<Long>();
         
-        try {
-            qosDao.getByProcess(null, WPS_PROCESS_NAME, r);
-            fail("Exception was not thrown by wpsidentifier as null value");
-        } catch(IllegalArgumentException ex) {
-            
+        for(MeasuredDataEntity m : dataList) {
+            for(AbstractQosEntity q : m.getData()) {
+                result.add(q.getId());
+            }
         }
         
-        try {
-            qosDao.getByProcess(WPS_NAME, null, r);
-            fail("Exception was not thrown by processidentifier as null value");
-        } catch(IllegalArgumentException ex) {
-            
+        return result;
+    }
+    
+    private Boolean allQosDeleted(List<MeasuredDataEntity> data) {
+        Boolean result = true;
+        
+        List<Long> listOfAbstractQosEntitiesId = getListOfAbstractQosEntitiesId(data);
+        
+        for(Long id : listOfAbstractQosEntitiesId) {
+            if(qosDao.findAbstractQosEntityByid(id) != null) {
+                result = false;
+            }
         }
+        
+        return result;
     }
 
     /**
@@ -236,10 +260,12 @@ public class QosDaoTest {
             fail("No MeasuredDataEntity");
         }
         
+     
         Integer deleteByProcess = qosDao.deleteByProcess(WPS_NAME, WPS_PROCESS_NAME);
-        byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        List<MeasuredDataEntity> evaluateByProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
         
-        Assert.assertTrue(deleteByProcess.equals(GENERATE_COUNT) && byProcess.isEmpty());
+        Boolean allQosDeleted = allQosDeleted(byProcess);
+        Assert.assertTrue(allQosDeleted && deleteByProcess.equals(GENERATE_COUNT) && evaluateByProcess.isEmpty());
     }
 
     /**
@@ -251,10 +277,11 @@ public class QosDaoTest {
         Date date = getDate(-substract);
         
         Integer deleteAllOlderAs = qosDao.deleteByProcess(WPS_NAME, WPS_PROCESS_NAME, date);
-        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        List<MeasuredDataEntity> evaluateByProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
         
         Integer expectedCount = (GENERATE_COUNT - substract);
-        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && byProcess.size() == (GENERATE_COUNT - expectedCount));
+
+        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && evaluateByProcess.size() == (GENERATE_COUNT - expectedCount));
     }
 
     /**
@@ -266,10 +293,10 @@ public class QosDaoTest {
 
         Date date = getDate(-substract);
         Integer deleteAllOlderAs = qosDao.deleteAllOlderAs(date);
-        List<MeasuredDataEntity> byProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
+        List<MeasuredDataEntity> evaluateByProcess = qosDao.getByProcess(WPS_NAME, WPS_PROCESS_NAME);
         
         Integer expectedCount = (GENERATE_COUNT - substract);
-        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && byProcess.size() == (GENERATE_COUNT - expectedCount));
+        Assert.assertTrue(deleteAllOlderAs.equals(expectedCount) && evaluateByProcess.size() == (GENERATE_COUNT - expectedCount));
     }
     
     @Test(expected = IllegalArgumentException.class)

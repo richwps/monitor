@@ -6,7 +6,7 @@
         <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity</class>
         <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity</class>
         <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
-        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity</class>
+        <class>de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.TestQosEntity</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:derby:Database/MonitoredDataTest;create=true"/>
             <property name="javax.persistence.jdbc.password" value=""/>
