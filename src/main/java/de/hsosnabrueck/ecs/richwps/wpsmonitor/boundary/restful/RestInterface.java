@@ -104,12 +104,12 @@ public class RestInterface {
      * Adds a MonitorRoute instance to the given HttpOperation index.
      *
      * @param operation {@link HttpOperation} instance
-     * @param RouteObj {@link MonitorRoute} instance
+     * @param routeObj {@link MonitorRoute} instance
      * @return RestInterface instance
      */
-    public RestInterface addRoute(HttpOperation operation, MonitorRoute RouteObj) {
+    public RestInterface addRoute(HttpOperation operation, MonitorRoute routeObj) {
         routeMap.get(Validate.notNull(operation, "operation"))
-                .add(Validate.notNull(RouteObj, "RouteObj"));
+                .add(Validate.notNull(routeObj, "RouteObj"));
 
         return this;
     }
@@ -141,7 +141,9 @@ public class RestInterface {
                         // init route at every request
                         result = initRoute(newRoute)
                                 .handle(request, response);
-                    } catch (CreateException ex) { // should never happened
+
+                        // should never happened, because this exception is catched before
+                    } catch (CreateException ex) {
                         response.status(500);
                     }
 

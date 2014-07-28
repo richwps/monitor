@@ -69,8 +69,6 @@ public abstract class DataDriver {
             adapter.init(this, resource);
 
             return adapter;
-        } catch (Error ex) {
-            throw new DataSourceException(ex);
         } catch (Exception ex) {
             throw new DataSourceException(ex);
         }

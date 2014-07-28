@@ -26,14 +26,14 @@ import javax.swing.JTextArea;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MeasuredDataPane extends javax.swing.JPanel {
+public class MeasuredDataPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form MeasuredDataPane
      *
      * @param measurementText Text which should be displayed
      */
-    public MeasuredDataPane(final String measurementText) {
+    public MeasuredDataPanel(final String measurementText) {
         initComponents();
 
         measuredText.setText(measurementText);

@@ -21,8 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.Hide;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
 /**
  *

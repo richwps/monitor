@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Dialog to show the measured data. The measured data will be shown in a
- * {@link MeasuredDataPane} JPanel in the scoll area of this dialog.
+ * {@link MeasuredDataPanel} JPanel in the scoll area of this dialog.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -85,7 +85,7 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
 
         // add new
         for (MeasuredDataEntity e : measuredData) {
-            MeasuredDataPane measuredDataPane = new MeasuredDataPane(e.getCreateTime() + ": " + e.toString());
+            MeasuredDataPanel measuredDataPane = new MeasuredDataPanel(e.getCreateTime() + ": " + e.toString());
 
             measuredDataAddPanel.add(measuredDataPane);
         }
@@ -249,19 +249,20 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
             recaptureData();
         }
     }//GEN-LAST:event_deleteByDateButtonActionPerformed
-    
+
     private Date getZeroTimeDate() {
         Date result = deleteOlderAsDate.getDate();
         Calendar cal = Calendar.getInstance();
         cal.setTime(result);
-        
+
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        
+
         return cal.getTime();
     }
+
     /**
      * Action behavior for the refreh button.
      *

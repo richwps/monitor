@@ -17,15 +17,12 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.Hide;
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 
 /**
  * General entity for qos-measurements. All qos entity must extends this entity.
@@ -93,7 +90,6 @@ public abstract class AbstractQosEntity implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof AbstractQosEntity)) {
             return false;
         }

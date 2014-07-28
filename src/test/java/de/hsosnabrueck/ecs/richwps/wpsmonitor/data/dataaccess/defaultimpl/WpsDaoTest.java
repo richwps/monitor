@@ -37,14 +37,14 @@ import static org.junit.Assert.*;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDaoTest {
-    
+
     private WpsDataAccess wpsDao;
     private String insertedIds[];
 
     private static Jpa jpa;
     private static WpsDaoFactory wpsFactory;
     private static final Integer GENERATE_COUNT = 20;
-    
+
     public WpsDaoTest() {
     }
 
@@ -98,7 +98,7 @@ public class WpsDaoTest {
 
         Assert.assertTrue(wps != null && wps.getId().equals(wps.getId()));
     }
-    
+
     /**
      * Test of get method, of class WpsDao.
      */

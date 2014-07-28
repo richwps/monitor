@@ -28,7 +28,7 @@ import java.util.Map;
 public class IntervalComboBoxItem {
 
     private final TriggerConfig.IntervalUnit dateKey;
-    private static final Map<TriggerConfig.IntervalUnit, String> enumStringMap;
+    private static final Map<TriggerConfig.IntervalUnit, String> INTERVAL_TYPE;
 
     /**
      * Creates an interval type item that matches the given dataKey.
@@ -40,7 +40,7 @@ public class IntervalComboBoxItem {
     }
 
     static {
-        enumStringMap = new EnumMap<TriggerConfig.IntervalUnit, String>(TriggerConfig.IntervalUnit.class);
+        INTERVAL_TYPE = new EnumMap<TriggerConfig.IntervalUnit, String>(TriggerConfig.IntervalUnit.class);
 
         String[] fill = new String[]{
             "Millisecond",
@@ -56,12 +56,12 @@ public class IntervalComboBoxItem {
         TriggerConfig.IntervalUnit[] dateValues = TriggerConfig.IntervalUnit.values();
 
         for (int i = 0; i < fill.length && i < dateValues.length; i++) {
-            enumStringMap.put(dateValues[i], fill[i]);
+            INTERVAL_TYPE.put(dateValues[i], fill[i]);
         }
     }
 
     public String getLabel() {
-        return enumStringMap.get(dateKey);
+        return INTERVAL_TYPE.get(dateKey);
     }
 
     public TriggerConfig.IntervalUnit getFormatKey() {

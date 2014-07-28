@@ -32,31 +32,31 @@ public interface DataSource {
 
     /**
      * Gets a list of {@link WpsDescription}-Instances from the used resource.
-     * 
+     *
      * @return List of {@link WpsDescription}-Instances.
      */
     public List<WpsDescription> getWpsList();
 
     /**
-     * Initializes the DataSource-Instance with the used DataDriver-Instance and 
+     * Initializes the DataSource-Instance with the used DataDriver-Instance and
      * the expected resource-type.
-     * 
+     *
      * @param driver DataDriver instance.
      * @param resource Expected resource type.
-     * @throws DataSourceException 
+     * @throws DataSourceException
      */
     public void init(DataDriver driver, String resource) throws DataSourceException;
 
     /**
      * Gets the name of the used DataDriver instance.
-     * 
+     *
      * @return String
      */
     public String getUsedDriver();
 
     /**
      * Gets the resource String.
-     * 
+     *
      * @return String
      */
     public String getRessource();

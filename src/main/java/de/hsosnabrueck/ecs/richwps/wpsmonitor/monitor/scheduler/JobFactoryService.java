@@ -17,8 +17,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -45,8 +43,6 @@ import org.quartz.spi.TriggerFiredBundle;
 public class JobFactoryService implements JobFactory {
 
     private final Map<Class<? extends Job>, JobFactory> classFactoryMap;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public JobFactoryService() {
         this.classFactoryMap = new HashMap<Class<? extends Job>, JobFactory>();

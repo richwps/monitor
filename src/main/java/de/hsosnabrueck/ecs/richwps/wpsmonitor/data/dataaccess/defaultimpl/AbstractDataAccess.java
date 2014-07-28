@@ -16,9 +16,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -40,7 +40,8 @@ public abstract class AbstractDataAccess<T> {
      */
     protected Boolean autoCommit;
     private final Jpa jpa;
-    protected static final Logger LOG = LogManager.getLogger();
+
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Default constructor
@@ -180,11 +181,9 @@ public abstract class AbstractDataAccess<T> {
      * @param value true or fals for enable or disable autoCommit behavior
      */
     public void setAutoCommit(Boolean value) {
-        if (value == null) {
-            value = false;
+        if (value != null) {
+            autoCommit = value;
         }
-
-        autoCommit = value;
     }
 
     /**
@@ -258,7 +257,7 @@ public abstract class AbstractDataAccess<T> {
         try {
             result = query.getResultList();
         } catch (NoResultException ex) {
-
+            result = new ArrayList<T>();
         }
 
         return result;

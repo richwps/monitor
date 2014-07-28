@@ -63,8 +63,10 @@ public class Application {
         try {
             new Application().run();
         } catch (Throwable ex) {
-            LOG.fatal("Can't run() WpsMonitor.", ex);
-            Runtime.getRuntime().exit(1); // exit the application
+            LOG.fatal("Execution Error. Execution of WPS-Monitor aborted.", ex);
+
+            // exit the application
+            Runtime.getRuntime().exit(1);
         }
     }
 

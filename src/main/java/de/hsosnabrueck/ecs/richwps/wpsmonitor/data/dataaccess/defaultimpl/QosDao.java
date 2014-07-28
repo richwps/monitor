@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityExistsException;
 
 /**
  * Default implementation of a QosDataAccess-interface.
@@ -61,7 +60,8 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public List<MeasuredDataEntity> get(final Range range) {
-        return null; // not needed here yet
+        // not needed here yet
+        return null;
     }
 
     @Override
@@ -81,12 +81,9 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
 
-        
         doNamedQuery("abstractQos.deleteByWpsProcess", parameters);
-        Integer result = doNamedQuery("qos.deleteByWpsProcess", parameters);
-        
-        
-        return result;
+
+        return doNamedQuery("qos.deleteByWpsProcess", parameters);
     }
 
     @Override
@@ -101,7 +98,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
         parameters.put("date", olderDate);
-        
+
         doNamedQuery("abstractQos.deleteByWpsProcessOlderAs", parameters);
 
         return doNamedQuery("qos.deleteByWpsProcessOlderAs", parameters);
@@ -112,7 +109,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
         Map<String, Object> parameters = new HashMap<String, Object>();
 
         parameters.put("date", Validate.notNull(date, "date"));
-        
+
         doNamedQuery("abstractQos.deleteOlderAs", parameters);
 
         return doNamedQuery("qos.deleteOlderAs", parameters);

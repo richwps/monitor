@@ -81,11 +81,11 @@ public class JobExecutedHandlerThread extends Thread {
                                 .getScheduler()
                                 .pauseJob(jobKey);
 
-                        // todo: maybe cleanup 
                         eventHandler
                                 .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
 
                         LOG.debug("MeasureJobListener: Fire monitor.wpsjob.wpsexception Event!");
+
                         eventHandler
                                 .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", process));
                     } catch (SchedulerException ex) {

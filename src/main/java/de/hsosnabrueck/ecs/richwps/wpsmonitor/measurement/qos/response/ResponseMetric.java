@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,17 +80,18 @@ public class ResponseMetric extends QosMetric {
 
         if (values != null && values.length > 0) {
             Integer index = values.length / 2;
-            double _median;
+            double unboxedMedian;
 
             Arrays.sort(values);
 
             if (index % 2 == 0) {
-                _median = (double) (values[index] + values[index - 1]) / 2;
+                unboxedMedian = (double) (values[index] + values[index - 1]) / 2;
             } else {
-                _median = (double) values[index];
+                unboxedMedian = (double) values[index];
             }
 
-            median = _median; // better as (Double)(double) ..
+            // better as (Double)(double) ..
+            median = unboxedMedian;
         }
 
         return median;

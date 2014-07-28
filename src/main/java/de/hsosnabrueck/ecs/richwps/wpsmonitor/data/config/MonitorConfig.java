@@ -46,24 +46,24 @@ public final class MonitorConfig {
     private final File propertiesFile;
 
     private static final Logger LOG = LogManager.getLogger();
-    ;
-    private static final Properties defaultProperties;
+    
+    private static final Properties DEFAULT_PROPERTIES;
 
     static {
-        defaultProperties = new Properties();
+        DEFAULT_PROPERTIES = new Properties();
 
         initDefaultProperties();
     }
 
     private static void initDefaultProperties() {
-        defaultProperties.setProperty("qos.delete.afterdays", "360");
-        defaultProperties.setProperty("qos.delete.attime", "9:00");
-        defaultProperties.setProperty("qos.delete", "true");
-        defaultProperties.setProperty("wpsclient.timeout", "1");
+        DEFAULT_PROPERTIES.setProperty("qos.delete.afterdays", "360");
+        DEFAULT_PROPERTIES.setProperty("qos.delete.attime", "9:00");
+        DEFAULT_PROPERTIES.setProperty("qos.delete", "true");
+        DEFAULT_PROPERTIES.setProperty("wpsclient.timeout", "1");
     }
 
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
-        this.properties = new Properties(defaultProperties);
+        this.properties = new Properties(DEFAULT_PROPERTIES);
         this.propertiesFile = propertiesFile == null && propertiesFile.exists() ? new File("monitor.properties") : propertiesFile;
         /* Using magic string because, if you use a valid propertie file, 
          then you can decide which name the propertie file has */

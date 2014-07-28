@@ -53,9 +53,9 @@ public class WpsProcessDescription {
     public WpsProcessDescription(final String identifier) {
         this(identifier, "", "", "");
     }
-    
+
     /**
-     * 
+     *
      * @param identifier Identifier for the Process which is displayed in the
      * Monitor
      * @param strAbstract A short abstract about the Wps Process
@@ -65,7 +65,7 @@ public class WpsProcessDescription {
     }
 
     /**
-     * 
+     *
      * @param identifier Identifier for the Process which is displayed in the
      * Monitor
      * @param title Title of the Wps-Process
@@ -81,8 +81,8 @@ public class WpsProcessDescription {
 
     /**
      * Gets the Identifier.
-     * 
-     * @return String 
+     *
+     * @return String
      */
     public String getIdentifier() {
         return identifier;
@@ -90,7 +90,7 @@ public class WpsProcessDescription {
 
     /**
      * Gets the title.
-     * 
+     *
      * @return String
      */
     public String getTitle() {
@@ -99,7 +99,7 @@ public class WpsProcessDescription {
 
     /**
      * Gets the abstract.
-     * 
+     *
      * @return String
      */
     public String getAbstract() {
@@ -108,7 +108,7 @@ public class WpsProcessDescription {
 
     /**
      * Gets the version.
-     * 
+     *
      * @return String
      */
     public String getVersion() {

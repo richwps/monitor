@@ -33,7 +33,7 @@ public abstract class QosProbe {
 
     private AbstractQosEntity measuredData;
 
-    public AbstractQosEntity getMeasuredData() {
+    public final AbstractQosEntity getMeasuredData() {
         return measuredData;
     }
 

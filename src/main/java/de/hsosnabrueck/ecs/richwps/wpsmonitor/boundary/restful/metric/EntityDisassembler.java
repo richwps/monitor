@@ -20,7 +20,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,8 +37,14 @@ import org.apache.logging.log4j.Logger;
 public class EntityDisassembler {
 
     private final MetricFactoryMap converterMap;
+
+    /**
+     * Used as index for the map data structure if no converter is defined for
+     * this type of entity
+     */
+    private final String noConverterIndex;
+
     private static final Logger LOG = LogManager.getLogger();
-    private final String NO_CONVERTER_INDEX;
 
     public EntityDisassembler(final MetricFactoryMap converterMap) {
         this(converterMap, "raw");
@@ -47,7 +52,7 @@ public class EntityDisassembler {
 
     public EntityDisassembler(final MetricFactoryMap converterMap, final String noConverterIndex) {
         this.converterMap = Validate.notNull(converterMap, "converterMap");
-        this.NO_CONVERTER_INDEX = noConverterIndex;
+        this.noConverterIndex = noConverterIndex;
     }
 
     /**
@@ -66,12 +71,18 @@ public class EntityDisassembler {
      * Disassembles the given dataList to a default metric.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return
+     * @return Map instance
      */
     public Map<String, QosMetric> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
         return disassembleLoop(dataList);
     }
 
+    /**
+     * Disassembles the given dataList to the registred metrics.
+     *
+     * @param dataList List of {@link MeasuredDataEntity} instances
+     * @return Map Instance
+     */
     public Map<String, QosMetric> disassembleToMetricssWithRawData(final List<MeasuredDataEntity> dataList) {
         Map<String, Set<QosMetric>> metrics = createNewBunchOfConverters();
 
@@ -91,7 +102,7 @@ public class EntityDisassembler {
      *
      * @param metrics QosMetric list
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return
+     * @return Map Instance
      */
     private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> metrics) {
         Map<String, QosMetric> finalMetrics = new HashMap<String, QosMetric>();
@@ -104,11 +115,11 @@ public class EntityDisassembler {
                 Measurement measurement = new Measurement(abstractQosEntity, measuredDataEntity.getCreateTime());
                 // if converters is null, use defaultConverter
                 if (metrics == null || !metrics.containsKey(converterEntityIndex)) {
-                    if (!finalMetrics.containsKey(NO_CONVERTER_INDEX)) {
-                        finalMetrics.put(NO_CONVERTER_INDEX, getDummyMetric());
+                    if (!finalMetrics.containsKey(noConverterIndex)) {
+                        finalMetrics.put(noConverterIndex, getDummyMetric());
                     }
 
-                    finalMetrics.get(NO_CONVERTER_INDEX).add(measurement);
+                    finalMetrics.get(noConverterIndex).add(measurement);
                 } else {
 
                     // assign to the specific converter
@@ -135,7 +146,7 @@ public class EntityDisassembler {
 
             @Override
             public String getName() {
-                return NO_CONVERTER_INDEX;
+                return noConverterIndex;
             }
         };
     }

@@ -64,7 +64,7 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
 
-    private static Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      *

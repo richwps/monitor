@@ -38,7 +38,6 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -56,8 +55,6 @@ import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Main frame of the monitor GUI. The monitor gets the Monitor instance as
@@ -71,8 +68,6 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
     private final Monitor monitor;
     private final DataSourceDialog dsDialog;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public WpsMonitorAdminGui(final Monitor monitor) {
         this(monitor, new HashSet<DataDriver>());
@@ -470,7 +465,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     }//GEN-LAST:event_wpsToAddUriFieldActionPerformed
 
     private void settingsMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
-        new MonitorProperties(this, true).setVisible(true);
+        new MonitorPropertiesDialog(this, true).setVisible(true);
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
     private void exitMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -484,7 +479,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-        new About(this, true).setVisible(true);
+        new AboutDialog(this, true).setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void restartButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_restartButtonActionPerformed

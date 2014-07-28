@@ -199,17 +199,10 @@ public class MonitorControlImpl implements MonitorControl {
             if (isWpsExists(wpsIdentifier) && !isProcessExists(wpsIdentifier, processIdentifier)) {
                 WpsProcessEntity process = new WpsProcessEntity(processIdentifier, getWps(wpsIdentifier));
 
-                try {
-                    isPersisted = wpsProcessDao.persist(process);
+                isPersisted = wpsProcessDao.persist(process);
 
-                    if (isPersisted) {
-                        schedulerControl.addWpsAsJob(process);
-
-                        eventHandler
-                                .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", process));
-                    }
-                } catch (SchedulerException ex) {
-                    LOG.warn("MonitorControl: {}", ex);
+                if (isPersisted) {
+                    scheduleProcess(process);
                 }
             }
         } catch (CreateException ex) {
@@ -221,6 +214,17 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         return isPersisted;
+    }
+
+    private void scheduleProcess(WpsProcessEntity process) {
+        try {
+            schedulerControl.addWpsAsJob(process);
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", process));
+        } catch (SchedulerException ex) {
+            LOG.warn("MonitorControl: {}", ex);
+        }
     }
 
     @Override
@@ -235,8 +239,9 @@ public class MonitorControlImpl implements MonitorControl {
             wpsProcessDao = wpsProcessDaoFactory.create();
 
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+            exists = (process != null);
 
-            if (exists = (process != null)) {
+            if (exists) {
                 process.setRawRequest(testRequest);
                 wpsProcessDao.update(process);
 
@@ -270,16 +275,14 @@ public class MonitorControlImpl implements MonitorControl {
         try {
             wpsDao = wpsDaoFactory.create();
 
-            if (wps != null) {
-                wps.setIdentifier(newWpsIdentifier);
-                wps.setUri(newUri);
+            wps.setIdentifier(newWpsIdentifier);
+            wps.setUri(newUri);
 
-                wpsDao.update(wps);
-                schedulerControl.updateJobsWpsGroupName(oldWpsIdentifier, newWpsIdentifier);
+            wpsDao.update(wps);
+            schedulerControl.updateJobsWpsGroupName(oldWpsIdentifier, newWpsIdentifier);
 
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.updateWps", new String[]{oldWpsIdentifier, newWpsIdentifier}));
-            }
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.updateWps", new String[]{oldWpsIdentifier, newWpsIdentifier}));
         } catch (CreateException ex) {
             throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
         } catch (SchedulerException ex) {
@@ -293,7 +296,7 @@ public class MonitorControlImpl implements MonitorControl {
         return wps;
     }
 
-    /**
+    /*
      * The delete process can be called logically here, but the cascade delete
      * behavior is already implemented in the specific data access
      * implementations. If the call deleteProcess is called here, there is an
@@ -308,17 +311,11 @@ public class MonitorControlImpl implements MonitorControl {
             wpsDao = wpsDaoFactory.create();
 
             WpsEntity wps = getWps(wpsIdentifier);
+            deleteable = (wps != null);
 
-            if (deleteable = (wps != null)) {
-                try {
-                    wpsDao.remove(wps);
-                    schedulerControl.removeWpsJobs(wpsIdentifier);
-
-                    eventHandler
-                            .fireEvent(new MonitorEvent("monitorcontrol.deleteWps", wps));
-                } catch (SchedulerException ex) {
-                    LOG.error("MonitorControl: {}", ex);
-                }
+            if (deleteable) {
+                wpsDao.remove(wps);
+                removeWpsJob(wps);
             }
         } catch (CreateException ex) {
             throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
@@ -329,6 +326,17 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         return deleteable;
+    }
+
+    private void removeWpsJob(WpsEntity wpsEntity) {
+        try {
+            schedulerControl.removeWpsJobs(wpsEntity.getIdentifier());
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.deleteWps", wpsEntity));
+        } catch (SchedulerException ex) {
+            LOG.error("MonitorControl: {}", ex);
+        }
     }
 
     @Override
@@ -342,8 +350,9 @@ public class MonitorControlImpl implements MonitorControl {
         try {
             wpsProcessDao = wpsProcessDaoFactory.create();
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+            deleteable = (process != null);
 
-            if (deleteable = (process != null)) {
+            if (deleteable) {
                 JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
 
                 wpsProcessDao.remove(process);
@@ -509,7 +518,7 @@ public class MonitorControlImpl implements MonitorControl {
         } catch (CreateException ex) {
             throw new AssertionError("Can't create qosDao. Execution aborted. ", ex);
         } finally {
-            if(qosDao != null) {
+            if (qosDao != null) {
                 qosDao.close();
             }
         }

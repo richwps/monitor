@@ -250,7 +250,6 @@ public final class SchedulerControl {
         Validate.notNull(config, "config");
 
         Trigger newTrigger;
-        
 
         String jGroup = forJob.getKey().getGroup();
         String tName = UUID.randomUUID().toString();
@@ -263,14 +262,14 @@ public final class SchedulerControl {
                 .withIdentity(tName, jGroup);
 
         ScheduleBuilder scheduleBuilder = getScheduleBuilder(config);
-        
+
         newTrigger = builder
                 .withSchedule(scheduleBuilder)
                 .build();
 
         return newTrigger;
     }
-    
+
     private ScheduleBuilder getScheduleBuilder(final TriggerConfig config) {
         /**
          * enum IntervalType MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS,
@@ -313,7 +312,7 @@ public final class SchedulerControl {
             default:
                 throw new AssertionError(config.getIntervalType().name());
         }
-        
+
         return scheduleBuilder;
     }
 
@@ -498,7 +497,6 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized Boolean isPaused(final JobKey jobKey) throws SchedulerException {
-        Set<String> pausedTriggerGroups = scheduler.getPausedTriggerGroups();
         List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
 
         for (Trigger t : triggersOfJob) {
@@ -533,10 +531,8 @@ public final class SchedulerControl {
         return jobFactoryService;
     }
 
-    private TriggerConfig.IntervalUnit fromQuartzToConfig(DateBuilder.IntervalUnit qU) {
-        TriggerConfig.IntervalUnit cU;
-
-        switch (qU) {
+    private TriggerConfig.IntervalUnit fromQuartzToConfig(DateBuilder.IntervalUnit quartzIntervalUnit) {
+        switch (quartzIntervalUnit) {
             case MILLISECOND:
                 return TriggerConfig.IntervalUnit.MILLISECOND;
             case SECOND:
@@ -554,7 +550,7 @@ public final class SchedulerControl {
             case YEAR:
                 return TriggerConfig.IntervalUnit.YEAR;
             default:
-                throw new AssertionError(qU.name());
+                throw new AssertionError(quartzIntervalUnit.name());
 
         }
     }

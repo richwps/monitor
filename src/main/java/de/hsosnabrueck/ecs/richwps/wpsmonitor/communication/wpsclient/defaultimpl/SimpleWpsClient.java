@@ -113,37 +113,48 @@ public class SimpleWpsClient implements WpsClient {
                 LOG.warn("Apache HTTP Client: Encoding not supported.", ex);
             } catch (IOException ex) {
                 LOG.warn("Apache HTTP Client I/O Error.", ex);
-                responseBody = null; // set null to indicate ConnectionException!
+
+                // set null to indicate ConnectionException!
+                responseBody = null;
             }
 
             // create response Object
-            response = new WpsResponse(responseBody, responseTime);
-
-            // set exception if necessary
-            if (responseBody == null) {
-                response.setException(new WpsConnectionException());
-            } else {
-                try {
-                    if (isWpsException(responseBody)) {
-                        WpsException ex;
-
-                        if (wpsExceptionMessage == null || "".equals(wpsExceptionMessage)) {
-                            ex = new WpsException();
-                        } else {
-                            ex = new WpsException(wpsExceptionMessage);
-
-                            LOG.debug(wpsExceptionMessage);
-                        }
-
-                        response.setException(ex);
-                    }
-                } catch (NoWpsResponse ex) {
-                    response.setException(new WpsConnectionException());
-                }
-            }
+            response = getWpsResponse(responseBody, responseTime);
+            lookupForExceptions(response);
         }
 
         return response;
+    }
+
+    private WpsResponse getWpsResponse(String responseBody, Date responseTime) {
+        return new WpsResponse(responseBody, responseTime);
+    }
+
+    private void lookupForExceptions(WpsResponse response) {
+        String responseBody = response.getResponseBody();
+        // set exception if necessary
+        if (responseBody == null) {
+            response.setException(new WpsConnectionException());
+        } else {
+            try {
+                if (isWpsException(responseBody)) {
+                    WpsException ex;
+
+                    if (wpsExceptionMessage == null || "".equals(wpsExceptionMessage)) {
+                        ex = new WpsException();
+                    } else {
+                        ex = new WpsException(wpsExceptionMessage);
+
+                        LOG.debug(wpsExceptionMessage);
+                    }
+
+                    response.setException(ex);
+                }
+            } catch (NoWpsResponse ex) {
+                response.setException(new WpsConnectionException());
+            }
+        }
+
     }
 
     private HttpPost buildRequest(final WpsRequest wpsRequest) throws UnsupportedEncodingException {

@@ -43,7 +43,7 @@ import javax.swing.text.NumberFormatter;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorProperties extends javax.swing.JDialog {
+public class MonitorPropertiesDialog extends javax.swing.JDialog {
 
     private final WpsMonitorAdminGui monitorMainFrame;
 
@@ -53,7 +53,7 @@ public class MonitorProperties extends javax.swing.JDialog {
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param modal true for modal dialog
      */
-    public MonitorProperties(WpsMonitorAdminGui monitorMainFrame, boolean modal) {
+    public MonitorPropertiesDialog(WpsMonitorAdminGui monitorMainFrame, boolean modal) {
         super(monitorMainFrame, modal);
 
         this.monitorMainFrame = monitorMainFrame;

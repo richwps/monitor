@@ -32,7 +32,7 @@ import javax.swing.WindowConstants;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class About extends JDialog {
+public class AboutDialog extends JDialog {
 
     /**
      * Creates new form About
@@ -40,7 +40,7 @@ public class About extends JDialog {
      * @param parent Parent frame
      * @param modal
      */
-    public About(Frame parent, boolean modal) {
+    public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
 
         initComponents();

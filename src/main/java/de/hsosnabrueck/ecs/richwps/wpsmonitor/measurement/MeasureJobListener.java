@@ -18,8 +18,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
@@ -44,8 +42,6 @@ public class MeasureJobListener implements JobListener {
      * MonitorEventHandler instance.
      */
     private final MonitorEventHandler eventHandler;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
@@ -95,7 +91,7 @@ public class MeasureJobListener implements JobListener {
                 handleJobWasExecuted.start();
             }
         } catch (CreateException ex) {
-            LOG.error("Can't create wpsProcessDao to handel the JobWasExecuted Event.", ex);
+            throw new AssertionError("Can't create wpsProcessDao to handel the JobWasExecuted Event.", ex);
         }
     }
 

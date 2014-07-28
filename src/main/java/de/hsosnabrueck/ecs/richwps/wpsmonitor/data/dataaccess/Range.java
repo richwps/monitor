@@ -15,8 +15,6 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-
 /**
  * Class to define a Range between "offset" and "count"; offset defines the
  * start value and count the total value of elements.
@@ -46,7 +44,6 @@ public class Range {
                 || count != null && count < 0) {
             throw new IllegalArgumentException("Count and offset need to be greater than zero.");
         }
-
 
         this.offset = offset;
         this.count = count;

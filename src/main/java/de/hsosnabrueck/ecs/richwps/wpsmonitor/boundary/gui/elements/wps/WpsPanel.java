@@ -263,7 +263,9 @@ public class WpsPanel extends javax.swing.JPanel {
 
             addPanelParent.remove(this);
             addPanelParent.revalidate();
-            addPanelParent.repaint(); // repaint required, otherwise the last element will not disappear
+
+            // repaint required, otherwise the last element will not disappear
+            addPanelParent.repaint();
         }
     }//GEN-LAST:event_deleteWpsButtonActionPerformed
 

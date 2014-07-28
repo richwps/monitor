@@ -323,7 +323,7 @@ public class MonitorBuilder {
             try {
                 withDefaultPersistenceUnit();
             } catch (BuilderException ex) {
-                LOG.error("Can't init JPA ", ex);
+                throw new AssertionError("Can't init JPA.", ex);
             }
         }
 

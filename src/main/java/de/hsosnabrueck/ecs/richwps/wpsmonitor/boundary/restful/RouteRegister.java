@@ -16,8 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Encapsulates the Spark API.
@@ -25,8 +23,6 @@ import org.apache.logging.log4j.Logger;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RouteRegister {
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Register a Route.

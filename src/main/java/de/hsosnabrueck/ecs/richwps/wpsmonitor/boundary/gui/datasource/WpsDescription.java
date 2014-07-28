@@ -31,7 +31,7 @@ public class WpsDescription {
      * Identifier of the Wps
      */
     private final String identifier;
-    
+
     /**
      * URI to the WPS-Server
      */
@@ -41,7 +41,7 @@ public class WpsDescription {
      * Set of {@link WpsProcessDescription} instances.
      */
     private final Set<WpsProcessDescription> processes;
-    
+
     public WpsDescription(final String identifier, final URI wpsUri) {
         this(identifier, wpsUri, null);
     }
@@ -58,9 +58,8 @@ public class WpsDescription {
     public WpsDescription(final String identifier, final URI wpsUri, final Set<WpsProcessDescription> processes) {
         this.identifier = Validate.notNull(identifier, "identifier");
         this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
-        
-        
-        if(processes == null) {
+
+        if (processes == null) {
             this.processes = new HashSet<WpsProcessDescription>();
         } else {
             this.processes = processes;
@@ -69,7 +68,7 @@ public class WpsDescription {
 
     /**
      * Get the URI of the WPS.
-     * 
+     *
      * @return URI instance.
      */
     public URI getUri() {
@@ -78,7 +77,7 @@ public class WpsDescription {
 
     /**
      * Get the Set of {@link WpsProcessDescription} Instances.
-     * 
+     *
      * @return Set of {@link WpsProcessDescription} Instances.
      */
     public Set<WpsProcessDescription> getProcesses() {
@@ -87,7 +86,7 @@ public class WpsDescription {
 
     /**
      * Add a {@link WpsProcessDescription} instance to the internal set.
-     * 
+     *
      * @param e WpsProcessDescription Instance
      * @return true if successfully added
      */
@@ -97,7 +96,7 @@ public class WpsDescription {
 
     /**
      * Gets the identifier of the WPS.
-     * 
+     *
      * @return String
      */
     public String getIdentifier() {

@@ -17,7 +17,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
@@ -36,7 +35,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -69,8 +67,6 @@ public class Monitor {
     private MonitorEventHandler eventHandler;
 
     private static final Logger LOG = LogManager.getLogger();
-
-    ;
 
     public Monitor(MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");

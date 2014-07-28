@@ -182,7 +182,6 @@ public class WpsProcessDaoTest {
         Assert.assertTrue(all.isEmpty());
     }
 
-
     /**
      * Test of find method, of class WpsProcessDao.
      */
@@ -190,20 +189,20 @@ public class WpsProcessDaoTest {
     public void testFind_String_String() {
         WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
         WpsProcessEntity findByStrings = wpsProcessDao.find(findById.getWps().getIdentifier(), findById.getIdentifier());
-        
+
         Assert.assertTrue(findById.equals(findByStrings));
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_firstParamNull() {
         wpsProcessDao.find(null, processIdentifier);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_secondParamNull() {
         wpsProcessDao.find(wpsIdentifier, null);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_allParamNull() {
         wpsProcessDao.find(null, null);
@@ -217,7 +216,7 @@ public class WpsProcessDaoTest {
         WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
         wpsProcessDao.deleteProcessesOfWps(findById.getWps().getIdentifier());
         List<WpsProcessEntity> all = wpsProcessDao.getAll(findById.getWps().getIdentifier());
-        
+
         Assert.assertTrue(all.isEmpty());
     }
 
@@ -225,7 +224,7 @@ public class WpsProcessDaoTest {
     public void testDeleteProcessesOfWps_allParamNull() {
         wpsProcessDao.deleteProcessesOfWps(null);
     }
-    
+
     /**
      * Test of remove method, of class WpsProcessDao.
      */
@@ -233,7 +232,7 @@ public class WpsProcessDaoTest {
     public void testRemove_String_String() {
         wpsProcessDao.remove(wpsIdentifier, processIdentifier);
         WpsProcessEntity findById = wpsProcessDao.find(wpsIdentifier, processIdentifier);
-        
+
         Assert.assertTrue(findById == null);
     }
 }

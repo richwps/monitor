@@ -43,6 +43,7 @@ public class DataDriverPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form DataAdapterPanel
+     *
      * @param parent Reference to the parent frame
      * @param driver Driver instance which should cares of
      */

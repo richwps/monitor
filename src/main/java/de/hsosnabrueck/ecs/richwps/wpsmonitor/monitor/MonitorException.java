@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
 /**
@@ -21,6 +20,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorException extends Exception {
+
     public MonitorException(String msg, Throwable ex) {
         super(msg, ex);
     }

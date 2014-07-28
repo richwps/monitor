@@ -18,6 +18,8 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
+ * Specialisation of DefaultMutableTreeNode-class to determine which type of
+ * node the specific instance is.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -30,13 +32,18 @@ public class WpsTreeNode extends DefaultMutableTreeNode {
 
         DRIVER, WPS, PROCESS
     }
-    public NodeType type;
+    private final NodeType type;
 
     public WpsTreeNode(Object obj, NodeType type) {
         super(obj);
         this.type = type;
     }
 
+    /**
+     * Gets the type of the Node: Driver Node, WPS Node or WPS-Process Node
+     *
+     * @return
+     */
     public NodeType getType() {
         return type;
     }
@@ -46,7 +53,20 @@ public class WpsTreeNode extends DefaultMutableTreeNode {
         return super.getUserObject().toString();
     }
 
+    /**
+     * Casts the userObject of this node to the specific WpsDescription or
+     * WPSProcessDescription type. The Datatype depends on the Node-Type.
+     *
+     * @param <T>
+     * @return WpsDescription or WPSProcessDescription
+     */
     public <T> T getDescription() {
-        return (T) userObject.getClass().cast(userObject);
+        T result = null;
+
+        if (userObject != null) {
+            result = (T) userObject.getClass().cast(userObject);
+        }
+
+        return result;
     }
 }

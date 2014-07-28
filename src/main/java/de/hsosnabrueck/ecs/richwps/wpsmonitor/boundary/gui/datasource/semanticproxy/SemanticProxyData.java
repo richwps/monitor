@@ -19,7 +19,6 @@ import de.hsos.richwps.sp.client.CommunicationException;
 import de.hsos.richwps.sp.client.InternalSPException;
 import de.hsos.richwps.sp.client.RDFException;
 import de.hsos.richwps.sp.client.ResourceNotFoundException;
-import de.hsos.richwps.sp.client.rdf.RDFID;
 import de.hsos.richwps.sp.client.wps.Network;
 import de.hsos.richwps.sp.client.wps.Process;
 import de.hsos.richwps.sp.client.wps.SPClient;
@@ -30,7 +29,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -98,7 +95,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
                 for (Process process : wps.getProcesses()) {
                     processes.add(getDescription(process));
                 }
-                
+
                 String wpsIdentifier = generateWpsIdentifier(uri.toString());
                 WpsDescription wpsDescription = new WpsDescription(wpsIdentifier, uri, processes);
 

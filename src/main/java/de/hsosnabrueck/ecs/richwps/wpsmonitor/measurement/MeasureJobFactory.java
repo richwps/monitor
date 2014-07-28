@@ -22,8 +22,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -59,8 +57,6 @@ public class MeasureJobFactory implements JobFactory {
      * QosDaoFactory instance to create a new data access for a new job.
      */
     private final QosDaoFactory qosDaoFactory;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.
