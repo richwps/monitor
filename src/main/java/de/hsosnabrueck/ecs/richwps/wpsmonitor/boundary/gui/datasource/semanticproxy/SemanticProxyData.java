@@ -111,7 +111,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     private String generateWpsIdentifier(String uri) {
         String withoutHttp = uri.substring(7);
 
-        return withoutHttp.substring(0, withoutHttp.indexOf("/"));
+        return withoutHttp.substring(0, withoutHttp.indexOf('/'));
     }
 
     private WpsProcessDescription getDescription(Process process) throws RDFException {
@@ -168,9 +168,6 @@ public class SemanticProxyData extends DataDriver implements DataSource {
         if (this.spClient != other.spClient && (this.spClient == null || !this.spClient.equals(other.spClient))) {
             return false;
         }
-        if (this.driver != other.driver && (this.driver == null || !this.driver.equals(other.driver))) {
-            return false;
-        }
-        return true;
+        return this.driver == other.driver || (this.driver != null && this.driver.equals(other.driver));
     }
 }

@@ -54,9 +54,6 @@ public class Application {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public Application() {
-    }
-
     public static void main(String[] args) {
         Locale.setDefault(Locale.GERMANY);
 
@@ -68,6 +65,9 @@ public class Application {
             // exit the application
             Runtime.getRuntime().exit(1);
         }
+    }
+
+    public Application() {
     }
 
     public void run() {

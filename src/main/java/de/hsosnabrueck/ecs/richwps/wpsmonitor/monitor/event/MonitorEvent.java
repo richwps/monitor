@@ -52,14 +52,14 @@ public class MonitorEvent {
         this.triggerDate = initDate();
     }
 
-    private Date initDate() {
-        return new Date();
-    }
-
     public MonitorEvent(String eventName, Object msg) {
         this.eventName = eventName;
         this.msg = msg;
         this.triggerDate = initDate();
+    }
+
+    private Date initDate() {
+        return new Date();
     }
 
     public String getEventName() {

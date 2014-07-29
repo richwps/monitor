@@ -30,12 +30,11 @@ import org.apache.logging.log4j.Logger;
  */
 public class MonitorEventHandler {
 
+    private static final Logger LOG = LogManager.getLogger();
     /**
      * Map that maps eventlisteners to their specific eventnames.
      */
     private final Map<String, List<MonitorEventListener>> events;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Default constructor.

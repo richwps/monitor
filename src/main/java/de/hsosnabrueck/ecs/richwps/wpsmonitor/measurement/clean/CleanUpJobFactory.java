@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,10 +35,10 @@ import org.quartz.spi.TriggerFiredBundle;
  */
 public final class CleanUpJobFactory implements JobFactory {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final QosDaoFactory qosDaoFactory;
     private Integer olderAs;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public CleanUpJobFactory(final QosDaoFactory qosDaoFactory, final Integer olderAs) {
         this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");

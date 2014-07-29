@@ -87,7 +87,7 @@ public class ResponseMetric extends QosMetric {
             if (index % 2 == 0) {
                 unboxedMedian = (double) (values[index] + values[index - 1]) / 2;
             } else {
-                unboxedMedian = (double) values[index];
+                unboxedMedian = values[index];
             }
 
             // better as (Double)(double) ..

@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
@@ -22,7 +23,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFacto
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,19 +41,11 @@ import org.junit.Test;
  */
 public class WpsProcessDaoTest {
 
-    private WpsDataAccess wpsDao;
-    private WpsProcessDataAccess wpsProcessDao;
-
-    private Long[] insertedIds;
-
     private static Jpa jpa;
     private static WpsDaoFactory wpsFactory;
     private static WpsProcessDaoFactory wpsProcessFactory;
 
     private static final Integer GENERATE_COUNT = 5;
-
-    private String wpsIdentifier;
-    private String processIdentifier;
 
     @BeforeClass
     public static void setUpClass() {
@@ -68,6 +60,12 @@ public class WpsProcessDaoTest {
     public static void tearDownClass() {
         jpa.close();
     }
+    private WpsDataAccess wpsDao;
+    private WpsProcessDataAccess wpsProcessDao;
+    private Long[] insertedIds;
+
+    private String wpsIdentifier;
+    private String processIdentifier;
 
     @Before
     public void setUp() {
@@ -233,4 +231,5 @@ public class WpsProcessDaoTest {
 
         Assert.assertTrue(findById == null);
     }
+
 }

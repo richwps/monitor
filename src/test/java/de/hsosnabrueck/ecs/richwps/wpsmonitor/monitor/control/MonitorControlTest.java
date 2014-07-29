@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
@@ -22,7 +23,6 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
@@ -38,7 +38,7 @@ import java.util.UUID;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -54,6 +54,14 @@ import org.quartz.TriggerKey;
 @Ignore
 public class MonitorControlTest {
 
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
     private MonitorControl mControl;
     private Monitor monitor;
     private WpsProcessDataAccess wpsProcessDao;
@@ -61,15 +69,6 @@ public class MonitorControlTest {
     private QosDataAccess qosDao;
 
     public MonitorControlTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
     }
 
     @Before
@@ -132,12 +131,9 @@ public class MonitorControlTest {
      */
     @Test
     public void testCreateWps_WpsEntity() {
-        System.out.println("createWps");
         WpsEntity wpsEntity = getUnstoredProcessEntity().getWps();
-
         Boolean createWps = mControl.createWps(wpsEntity);
         WpsEntity find = wpsDao.find(wpsEntity.getIdentifier());
-
         Assert.assertTrue(createWps && find != null && find.getIdentifier().equals(wpsEntity.getIdentifier()));
     }
 
@@ -146,11 +142,8 @@ public class MonitorControlTest {
      */
     @Test
     public void testCreateWps_String_URI() {
-        System.out.println("createWps");
         WpsEntity wpsEntity = getUnstoredProcessEntity().getWps();
-
         Boolean createWps = mControl.createWps(wpsEntity.getIdentifier(), wpsEntity.getUri());
-
         WpsEntity find = wpsDao.find(wpsEntity.getIdentifier());
         Assert.assertTrue(createWps && find != null && find.getIdentifier().equals(wpsEntity.getIdentifier()));
     }
@@ -188,16 +181,12 @@ public class MonitorControlTest {
      */
     @Test
     public void testCreateAndScheduleProcess_String_String() {
-        System.out.println("createAndScheduleProcess");
         WpsProcessEntity unstoredProcessEntity = getUnstoredProcessEntity();
         wpsDao.persist(unstoredProcessEntity.getWps());
-
         String wpsIdentifier = unstoredProcessEntity.getWps().getIdentifier();
         String processIdentifier = unstoredProcessEntity.getIdentifier();
-
         Boolean registred = mControl.createAndScheduleProcess(wpsIdentifier, processIdentifier);
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(unstoredProcessEntity);
-
         Assert.assertTrue(registred && checkIsCreateAndScheduledProcess);
     }
 
@@ -206,11 +195,8 @@ public class MonitorControlTest {
      */
     @Test
     public void testCreateAndScheduleProcess_WpsProcessEntity() {
-        System.out.println("createAndScheduleProcess");
-
         WpsProcessEntity unstoredProcessEntity = getUnstoredProcessEntity();
         wpsDao.persist(unstoredProcessEntity.getWps());
-
         Boolean registred = mControl.createAndScheduleProcess(unstoredProcessEntity);
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(unstoredProcessEntity);
         Assert.assertTrue(registred && checkIsCreateAndScheduledProcess);
@@ -221,10 +207,7 @@ public class MonitorControlTest {
      */
     @Test
     public void testCreateAndScheduleProcessWithAlreadyExistedProcess() {
-        System.out.println("createAndScheduleProcess");
-
         WpsProcessEntity storedEntity = getStoredEntity();
-
         Boolean registred = mControl.createAndScheduleProcess(storedEntity);
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(storedEntity);
         Assert.assertTrue(!registred && !checkIsCreateAndScheduledProcess);
@@ -316,18 +299,12 @@ public class MonitorControlTest {
      */
     @Test
     public void testSaveTrigger_WpsProcessEntity_TriggerConfig() {
-        System.out.println("saveTrigger");
-
         WpsProcessEntity pE = getUnstoredProcessEntity();
         wpsDao.persist(pE.getWps());
-
         TriggerConfig t = getTriggerConfigAndCreateJob(pE);
-
         TriggerConfig saveTrigger = mControl.saveTrigger(pE, t);
-
         TriggerKey key = new TriggerKey(saveTrigger.getTriggerName(), saveTrigger.getTriggerGroup());
         Boolean checkIfSaved = checkIfSaved(key);
-
         Assert.assertTrue(checkIfSaved);
     }
 
@@ -336,14 +313,10 @@ public class MonitorControlTest {
      */
     @Test
     public void testSetTestRequest_3args() {
-        System.out.println("setTestRequest");
         WpsProcessEntity storedEntity = getStoredEntity();
         mControl.setTestRequest(storedEntity, "hello world");
-
         wpsProcessDao.update(storedEntity);
-
         WpsProcessEntity find = wpsProcessDao.find(storedEntity.getWps().getIdentifier(), storedEntity.getIdentifier());
-
         Assert.assertTrue(find != null && find.getRawRequest().equals("hello world"));
     }
 
@@ -352,22 +325,16 @@ public class MonitorControlTest {
      */
     @Test
     public void testUpdateWps_3args() {
-        System.out.println("updateWps");
         WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
         wpsDao.persist(wpsProcess.getWps());
         String oldWpsIdentifier = wpsProcess.getWps().getIdentifier();
-
         Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(wpsProcess);
-
         if (!createAndScheduleProcess) {
             fail("Can't create and schedule process");
         }
-
         WpsEntity newWps = getUnstoredProcessEntity().getWps();
         mControl.updateWps(oldWpsIdentifier, newWps);
-
         JobKey k = new JobKey(wpsProcess.getIdentifier(), newWps.getIdentifier());
-
         try {
             if (!monitor.getSchedulerControl().isJobRegistred(k)) {
                 fail("Job was not modified.");
@@ -382,12 +349,10 @@ public class MonitorControlTest {
      */
     @Test
     public void testUpdateWpsAcceptedNotNullValues() {
-        System.out.println("updateWps");
         WpsProcessEntity unstoredProcessEntity = getUnstoredProcessEntity();
         String wpsIdentifier = unstoredProcessEntity.getIdentifier();
         URI uri = unstoredProcessEntity.getWps().getUri();
         WpsEntity wps = getUnstoredProcessEntity().getWps();
-
         Boolean check = true;
         try {
             mControl.updateWps(null, wps);
@@ -395,49 +360,42 @@ public class MonitorControlTest {
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(wpsIdentifier, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(null, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(null, null, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(wpsIdentifier, null, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(null, wpsIdentifier, null);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             mControl.updateWps(null, null, uri);
             check = false;
         } catch (IllegalArgumentException ex) {
 
         }
-
         Assert.assertTrue(check);
     }
 
@@ -446,36 +404,27 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteWps_String() {
-        try { //todo ggf. noch testen ob die measured data ebenfalls geloescht wurden
-            System.out.println("deleteWps");
+        try {
             WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
             Boolean createWps = mControl.createWps(wpsProcess.getWps());
             WpsEntity find = wpsDao.find(wpsProcess.getWps().getIdentifier());
-
             if (!createWps) {
                 fail("Can't create WPS");
             }
-
             TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
             triggerConfig = mControl.saveTrigger(wpsProcess, triggerConfig);
-
             if (triggerConfig == null) {
                 fail("Can't save trigger");
             }
-
             TriggerKey saveTrigger = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
-
             JobKey jobKey = new JobKey(wpsProcess.getIdentifier(), wpsProcess.getWps().getIdentifier());
-
             SchedulerControl schedulerControl = monitor.getSchedulerControl();
             if (!schedulerControl.isJobRegistred(jobKey)) {
                 fail("Job key wasn't register at createAndScheduleJob call");
             }
-
             if (!schedulerControl.isTriggerRegistred(saveTrigger)) {
                 fail("Trigger wasn't register at saveTrigger call");
             }
-
             WpsProcessEntity dbWpsProcess = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
             ResponseEntity qos = new ResponseEntity();
             qos.setResponseTime(10000);
@@ -483,38 +432,29 @@ public class MonitorControlTest {
             mData.add(qos);
             mData.setCreateTime(new Date());
             mData.setProcess(dbWpsProcess);
-
             qosDao.persist(mData);
             mData = qosDao.find(mData.getId());
             Long qosId = mData.getData().get(0).getId();
             AbstractQosEntity findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-
             if (findAbstractQosEntity == null) {
                 fail("AbstractQosEntity wasn't stored in the database");
             }
-
             mControl.deleteWps(wpsProcess.getWps());
             findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-
             if (findAbstractQosEntity != null) {
                 fail("Qos Entity are not deleted too");
             }
-
             if (schedulerControl.isJobRegistred(jobKey)) {
                 fail("Job key already registred after deleteWps!");
             }
-
             if (schedulerControl.isTriggerRegistred(saveTrigger)) {
                 fail("TriggerKey already registred after deleteWps!");
             }
-
             WpsProcessEntity processFind = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
             WpsEntity wpsFind = wpsDao.find(wpsProcess.getWps().getIdentifier());
-
             if (processFind != null) {
                 fail("Wps Process wasn't deleted");
             }
-
             if (wpsFind != null) {
                 fail("Wps wasn't deleted");
             }
@@ -528,9 +468,7 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteWpsNotAcceptedNullValues() {
-        System.out.println("deleteWps");
         Boolean check = true;
-
         try {
             WpsEntity en = null;
             mControl.deleteWps(en);
@@ -538,7 +476,6 @@ public class MonitorControlTest {
         } catch (IllegalArgumentException ex) {
 
         }
-
         try {
             String identifier = null;
             mControl.deleteWps(identifier);
@@ -546,7 +483,6 @@ public class MonitorControlTest {
         } catch (IllegalArgumentException ex) {
 
         }
-
         Assert.assertTrue(check);
     }
 
@@ -555,8 +491,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteProcess_String_String() {
-        System.out.println("deleteProcess");
-
     }
 
     /**
@@ -564,8 +498,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteProcess_WpsProcessEntity() {
-        System.out.println("deleteProcess");
-
     }
 
     /**
@@ -573,8 +505,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testIsPausedMonitoring_String_String() {
-        System.out.println("isPausedMonitoring");
-
     }
 
     /**
@@ -582,8 +512,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testIsPausedMonitoring_WpsProcessEntity() {
-        System.out.println("isPausedMonitoring");
-
     }
 
     /**
@@ -591,8 +519,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testResumeMonitoring_String_String() {
-        System.out.println("resumeMonitoring");
-
     }
 
     /**
@@ -600,8 +526,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testResumeMonitoring_WpsProcessEntity() {
-        System.out.println("resumeMonitoring");
-
     }
 
     /**
@@ -609,8 +533,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testPauseMonitoring_String_String() {
-        System.out.println("pauseMonitoring");
-
     }
 
     /**
@@ -618,8 +540,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testPauseMonitoring_WpsProcessEntity() {
-        System.out.println("pauseMonitoring");
-
     }
 
     /**
@@ -627,8 +547,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetProcessesOfWps_String() {
-        System.out.println("getProcessesOfWps");
-
     }
 
     /**
@@ -636,8 +554,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetProcessesOfWps_WpsEntity() {
-        System.out.println("getProcessesOfWps");
-
     }
 
     /**
@@ -645,8 +561,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetTriggers_String_String() {
-        System.out.println("getTriggers");
-
     }
 
     /**
@@ -654,8 +568,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetTriggers_WpsProcessEntity() {
-        System.out.println("getTriggers");
-
     }
 
     /**
@@ -663,8 +575,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetMeasuredData_String_String() {
-        System.out.println("getMeasuredData");
-
     }
 
     /**
@@ -672,8 +582,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetMeasuredData_WpsProcessEntity() {
-        System.out.println("getMeasuredData");
-
     }
 
     /**
@@ -681,8 +589,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetMeasuredData_3args() {
-        System.out.println("getMeasuredData");
-
     }
 
     /**
@@ -690,8 +596,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetMeasuredData_WpsProcessEntity_Range() {
-        System.out.println("getMeasuredData");
-
     }
 
     /**
@@ -699,8 +603,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteMeasuredDataOfProcess_String_String() {
-        System.out.println("deleteMeasuredDataOfProcess");
-
     }
 
     /**
@@ -708,8 +610,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteMeasuredDataOfProcess_WpsProcessEntity() {
-        System.out.println("deleteMeasuredDataOfProcess");
-
     }
 
     /**
@@ -717,8 +617,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteMeasuredDataOfProcess_3args() {
-        System.out.println("deleteMeasuredDataOfProcess");
-
     }
 
     /**
@@ -726,8 +624,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteMeasuredDataOfProcess_WpsProcessEntity_Date() {
-        System.out.println("deleteMeasuredDataOfProcess");
-
     }
 
     /**
@@ -735,8 +631,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteTrigger() {
-        System.out.println("deleteTrigger");
-
     }
 
     /**
@@ -744,8 +638,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testGetWpsList() {
-        System.out.println("getWpsList");
-
     }
 
     /**
@@ -753,8 +645,6 @@ public class MonitorControlTest {
      */
     @Test
     public void testDeleteMeasuredData() {
-        System.out.println("deleteMeasuredData");
-
     }
 
 }

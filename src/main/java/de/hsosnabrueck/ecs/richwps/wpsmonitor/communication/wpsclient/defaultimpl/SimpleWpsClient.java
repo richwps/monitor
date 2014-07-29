@@ -65,8 +65,8 @@ import org.xml.sax.SAXException;
  */
 public class SimpleWpsClient implements WpsClient {
 
-    private String wpsExceptionMessage;
     private static final Logger LOG = LogManager.getLogger();
+    private String wpsExceptionMessage;
     private HttpClient httpClient;
 
     @Override

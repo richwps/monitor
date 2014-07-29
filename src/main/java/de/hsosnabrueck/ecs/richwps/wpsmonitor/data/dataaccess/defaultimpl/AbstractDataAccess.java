@@ -34,14 +34,14 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class AbstractDataAccess<T> {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     /**
      * Indicates if auto commit is active By default, all operations start a
      * transaction and commit the transaction after all actions are down
      */
     protected Boolean autoCommit;
     private final Jpa jpa;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Default constructor

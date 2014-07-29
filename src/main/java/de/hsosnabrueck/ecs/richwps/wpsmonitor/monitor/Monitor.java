@@ -15,23 +15,23 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJob;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
@@ -61,12 +61,12 @@ import org.quartz.TriggerKey;
  */
 public class Monitor {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private MonitorControlImpl monitorControl;
     private MonitorBuilder builderInstance;
     private MonitorConfig config;
     private MonitorEventHandler eventHandler;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public Monitor(MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");

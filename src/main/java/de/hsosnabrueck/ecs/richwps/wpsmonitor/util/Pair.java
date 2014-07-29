@@ -63,9 +63,6 @@ public class Pair<A, B> {
         if (this.a != other.a && (this.a == null || !this.a.equals(other.a))) {
             return false;
         }
-        if (this.b != other.b && (this.b == null || !this.b.equals(other.b))) {
-            return false;
-        }
-        return true;
+        return this.b == other.b || (this.b != null && this.b.equals(other.b));
     }
 }

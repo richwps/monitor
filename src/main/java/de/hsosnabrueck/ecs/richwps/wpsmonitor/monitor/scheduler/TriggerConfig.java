@@ -26,11 +26,6 @@ import java.util.Date;
  */
 public class TriggerConfig {
 
-    public enum IntervalUnit {
-
-        MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
-    }
-
     /**
      * Interval Type (e.g Month).
      */
@@ -155,5 +150,10 @@ public class TriggerConfig {
     @Override
     public String toString() {
         return "TriggerConfig{" + "intervalType=" + intervalType + ", start=" + start + ", end=" + end + ", interval=" + interval + ", triggerKey=" + triggerKey + '}';
+    }
+
+    public enum IntervalUnit {
+
+        MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
     }
 }

@@ -35,11 +35,11 @@ import org.quartz.SchedulerException;
  */
 public class JobExecutedHandlerThread extends Thread {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final JobExecutionContext executionContext;
     private final WpsProcessDataAccess wpsProcessDao;
     private final MonitorEventHandler eventHandler;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public JobExecutedHandlerThread(final JobExecutionContext scheduler, final MonitorEventHandler eventHandler, final WpsProcessDataAccess wpsProcessDao) {
         this.executionContext = scheduler;

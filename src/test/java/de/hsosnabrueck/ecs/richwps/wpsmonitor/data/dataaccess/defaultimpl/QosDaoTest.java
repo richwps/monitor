@@ -36,7 +36,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,12 +47,6 @@ import org.junit.Test;
  */
 public class QosDaoTest {
 
-    private QosDataAccess qosDao;
-    private WpsDataAccess wpsDao;
-    private WpsProcessDataAccess wpsProcessDao;
-
-    private Long[] insertedIds;
-
     private static QosDaoFactory qosFactory;
     private static WpsDaoFactory wpsFactory;
     private static WpsProcessDaoFactory wpsProcessFactory;
@@ -62,9 +56,6 @@ public class QosDaoTest {
     private static final String WPS_NAME = "testCaseScenario_localWps";
 
     private static Jpa jpa;
-
-    public QosDaoTest() {
-    }
 
     @BeforeClass
     public static void setUpClass() {
@@ -79,6 +70,13 @@ public class QosDaoTest {
     @AfterClass
     public static void tearDownClass() {
         jpa.close();
+    }
+    private QosDataAccess qosDao;
+    private WpsDataAccess wpsDao;
+    private WpsProcessDataAccess wpsProcessDao;
+    private Long[] insertedIds;
+
+    public QosDaoTest() {
     }
 
     @Before
@@ -165,7 +163,6 @@ public class QosDaoTest {
      */
     @Test
     public void testGetByWps() {
-        System.out.println("getByWps");
         Range r = new Range(null, GENERATE_COUNT);
 
         List<MeasuredDataEntity> byWps = qosDao.getByWps(WPS_NAME, r);

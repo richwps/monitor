@@ -15,11 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -37,6 +37,8 @@ import spark.Response;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class RestInterface {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Concrete PresentateStragey instance which should be used. Is used as
@@ -71,8 +73,6 @@ public class RestInterface {
      * {@link HttpOperation}.
      */
     private Map<HttpOperation, Set<MonitorRoute>> routeMap;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Creates a new RestInterface instance.

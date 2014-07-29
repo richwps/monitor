@@ -46,11 +46,11 @@ import org.apache.logging.log4j.Logger;
  */
 public class DataSourceDialog extends javax.swing.JDialog {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final Set<DataDriver> drivers;
     private final Set<DataSource> sources;
     private final WpsMonitorAdminGui mainFrame;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Creates new form DataSourceDialog

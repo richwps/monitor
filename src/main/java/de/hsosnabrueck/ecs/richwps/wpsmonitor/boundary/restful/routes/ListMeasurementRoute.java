@@ -15,9 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.List;
 import java.util.Map;

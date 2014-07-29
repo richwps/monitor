@@ -37,16 +37,7 @@ import org.apache.logging.log4j.Logger;
  */
 public final class MonitorConfig {
 
-    private Integer deleteIntervalInDays;
-    private Calendar deleteTime;
-    private Boolean deleteJobActiv;
-    private Integer wpsClientTimeout;
-
-    private final Properties properties;
-    private final File propertiesFile;
-
     private static final Logger LOG = LogManager.getLogger();
-    
     private static final Properties DEFAULT_PROPERTIES;
 
     static {
@@ -62,10 +53,18 @@ public final class MonitorConfig {
         DEFAULT_PROPERTIES.setProperty("wpsclient.timeout", "1");
     }
 
+    private Integer deleteIntervalInDays;
+    private Calendar deleteTime;
+    private Boolean deleteJobActiv;
+    private Integer wpsClientTimeout;
+
+    private final Properties properties;
+    private final File propertiesFile;
+
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
         this.properties = new Properties(DEFAULT_PROPERTIES);
         this.propertiesFile = propertiesFile == null && propertiesFile.exists() ? new File("monitor.properties") : propertiesFile;
-        /* Using magic string because, if you use a valid propertie file, 
+        /* Using magic string because, if you use a valid propertie file,
          then you can decide which name the propertie file has */
 
         initPropertiesObject();
@@ -250,4 +249,5 @@ public final class MonitorConfig {
             this.wpsClientTimeout = wpsClientTimeout;
         }
     }
+
 }

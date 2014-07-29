@@ -6,6 +6,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -136,10 +137,7 @@ public class WpsProcessEntity implements Serializable {
             return false;
         }
         final WpsProcessEntity other = (WpsProcessEntity) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id) || (this.id != null && this.id.equals(other.id));
     }
 
     @Override

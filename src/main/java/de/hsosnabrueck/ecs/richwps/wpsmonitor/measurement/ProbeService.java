@@ -36,8 +36,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class ProbeService {
 
-    private final List<Factory<QosProbe>> probeFactories;
     private static final Logger LOG = LogManager.getLogger();
+    private final List<Factory<QosProbe>> probeFactories;
 
     public ProbeService() {
         probeFactories = new ArrayList<>();

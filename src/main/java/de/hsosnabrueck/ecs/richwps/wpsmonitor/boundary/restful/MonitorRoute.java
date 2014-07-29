@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
 import spark.Route;
 
 /**
@@ -86,9 +86,6 @@ public abstract class MonitorRoute extends Route {
             return false;
         }
         final MonitorRoute other = (MonitorRoute) obj;
-        if ((this.route == null) ? (other.route != null) : !this.route.equals(other.route)) {
-            return false;
-        }
-        return true;
+        return !((this.route == null) ? (other.route != null) : !this.route.equals(other.route));
     }
 }

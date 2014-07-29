@@ -18,10 +18,10 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.utils;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -29,17 +29,17 @@ import static org.junit.Assert.*;
  */
 public class PairTest {
 
-    private Pair<String, Integer> instance;
-
-    public PairTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    private Pair<String, Integer> instance;
+
+    public PairTest() {
     }
 
     @Before
@@ -56,11 +56,8 @@ public class PairTest {
      */
     @Test
     public void testGetLeft() {
-        System.out.println("getLeft");
-
         Object expResult = "Zahl";
         Object result = instance.getLeft();
-
         assertEquals(expResult, result);
     }
 
@@ -69,11 +66,8 @@ public class PairTest {
      */
     @Test
     public void testGetRight() {
-        System.out.println("getRight");
-
         Object expResult = 5;
         Object result = instance.getRight();
-
         assertEquals(expResult, result);
     }
 
@@ -82,11 +76,8 @@ public class PairTest {
      */
     @Test
     public void testToString() {
-        System.out.println("toString");
-
         String expResult = "Zahl.5";
         String result = instance.toString();
-
         assertEquals(expResult, result);
     }
 
@@ -95,8 +86,6 @@ public class PairTest {
      */
     @Test
     public void testEquals() {
-        System.out.println("equals");
-
         assertEquals(new Pair<>("Zahl", 5), instance);
     }
 

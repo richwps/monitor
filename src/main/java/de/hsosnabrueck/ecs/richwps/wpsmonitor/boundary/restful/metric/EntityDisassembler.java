@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +36,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class EntityDisassembler {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final MetricFactoryMap converterMap;
 
     /**
@@ -43,8 +45,6 @@ public class EntityDisassembler {
      * this type of entity
      */
     private final String noConverterIndex;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public EntityDisassembler(final MetricFactoryMap converterMap) {
         this(converterMap, "raw");

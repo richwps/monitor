@@ -30,9 +30,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class JaxbPresentateStrategy implements PresentateStrategy {
 
-    private JAXBContext xmlContext;
-
     private static final Logger LOG = LogManager.getLogger();
+    private JAXBContext xmlContext;
 
     public JaxbPresentateStrategy(Class[] classes) {
         try {

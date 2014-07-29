@@ -27,17 +27,7 @@ import java.util.Map;
  */
 public class IntervalComboBoxItem {
 
-    private final TriggerConfig.IntervalUnit dateKey;
     private static final Map<TriggerConfig.IntervalUnit, String> INTERVAL_TYPE;
-
-    /**
-     * Creates an interval type item that matches the given dataKey.
-     *
-     * @param dateKey {@link DateBuilder.IntervalUnit} instance
-     */
-    public IntervalComboBoxItem(TriggerConfig.IntervalUnit dateKey) {
-        this.dateKey = Validate.notNull(dateKey, "dateKey");
-    }
 
     static {
         INTERVAL_TYPE = new EnumMap<>(TriggerConfig.IntervalUnit.class);
@@ -58,6 +48,16 @@ public class IntervalComboBoxItem {
         for (int i = 0; i < fill.length && i < dateValues.length; i++) {
             INTERVAL_TYPE.put(dateValues[i], fill[i]);
         }
+    }
+    private final TriggerConfig.IntervalUnit dateKey;
+
+    /**
+     * Creates an interval type item that matches the given dataKey.
+     *
+     * @param dateKey {@link DateBuilder.IntervalUnit} instance
+     */
+    public IntervalComboBoxItem(TriggerConfig.IntervalUnit dateKey) {
+        this.dateKey = Validate.notNull(dateKey, "dateKey");
     }
 
     public String getLabel() {

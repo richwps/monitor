@@ -30,14 +30,12 @@ public class ParamTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testNotNullThrowsException() {
-        System.out.println("notNull");
 
         Validate.notNull(null, "Null test");
     }
 
     @Test
     public void testNotNullThrowsNoException() {
-        System.out.println("notNull");
         String str = "Hello World!";
 
         try {

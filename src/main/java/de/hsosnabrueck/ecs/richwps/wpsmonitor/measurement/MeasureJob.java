@@ -53,14 +53,14 @@ import org.quartz.JobExecutionException;
  */
 public class MeasureJob implements Job {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     protected final WpsProcessEntity processEntity;
     protected final QosDataAccess dao;
     protected WpsClient wpsClient;
 
     protected List<QosProbe> probes;
     protected Boolean error;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * Constructor.

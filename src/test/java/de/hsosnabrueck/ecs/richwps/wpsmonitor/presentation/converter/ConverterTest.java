@@ -15,13 +15,13 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.presentation.converter;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +38,7 @@ import org.junit.Test;
  */
 public class ConverterTest {
 
-    private EntityDispatcher dispatch;
-    private List<MeasuredDataEntity> data;
-
     private static DispatcherFactory dispatchFactory;
-
-    public ConverterTest() {
-    }
 
     @BeforeClass
     public static void setUpClass() {
@@ -56,6 +50,20 @@ public class ConverterTest {
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    public static void main(String[] args) {
+        ConverterTest.setUpClass();
+        ConverterTest t = new ConverterTest();
+
+        t.setUp();
+        PresentateStrategy json = new JsonPresentateStrategy();
+    }
+
+    private EntityDispatcher dispatch;
+    private List<MeasuredDataEntity> data;
+
+    public ConverterTest() {
     }
 
     @Before
@@ -125,12 +133,4 @@ public class ConverterTest {
         );
     }
 
-    public static void main(String[] args) {
-        ConverterTest.setUpClass();
-        ConverterTest t = new ConverterTest();
-
-        t.setUp();
-        PresentateStrategy json = new JsonPresentateStrategy();
-        System.out.println(json.presentate(t.dispatch.dispatchToMetric(t.data)));
-    }
 }

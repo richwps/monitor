@@ -21,10 +21,6 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.util;
  */
 public class Validate {
 
-    private Validate() {
-
-    }
-
     /**
      * Checks if a Parameter is null.
      *
@@ -53,5 +49,9 @@ public class Validate {
         if (!t) {
             throw new IllegalArgumentException(name + " was not valid.");
         }
+    }
+
+    private Validate() {
+
     }
 }

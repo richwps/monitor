@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
 import spark.Request;
 import spark.Response;

@@ -15,13 +15,13 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.client.defaultimpl;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,11 +51,6 @@ public class SimpleWpsClientTest {
     private static WpsClientFactory wpsClientFactory;
 
     private static String rawRequest;
-    private WpsProcessInfo info;
-    private WpsClient client;
-
-    public SimpleWpsClientTest() {
-    }
 
     private static Path getFilePath() {
         String strPath = SimpleWpsClientTest.class.getResource(TEST_REQUEST_FILE).getPath();
@@ -73,14 +68,12 @@ public class SimpleWpsClientTest {
         wpsClientFactory = new WpsClientFactory(new SimpleWpsClientFactory());
         StringBuilder buf = new StringBuilder();
         Scanner scan = null;
-
         try {
             Path path = getFilePath();
             scan = new Scanner(path, StandardCharsets.UTF_8.name());
             while (scan.hasNextLine()) {
                 buf.append(scan.nextLine());
             }
-
         } catch (IOException ex) {
             Logger.getLogger(SimpleWpsClientTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -89,14 +82,17 @@ public class SimpleWpsClientTest {
             if (scan != null) {
                 scan.close();
             }
-            System.out.println(System.getProperty("user.dir"));
         }
-
         rawRequest = buf.toString();
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+    private WpsProcessInfo info;
+    private WpsClient client;
+
+    public SimpleWpsClientTest() {
     }
 
     @Before
@@ -106,11 +102,9 @@ public class SimpleWpsClientTest {
         } catch (CreateException ex) {
             fail("can't create WPS");
         }
-
-        if (rawRequest == null || rawRequest.equals("")) {
+        if (rawRequest == null || rawRequest.isEmpty()) {
             fail("Can't load testrequest from file");
         }
-
         try {
             info = new WpsProcessInfo(new URI(WPS_URI), rawRequest);
         } catch (URISyntaxException ex) {
@@ -129,7 +123,7 @@ public class SimpleWpsClientTest {
     @Test
     public void testValidExecute() {
         WpsResponse response = doDefaultRequest();
-        Assert.assertTrue(!response.isException() && response.getResponseBody() != null && !response.getResponseBody().equals(""));
+        Assert.assertTrue(!response.isException() && response.getResponseBody() != null && !response.getResponseBody().isEmpty());
     }
 
     private WpsResponse doDefaultRequest() {
@@ -161,8 +155,6 @@ public class SimpleWpsClientTest {
     public void testExceptionIdentification() {
         WpsRequest request = new WpsRequest("", info);
         WpsResponse response = client.execute(request);
-
-        System.out.println(response.getExceptionMessage());
         Assert.assertTrue(response.isWpsException());
     }
 

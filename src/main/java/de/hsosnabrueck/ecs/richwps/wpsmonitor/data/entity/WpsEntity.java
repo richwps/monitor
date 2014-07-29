@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -99,10 +100,7 @@ public class WpsEntity implements Serializable {
             return false;
         }
         final WpsEntity other = (WpsEntity) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id) || (this.id != null && this.id.equals(other.id));
     }
 
     public Long getId() {

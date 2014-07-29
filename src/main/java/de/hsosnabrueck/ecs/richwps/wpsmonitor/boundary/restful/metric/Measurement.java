@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import static de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate.notNull;
 import java.util.Date;
 

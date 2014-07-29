@@ -33,11 +33,11 @@ import org.apache.logging.log4j.Logger;
  */
 public final class Jpa {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final String puUnit;
     private EntityManagerFactory emf;
     private ThreadLocal<EntityManager> entityStorage;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     public Jpa(String persistenceUnit) {
         this.puUnit = Validate.notNull(persistenceUnit, "puUnit");

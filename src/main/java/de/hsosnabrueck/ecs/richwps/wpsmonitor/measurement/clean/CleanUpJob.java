@@ -31,10 +31,10 @@ import org.quartz.JobExecutionException;
  */
 public class CleanUpJob implements Job {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     private final QosDataAccess qosDao;
     private final Date olderAs;
-
-    private static final Logger LOG = LogManager.getLogger();
 
     /**
      *
