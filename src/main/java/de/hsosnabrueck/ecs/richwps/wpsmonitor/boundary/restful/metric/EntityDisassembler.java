@@ -105,7 +105,7 @@ public class EntityDisassembler {
      * @return Map Instance
      */
     private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> metrics) {
-        Map<String, QosMetric> finalMetrics = new HashMap<String, QosMetric>();
+        Map<String, QosMetric> finalMetrics = new HashMap<>();
 
         for (MeasuredDataEntity measuredDataEntity : dataList) {
             List<AbstractQosEntity> measureData = measuredDataEntity.getData();
@@ -157,7 +157,7 @@ public class EntityDisassembler {
      * @return Map of entity converters
      */
     private Map<String, Set<QosMetric>> createNewBunchOfConverters() {
-        Map<String, Set<QosMetric>> entityConverters = new HashMap<String, Set<QosMetric>>();
+        Map<String, Set<QosMetric>> entityConverters = new HashMap<>();
 
         for (Map.Entry e : converterMap.entrySet()) {
             try {

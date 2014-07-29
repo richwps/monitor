@@ -147,7 +147,7 @@ public class MeasureJob implements Job {
             response = wpsClient.execute(request);
         }
 
-        return new Pair<WpsRequest, WpsResponse>(request, response);
+        return new Pair<>(request, response);
     }
 
     /**
@@ -156,7 +156,7 @@ public class MeasureJob implements Job {
      * @return List with the Entities
      */
     public List<AbstractQosEntity> getMeasuredDatas() {
-        List<AbstractQosEntity> measuredDatas = new ArrayList<AbstractQosEntity>();
+        List<AbstractQosEntity> measuredDatas = new ArrayList<>();
 
         for (QosProbe p : probes) {
             AbstractQosEntity measuredData = p.getMeasuredData();

@@ -60,7 +60,7 @@ public class WpsDescription {
         this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
 
         if (processes == null) {
-            this.processes = new HashSet<WpsProcessDescription>();
+            this.processes = new HashSet<>();
         } else {
             this.processes = processes;
         }

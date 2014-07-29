@@ -24,7 +24,7 @@ import java.util.List;
  * @param <T> Type of Entity which the {@link DataAccess} implementation should
  * take care of
  */
-public interface DataAccess<T> {
+public interface DataAccess<T> extends AutoCloseable {
 
     /**
      * Tries to find an Object in the Database with the given primary key.
@@ -94,5 +94,6 @@ public interface DataAccess<T> {
      * Should be called if the DataAccess is no longer needed. The specific
      * implementation of the DataAccess interface need to decide what is to do.
      */
+    @Override
     public void close();
 }

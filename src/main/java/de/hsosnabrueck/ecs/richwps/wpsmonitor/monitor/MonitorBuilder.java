@@ -437,7 +437,7 @@ public class MonitorBuilder {
             withDefaultJobFactoryService();
         }
 
-        List<JobListener> jobListeners = new ArrayList<JobListener>();
+        List<JobListener> jobListeners = new ArrayList<>();
         jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
 
         return new SchedulerFactory(jobFactoryService, jobListeners);
@@ -560,9 +560,7 @@ public class MonitorBuilder {
                         wpsDaoFactory,
                         wpsProcessDaoFactory
                 );
-            } catch (SchedulerException ex) {
-                throw new BuilderException(ex);
-            } catch (CreateException ex) {
+            } catch (SchedulerException | CreateException ex) {
                 throw new BuilderException(ex);
             }
         }
@@ -627,7 +625,7 @@ public class MonitorBuilder {
                         }
                 );
             } catch (EventNotFound ex) {
-                LOG.error("Can't register the JPA listener. ", ex);
+                LOG.error("Can't register the JPA listener.", ex);
             }
         }
     }

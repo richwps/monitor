@@ -403,10 +403,11 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
                         "Can't register Wps. Maybe the Wps is already registred."
                 );
             }
-        } catch (MalformedURLException ex) {
-            showUriConvertError();
-        } catch (URISyntaxException ex) {
-            showUriConvertError();
+        } catch (MalformedURLException | URISyntaxException ex) {
+            MessageDialogs.showError(this,
+                    "Error",
+                    "The entered Uniform Resource Identifier or Locator is not valid!"
+            );
         }
 
         return panel;
@@ -438,13 +439,6 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     private void addWpsPanel(WpsPanel panel) {
         wpsAddPanel.add(panel, BorderLayout.PAGE_START);
         wpsAddPanel.revalidate();
-    }
-
-    private void showUriConvertError() {
-        MessageDialogs.showError(this,
-                "Error",
-                "The entered URI is not valid!"
-        );
     }
 
     /**

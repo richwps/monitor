@@ -116,9 +116,7 @@ public class MonitorControlTest {
         try {
             WpsEntity wps = new WpsEntity(UUID.randomUUID().toString(), "http://example.com");
             process = new WpsProcessEntity(UUID.randomUUID().toString(), wps);
-        } catch (MalformedURLException ex) {
-            fail(ex.toString());
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             fail(ex.toString());
         }
 

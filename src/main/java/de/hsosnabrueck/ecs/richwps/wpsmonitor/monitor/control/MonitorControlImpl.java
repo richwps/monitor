@@ -117,7 +117,7 @@ public class MonitorControlImpl implements MonitorControl {
                         .fireEvent(new MonitorEvent("monitorcontrol.saveTrigger", config));
             }
         } catch (SchedulerException ex) {
-            LOG.error("Can't save trigger because of Scheduler Exception. ", ex);
+            LOG.error("Can't save trigger because of Scheduler Exception.", ex);
         }
 
         return newConfig;
@@ -126,7 +126,7 @@ public class MonitorControlImpl implements MonitorControl {
     @Override
     public List<TriggerConfig> getTriggers(String wpsIdentifier, String processIdentifier) {
         JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-        List<TriggerConfig> result = new ArrayList<TriggerConfig>();
+        List<TriggerConfig> result = new ArrayList<>();
 
         try {
             List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
@@ -151,7 +151,7 @@ public class MonitorControlImpl implements MonitorControl {
             eventHandler
                     .fireEvent(new MonitorEvent("monitorcontrol.deleteTrigger", config));
         } catch (SchedulerException ex) {
-            LOG.warn("Can't delete Trigger because of Scheduler Exception. ", ex);
+            LOG.warn("Can't delete Trigger because of Scheduler Exception.", ex);
 
             return false;
         }
@@ -165,21 +165,15 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(uri, "uri");
 
         WpsEntity wps = new WpsEntity(wpsIdentifier, uri);
-        WpsDataAccess wpsDao = null;
         Boolean result = false;
 
-        try {
-            wpsDao = wpsDaoFactory.create();
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
             result = wpsDao.persist(wps);
 
             eventHandler
                     .fireEvent(new MonitorEvent("monitorcontrol.createWps", wps));
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
         }
 
         return result;
@@ -191,14 +185,12 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(processIdentifier, "processIdentifier");
 
         Boolean isPersisted = false;
-        WpsProcessDataAccess wpsProcessDao = null;
 
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
 
             if (isWpsExists(wpsIdentifier) && !isProcessExists(wpsIdentifier, processIdentifier)) {
-                WpsProcessEntity process = new WpsProcessEntity(processIdentifier, getWps(wpsIdentifier));
 
+                WpsProcessEntity process = new WpsProcessEntity(processIdentifier, getWps(wpsIdentifier));
                 isPersisted = wpsProcessDao.persist(process);
 
                 if (isPersisted) {
@@ -206,11 +198,7 @@ public class MonitorControlImpl implements MonitorControl {
                 }
             }
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
 
         return isPersisted;
@@ -232,11 +220,9 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        WpsProcessDataAccess wpsProcessDao = null;
         Boolean exists = false;
 
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
 
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
             exists = (process != null);
@@ -249,11 +235,7 @@ public class MonitorControlImpl implements MonitorControl {
                         .fireEvent(new MonitorEvent("monitorcontrol.setTestRequest", process));
             }
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
 
         return exists;
@@ -265,16 +247,13 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(newWpsIdentifier, "newWpsIdentifier");
         Validate.notNull(newUri, "newUri");
 
-        WpsDataAccess wpsDao = null;
         WpsEntity wps = getWps(oldWpsIdentifier);
 
         if (wps.getIdentifier().equals(newWpsIdentifier) && wps.getUri().equals(newUri)) {
             return wps;
         }
 
-        try {
-            wpsDao = wpsDaoFactory.create();
-
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
             wps.setIdentifier(newWpsIdentifier);
             wps.setUri(newUri);
 
@@ -284,13 +263,9 @@ public class MonitorControlImpl implements MonitorControl {
             eventHandler
                     .fireEvent(new MonitorEvent("monitorcontrol.updateWps", new String[]{oldWpsIdentifier, newWpsIdentifier}));
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
         } catch (SchedulerException ex) {
-            LOG.error("Scheduler exception while updating a wps. ", ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
+            LOG.error("Scheduler exception while updating a wps.", ex);
         }
 
         return wps;
@@ -304,25 +279,22 @@ public class MonitorControlImpl implements MonitorControl {
      */
     @Override
     public Boolean deleteWps(final String wpsIdentifier) {
-        WpsDataAccess wpsDao = null;
         Boolean deleteable = false;
 
-        try {
-            wpsDao = wpsDaoFactory.create();
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
 
-            WpsEntity wps = getWps(wpsIdentifier);
-            deleteable = (wps != null);
+            WpsEntity wpsEntity = getWps(wpsIdentifier);
+            deleteable = (wpsEntity != null);
 
             if (deleteable) {
-                wpsDao.remove(wps);
-                removeWpsJob(wps);
+                wpsDao.remove(wpsEntity);
+                removeWpsJob(wpsEntity);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.deleteWps", wpsEntity));
             }
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
         }
 
         return deleteable;
@@ -330,10 +302,8 @@ public class MonitorControlImpl implements MonitorControl {
 
     private void removeWpsJob(WpsEntity wpsEntity) {
         try {
-            schedulerControl.removeWpsJobs(wpsEntity.getIdentifier());
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.deleteWps", wpsEntity));
+            schedulerControl
+                    .removeWpsJobs(wpsEntity.getIdentifier());
         } catch (SchedulerException ex) {
             LOG.error("MonitorControl: {}", ex);
         }
@@ -344,12 +314,12 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        WpsProcessDataAccess wpsProcessDao = null;
         Boolean deleteable = false;
 
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
-            WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+
+            WpsProcessEntity process = wpsProcessDao
+                    .find(wpsIdentifier, processIdentifier);
             deleteable = (process != null);
 
             if (deleteable) {
@@ -362,13 +332,9 @@ public class MonitorControlImpl implements MonitorControl {
                         .fireEvent(new MonitorEvent("monitorcontrol.deleteProcess", process));
             }
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         } catch (SchedulerException ex) {
-            LOG.error("Can't delete job of process {}. ", processIdentifier, ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            LOG.error("Can't delete job of process {}.", processIdentifier, ex);
         }
 
         return deleteable;
@@ -376,18 +342,12 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<WpsEntity> getWpsList() {
-        WpsDataAccess wpsDao = null;
         List<WpsEntity> wpsList = null;
 
-        try {
-            wpsDao = wpsDaoFactory.create();
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
             wpsList = wpsDao.getAll();
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
         }
 
         return wpsList;
@@ -397,18 +357,12 @@ public class MonitorControlImpl implements MonitorControl {
     public List<WpsProcessEntity> getProcessesOfWps(String identifier) {
         Validate.notNull(identifier, "identifier");
 
-        WpsProcessDataAccess wpsProcessDao = null;
         List<WpsProcessEntity> processes = null;
 
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
             processes = wpsProcessDao.getAll(identifier);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
 
         return processes;
@@ -424,18 +378,13 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        QosDataAccess qosDao = null;
         List<MeasuredDataEntity> measuredData = null;
 
-        try {
-            qosDao = qosDaoFactory.create();
-            measuredData = qosDao.getByProcess(wpsIdentifier, processIdentifier, range);
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
+            measuredData = qosDao
+                    .getByProcess(wpsIdentifier, processIdentifier, range);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted. ", ex);
-        } finally {
-            if (qosDao != null) {
-                qosDao.close();
-            }
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
         }
 
         return measuredData;
@@ -466,10 +415,7 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        WpsProcessDataAccess wpsProcessDao = null;
-
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
 
             if (process != null) {
@@ -487,11 +433,7 @@ public class MonitorControlImpl implements MonitorControl {
         } catch (SchedulerException ex) {
             LOG.warn("MonitorControl: {}", ex);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
     }
 
@@ -506,21 +448,13 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs) {
-        QosDataAccess qosDao = null;
-
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        try {
-            qosDao = qosDaoFactory.create();
-
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
             qosDao.deleteByProcess(wpsIdentifier, processIdentifier, olderAs);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted. ", ex);
-        } finally {
-            if (qosDao != null) {
-                qosDao.close();
-            }
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
         }
     }
 
@@ -538,7 +472,7 @@ public class MonitorControlImpl implements MonitorControl {
                         .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
             }
         } catch (SchedulerException ex) {
-            LOG.error("Can't pause the monitoring of process {} because of scheduler exception. ", processIdentifier, ex);
+            LOG.error("Can't pause the monitoring of process {} because of scheduler exception.", processIdentifier, ex);
         }
     }
 
@@ -552,7 +486,7 @@ public class MonitorControlImpl implements MonitorControl {
             qosDao = qosDaoFactory.create();
             qosDao.deleteAllOlderAs(olderAs);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted. ", ex);
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
         }
     }
 
@@ -736,18 +670,12 @@ public class MonitorControlImpl implements MonitorControl {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        WpsProcessDataAccess wpsProcessDao = null;
         WpsProcessEntity result = null;
 
-        try {
-            wpsProcessDao = wpsProcessDaoFactory.create();
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
             result = wpsProcessDao.find(wpsIdentifier, processIdentifier);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsProcessDao != null) {
-                wpsProcessDao.close();
-            }
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
 
         return result;
@@ -766,18 +694,12 @@ public class MonitorControlImpl implements MonitorControl {
     private WpsEntity getWps(final String wpsIdentifier) {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
 
-        WpsDataAccess wpsDao = null;
         WpsEntity result = null;
 
-        try {
-            wpsDao = wpsDaoFactory.create();
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
             result = wpsDao.find(wpsIdentifier);
         } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted. ", ex);
-        } finally {
-            if (wpsDao != null) {
-                wpsDao.close();
-            }
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
         }
 
         return result;
@@ -817,7 +739,7 @@ public class MonitorControlImpl implements MonitorControl {
         try {
             result = schedulerControl.isJobRegistred(jobKey);
         } catch (SchedulerException ex) {
-            LOG.warn("Can't check if a process is scheduled. ", ex);
+            LOG.warn("Can't check if a process is scheduled.", ex);
         }
 
         return result;

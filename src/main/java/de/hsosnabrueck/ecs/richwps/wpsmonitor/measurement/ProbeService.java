@@ -40,7 +40,7 @@ public class ProbeService {
     private static final Logger LOG = LogManager.getLogger();
 
     public ProbeService() {
-        probeFactories = new ArrayList<Factory<QosProbe>>();
+        probeFactories = new ArrayList<>();
     }
 
     /**
@@ -71,7 +71,7 @@ public class ProbeService {
      * @return list of QosProbes
      */
     public List<QosProbe> buildProbes() {
-        List<QosProbe> factoredObjects = new ArrayList<QosProbe>();
+        List<QosProbe> factoredObjects = new ArrayList<>();
 
         for (Factory<QosProbe> probeFactory : probeFactories) {
             try {

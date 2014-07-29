@@ -32,7 +32,7 @@ public class MetricFactoryMap {
     private final Map<String, Set<Factory<QosMetric>>> converterMap;
 
     public MetricFactoryMap() {
-        this.converterMap = new HashMap<String, Set<Factory<QosMetric>>>();
+        this.converterMap = new HashMap<>();
     }
 
     public MetricFactoryMap add(final String index, final Factory<QosMetric> converterFactory) {

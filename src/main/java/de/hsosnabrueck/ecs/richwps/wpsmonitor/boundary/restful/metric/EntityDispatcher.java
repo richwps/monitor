@@ -79,7 +79,7 @@ public class EntityDispatcher {
     }
 
     private Map<String, Object> dispatch(Map<String, QosMetric> disassemble) {
-        Map<String, Object> merged = new HashMap<String, Object>();
+        Map<String, Object> merged = new HashMap<>();
 
         for (Map.Entry e : disassemble.entrySet()) {
             merged.put((String) e.getKey(), ((QosMetric) e.getValue()).calculate());

@@ -45,7 +45,7 @@ public class JobFactoryService implements JobFactory {
     private final Map<Class<? extends Job>, JobFactory> classFactoryMap;
 
     public JobFactoryService() {
-        this.classFactoryMap = new HashMap<Class<? extends Job>, JobFactory>();
+        this.classFactoryMap = new HashMap<>();
     }
 
     /**

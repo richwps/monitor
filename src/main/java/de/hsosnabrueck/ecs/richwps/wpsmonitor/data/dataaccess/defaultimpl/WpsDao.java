@@ -44,7 +44,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     public WpsEntity find(String wpsIdentifier) {
         Validate.notNull(wpsIdentifier, "wpsIdentifier");
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("identifier", wpsIdentifier);
 
         List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
@@ -79,7 +79,7 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
         Validate.notNull(o, "WpsEntity");
         Validate.notNull(o.getIdentifier(), "WpsEntity Identifier");
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("wpsIdentifier", o.getIdentifier());
 
         beginTransaction();

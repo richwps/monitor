@@ -52,20 +52,10 @@ public class GuiStarter {
             try {
                 LOG.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); // Fallback
-            } catch (ClassNotFoundException ex) {
-                LOG.error("Can't load SystemLookAndFeel.", ex);
-            } catch (InstantiationException ex) {
-                LOG.error("Can't load SystemLookAndFeel.", ex);
-            } catch (IllegalAccessException ex) {
-                LOG.error("Can't load SystemLookAndFeel.", ex);
-            } catch (UnsupportedLookAndFeelException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 LOG.error("Can't load SystemLookAndFeel.", ex);
             }
-        } catch (ClassNotFoundException ex) {
-            LOG.error("Can't load SystemLookAndFeel.", ex);
-        } catch (InstantiationException ex) {
-            LOG.error("Can't load SystemLookAndFeel.", ex);
-        } catch (IllegalAccessException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             LOG.error("Can't load SystemLookAndFeel.", ex);
         }
 

@@ -32,7 +32,7 @@ public abstract class QosMetric {
     private final List<Measurement> entities;
 
     public QosMetric() {
-        entities = new ArrayList<Measurement>();
+        entities = new ArrayList<>();
     }
 
     /**

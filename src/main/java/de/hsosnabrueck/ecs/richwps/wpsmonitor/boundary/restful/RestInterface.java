@@ -93,7 +93,7 @@ public class RestInterface {
     }
 
     private void initMap() {
-        routeMap = new EnumMap<HttpOperation, Set<MonitorRoute>>(HttpOperation.class);
+        routeMap = new EnumMap<>(HttpOperation.class);
 
         for (HttpOperation v : HttpOperation.values()) {
             routeMap.put(v, new HashSet<MonitorRoute>());

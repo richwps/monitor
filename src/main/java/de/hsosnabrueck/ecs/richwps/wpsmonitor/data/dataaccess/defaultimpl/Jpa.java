@@ -50,7 +50,7 @@ public final class Jpa {
     public void open() {
         if (emf == null || !emf.isOpen()) {
             emf = Persistence.createEntityManagerFactory(puUnit);
-            entityStorage = new ThreadLocal<EntityManager>();
+            entityStorage = new ThreadLocal<>();
         }
     }
 

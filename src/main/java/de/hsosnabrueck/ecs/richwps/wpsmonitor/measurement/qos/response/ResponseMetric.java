@@ -34,7 +34,7 @@ public class ResponseMetric extends QosMetric {
         Integer worst = null, best = null;
         Double median;
 
-        List<Integer> averageList = new ArrayList<Integer>();
+        List<Integer> averageList = new ArrayList<>();
 
         for (Measurement measured : getEntities()) {
             ResponseEntity responseEntity = measured.getEntity();
@@ -67,7 +67,7 @@ public class ResponseMetric extends QosMetric {
             return "No Data available";
         }
 
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put("median", median);
         data.put("worst", worst);
         data.put("best", best);

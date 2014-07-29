@@ -125,7 +125,7 @@ public class TriggerConfig {
     }
 
     public void setTriggerKey(String keyName, String keyGroup) {
-        this.triggerKey = new Pair<String, String>(keyName, keyGroup);
+        this.triggerKey = new Pair<>(keyName, keyGroup);
     }
 
     public String getTriggerName() {

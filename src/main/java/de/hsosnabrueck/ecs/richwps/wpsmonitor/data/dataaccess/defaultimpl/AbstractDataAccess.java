@@ -257,7 +257,7 @@ public abstract class AbstractDataAccess<T> {
         try {
             result = query.getResultList();
         } catch (NoResultException ex) {
-            result = new ArrayList<T>();
+            result = new ArrayList<>();
         }
 
         return result;

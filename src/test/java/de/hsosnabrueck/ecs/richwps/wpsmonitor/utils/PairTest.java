@@ -44,7 +44,7 @@ public class PairTest {
 
     @Before
     public void setUp() {
-        instance = new Pair<String, Integer>("Zahl", 5);
+        instance = new Pair<>("Zahl", 5);
     }
 
     @After
@@ -97,7 +97,7 @@ public class PairTest {
     public void testEquals() {
         System.out.println("equals");
 
-        assertEquals(new Pair<String, Integer>("Zahl", 5), instance);
+        assertEquals(new Pair<>("Zahl", 5), instance);
     }
 
 }

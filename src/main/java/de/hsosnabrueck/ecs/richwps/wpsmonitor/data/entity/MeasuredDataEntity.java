@@ -99,7 +99,7 @@ public class MeasuredDataEntity implements Serializable {
     private List<AbstractQosEntity> data;
 
     public MeasuredDataEntity() {
-        this.data = new ArrayList<AbstractQosEntity>();
+        this.data = new ArrayList<>();
     }
 
     public MeasuredDataEntity(List<AbstractQosEntity> qosEntities) {

@@ -41,7 +41,7 @@ public class MonitorEventHandler {
      * Default constructor.
      */
     public MonitorEventHandler() {
-        events = new HashMap<String, List<MonitorEventListener>>();
+        events = new HashMap<>();
     }
 
     /**

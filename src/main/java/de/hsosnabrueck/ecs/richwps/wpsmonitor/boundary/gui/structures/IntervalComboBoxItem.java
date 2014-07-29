@@ -40,7 +40,7 @@ public class IntervalComboBoxItem {
     }
 
     static {
-        INTERVAL_TYPE = new EnumMap<TriggerConfig.IntervalUnit, String>(TriggerConfig.IntervalUnit.class);
+        INTERVAL_TYPE = new EnumMap<>(TriggerConfig.IntervalUnit.class);
 
         String[] fill = new String[]{
             "Millisecond",

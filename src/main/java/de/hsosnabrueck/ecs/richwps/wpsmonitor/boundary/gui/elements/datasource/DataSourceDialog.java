@@ -65,7 +65,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
         this.drivers = drivers;
         this.mainFrame = monitorMainFrame;
-        this.sources = new HashSet<DataSource>();
+        this.sources = new HashSet<>();
 
         initComponents();
         init();

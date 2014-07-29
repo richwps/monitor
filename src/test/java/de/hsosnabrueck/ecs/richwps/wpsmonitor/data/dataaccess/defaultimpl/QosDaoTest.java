@@ -143,9 +143,7 @@ public class QosDaoTest {
     private WpsEntity genWps() {
         try {
             return new WpsEntity(WPS_NAME, "http://localhost");
-        } catch (MalformedURLException ex) {
-            fail(ex.toString());
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             fail(ex.toString());
         }
 
@@ -224,7 +222,7 @@ public class QosDaoTest {
     }
 
     private List<Long> getListOfAbstractQosEntitiesId(List<MeasuredDataEntity> dataList) {
-        List<Long> result = new ArrayList<Long>();
+        List<Long> result = new ArrayList<>();
 
         for (MeasuredDataEntity m : dataList) {
             for (AbstractQosEntity q : m.getData()) {

@@ -82,7 +82,7 @@ public class Application {
             rest.start();
 
             LOG.trace("Setup DataDriver Set ...");
-            Set<DataDriver> drivers = new HashSet<DataDriver>();
+            Set<DataDriver> drivers = new HashSet<>();
             drivers.add(new SemanticProxyData());
 
             LOG.trace("Start GUI ...");

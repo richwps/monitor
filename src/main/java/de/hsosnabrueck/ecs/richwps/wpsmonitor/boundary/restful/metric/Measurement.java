@@ -17,6 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
+import static de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate.notNull;
 import java.util.Date;
 
 /**
@@ -29,8 +30,8 @@ public class Measurement {
     private final Date measurementDate;
 
     public Measurement(final AbstractQosEntity entity, final Date date) {
-        this.values = Validate.notNull(entity, "entity");
-        this.measurementDate = Validate.notNull(date, "date");
+        this.values = notNull(entity, "entity");
+        this.measurementDate = notNull(date, "date");
     }
 
     public <T> T getEntity() {

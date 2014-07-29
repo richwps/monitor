@@ -59,7 +59,7 @@ public class WpsDialog extends javax.swing.JDialog {
     public WpsDialog(WpsMonitorAdminGui parent, DataSource source, boolean modal) {
         super(parent, modal);
 
-        Set<DataSource> sources = new HashSet<DataSource>();
+        Set<DataSource> sources = new HashSet<>();
         sources.add(source);
 
         init(parent, sources);
@@ -197,7 +197,7 @@ public class WpsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_addToMonitorButtonActionPerformed
 
     private Map<String, WpsDescription> assignSelectionsToMap(TreePath[] selections) {
-        Map<String, WpsDescription> wpsDescriptions = new HashMap<String, WpsDescription>();
+        Map<String, WpsDescription> wpsDescriptions = new HashMap<>();
 
         for (TreePath p : selections) {
             if (p.getLastPathComponent() instanceof WpsTreeNode) {

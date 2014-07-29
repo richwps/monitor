@@ -83,14 +83,14 @@ public class SemanticProxyData extends DataDriver implements DataSource {
 
     @Override
     public List<WpsDescription> getWpsList() {
-        List<WpsDescription> result = new ArrayList<WpsDescription>();
+        List<WpsDescription> result = new ArrayList<>();
 
         try {
             Network net = spClient.getNetwork();
 
             for (WPS wps : net.getWPSs()) {
                 URI uri = new URI(wps.getEndpoint());
-                Set<WpsProcessDescription> processes = new HashSet<WpsProcessDescription>();
+                Set<WpsProcessDescription> processes = new HashSet<>();
 
                 for (Process process : wps.getProcesses()) {
                     processes.add(getDescription(process));
@@ -101,15 +101,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
 
                 result.add(wpsDescription);
             }
-        } catch (ResourceNotFoundException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
-        } catch (InternalSPException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
-        } catch (CommunicationException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
-        } catch (RDFException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
-        } catch (URISyntaxException ex) {
+        } catch (ResourceNotFoundException | InternalSPException | CommunicationException | RDFException | URISyntaxException ex) {
             LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         }
 

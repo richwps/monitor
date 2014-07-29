@@ -43,7 +43,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public List<MeasuredDataEntity> getByWps(final String identifier, final Range range) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
+        Map<String, Object> parameter = new HashMap<>();
         parameter.put("identifier", Validate.notNull(identifier, "identifier"));
 
         return getBy("qos.getQosByWps", parameter, MeasuredDataEntity.class, range);
@@ -51,7 +51,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public List<MeasuredDataEntity> getByProcess(final String wpsIdentifier, final String processIdentifier, final Range range) {
-        Map<String, Object> parameter = new HashMap<String, Object>();
+        Map<String, Object> parameter = new HashMap<>();
         parameter.put("identifier", Validate.notNull(processIdentifier, "processIdentifier"));
         parameter.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
 
@@ -76,7 +76,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public Integer deleteByProcess(final String wpsIdentifier, final String processIdentifier) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
@@ -93,7 +93,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
             return deleteByProcess(wpsIdentifier, processIdentifier);
         }
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
         parameters.put("processIdentifier", Validate.notNull(processIdentifier, "processIdentifier"));
@@ -106,7 +106,7 @@ public class QosDao extends AbstractDataAccess<MeasuredDataEntity> implements Qo
 
     @Override
     public Integer deleteAllOlderAs(final Date date) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("date", Validate.notNull(date, "date"));
 

@@ -362,7 +362,7 @@ public final class SchedulerControl {
         Boolean result = false;
 
         if (!jobKeys.isEmpty()) {
-            List<JobKey> toDelete = new ArrayList<JobKey>(jobKeys);
+            List<JobKey> toDelete = new ArrayList<>(jobKeys);
 
             result = scheduler.deleteJobs(toDelete);
         }
@@ -408,7 +408,7 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized List<TriggerKey> getTriggerKeysOfJob(final JobKey jobKey) throws SchedulerException {
-        List<TriggerKey> result = new ArrayList<TriggerKey>();
+        List<TriggerKey> result = new ArrayList<>();
 
         for (Trigger t : getTriggers(jobKey)) {
             result.add(t.getKey());
@@ -438,7 +438,7 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public List<TriggerConfig> getTriggerConfigsOfJob(final JobKey jobKey) throws SchedulerException {
-        List<TriggerConfig> result = new ArrayList<TriggerConfig>();
+        List<TriggerConfig> result = new ArrayList<>();
 
         for (Trigger t : getTriggers(jobKey)) {
             result.add(getConfigOfTrigger(t));

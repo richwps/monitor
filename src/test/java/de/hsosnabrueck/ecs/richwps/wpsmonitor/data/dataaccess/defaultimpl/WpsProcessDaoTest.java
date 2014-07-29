@@ -98,9 +98,7 @@ public class WpsProcessDaoTest {
 
                     insertedIds[i] = wpsProcess.getId();
                 }
-            } catch (MalformedURLException ex) {
-                fail(ex.toString());
-            } catch (URISyntaxException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 fail(ex.toString());
             }
 

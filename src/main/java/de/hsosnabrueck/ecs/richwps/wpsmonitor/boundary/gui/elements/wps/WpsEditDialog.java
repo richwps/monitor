@@ -185,10 +185,8 @@ public class WpsEditDialog extends javax.swing.JDialog {
             addParentPanel.reInit();
 
             dispose();
-        } catch (MalformedURLException ex) {
-            showUriErrorDialog();
-        } catch (URISyntaxException ex) {
-            showUriErrorDialog();
+        } catch (MalformedURLException | URISyntaxException ex) {
+            MessageDialogs.showError(this, "Malformed URL", "The entered URL is not valid!");
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -199,10 +197,6 @@ public class WpsEditDialog extends javax.swing.JDialog {
     private void newUriTextFieldActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newUriTextFieldActionPerformed
         saveButtonActionPerformed(evt);
     }//GEN-LAST:event_newUriTextFieldActionPerformed
-
-    private void showUriErrorDialog() {
-        MessageDialogs.showError(this, "Malformed URI", "The entered URI is not valid!");
-    }
 
     private void appendTitle(String name) {
         this.setTitle(getTitle() + " " + name);

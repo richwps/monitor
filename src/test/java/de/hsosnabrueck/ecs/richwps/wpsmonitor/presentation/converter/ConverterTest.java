@@ -62,16 +62,16 @@ public class ConverterTest {
     public void setUp() {
 
         dispatch = dispatchFactory.create();
-        data = new ArrayList<MeasuredDataEntity>();
+        data = new ArrayList<>();
 
-        List<AbstractQosEntity> qosEntities = new ArrayList<AbstractQosEntity>();
+        List<AbstractQosEntity> qosEntities = new ArrayList<>();
 
         qosEntities.add(new ExampleQos("muh", 22));
         qosEntities.add(new ExampleQos("buh", 11));
         qosEntities.add(new ExampleQos("valuhu", 9));
         data.add(new MeasuredDataEntity(qosEntities));
 
-        qosEntities = new ArrayList<AbstractQosEntity>();
+        qosEntities = new ArrayList<>();
 
         qosEntities.add(new ExampleQos("muh", 22));
         qosEntities.add(new ExampleQos("buh", 11));

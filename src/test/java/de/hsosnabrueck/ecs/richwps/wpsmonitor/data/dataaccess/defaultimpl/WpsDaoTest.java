@@ -77,9 +77,7 @@ public class WpsDaoTest {
 
         } catch (CreateException ex) {
             fail("Can't create DAO!");
-        } catch (MalformedURLException ex) {
-            fail(ex.toString());
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             fail(ex.toString());
         }
     }
