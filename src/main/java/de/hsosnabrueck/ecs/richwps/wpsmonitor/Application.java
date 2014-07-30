@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.GuiStarter;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.HttpOperation;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
@@ -82,7 +82,7 @@ public class Application {
             rest.start();
 
             LOG.trace("Setup DataDriver Set ...");
-            Set<DataDriver> drivers = new HashSet<>();
+            Set<DataSourceCreator> drivers = new HashSet<>();
             drivers.add(new SemanticProxyData());
 
             LOG.trace("Start GUI ...");

@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.DataSourceDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
@@ -70,7 +70,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     private final DataSourceDialog dsDialog;
 
     public WpsMonitorAdminGui(final Monitor monitor) {
-        this(monitor, new HashSet<DataDriver>());
+        this(monitor, new HashSet<DataSourceCreator>());
     }
 
     /**
@@ -79,7 +79,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
      * @param monitor {@link Monitor} reference
      * @param dataSources List of possible DataSources
      */
-    public WpsMonitorAdminGui(final Monitor monitor, final Set<DataDriver> dataSources) {
+    public WpsMonitorAdminGui(final Monitor monitor, final Set<DataSourceCreator> dataSources) {
         this.monitor = Validate.notNull(monitor, "monitor");
         this.dsDialog = new DataSourceDialog(this, dataSources, this, true);
 

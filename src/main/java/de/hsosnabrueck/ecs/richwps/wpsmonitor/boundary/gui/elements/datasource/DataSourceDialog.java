@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
@@ -48,7 +48,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private final Set<DataDriver> drivers;
+    private final Set<DataSourceCreator> drivers;
     private final Set<DataSource> sources;
     private final WpsMonitorAdminGui mainFrame;
 
@@ -60,7 +60,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public DataSourceDialog(WpsMonitorAdminGui monitorMainFrame, Set<DataDriver> drivers, java.awt.Frame parent, boolean modal) {
+    public DataSourceDialog(WpsMonitorAdminGui monitorMainFrame, Set<DataSourceCreator> drivers, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
         this.drivers = drivers;
@@ -73,7 +73,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
     }
 
     private void init() {
-        for (DataDriver driver : drivers) {
+        for (DataSourceCreator driver : drivers) {
             driverAddPanel.add(new DataDriverPanel(this, driver));
         }
 
@@ -117,7 +117,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        jPanel1.setBorder(BorderFactory.createTitledBorder("Data Drivers"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Registered Data Source Creatores"));
 
         jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -267,8 +267,8 @@ public class DataSourceDialog extends javax.swing.JDialog {
                 String driverName = sourceResourceDriver[0];
                 String resource = sourceResourceDriver[1];
 
-                for (DataDriver driver : drivers) {
-                    if (driver.getDriverName().equals(driverName)) {
+                for (DataSourceCreator driver : drivers) {
+                    if (driver.getCreatorName().equals(driverName)) {
                         try {
                             addDataSource(driver.create(resource));
                         } catch (DataSourceException ex) {

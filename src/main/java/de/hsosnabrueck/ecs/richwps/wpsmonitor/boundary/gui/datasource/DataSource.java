@@ -18,7 +18,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 import java.util.List;
 
 /**
- * A DataSource instance is created by a {@link DataDriver}. A DataSource is
+ * A DataSource instance is created by a {@link DataSourceCreator}. A DataSource is
  * linked to a resource, like a database or file which contains informations
  * over WPS and WPS-Processes. The DataSource need to know how the specific
  * resource is readed.
@@ -38,17 +38,17 @@ public interface DataSource {
     public List<WpsDescription> getWpsList();
 
     /**
-     * Initializes the DataSource-Instance with the used DataDriver-Instance and
-     * the expected resource-type.
+     * Initializes the DataSource-Instance with the used DataSourceCreator-Instance and
+ the expected resource-type.
      *
-     * @param driver DataDriver instance.
+     * @param driver DataSourceCreator instance.
      * @param resource Expected resource type.
      * @throws DataSourceException
      */
-    public void init(DataDriver driver, String resource) throws DataSourceException;
+    public void init(DataSourceCreator driver, String resource) throws DataSourceException;
 
     /**
-     * Gets the name of the used DataDriver instance.
+     * Gets the name of the used DataSourceCreator instance.
      *
      * @return String
      */

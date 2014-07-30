@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import java.awt.Dimension;
@@ -39,7 +39,7 @@ import javax.swing.LayoutStyle;
 public class DataDriverPanel extends javax.swing.JPanel {
 
     private final DataSourceDialog parent;
-    private final DataDriver driver;
+    private final DataSourceCreator driver;
 
     /**
      * Creates new form DataAdapterPanel
@@ -47,7 +47,7 @@ public class DataDriverPanel extends javax.swing.JPanel {
      * @param parent Reference to the parent frame
      * @param driver Driver instance which should cares of
      */
-    public DataDriverPanel(DataSourceDialog parent, DataDriver driver) {
+    public DataDriverPanel(DataSourceDialog parent, DataSourceCreator driver) {
         this.parent = parent;
         this.driver = driver;
 
@@ -56,7 +56,7 @@ public class DataDriverPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        drivername.setText(driver.getDriverName());
+        drivername.setText(driver.getCreatorName());
         expectedType.setText(driver.getExpectedResourceType());
     }
 

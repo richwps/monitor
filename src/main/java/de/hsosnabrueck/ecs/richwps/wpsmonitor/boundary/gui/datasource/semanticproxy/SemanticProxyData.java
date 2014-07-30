@@ -24,7 +24,7 @@ import de.hsos.richwps.sp.client.wps.Process;
 import de.hsos.richwps.sp.client.wps.SPClient;
 import de.hsos.richwps.sp.client.wps.Vocabulary;
 import de.hsos.richwps.sp.client.wps.WPS;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
@@ -44,7 +44,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class SemanticProxyData extends DataDriver implements DataSource {
+public class SemanticProxyData extends DataSourceCreator implements DataSource {
 
     private static final String SP_VOCABULARY_PATH = "/semanticproxy/resources/vocab";
     private static final String SP_ROOT = "/semanticproxy/resources";
@@ -52,12 +52,12 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     private static final Logger LOG = LogManager.getLogger();
 
     private SPClient spClient;
-    private DataDriver driver;
+    private DataSourceCreator creator;
     private String resource;
 
     @Override
-    public void init(final DataDriver driver, final String resource) throws DataSourceException {
-        this.driver = driver;
+    public void init(final DataSourceCreator creator, final String resource) throws DataSourceException {
+        this.creator = creator;
         this.resource = resource;
 
         connect();
@@ -124,7 +124,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     }
 
     @Override
-    public String getDriverName() {
+    public String getCreatorName() {
         return "SemanticProxy-Client";
     }
 
@@ -140,7 +140,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
 
     @Override
     public String getUsedDriver() {
-        return driver.getDriverName();
+        return creator.getCreatorName();
     }
 
     @Override
@@ -152,7 +152,7 @@ public class SemanticProxyData extends DataDriver implements DataSource {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + (this.spClient != null ? this.spClient.hashCode() : 0);
-        hash = 97 * hash + (this.driver != null ? this.driver.hashCode() : 0);
+        hash = 97 * hash + (this.creator != null ? this.creator.hashCode() : 0);
         return hash;
     }
 
@@ -168,6 +168,6 @@ public class SemanticProxyData extends DataDriver implements DataSource {
         if (this.spClient != other.spClient && (this.spClient == null || !this.spClient.equals(other.spClient))) {
             return false;
         }
-        return this.driver == other.driver || (this.driver != null && this.driver.equals(other.driver));
+        return this.creator == other.creator || (this.creator != null && this.creator.equals(other.creator));
     }
 }

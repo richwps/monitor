@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataDriver;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
 import java.util.Set;
@@ -43,7 +43,7 @@ public class GuiStarter {
      * @param controlDependency
      * @param drivers
      */
-    public static void start(final Monitor controlDependency, final Set<DataDriver> drivers) {
+    public static void start(final Monitor controlDependency, final Set<DataSourceCreator> drivers) {
         try {
             // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
