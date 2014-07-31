@@ -76,7 +76,7 @@ public class MonitorControlTest {
         try {
             monitor = new MonitorBuilder()
                     .withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu")
-                    .setupDefault()
+                    .configureDefault()
                     .build();
 
             monitor.getProbeService()
