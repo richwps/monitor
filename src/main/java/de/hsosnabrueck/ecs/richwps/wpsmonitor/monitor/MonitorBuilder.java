@@ -44,51 +44,27 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.JobListener;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 
 /**
- * Builder pattern to build a Monitor-instance. First, call setupDefault() and
- * then personalize the build with the with-methods. If an exception occurs, the
- * builder will catch the exception and rethrow it as a BuilderException.
+ * Builder pattern to build a Monitor-instance. First, call configureDefault()
+ * and then personalize the build with the with-methods. If an exception occurs,
+ * the builder will catch the exception and rethrow it as a
+ * {@link BuilderException}.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorBuilder {
 
     private static final Logger LOG = LogManager.getLogger();
+    private MonitorBuilderCollector storage;
 
     /**
-     * Probe service.
+     * Config object for the monitor instance
      */
-    private ProbeService probeService;
-
-    /**
-     * JobFactoryService for the Quartz-Scheduler.
-     */
-    private JobFactoryService jobFactoryService;
-
-    /**
-     * WpsClient-Factory.
-     */
-    private WpsClientFactory wpsClientFactory;
-
-    /**
-     * WpsClientConfig instance.
-     */
-    private WpsClientConfig wpsClientConfig;
-
-    /**
-     * Monitor eventHandler system.
-     */
-    private MonitorEventHandler eventHandler;
+    private MonitorConfig monitorConfig;
 
     /**
      * Data access factory for QosDataAccess instances.
@@ -106,14 +82,9 @@ public class MonitorBuilder {
     private WpsProcessDaoFactory wpsProcessDaoFactory;
 
     /**
-     * File object which should point to a *.properties file.
+     * WpsClient-Factory.
      */
-    private File propertiesFile;
-
-    /**
-     * Config object for the monitor instance
-     */
-    private MonitorConfig monitorConfig;
+    private WpsClientFactory wpsClientFactory;
 
     /**
      * Jpa instance which holds the EntityManagerFactory - will be used if the
@@ -122,169 +93,314 @@ public class MonitorBuilder {
     private Jpa jpaInstance;
 
     /**
+     * Creates a MonitorBuilder instance which can be used to configure and
+     * create a Monitor instance.
+     */
+    public MonitorBuilder() {
+        this.storage = new MonitorBuilderCollector();
+    }
+
+    /**
+     * Builds a {@link Monitor} instance with all necessary dependencies. This
+     * MonitorBuilder instance will be a part of the Monitor-instance. Be aware
+     * to recycle this MonitorBuilder instance.
+     *
+     * @return Monitor instance
+     * @throws BuilderException
+     */
+    public Monitor build() throws BuilderException {
+        try {
+            buildAllPieces();
+
+            storage.addJobListener(buildMeasureJobListener());
+            setupEventHandler();
+
+            if (!storage.isValid()) {
+                throw new BuilderException("The State of the MonitorBuilder Instance is not valid.");
+            }
+
+            return new Monitor(this);
+        } catch (MonitorConfigException ex) {
+            throw new BuilderException(ex);
+        }
+    }
+
+    /**
+     * Configures the Builder-instance which default values.
+     *
+     * @return MonitorBuilder instance
+     * @throws BuilderException
+     */
+    public MonitorBuilder configureDefault() throws BuilderException {
+        return withDefaultEventHandler()
+                .withDefaultJobFactoryService()
+                .withDefaultProbeService()
+                .withDefaultPropertiesFile()
+                .withDefaultQosDefaultDaoFactory()
+                .withDefaultWpsDefaultClientFactory()
+                .withDefaultWpsDefaultDaoFactory()
+                .withDefaultWpsProcessDefaultDaoFactory();
+    }
+
+    /**
+     * re configures the builder instance.
+     *
+     * @throws BuilderException
+     */
+    public void reConfigure() throws BuilderException {
+        buildAllPieces();
+    }
+
+    private MonitorBuilder buildAllPieces() throws BuilderException {
+        monitorConfig = buildMonitorConfig();
+        qosDaoFactory = buildQosDaoFactory();
+        wpsDaoFactory = buildWpsDaoFactory();
+        wpsProcessDaoFactory = buildWpsProcessDaoFactory();
+        wpsClientFactory = buildWpsClientFactory(buildWpsClientConfig(monitorConfig));
+
+        return this;
+    }
+
+    private Jpa getJpaInstance() throws BuilderException {
+        if (jpaInstance == null) {
+            jpaInstance = new Jpa(storage.getPersistenceUnit());
+        }
+
+        return jpaInstance;
+    }
+
+    /**
+     * Gets the ProbeService-Instance. If the value is not set, a
+     * BuilderException instance will be thrown.
+     *
+     * @return ProbeService-Instance
+     * @throws BuilderException
+     */
+    public ProbeService getProbeService() throws BuilderException {
+        return storage.getProbeService();
+    }
+
+    /**
      * Sets the {@link ProbeService} instance.
      *
-     * @param probeService ProbeService instance
+     * @param probeService ProbeService instance which should be used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withProbeService(ProbeService probeService) {
-        this.probeService = Validate.notNull(probeService, "probeService");
+    public MonitorBuilder withProbeService(final ProbeService probeService) {
+        storage.setProbeService(probeService);
 
         return this;
     }
 
     /**
-     * Sets the properties filename which should be used.
+     * Gets the JobFactoryService-Instance. If the value is not set, a
+     * BuilderException instance will be thrown.
      *
-     * @param fileName Properties filename
-     * @return MonitorBuilder instance
+     * @return JobFactoryService-Instance.
+     * @throws BuilderException
      */
-    public MonitorBuilder withPropertiesFile(String fileName) {
-        File pFile = null;
-
-        if (fileName != null && !"".equals(fileName.trim())) {
-            pFile = new File(fileName);
-        }
-
-        this.propertiesFile = pFile;
-
-        return this;
+    public JobFactoryService getJobFactoryService() throws BuilderException {
+        return storage.getJobFactoryService();
     }
 
     /**
      * Sets the {@link JobFactoryService}-instance.
      *
-     * @param jobFactoryService JobFactoryService instance
+     * @param jobFactoryService JobFactoryService instance which should be used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withJobFactoryService(JobFactoryService jobFactoryService) {
-        this.jobFactoryService = Validate.notNull(jobFactoryService, "jobFactoryService");
+    public MonitorBuilder withJobFactoryService(final JobFactoryService jobFactoryService) {
+        storage.setJobFactoryService(jobFactoryService);
 
         return this;
     }
 
     /**
-     * Sets the {@link QosDaoFactory} instance.
+     * Gets the WpsClient-Default factory. If the value is not set, a
+     * BuilderException instance will be thrown.
      *
-     * @param qosDaoFactory QosDaoFactory instance
+     * @return Factory&lt;WpsClient>
+     * @throws BuilderException
+     */
+    public Factory<WpsClient> getWpsDefaultClientFactory() throws BuilderException {
+        return storage.getWpsDefaultClientFactory();
+    }
+
+    /**
+     * Sets the default client factory instance.
+     *
+     * @param wpsDefaultClientFactory Factory&lt;WpsClient> which should be used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withQosDaoFactory(QosDaoFactory qosDaoFactory) {
-        this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
+    public MonitorBuilder withWpsDefaultClientFactory(final Factory<WpsClient> wpsDefaultClientFactory) {
+        storage.setWpsDefaultClientFactory(wpsDefaultClientFactory);
 
         return this;
     }
 
     /**
-     * Sets the {@link WpsDaoFactory} instance.
+     * Gets the default QosDaoFactory instance. If the value is not set, a
+     * BuilderException instance will be thrown.
      *
-     * @param wpsDaoFactory WpsDaoFactory instance
+     * @return Factory&lt;QosDataAccess> instance
+     * @throws BuilderException
+     */
+    public Factory<QosDataAccess> getQosDefaultDaoFactory() throws BuilderException {
+        return storage.getQosDefaultDaoFactory();
+    }
+
+    /**
+     * Sets the default QosDaoFactory instance.
+     *
+     * @param qosDefaultDaoFactory Factory&lt;QosDataAccess> instance which
+     * should be used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withWpsDaoFactory(WpsDaoFactory wpsDaoFactory) {
-        this.wpsDaoFactory = Validate.notNull(wpsDaoFactory, "wpsDaoFactory");
+    public MonitorBuilder withQosDefaultDaoFactory(final Factory<QosDataAccess> qosDefaultDaoFactory) {
+        storage.setQosDefaultDaoFactory(qosDefaultDaoFactory);
 
         return this;
     }
 
     /**
-     * Sets the {@link WpsProcessDaoFactory} instance.
+     * Gets the defaul WpsDaoFactory instance. If the value is not set, a
+     * BuilderException instance will be thrown.
      *
-     * @param wpsProcessDaoFactory WpsProcessDaoFactory instance
+     * @return Factory&lt;WpsDataAccess> instance
+     * @throws BuilderException
+     */
+    public Factory<WpsDataAccess> getWpsDefaultDaoFactory() throws BuilderException {
+        return storage.getWpsDefaultDaoFactory();
+    }
+
+    /**
+     * Sets the default WpsDaoFactory instance.
+     *
+     * @param wpsDefaultDaoFactory Factory&lt;WpsDataAccess> instance which
+     * should be use
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withWpsProcessDaoFactory(WpsProcessDaoFactory wpsProcessDaoFactory) {
-        this.wpsProcessDaoFactory = Validate.notNull(wpsProcessDaoFactory, "wpsProcessDaoFactory");
+    public MonitorBuilder withWpsDefaultDaoFactory(final Factory<WpsDataAccess> wpsDefaultDaoFactory) {
+        storage.setWpsDefaultDaoFactory(wpsDefaultDaoFactory);
 
         return this;
     }
 
     /**
-     * Sets the {@link Factory&lt;QosDataAccess>} instance. Will be injected in
-     * a new QosDaoFactory instance.
+     * Gets the {@link WpsProcessDataAccess}-Factory instance. If the value is
+     * not set, a BuilderException instance will be thrown.
      *
-     * @param defaultQosDaoFactory Factory&lt;QosDataAccess>
+     * @return Factory&lt;WpsProcessDataAccess> instance
+     * @throws BuilderException
+     */
+    public Factory<WpsProcessDataAccess> getWpsProcessDefaultDaoFactory() throws BuilderException {
+        return storage.getWpsProcessDefaultDaoFactory();
+    }
+
+    /**
+     * Sets the default WpsProcessDaoFactory instance.
+     *
+     * @param wpsProcessDefaultDaoFactory Factory&lt;WpsProcessDataAccess>
+     * instance which should be used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withQosDaoFactory(Factory<QosDataAccess> defaultQosDaoFactory) {
-        this.qosDaoFactory = new QosDaoFactory(defaultQosDaoFactory);
+    public MonitorBuilder withWpsProcessDefaultDaoFactory(final Factory<WpsProcessDataAccess> wpsProcessDefaultDaoFactory) {
+        storage.setWpsProcessDefaultDaoFactory(wpsProcessDefaultDaoFactory);
 
         return this;
     }
 
     /**
-     * Sets the {@link Factory&lt;WpsDataAccess>} instance. Will be injected in
-     * a new WpsDaoFactory instance.
+     * Gets the {@link MonitorEventHandler} instance. If the value is not set, a
+     * BuilderException instance will be thrown.
      *
-     * @param defaultWpsDaoFactory Factory&lt;WpsDataAccess>
+     * @return {@link MonitorEventHandler} instance
+     * @throws BuilderException
+     */
+    public MonitorEventHandler getEventHandler() throws BuilderException {
+        return storage.getEventHandler();
+    }
+
+    /**
+     * Sets the {@link MonitorEventHandler} instance.
+     *
+     * @param eventHandler {@link MonitorEventHandler} instance which should be
+     * used
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withWpsDaoFactory(Factory<WpsDataAccess> defaultWpsDaoFactory) {
-        this.wpsDaoFactory = new WpsDaoFactory(defaultWpsDaoFactory);
+    public MonitorBuilder withEventHandler(final MonitorEventHandler eventHandler) {
+        storage.setEventHandler(eventHandler);
 
         return this;
     }
 
     /**
-     * Sets the {@link Factory&lt;WpsProcessDataAccess>} instance. Will be
-     * injected in a new WpsProcessDaoFactory instance.
+     * Gets the File instance which points to the properties file. If the value
+     * is not set, a BuilderException instance will be thrown.
      *
-     * @param defaultWpsProcessDaoFactory Factory&lt;WpsProcessDataAccess>
+     * @return File instance
+     * @throws BuilderException
+     */
+    public File getPropertiesFile() throws BuilderException {
+        return storage.getPropertiesFile();
+    }
+
+    /**
+     * Sets the properties file.
+     *
+     * @param propertiesFile File instance
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withWpsProcessDaoFactory(Factory<WpsProcessDataAccess> defaultWpsProcessDaoFactory) {
-        this.wpsProcessDaoFactory = new WpsProcessDaoFactory(defaultWpsProcessDaoFactory);
+    public MonitorBuilder withPropertiesFile(final File propertiesFile) {
+        storage.setPropertiesFile(propertiesFile);
 
         return this;
     }
 
     /**
-     * Sets the {@link Factory&lt;WpsClient>} instance. Will be injected in a
-     * new WpsClientFactory instance.
+     * Sets the properties file by filename string.
      *
-     * @param wpsClientFactory
+     * @param propertiesFile String to a file which should exists
      * @return MonitorBuilder instance
      */
-    public MonitorBuilder withWpsClientFactory(Factory<WpsClient> wpsClientFactory) {
-        this.wpsClientFactory = new WpsClientFactory(wpsClientFactory, wpsClientConfig);
+    public MonitorBuilder withPropertiesFile(final String propertiesFile) {
+        File pFile = null;
 
-        return this;
-    }
-
-    /**
-     * Sets the {@link WpsClientFactory} instance.
-     *
-     * @param wpsClientFactory WpsClientFactory instance
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withWpsClientFactory(WpsClientFactory wpsClientFactory) {
-        this.wpsClientFactory = Validate.notNull(wpsClientFactory, "wpsClientFactory");
-
-        return this;
-    }
-
-    /**
-     * Sets the {@link WpsClientConfig} instance. Calls setWpsClientConfig on
-     * the wpsClientFactory
-     *
-     * @param config WpsClientConfig instance
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withWpsClientConfig(WpsClientConfig config) {
-        Validate.notNull(config, "config");
-
-        if (this.wpsClientFactory != null) {
-            this.wpsClientFactory.setWpsClientConfig(wpsClientConfig);
+        if (propertiesFile != null && !"".equals(propertiesFile.trim())) {
+            pFile = new File(propertiesFile);
         }
 
-        this.wpsClientConfig = Validate.notNull(config, "config");
+        storage.setPropertiesFile(pFile);
 
         return this;
     }
 
     /**
-     * Sets the default {@link ProbeService} instance. {@link ProbeService} will
-     * be used.
+     * Gets the name of the persistence unit. If the value is not set, a
+     * BuilderException instance will be thrown.
+     *
+     * @return
+     * @throws BuilderException
+     */
+    public String getPersistenceUnit() throws BuilderException {
+        return storage.getPersistenceUnit();
+    }
+
+    /**
+     * Sets the name of the persistence unit. This value is only needed, if the
+     * default JPA implemenation is used.
+     *
+     * @param persistenceUnit
+     * @return MonitorBuilder instance
+     */
+    public MonitorBuilder withPersistenceUnit(final String persistenceUnit) {
+        storage.setPersistenceUnit(persistenceUnit);
+
+        return this;
+    }
+
+    /**
+     * Sets the default {@link ProbeService} instance.
      *
      * @return MonitorBuilder instance
      */
@@ -293,86 +409,7 @@ public class MonitorBuilder {
     }
 
     /**
-     * Sets the Persistence Unit Name.
-     *
-     * @param pu Persistence unit name for jpa
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withPersistenceUnit(String pu) throws BuilderException {
-        if (jpaInstance != null) {
-            throw new BuilderException("Persistence unit was already set.");
-        }
-        jpaInstance = new Jpa(pu);
-
-        return this;
-    }
-
-    /**
-     * Sets the default Persistence unit name
-     *
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withDefaultPersistenceUnit() throws BuilderException {
-        withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitor_pu");
-
-        return this;
-    }
-
-    private Jpa initJpaInstanceIfNotSet() {
-        if (jpaInstance == null) {
-            try {
-                withDefaultPersistenceUnit();
-            } catch (BuilderException ex) {
-                throw new AssertionError("Can't init JPA.", ex);
-            }
-        }
-
-        return jpaInstance;
-    }
-
-    /**
-     * Sets the default {@link QosDaoFactory} instance.
-     * {@link QosDaoDefaultFactory} will be used.
-     *
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withDefaultQosDaoFactory() {
-        return withQosDaoFactory(new QosDaoDefaultFactory(initJpaInstanceIfNotSet()));
-    }
-
-    /**
-     * Sets the default {@link WpsDaoFactory} instance.
-     * {@link WpsDaoDefaultFactory} will be used.
-     *
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withDefaultWpsDaoFactory() {
-        return withWpsDaoFactory(new WpsDaoDefaultFactory(initJpaInstanceIfNotSet()));
-    }
-
-    /**
-     * Sets the default {@link WpsProcessDaoFactory} instance.
-     * {@link WpsProcessDaoDefaultFactory} will be used.
-     *
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withDefaultWpsProcessDaoFactory() {
-        return withWpsProcessDaoFactory(new WpsProcessDaoDefaultFactory(initJpaInstanceIfNotSet()));
-    }
-
-    /**
-     * Sets the default {@link WpsClient} instance.
-     * {@link SimpleWpsClientFactory} will be used.
-     *
-     * @return MonitorBuilder instance
-     */
-    public MonitorBuilder withDefaultWpsClient() {
-        return withWpsClientFactory(new SimpleWpsClientFactory());
-    }
-
-    /**
      * Sets the default {@link JobFactoryService} instance.
-     * {@link JobFactoryService} will be used.
      *
      * @return MonitorBuilder instance
      */
@@ -381,306 +418,245 @@ public class MonitorBuilder {
     }
 
     /**
-     * Sets the default properties file. monitor.properties will be used as
-     * filename.
+     * Sets the default WpsClientFactory. By default the {@link SimpleWpsClient}
+     * Implementation is used. This implementation is very simple and does not
+     * support chung request or some other nice feature.
+     *
+     * @return MonitorBuilder instance
+     */
+    public MonitorBuilder withDefaultWpsDefaultClientFactory() {
+        return withWpsDefaultClientFactory(new SimpleWpsClientFactory());
+    }
+
+    /**
+     * Sets the default {@link QosDataAccess} factory instance. By default,
+     * {@link QosDaoDefaultFactory} is used and the {@link Jpa} class will be
+     * instantiated once and used for every other default {@link DataAccess}
+     * implementation.
+     *
+     * @return MonitorBuilder instance
+     * @throws BuilderException
+     */
+    public MonitorBuilder withDefaultQosDefaultDaoFactory() throws BuilderException {
+        return withQosDefaultDaoFactory(new QosDaoDefaultFactory(getJpaInstance()));
+    }
+
+    /**
+     * Sets the default {@link WpsDataAccess} factory instance. By default,
+     * {@link WpsDaoDefaultFactory} is used and the {@link Jpa} class will be
+     * instantiated once and used for every other default {@link DataAccess}
+     * implementation.
+     *
+     * @return MonitorBuilder instance
+     * @throws BuilderException
+     */
+    public MonitorBuilder withDefaultWpsDefaultDaoFactory() throws BuilderException {
+        return withWpsDefaultDaoFactory(new WpsDaoDefaultFactory(getJpaInstance()));
+    }
+
+    /**
+     * Sets the default {@link WpsProcessDataAccess} factory instance. By
+     * default, {@link WpsProcessDaoDefaultFactory} is used and the {@link Jpa}
+     * class will be instantiated once and used for every other default
+     * {@link DataAccess} implementation.
+     *
+     * @return MonitorBuilder instance
+     * @throws BuilderException
+     */
+    public MonitorBuilder withDefaultWpsProcessDefaultDaoFactory() throws BuilderException {
+        return withWpsProcessDefaultDaoFactory(new WpsProcessDaoDefaultFactory(getJpaInstance()));
+    }
+
+    /**
+     * Sets the {@link MonitorEventHandler} as default instance.
+     *
+     * @return MonitorBuilder instance
+     */
+    public MonitorBuilder withDefaultEventHandler() {
+        return withEventHandler(new MonitorEventHandler());
+    }
+
+    /**
+     * Sets the default Properties file. By default, the file with the name
+     * monitor.properties is used. If the file does not exists, the monitor will
+     * create the file.
      *
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withDefaultPropertiesFile() {
-        withPropertiesFile("monitor.properties");
-
-        return this;
+        return withPropertiesFile("monitor.properties");
     }
 
-    private void setupMonitorConfig() throws BuilderException {
-        if (propertiesFile == null) {
-            withDefaultPropertiesFile();
-        }
+    /**
+     * Creates the {@link WpsClientFactory} with the given
+     * {@link WpsClientConfig}-Instance.
+     *
+     * @param wpsClientConfig
+     * @return {@link WpsClientFactory} instance
+     * @throws BuilderException
+     */
+    public WpsClientFactory buildWpsClientFactory(final WpsClientConfig wpsClientConfig) throws BuilderException {
+        return new WpsClientFactory(storage.getWpsDefaultClientFactory(), wpsClientConfig);
+    }
 
+    /**
+     * Creates the {@link QosDaoFactory} instance.
+     *
+     * @return {@link QosDaoFactory} instance
+     * @throws BuilderException
+     */
+    public QosDaoFactory buildQosDaoFactory() throws BuilderException {
+        return new QosDaoFactory(storage.getQosDefaultDaoFactory());
+    }
+
+    /**
+     * Creates the {@link WpsDaoFactory} instance.
+     *
+     * @return {@link WpsDaoFactory} instance
+     * @throws BuilderException
+     */
+    public WpsDaoFactory buildWpsDaoFactory() throws BuilderException {
+        return new WpsDaoFactory(storage.getWpsDefaultDaoFactory());
+    }
+
+    /**
+     *
+     * @return @throws BuilderException
+     */
+    public WpsProcessDaoFactory buildWpsProcessDaoFactory() throws BuilderException {
+        return new WpsProcessDaoFactory(storage.getWpsProcessDefaultDaoFactory());
+    }
+
+    private MeasureJobListener buildMeasureJobListener() throws BuilderException {
+        return new MeasureJobListener(buildWpsProcessDaoFactory(), storage.getEventHandler());
+    }
+
+    private MonitorConfig buildMonitorConfig() throws BuilderException {
         try {
-            monitorConfig = new MonitorConfig(propertiesFile);
+            return new MonitorConfig(storage.getPropertiesFile());
         } catch (MonitorConfigException ex) {
             throw new BuilderException(ex);
         }
     }
 
-    /**
-     * Calls all default methods.
-     *
-     * @return MonitorBuilder instance
-     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException
-     */
-    public MonitorBuilder setupDefault() throws BuilderException {
-        return withDefaultProbeService()
-                .withDefaultWpsClient()
-                .withDefaultPersistenceUnit()
-                .withDefaultQosDaoFactory()
-                .withDefaultWpsDaoFactory()
-                .withDefaultWpsProcessDaoFactory()
-                .withDefaultJobFactoryService()
-                .withDefaultPropertiesFile();
+    private SchedulerControl buildSchedulerControl() throws BuilderException {
+        SchedulerFactory schedulerFactory = new SchedulerFactory(storage.getJobFactoryService(), storage.getJobListeners());
+
+        try {
+            return new SchedulerControl(schedulerFactory.create(), storage.getJobFactoryService());
+        } catch (CreateException ex) {
+            throw new BuilderException(ex);
+        }
     }
 
     /**
-     * Sets the default {@link SchedulerFactory} instance up whith all
-     * dependencies.
+     * Builds the {@link MonitorControl}-instance with the needed dependencies.
      *
-     * @return SchedulerFactory SchedulerFactory instance
-     * @throws CreateException
-     */
-    private SchedulerFactory setupSchedulerFactory() throws CreateException {
-        if (this.wpsProcessDaoFactory == null) {
-            withDefaultWpsProcessDaoFactory();
-        }
-
-        if (this.jobFactoryService == null) {
-            withDefaultJobFactoryService();
-        }
-
-        List<JobListener> jobListeners = new ArrayList<>();
-        jobListeners.add(new MeasureJobListener(wpsProcessDaoFactory, eventHandler));
-
-        return new SchedulerFactory(jobFactoryService, jobListeners);
-    }
-
-    /**
-     * Build {@link WpsDataAccess} instance.
-     *
-     * @return WpsDataAccess instance
-     * @throws CreateException
+     * @return {@link MonitorControl} instance.
      * @throws BuilderException
      */
-    public WpsDataAccess buildWpsDataAccess() throws CreateException, BuilderException {
-        if (wpsDaoFactory == null) {
-            throw new BuilderException("WpsDaoFactory is not set.");
-        }
-
-        return wpsDaoFactory.create();
-    }
-
-    /**
-     * Build {@link WpsClient} instance.
-     *
-     * @return WpsClient instance
-     * @throws CreateException
-     * @throws BuilderException
-     */
-    public WpsClient buildWpsClient() throws CreateException, BuilderException {
-        if (wpsClientFactory == null) {
-            throw new BuilderException("WpsClientFactory is not set.");
-        }
-
-        return wpsClientFactory.create();
-    }
-
-    /**
-     * Build {@link WpsProcessDataAccess} instance.
-     *
-     * @return WpsProcessDataAccess instance
-     * @throws CreateException
-     * @throws BuilderException
-     */
-    public WpsProcessDataAccess buildWpsProcessDataAccess() throws CreateException, BuilderException {
-        if (wpsProcessDaoFactory == null) {
-            throw new BuilderException("wpsProcessDaoFactory is not set.");
-        }
-
-        return wpsProcessDaoFactory.create();
-    }
-
-    /**
-     * Build {@link QosDataAccess} instance.
-     *
-     * @return QosDataAccess instance
-     * @throws CreateException
-     * @throws BuilderException
-     */
-    public QosDataAccess buildQosDataAccess() throws CreateException, BuilderException {
-        if (qosDaoFactory == null) {
-            throw new BuilderException("qosDaoFactory is not set.");
-        }
-
-        return qosDaoFactory.create();
-    }
-
-    /**
-     * Build {@link MonitorEventHandler} instance.
-     *
-     * @return MonitorEventHandler instance
-     */
-    public MonitorEventHandler buildEventHandler() {
-        return new MonitorEventHandler();
-    }
-
-    /**
-     * Build {@link Scheduler} instance.
-     *
-     * @return Scheduler instance
-     * @throws SchedulerException
-     * @throws CreateException
-     */
-    public Scheduler buildScheduler() throws SchedulerException, CreateException {
-        return setupSchedulerFactory().create();
-    }
-
-    /**
-     * Build {@link SchedulerControl} instance.
-     *
-     * @return SchedulerControl instance
-     * @throws SchedulerException
-     * @throws CreateException
-     */
-    public SchedulerControl buildSchedulerControl() throws SchedulerException, CreateException {
-        return new SchedulerControl(buildScheduler(), jobFactoryService);
-    }
-
-    /**
-     * Evaluates if the builder has all dependencies to create a
-     * {@link Monitor}-instance.
-     *
-     * @return true if all dependencies are known, otherwise false
-     */
-    public Boolean isValid() {
-        return !(probeService == null
-                || wpsDaoFactory == null
-                || qosDaoFactory == null
-                || wpsProcessDaoFactory == null
-                || wpsClientFactory == null
-                || propertiesFile == null);
-    }
-
     public MonitorControlImpl buildMonitorControl() throws BuilderException {
-        MonitorControlImpl control = null;
-
-        if (isValid()) {
-            try {
-                control = new MonitorControlImpl(buildSchedulerControl(),
-                        getEventHandler(),
-                        qosDaoFactory,
-                        wpsDaoFactory,
-                        wpsProcessDaoFactory
-                );
-            } catch (SchedulerException | CreateException ex) {
-                throw new BuilderException(ex);
-            }
-        }
-
-        return control;
+        return new MonitorControlImpl(buildSchedulerControl(), storage.getEventHandler(), qosDaoFactory, wpsDaoFactory, wpsProcessDaoFactory);
     }
 
-    /**
-     * Build a {@link Monitor} instance with all necessary dependencies. This
-     * MonitorBuilder instance will be a part of the Monitor-instance. Be aware
-     * to recycle this MonitorBuilder instance.
-     *
-     * @return Monitor instance
-     * @throws BuilderException
-     */
-    public Monitor build() throws BuilderException {
+    private WpsClientConfig buildWpsClientConfig(final MonitorConfig config) throws BuilderException {
+        WpsClientConfig wpsClientConfig = new WpsClientConfig();
+        wpsClientConfig.setConnectionTimeout(config.getWpsClientTimeout());
 
+        return wpsClientConfig;
+    }
+
+    private void setupEventHandler() throws BuilderException {
+        storage.getEventHandler()
+                .registerEvent("scheduler.wpsjob.wasexecuted");
+        storage.getEventHandler()
+                .registerEvent("measurement.wpsjob.wpsexception");
+        storage.getEventHandler()
+                .registerEvent("monitor.start");
+        storage.getEventHandler()
+                .registerEvent("monitor.restart");
+        storage.getEventHandler()
+                .registerEvent("monitor.shutdown");
+
+        if (isJpaUsed()) {
+            setupJpaListeners();
+        }
+    }
+
+    private void setupJpaListeners() throws BuilderException {
         try {
-            if (!isValid()) {
-                throw new BuilderException("Builder state is not valid because of some dependencies are missing. Call setupDefault() first.");
-            }
+            // register JPA start
+            storage.getEventHandler().registerListener("monitor.start",
+                    new MonitorEventListener() {
 
-            setupEventHandler();
-            setupMonitorConfig();
+                        @Override
+                        public void execute(MonitorEvent event) {
+                            jpaInstance.open();
+                        }
+                    }
+            );
 
-            if (wpsClientConfig == null) {
-                withWpsClientConfig(new WpsClientConfig());
-            }
+            // register JPA Shutdown
+            storage.getEventHandler().registerListener("monitor.shutdown",
+                    new MonitorEventListener() {
 
-            wpsClientConfig.setConnectionTimeout(monitorConfig.getWpsClientTimeout());
-
-            registerJpaListenersIfUsed();
-
-            return new Monitor(this);
-        } catch (MonitorConfigException ex) {
-            throw new BuilderException(ex);
+                        @Override
+                        public void execute(MonitorEvent event) {
+                            jpaInstance.close();
+                        }
+                    }
+            );
+        } catch (EventNotFound ex) {
+            LOG.error("Can't register the JPA listener.", ex);
         }
     }
 
-    private void registerJpaListenersIfUsed() {
-        if (jpaInstance != null) {
-            try {
-                // register JPA start
-                eventHandler.registerListener("monitor.start",
-                        new MonitorEventListener() {
-
-                            @Override
-                            public void execute(MonitorEvent event) {
-                                jpaInstance.open();
-                            }
-                        }
-                );
-
-                // register JPA Shutdown
-                eventHandler.registerListener("monitor.shutdown",
-                        new MonitorEventListener() {
-
-                            @Override
-                            public void execute(MonitorEvent event) {
-                                jpaInstance.close();
-                            }
-                        }
-                );
-            } catch (EventNotFound ex) {
-                LOG.error("Can't register the JPA listener.", ex);
-            }
-        }
+    private Boolean isJpaUsed() {
+        return jpaInstance != null;
     }
 
     /**
-     * Sets the MonitorEventHandler up.
+     * Gets the configured {@link MonitorConfig}-instance.
+     *
+     * @return {@link MonitorConfig}-instance
      */
-    private void setupEventHandler() {
-        if (this.eventHandler == null) {
-            this.eventHandler = buildEventHandler();
-        }
-
-        eventHandler.registerEvent("scheduler.wpsjob.wasexecuted");
-        eventHandler.registerEvent("measurement.wpsjob.wpsexception");
-        eventHandler.registerEvent("monitor.start");
-        eventHandler.registerEvent("monitor.restart");
-        eventHandler.registerEvent("monitor.shutdown");
+    public MonitorConfig getMonitorConfig() {
+        return monitorConfig;
     }
 
-    public ProbeService getProbeService() {
-        return probeService;
-    }
-
+    /**
+     * Gets the configured QosDaoFactory instance.
+     *
+     * @return Factory&lt;QosDataAcccess> instance
+     */
     public QosDaoFactory getQosDaoFactory() {
         return qosDaoFactory;
     }
 
+    /**
+     * Gets the configured WpsDaoFactory instance.
+     *
+     * @return Factory&lt;WpsDataAccess> instance
+     */
     public WpsDaoFactory getWpsDaoFactory() {
         return wpsDaoFactory;
     }
 
+    /**
+     * Gets the configured WpsProcessDaoFactory instance.
+     *
+     * @return Factory&lt;WpsProcessDataAccess> instance
+     */
     public WpsProcessDaoFactory getWpsProcessDaoFactory() {
         return wpsProcessDaoFactory;
     }
 
+    /**
+     * Gets the configured WpsClientFactory instance.
+     *
+     * @return Factory&lt;WpsClient> instance
+     */
     public WpsClientFactory getWpsClientFactory() {
         return wpsClientFactory;
-    }
-
-    public MonitorEventHandler getEventHandler() {
-        if (this.eventHandler == null) {
-            setupEventHandler();
-        }
-        return eventHandler;
-    }
-
-    public WpsClientConfig getWpsClientConfig() {
-        return wpsClientConfig;
-    }
-
-    public File getPropertiesFile() {
-        return propertiesFile;
-    }
-
-    public MonitorConfig getMonitorConfig() {
-        return monitorConfig;
     }
 }
