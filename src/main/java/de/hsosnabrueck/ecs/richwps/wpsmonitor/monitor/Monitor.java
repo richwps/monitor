@@ -35,6 +35,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryServic
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -70,12 +71,16 @@ public class Monitor {
 
     public Monitor(MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");
-        Validate.isTrue(builder.isValid(), "builder");
 
         initMonitorWithBuilder(builder);
         registerShutdownHook();
     }
 
+    /**
+     * Starts the monitor if not already running.
+     * 
+     * @throws MonitorException 
+     */
     public void start() throws MonitorException {
         if (!isActive()) {
             beforeStart();
@@ -93,6 +98,11 @@ public class Monitor {
         }
     }
 
+    /**
+     * Shutting down the monitor if it is running.
+     * 
+     * @throws MonitorException 
+     */
     public void shutdown() throws MonitorException {
         if (isActive()) {
             LOG.debug("Monitor shutdown.");
@@ -115,7 +125,13 @@ public class Monitor {
                 .fireEvent(new MonitorEvent("monitor.restart"));
 
         shutdown();
-
+        
+        try {
+            builderInstance.reConfigure();
+        } catch (BuilderException ex) {
+            throw new MonitorException("A Builder Exception is occourd.", ex);
+        }
+        
         initMonitorWithBuilder(builderInstance);
         start();
     }
@@ -233,9 +249,9 @@ public class Monitor {
 
             jobFactoryService.register(MeasureJob.class, measureJobFactory);
             jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
-        } catch (CreateException ex) {
+        } catch (CreateException | BuilderException ex) {
             throw new AssertionError("Can't setup the Jobfactories. Execution aborted.", ex);
-        }
+        } 
     }
 
     public MonitorControl getMonitorControl() {
@@ -259,8 +275,13 @@ public class Monitor {
     }
 
     public ProbeService getProbeService() {
-        return builderInstance
-                .getProbeService();
+        try {
+            return builderInstance
+                    .getProbeService();
+        } catch (BuilderException ex) {
+            // at this point, this exception should never be thrown
+            throw new AssertionError("ProbeService seems to not builded yet.", ex);
+        }
     }
 
     public Boolean isActive() {
