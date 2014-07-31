@@ -102,7 +102,8 @@ public class Application {
      */
     public Monitor setupMonitor() throws BuilderException {
         Monitor monitor = new MonitorBuilder()
-                .setupDefault()
+                .withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitor_pu")
+                .configureDefault()
                 .build();
 
         monitor.getProbeService()
