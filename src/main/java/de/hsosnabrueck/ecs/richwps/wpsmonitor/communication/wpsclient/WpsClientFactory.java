@@ -52,7 +52,7 @@ public final class WpsClientFactory implements Factory<WpsClient> {
 
     public WpsClientFactory(final Factory<WpsClient> defaultClient, final WpsClientConfig config) {
         this.defaultClientImpl = Validate.notNull(defaultClient, "defaultClient");
-        setWpsClientConfig(wpsClientConfig);
+        setWpsClientConfig(config);
     }
 
     public WpsClientConfig getWpsClientConfig() {
