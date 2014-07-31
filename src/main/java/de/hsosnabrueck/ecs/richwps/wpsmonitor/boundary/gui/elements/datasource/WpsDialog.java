@@ -15,7 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
@@ -239,21 +241,25 @@ public class WpsDialog extends javax.swing.JDialog {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Data Sources");
 
         for (DataSource source : sources) {
-            String rootTitle = source.getUsedDriver() + ": " + source.getRessource();
-            DefaultMutableTreeNode wpsRoot = new DefaultMutableTreeNode(rootTitle);
-
-            for (WpsDescription wpsDesc : source.getWpsList()) {
-                DefaultMutableTreeNode wps = new WpsTreeNode(wpsDesc, WpsTreeNode.NodeType.WPS);
-
-                for (WpsProcessDescription processDesc : wpsDesc.getProcesses()) {
-                    DefaultMutableTreeNode processNode = new WpsTreeNode(processDesc, WpsTreeNode.NodeType.PROCESS);
-                    wps.add(processNode);
+            try {
+                String rootTitle = source.getUsedDriver() + ": " + source.getRessource();
+                DefaultMutableTreeNode wpsRoot = new DefaultMutableTreeNode(rootTitle);
+                
+                for (WpsDescription wpsDesc : source.getWpsList()) {
+                    DefaultMutableTreeNode wps = new WpsTreeNode(wpsDesc, WpsTreeNode.NodeType.WPS);
+                    
+                    for (WpsProcessDescription processDesc : wpsDesc.getProcesses()) {
+                        DefaultMutableTreeNode processNode = new WpsTreeNode(processDesc, WpsTreeNode.NodeType.PROCESS);
+                        wps.add(processNode);
+                    }
+                    
+                    wpsRoot.add(wps);
                 }
-
-                wpsRoot.add(wps);
+                
+                root.add(wpsRoot);
+            } catch (DataSourceException ex) {
+                MessageDialogs.showError(this, "Error", "An Exception occourd while loading the WPS List. Message was: " + ex.toString());
             }
-
-            root.add(wpsRoot);
         }
 
         wpsTree = new JTree(root);
