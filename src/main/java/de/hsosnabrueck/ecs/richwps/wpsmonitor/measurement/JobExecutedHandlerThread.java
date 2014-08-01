@@ -17,8 +17,8 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;

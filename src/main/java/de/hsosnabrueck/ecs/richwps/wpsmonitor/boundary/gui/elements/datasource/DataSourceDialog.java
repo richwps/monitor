@@ -20,9 +20,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;

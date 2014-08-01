@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.EnumMap;
 import java.util.Map;

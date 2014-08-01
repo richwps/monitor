@@ -17,7 +17,7 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
 import java.util.Set;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

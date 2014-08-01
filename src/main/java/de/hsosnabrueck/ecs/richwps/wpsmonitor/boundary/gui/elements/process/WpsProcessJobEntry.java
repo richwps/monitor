@@ -20,7 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures.IntervalComboBoxItem;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

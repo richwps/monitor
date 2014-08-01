@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MeasureJobListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
@@ -33,26 +37,23 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.Jpa;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.SchedulerFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Builder pattern to build a Monitor-instance. First, call configureDefault()
- * and then personalize the build with the with-methods. If an exception occurs,
- * the builder will catch the exception and rethrow it as a
- * {@link BuilderException}.
+ * Builder pattern to build a Monitor-instance. First, call setupDefault()
+ and then personalize the build with the with-methods. If an exception occurs,
+ the builder will catch the exception and rethrow it as a
+ {@link BuilderException}.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -131,7 +132,7 @@ public class MonitorBuilder {
      * @return MonitorBuilder instance
      * @throws BuilderException
      */
-    public MonitorBuilder configureDefault() throws BuilderException {
+    public MonitorBuilder setupDefault() throws BuilderException {
         return withDefaultEventHandler()
                 .withDefaultJobFactoryService()
                 .withDefaultProbeService()

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
 /**
- * Will be thrown if the given eventName does not match any registred eventName.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class EventNotFound extends Exception {
+public class MonitorException extends Exception {
 
-    public EventNotFound(final String eventName) {
-        super("Eventname " + eventName + " could not resolved.");
+    public MonitorException(String msg, Throwable ex) {
+        super(msg, ex);
     }
-
 }

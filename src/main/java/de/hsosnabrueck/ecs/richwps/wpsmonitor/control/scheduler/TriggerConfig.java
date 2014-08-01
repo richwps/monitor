@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Pair;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;

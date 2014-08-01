@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
@@ -26,9 +28,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAcce
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.URI;
 import java.util.ArrayList;

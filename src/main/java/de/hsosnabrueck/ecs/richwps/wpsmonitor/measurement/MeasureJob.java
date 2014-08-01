@@ -92,7 +92,7 @@ public class MeasureJob implements Job {
             if (!error && request.getRequestTime() != null) {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
-            }
+            } 
 
             LOG.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     context.getJobDetail().getKey(),

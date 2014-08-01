@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event;
 
 /**
+ * Interface that needs to be implement by event listeners.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorException extends Exception {
+public interface MonitorEventListener {
 
-    public MonitorException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+    /**
+     * Execute method which handles the listener behavior.
+     *
+     * @param event MonitorEvent-instance
+     */
+    public void execute(MonitorEvent event);
 }

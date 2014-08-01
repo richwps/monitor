@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
@@ -26,16 +28,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJobFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.SchedulerControl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;

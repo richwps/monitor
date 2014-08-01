@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
 import spark.Route;
 
 /**

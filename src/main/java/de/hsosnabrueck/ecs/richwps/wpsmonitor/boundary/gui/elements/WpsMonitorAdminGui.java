@@ -21,8 +21,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.D
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.Color;

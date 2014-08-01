@@ -19,7 +19,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.Dispatcher
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 

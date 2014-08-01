@@ -32,10 +32,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.util.HashSet;
 import java.util.Locale;
@@ -103,7 +103,7 @@ public class Application {
     public Monitor setupMonitor() throws BuilderException {
         Monitor monitor = new MonitorBuilder()
                 .withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitor_pu")
-                .configureDefault()
+                .setupDefault()
                 .build();
 
         monitor.getProbeService()

@@ -20,9 +20,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAd
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Color;
 import java.awt.Dimension;

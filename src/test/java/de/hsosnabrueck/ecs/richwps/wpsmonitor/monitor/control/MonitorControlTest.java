@@ -15,6 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.SchedulerControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
@@ -25,9 +27,9 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.MonitorBuilder;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -76,7 +78,7 @@ public class MonitorControlTest {
         try {
             monitor = new MonitorBuilder()
                     .withPersistenceUnit("de.hsosnabrueck.ecs.richwps_WPSMonitorTEST_pu")
-                    .configureDefault()
+                    .setupDefault()
                     .build();
 
             monitor.getProbeService()

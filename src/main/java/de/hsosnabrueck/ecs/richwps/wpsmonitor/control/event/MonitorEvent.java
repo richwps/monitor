@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event;
 
 import java.util.Date;
 

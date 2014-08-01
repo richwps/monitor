@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event;
 
 /**
- * Interface that needs to be implement by event listeners.
+ * Will be thrown if the given eventName does not match any registred eventName.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface MonitorEventListener {
+public class EventNotFound extends Exception {
 
-    /**
-     * Execute method which handles the listener behavior.
-     *
-     * @param event MonitorEvent-instance
-     */
-    public void execute(MonitorEvent event);
+    public EventNotFound(final String eventName) {
+        super("Eventname " + eventName + " could not resolved.");
+    }
+
 }

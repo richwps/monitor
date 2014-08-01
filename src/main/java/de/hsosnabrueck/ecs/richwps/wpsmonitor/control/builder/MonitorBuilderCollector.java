@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor;
+package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
@@ -23,8 +23,8 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.monitor.scheduler.JobFactoryService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.io.File;
 import java.lang.reflect.Field;
