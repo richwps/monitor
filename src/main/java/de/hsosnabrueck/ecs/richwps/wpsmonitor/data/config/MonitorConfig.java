@@ -63,7 +63,7 @@ public final class MonitorConfig {
 
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
         this.properties = new Properties(DEFAULT_PROPERTIES);
-        this.propertiesFile = propertiesFile == null && propertiesFile.exists() ? new File("monitor.properties") : propertiesFile;
+        this.propertiesFile = propertiesFile == null ? new File("monitor.properties") : propertiesFile;
         /* Using magic string because, if you use a valid propertie file,
          then you can decide which name the propertie file has */
 
