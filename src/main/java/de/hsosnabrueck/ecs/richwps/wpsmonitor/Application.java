@@ -23,7 +23,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.RestInterface;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.RestInterfaceBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementAllAliasRoute;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementNoFormatAliasRoute;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementNoMetricsAliasRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
@@ -152,7 +152,7 @@ public class Application {
                     public MonitorRoute create() throws CreateException {
                         // Alias for the ListMeasurementRoute
                         // /measurement/wps/:wps/process/:process/count/:count
-                        return new ListMeasurementNoFormatAliasRoute();
+                        return new ListMeasurementNoMetricsAliasRoute();
                     }
                 })
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())

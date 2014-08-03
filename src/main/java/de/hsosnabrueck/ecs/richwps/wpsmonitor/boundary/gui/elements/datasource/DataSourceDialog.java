@@ -115,6 +115,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
         showWpsOfSourcesButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("DataCreators- and Resources");
         setResizable(false);
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Registered Data Source Creatores"));

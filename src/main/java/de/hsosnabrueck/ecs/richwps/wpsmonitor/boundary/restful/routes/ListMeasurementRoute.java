@@ -40,7 +40,7 @@ public class ListMeasurementRoute extends MonitorRoute {
     }
 
     public ListMeasurementRoute() {
-        super("/measurement/wps/:wps/process/:process/count/:count/format/:format");
+        super("/measurement/wps/:wps/process/:process/count/:count/display/:display");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ListMeasurementRoute extends MonitorRoute {
             String wpsIdentifier = Validate.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Validate.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
-            String format = request.params(":format");
+            String display = request.params(":display");
 
             List<MeasuredDataEntity> measuredData = getMonitorControl()
                     .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
@@ -60,10 +60,18 @@ public class ListMeasurementRoute extends MonitorRoute {
 
             Map<String, Object> toPresentate = null;
 
-            if ("converted".equals(format)) {
-                toPresentate = getConverted(measuredData);
-            } else if ("both".equals(format)) {
-                toPresentate = getRawAndConverted(measuredData);
+            if (display != null) {
+                switch (display) {
+                    case "metric":
+                        toPresentate = getMetrics(measuredData);
+                        break;
+                    case "values":
+                        toPresentate = getRaw(measuredData);
+                        break;
+                    default:
+                        toPresentate = getRawAndMetrics(measuredData);
+                        break;
+                }
             }
 
             if (toPresentate == null) {
@@ -82,7 +90,7 @@ public class ListMeasurementRoute extends MonitorRoute {
         return null;
     }
 
-    private Map<String, Object> getConverted(List<MeasuredDataEntity> measuredData) {
+    private Map<String, Object> getMetrics(List<MeasuredDataEntity> measuredData) {
         return getDispatch().dispatchToMetric(measuredData);
     }
 
@@ -90,7 +98,7 @@ public class ListMeasurementRoute extends MonitorRoute {
         return getDispatch().dispatchData(measuredData);
     }
 
-    private Map<String, Object> getRawAndConverted(List<MeasuredDataEntity> measuredData) {
+    private Map<String, Object> getRawAndMetrics(List<MeasuredDataEntity> measuredData) {
         return getDispatch().dispatchBoth(measuredData);
     }
 

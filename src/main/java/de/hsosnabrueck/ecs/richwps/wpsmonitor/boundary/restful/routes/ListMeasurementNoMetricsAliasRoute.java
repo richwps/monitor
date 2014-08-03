@@ -19,9 +19,9 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ListMeasurementNoFormatAliasRoute extends ListMeasurementRoute {
+public class ListMeasurementNoMetricsAliasRoute extends ListMeasurementRoute {
 
-    public ListMeasurementNoFormatAliasRoute() {
+    public ListMeasurementNoMetricsAliasRoute() {
         super("/measurement/wps/:wps/process/:process/count/:count");
     }
 }

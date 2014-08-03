@@ -305,8 +305,9 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
         });
         monitorMenu.add(restartButton);
 
+        dataSourceMenuITem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
         dataSourceMenuITem.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
-        dataSourceMenuITem.setText("Datasources- and Drivers");
+        dataSourceMenuITem.setText("DataCreators- and Resources");
         dataSourceMenuITem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 dataSourceMenuITemActionPerformed(evt);

@@ -92,6 +92,7 @@ public class WpsDialog extends javax.swing.JDialog {
         JLabel jLabel1 = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("List of WPS-Servers- and Processes");
         setMaximumSize(null);
         setMinimumSize(null);
         setResizable(false);
