@@ -67,7 +67,8 @@ import javax.swing.WindowConstants;
 public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
     private final Monitor monitor;
-    private final DataSourceDialog dsDialog;
+    private DataSourceDialog dsDialog;
+    private final Set<DataSourceCreator> dataSources;
 
     public WpsMonitorAdminGui(final Monitor monitor) {
         this(monitor, new HashSet<DataSourceCreator>());
@@ -81,7 +82,12 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
      */
     public WpsMonitorAdminGui(final Monitor monitor, final Set<DataSourceCreator> dataSources) {
         this.monitor = Validate.notNull(monitor, "monitor");
-        this.dsDialog = new DataSourceDialog(this, dataSources, this, true);
+        
+        if(dataSources == null) {
+            this.dataSources = new HashSet<>();
+        } else {
+            this.dataSources = dataSources;
+        }
 
         initComponents();
         init();
@@ -489,6 +495,10 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     }//GEN-LAST:event_restartButtonActionPerformed
 
     private void dataSourceMenuITemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dataSourceMenuITemActionPerformed
+        if(this.dsDialog == null) {
+            this.dsDialog = new DataSourceDialog(this, dataSources, true);
+        }
+        
         this.dsDialog.setVisible(true);
     }//GEN-LAST:event_dataSourceMenuITemActionPerformed
 
