@@ -49,7 +49,7 @@ public class CleanUpJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
-            LOG.debug("Cleanup Job: deleteAllOlderAs {}", olderAs);
+            LOG.info("Cleanup Job: deleteAllOlderAs {}", olderAs);
             qosDao.deleteAllOlderAs(olderAs);
         } finally {
             qosDao.close();

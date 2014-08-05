@@ -82,7 +82,7 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
     }
 
     @Override
-    public List<WpsDescription> getWpsList() {
+    public List<WpsDescription> getWpsList() throws DataSourceException {
         List<WpsDescription> result = new ArrayList<>();
 
         try {
@@ -102,7 +102,7 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
                 result.add(wpsDescription);
             }
         } catch (ResourceNotFoundException | InternalSPException | CommunicationException | RDFException | URISyntaxException ex) {
-            LOG.error("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
+            throw new DataSourceException("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         }
 
         return result;

@@ -28,15 +28,16 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasur
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Log4j2Utils;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -53,6 +54,7 @@ import org.apache.logging.log4j.Logger;
 public class Application {
 
     private static final Logger LOG = LogManager.getLogger();
+    private static final String LOG_DIRECTORY = Log4j2Utils.getFileNameIfExists();
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.GERMANY);
@@ -86,7 +88,9 @@ public class Application {
             drivers.add(new SemanticProxyData());
 
             LOG.trace("Start GUI ...");
-            GuiStarter.start(monitor, drivers);
+            GuiStarter.start(monitor, LOG_DIRECTORY, drivers);
+
+            LOG.info("WpsMonitor is started.");
         } catch (MonitorException ex) {
             throw new AssertionError("Can't start the monitor!", ex);
         } catch (BuilderException ex) {

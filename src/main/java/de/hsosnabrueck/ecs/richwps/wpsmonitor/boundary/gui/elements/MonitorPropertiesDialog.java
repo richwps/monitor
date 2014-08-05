@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,10 +51,9 @@ public class MonitorPropertiesDialog extends javax.swing.JDialog {
      * Constructor.
      *
      * @param monitorMainFrame Reference to the MainFrame of this gui
-     * @param modal true for modal dialog
      */
-    public MonitorPropertiesDialog(WpsMonitorAdminGui monitorMainFrame, boolean modal) {
-        super(monitorMainFrame, modal);
+    public MonitorPropertiesDialog(WpsMonitorAdminGui monitorMainFrame) {
+        super(monitorMainFrame, true);
 
         this.monitorMainFrame = monitorMainFrame;
 

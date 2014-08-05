@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
@@ -102,8 +102,8 @@ public class WpsProcessPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess, true);
-        this.measuredDataDialog = new ShowMeasuredDataDialog(mainFrame, wpsProcess, true);
+        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess);
+        this.measuredDataDialog = new ShowMeasuredDataDialog(mainFrame, wpsProcess);
 
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());

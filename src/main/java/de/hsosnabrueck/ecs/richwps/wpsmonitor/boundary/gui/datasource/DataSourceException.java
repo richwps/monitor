@@ -23,11 +23,15 @@ package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource;
  */
 public class DataSourceException extends Exception {
 
-    public DataSourceException(String toString) {
-        super(toString);
+    public DataSourceException(final String msg) {
+        super(msg);
     }
-
-    public DataSourceException(Throwable ex) {
+    
+    public DataSourceException(final String msg, final Throwable ex) {
+        super(msg, ex);
+    }
+    
+    public DataSourceException(final Throwable ex) {
         super(ex);
     }
 

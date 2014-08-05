@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
@@ -69,7 +69,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps, true);
+        this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps);
         setWpsTextLabels(wps);
 
         registerMonitoringPausedEvent();
@@ -275,7 +275,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addProcessToWpsButtonActionPerformed
 
     private void editWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
-        new WpsEditDialog(monitorMainFrame, this, true).setVisible(true);
+        new WpsEditDialog(monitorMainFrame, this).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
 
     public WpsProcessDialog getWpsProcessDialog() {

@@ -34,16 +34,17 @@ public class GuiStarter {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public static void start(final Monitor controlDependency) {
-        start(controlDependency, null);
+    public static void start(final Monitor controlDependency, final String logDirectory) {
+        start(controlDependency, logDirectory, null);
     }
 
     /**
      *
      * @param controlDependency
+     * @param logDirectory
      * @param drivers
      */
-    public static void start(final Monitor controlDependency, final Set<DataSourceCreator> drivers) {
+    public static void start(final Monitor controlDependency, final String logDirectory, final Set<DataSourceCreator> drivers) {
         try {
             // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
@@ -62,7 +63,7 @@ public class GuiStarter {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                WpsMonitorAdminGui wpsMonitorGui = new WpsMonitorAdminGui(controlDependency, drivers);
+                WpsMonitorAdminGui wpsMonitorGui = new WpsMonitorAdminGui(controlDependency, logDirectory, drivers);
                 wpsMonitorGui.setVisible(true);
             }
         });

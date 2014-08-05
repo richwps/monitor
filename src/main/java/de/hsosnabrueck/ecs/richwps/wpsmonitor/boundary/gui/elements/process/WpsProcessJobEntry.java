@@ -16,9 +16,9 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import com.toedter.calendar.JDateChooser;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures.IntervalComboBoxItem;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.IntervalComboBoxItem;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.awt.Color;

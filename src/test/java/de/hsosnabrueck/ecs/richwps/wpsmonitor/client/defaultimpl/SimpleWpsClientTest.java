@@ -38,12 +38,14 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
+@Ignore
 public class SimpleWpsClientTest {
 
     private static final String WPS_URI = "http://localhost:8080/wps/WebProcessingService";

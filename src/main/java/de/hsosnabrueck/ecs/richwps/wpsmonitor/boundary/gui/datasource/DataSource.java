@@ -34,6 +34,7 @@ public interface DataSource {
      * Gets a list of {@link WpsDescription}-Instances from the used resource.
      *
      * @return List of {@link WpsDescription}-Instances.
+     * @throws DataSourceException
      */
     public List<WpsDescription> getWpsList() throws DataSourceException;
 

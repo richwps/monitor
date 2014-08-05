@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import com.toedter.calendar.JDateChooser;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
@@ -31,6 +31,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,7 +46,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ShowMeasuredDataDialog extends javax.swing.JDialog {
+public class ShowMeasuredDataDialog extends JDialog {
 
     private final WpsMonitorAdminGui monitorMainFrame;
     private final WpsProcessEntity wpsProcess;
@@ -57,10 +58,9 @@ public class ShowMeasuredDataDialog extends javax.swing.JDialog {
      *
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param process WpsProcessEntity to select the right measured data
-     * @param modal true for modal dialog
      */
-    public ShowMeasuredDataDialog(WpsMonitorAdminGui monitorMainFrame, WpsProcessEntity process, boolean modal) {
-        super(monitorMainFrame, modal);
+    public ShowMeasuredDataDialog(WpsMonitorAdminGui monitorMainFrame, WpsProcessEntity process) {
+        super(monitorMainFrame, true);
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
 

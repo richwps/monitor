@@ -15,10 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.DataSourceDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.logviewer.LogViewerDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
@@ -35,6 +36,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,29 +69,27 @@ import javax.swing.WindowConstants;
 public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
     private final Monitor monitor;
-    private DataSourceDialog dsDialog;
-    private final Set<DataSourceCreator> dataSources;
+    private final DataSourceDialog dsDialog;
+    private final LogViewerDialog lvDialog;
 
-    public WpsMonitorAdminGui(final Monitor monitor) {
-        this(monitor, new HashSet<DataSourceCreator>());
+    public WpsMonitorAdminGui(final Monitor monitor, final String logDirectory) {
+        this(monitor, logDirectory, new HashSet<DataSourceCreator>());
     }
 
     /**
      * Creates new form WpsMonitorGui instance.
      *
      * @param monitor {@link Monitor} reference
+     * @param logDirectory Directory of monitor logs
      * @param dataSources List of possible DataSources
      */
-    public WpsMonitorAdminGui(final Monitor monitor, final Set<DataSourceCreator> dataSources) {
-        this.monitor = Validate.notNull(monitor, "monitor");
-        
-        if(dataSources == null) {
-            this.dataSources = new HashSet<>();
-        } else {
-            this.dataSources = dataSources;
-        }
-
+    public WpsMonitorAdminGui(final Monitor monitor, final String logDirectory, final Set<DataSourceCreator> dataSources) {
         initComponents();
+        
+        this.monitor = Validate.notNull(monitor, "monitor");
+        this.dsDialog = new DataSourceDialog(this, dataSources);
+        this.lvDialog = new LogViewerDialog(this, Paths.get(logDirectory));
+
         init();
         setLocationRelativeTo(null);
     }
@@ -164,10 +164,11 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
         wpsAddPanel = new JPanel();
         menuBar = new JMenuBar();
         JMenu monitorMenu = new JMenu();
-        restartButton = new JMenuItem();
-        dataSourceMenuITem = new JMenuItem();
+        dataSourceMenuItem = new JMenuItem();
+        showLogsMenuItem = new JMenuItem();
         JMenuItem settingsMenuItem = new JMenuItem();
         JPopupMenu.Separator jSeparator1 = new JPopupMenu.Separator();
+        restartButton = new JMenuItem();
         JMenuItem exitMenuItem = new JMenuItem();
         JMenu aboutMenu = new JMenu();
         JMenuItem aboutMenuItem = new JMenuItem();
@@ -207,7 +208,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
         });
 
         dataSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        dataSourcesButton.setText("Add through registred Data Source");
+        dataSourcesButton.setText("Add through registered Data Source");
         dataSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 dataSourcesButtonActionPerformed(evt);
@@ -275,7 +276,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
             decoPanelWpsScrollLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelWpsScrollLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wpsScrollPane, GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                .addComponent(wpsScrollPane, GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -302,24 +303,24 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
         monitorMenu.setText("Monitor");
 
-        restartButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
-        restartButton.setText("Restart");
-        restartButton.addActionListener(new ActionListener() {
+        dataSourceMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
+        dataSourceMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
+        dataSourceMenuItem.setText("DataCreators- and Resources");
+        dataSourceMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                restartButtonActionPerformed(evt);
+                dataSourceMenuItemActionPerformed(evt);
             }
         });
-        monitorMenu.add(restartButton);
+        monitorMenu.add(dataSourceMenuItem);
 
-        dataSourceMenuITem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
-        dataSourceMenuITem.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
-        dataSourceMenuITem.setText("DataCreators- and Resources");
-        dataSourceMenuITem.addActionListener(new ActionListener() {
+        showLogsMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/logs.png"))); // NOI18N
+        showLogsMenuItem.setText("Show Logs");
+        showLogsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                dataSourceMenuITemActionPerformed(evt);
+                showLogsMenuItemActionPerformed(evt);
             }
         });
-        monitorMenu.add(dataSourceMenuITem);
+        monitorMenu.add(showLogsMenuItem);
 
         settingsMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/settings.png"))); // NOI18N
         settingsMenuItem.setText("Settings");
@@ -330,6 +331,15 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
         });
         monitorMenu.add(settingsMenuItem);
         monitorMenu.add(jSeparator1);
+
+        restartButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
+        restartButton.setText("Restart");
+        restartButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                restartButtonActionPerformed(evt);
+            }
+        });
+        monitorMenu.add(restartButton);
 
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
         exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
@@ -466,7 +476,7 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
     }//GEN-LAST:event_wpsToAddUriFieldActionPerformed
 
     private void settingsMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
-        new MonitorPropertiesDialog(this, true).setVisible(true);
+        new MonitorPropertiesDialog(this).setVisible(true);
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
     private void exitMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -475,12 +485,16 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
 
         if (yes) {
             dispose();
-            Runtime.getRuntime().exit(0);
+            try {
+                monitor.shutdown();
+            } catch (MonitorException ex) {
+               
+            }
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-        new AboutDialog(this, true).setVisible(true);
+        new AboutDialog(this).setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void restartButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_restartButtonActionPerformed
@@ -494,25 +508,27 @@ public class WpsMonitorAdminGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_restartButtonActionPerformed
 
-    private void dataSourceMenuITemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dataSourceMenuITemActionPerformed
-        if(this.dsDialog == null) {
-            this.dsDialog = new DataSourceDialog(this, dataSources, true);
-        }
-        
+    private void dataSourceMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dataSourceMenuItemActionPerformed
         this.dsDialog.setVisible(true);
-    }//GEN-LAST:event_dataSourceMenuITemActionPerformed
+    }//GEN-LAST:event_dataSourceMenuItemActionPerformed
 
     private void dataSourcesButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dataSourcesButtonActionPerformed
         this.dsDialog.showWpsDialog();
     }//GEN-LAST:event_dataSourcesButtonActionPerformed
 
+    private void showLogsMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showLogsMenuItemActionPerformed
+        lvDialog.prepare();
+        lvDialog.setVisible(true);
+    }//GEN-LAST:event_showLogsMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton addWpsButton;
     private JPanel controlPanel;
-    private JMenuItem dataSourceMenuITem;
+    private JMenuItem dataSourceMenuItem;
     private JButton dataSourcesButton;
     private JMenuBar menuBar;
     private JMenuItem restartButton;
+    private JMenuItem showLogsMenuItem;
     private JPanel wpsAddPanel;
     private JScrollPane wpsScrollPane;
     private JTextField wpsToAddField;

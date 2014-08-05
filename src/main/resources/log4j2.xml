@@ -4,15 +4,42 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %highlight{%-5level} %logger{3} %msg%n%n"/>
         </Console>
-        <File name="ErrorFile" fileName="logs/error.log" bufferedIO="true" immediateFlush="true">
+        <RollingFile name="ErrorFile" fileName="logs/error.log" bufferedIO="true" immediateFlush="true"
+                     filePattern="logs/$${date:yyyy-MM}/error-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
-        </File>
-        <File name="FatalFile" fileName="logs/fatal.log" bufferedIO="true" immediateFlush="true">
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="FatalFile" fileName="logs/fatal.log" bufferedIO="true" immediateFlush="true"
+                     filePattern="logs/$${date:yyyy-MM}/fatal-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
-        </File>
-        <File name="WarnFile" fileName="logs/warn.log" bufferedIO="true" immediateFlush="true">
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="WarnFile" fileName="logs/warn.log" bufferedIO="true" immediateFlush="true"
+                     filePattern="logs/$${date:yyyy-MM}/warn-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
-        </File>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="InfoFile" fileName="logs/info.log" bufferedIO="true" immediateFlush="true"
+                     filePattern="logs/$${date:yyyy-MM}/info-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{3}%msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Root level="all">
@@ -20,6 +47,7 @@
             <AppenderRef ref="ErrorFile" level="error" />
             <AppenderRef ref="FatalFile" level="fatal" />
             <AppenderRef ref="WarnFile" level="warn" />
+            <AppenderRef ref="InfoFile" level="info" />
         </Root>
     </Loggers>
 </Configuration>

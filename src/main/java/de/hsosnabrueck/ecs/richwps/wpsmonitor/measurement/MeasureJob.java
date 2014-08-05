@@ -94,7 +94,7 @@ public class MeasureJob implements Job {
                 persistMeasuredData(getMeasuredDatas());
             } 
 
-            LOG.debug("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
+            LOG.info("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     context.getJobDetail().getKey(),
                     context.getTrigger().getKey(),
                     processEntity.toString(),

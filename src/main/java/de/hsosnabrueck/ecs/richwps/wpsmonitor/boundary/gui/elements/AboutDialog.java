@@ -40,8 +40,8 @@ public class AboutDialog extends JDialog {
      * @param parent Parent frame
      * @param modal
      */
-    public AboutDialog(Frame parent, boolean modal) {
-        super(parent, modal);
+    public AboutDialog(Frame parent) {
+        super(parent, true);
 
         initComponents();
         setLocationRelativeTo(parent);

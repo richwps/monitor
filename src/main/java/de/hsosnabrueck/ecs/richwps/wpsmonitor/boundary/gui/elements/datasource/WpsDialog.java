@@ -15,7 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
@@ -23,9 +23,10 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcess
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.structures.WpsTreeNode;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.WpsTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,27 +53,19 @@ public class WpsDialog extends javax.swing.JDialog {
 
     private WpsMonitorAdminGui mainFrame;
 
-    public WpsDialog(WpsMonitorAdminGui parent, Set<DataSource> sources, boolean modal) {
-        super(parent, modal);
-
-        init(parent, sources);
-    }
-
-    public WpsDialog(WpsMonitorAdminGui parent, DataSource source, boolean modal) {
-        super(parent, modal);
-
-        Set<DataSource> sources = new HashSet<>();
-        sources.add(source);
-
-        init(parent, sources);
-    }
-
-    private void init(WpsMonitorAdminGui parent, Set<DataSource> sources) {
+    public WpsDialog(final WpsMonitorAdminGui parent, final Set<DataSource> sources) {
+        super(parent, true);
+        this.mainFrame = parent;
+        
         initComponents();
-        initTree(sources);
         setLocationRelativeTo(parent);
 
-        this.mainFrame = parent;
+        
+        initTree(sources == null ? new HashSet<DataSource>() : sources);
+    }
+
+    public WpsDialog(final WpsMonitorAdminGui parent, final DataSource source) {
+        this(parent, new HashSet<>(Arrays.asList(new DataSource[] { source })));
     }
 
     /**
@@ -93,6 +86,7 @@ public class WpsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("List of WPS-Servers- and Processes");
+        setIconImage(new ImageIcon(getClass().getResource("/icons/database.png")).getImage());
         setMaximumSize(null);
         setMinimumSize(null);
         setResizable(false);
@@ -199,7 +193,7 @@ public class WpsDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_addToMonitorButtonActionPerformed
 
-    private Map<String, WpsDescription> assignSelectionsToMap(TreePath[] selections) {
+    private Map<String, WpsDescription> assignSelectionsToMap(final TreePath[] selections) {
         Map<String, WpsDescription> wpsDescriptions = new HashMap<>();
 
         for (TreePath p : selections) {
@@ -238,7 +232,7 @@ public class WpsDialog extends javax.swing.JDialog {
         return wpsDescriptions;
     }
 
-    private void initTree(Set<DataSource> sources) {
+    private void initTree(final Set<DataSource> sources) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Data Sources");
 
         for (DataSource source : sources) {

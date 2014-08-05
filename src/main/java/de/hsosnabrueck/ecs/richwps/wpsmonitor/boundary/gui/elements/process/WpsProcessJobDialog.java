@@ -52,10 +52,9 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
      *
      * @param mainFrame Reference to the WpsMonitorAdminGui of this gui
      * @param wpsProcess WpsProcessEntity instance to request the right trigger
-     * @param modal true for modal form
      */
-    public WpsProcessJobDialog(WpsMonitorAdminGui mainFrame, WpsProcessEntity wpsProcess, boolean modal) {
-        super(mainFrame, modal);
+    public WpsProcessJobDialog(WpsMonitorAdminGui mainFrame, WpsProcessEntity wpsProcess) {
+        super(mainFrame, true);
         initComponents();
 
         setLocationRelativeTo(mainFrame);

@@ -48,7 +48,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private final Set<DataSourceCreator> drivers;
+    private final Set<DataSourceCreator> creators;
     private final Set<DataSource> sources;
     private final WpsMonitorAdminGui mainFrame;
 
@@ -56,43 +56,44 @@ public class DataSourceDialog extends javax.swing.JDialog {
      * Creates new form DataSourceDialog
      *
      * @param monitorMainFrame
-     * @param drivers
-     * @param modal
+     * @param creators
      */
-    public DataSourceDialog(WpsMonitorAdminGui monitorMainFrame, Set<DataSourceCreator> drivers, boolean modal) {
-        super(monitorMainFrame, modal);
+    public DataSourceDialog(final WpsMonitorAdminGui monitorMainFrame, final Set<DataSourceCreator> creators) {
+        super(monitorMainFrame, true);
 
-        this.drivers = drivers;
+        this.creators = creators;
         this.mainFrame = monitorMainFrame;
         this.sources = new HashSet<>();
-        
-        setLocationRelativeTo(monitorMainFrame);
+
         initComponents();
+        setLocationRelativeTo(monitorMainFrame);
         init();
     }
 
     private void init() {
-        for (DataSourceCreator driver : drivers) {
-            driverAddPanel.add(new DataDriverPanel(this, driver));
+        if (creators != null) {
+            for (DataSourceCreator driver : creators) {
+                driverAddPanel.add(new DataDriverPanel(this, driver));
+            }
+
+            readSources();
+
+            try {
+                mainFrame.getMonitorReference()
+                        .getEventHandler()
+                        .registerListener("monitor.shutdown", new MonitorEventListener() {
+
+                            @Override
+                            public void execute(MonitorEvent event) {
+                                storeSources();
+                            }
+                        });
+            } catch (EventNotFound ex) {
+                LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event.", ex);
+            }
+
+            driverAddPanel.revalidate();
         }
-
-        readSources();
-
-        try {
-            mainFrame.getMonitorReference()
-                    .getEventHandler()
-                    .registerListener("monitor.shutdown", new MonitorEventListener() {
-
-                        @Override
-                        public void execute(MonitorEvent event) {
-                            storeSources();
-                        }
-                    });
-        } catch (EventNotFound ex) {
-            LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event.", ex);
-        }
-
-        driverAddPanel.revalidate();
     }
 
     /**
@@ -115,6 +116,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DataCreators- and Resources");
+        setIconImage(new ImageIcon(getClass().getResource("/icons/database-add.png")).getImage());
         setResizable(false);
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Registered Data Source Creatores"));
@@ -267,7 +269,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
                 String driverName = sourceResourceDriver[0];
                 String resource = sourceResourceDriver[1];
 
-                for (DataSourceCreator driver : drivers) {
+                for (DataSourceCreator driver : creators) {
                     if (driver.getCreatorName().equals(driverName)) {
                         try {
                             addDataSource(driver.create(resource));
@@ -285,7 +287,8 @@ public class DataSourceDialog extends javax.swing.JDialog {
     }
 
     public void showWpsDialog() {
-        new WpsDialog(mainFrame, sources, true).setVisible(true);
+        WpsDialog wpsDialog = new WpsDialog(mainFrame, sources);
+        wpsDialog.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
