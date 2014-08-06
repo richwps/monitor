@@ -64,6 +64,9 @@ public class WpsProcessPanel extends JPanel {
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
 
+    private final MonitorEventListener exceptionListener;
+    private final MonitorEventListener pauseMonitoringListener;
+
     private static final Logger LOG = LogManager.getLogger();
 
     /**
@@ -72,9 +75,9 @@ public class WpsProcessPanel extends JPanel {
      * @param parent Parent panel; is needed for delete operation
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      */
-    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent,
             final WpsProcessEntity wpsProcess) {
-        
+
         this(mainFrame, parent, wpsProcess, false);
     }
 
@@ -86,14 +89,16 @@ public class WpsProcessPanel extends JPanel {
      * @param restored true if the form is only restored by its parent (e.g. the
      * monitor is restarted)
      */
-    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent, WpsProcessEntity wpsProcess, 
+    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent, WpsProcessEntity wpsProcess,
             final Boolean restored) {
-        
+
         this.mainFrame = mainFrame;
         this.parent = parent;
         this.wpsProcess = Validate.notNull(wpsProcess, "wpsProcess");
 
         initComponents();
+        // fix for box layout
+        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
 
         if (restored) {
             triggerSaveState();
@@ -101,7 +106,21 @@ public class WpsProcessPanel extends JPanel {
             this.saved = false;
         }
 
-        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+        // set up listeners. the fields are final to be save for reference changes
+        exceptionListener = new MonitorEventListener() {
+            @Override
+            public void execute(MonitorEvent event) {
+                processRequestException(event.getMsg());
+            }
+        };
+
+        pauseMonitoringListener = new MonitorEventListener() {
+            @Override
+            public void execute(MonitorEvent event) {
+                monitoringPauseEvent(event.getMsg());
+            }
+        };
+
         init();
     }
 
@@ -145,31 +164,21 @@ public class WpsProcessPanel extends JPanel {
                     .getMonitorReference()
                     .getEventHandler();
 
-            eventHandler
-                    .registerListener("measurement.wpsjob.wpsexception", new MonitorEventListener() {
+            eventHandler.registerListener("measurement.wpsjob.wpsexception", exceptionListener);
+            eventHandler.registerListener("monitorcontrol.pauseMonitoring", pauseMonitoringListener);
+        } catch (EventNotFound ex) {
+            LOG.warn("Can't register WpsProcessPanel Listener at EventHandler.", ex);
+        }
+    }
 
-                        @Override
-                        public void execute(MonitorEvent event) {
+    private void removeMonitoringEvents() {
+        try {
+            MonitorEventHandler eventHandler = mainFrame
+                    .getMonitorReference()
+                    .getEventHandler();
 
-                            if (event.getMsg() instanceof WpsProcessEntity) {
-                                WpsProcessEntity process = (WpsProcessEntity) event.getMsg();
-                                processRequestException(process);
-                            }
-                        }
-
-                    });
-
-            eventHandler
-                    .registerListener("monitorcontrol.pauseMonitoring", new MonitorEventListener() {
-
-                        @Override
-                        public void execute(MonitorEvent event) {
-                            if (event.getMsg() instanceof WpsProcessEntity) {
-                                WpsProcessEntity process = (WpsProcessEntity) event.getMsg();
-                                monitoringPauseEvent(process);
-                            }
-                        }
-                    });
+            eventHandler.removeListener("measurement.wpsjob.wpsexception", exceptionListener);
+            eventHandler.removeListener("monitorcontrol.pauseMonitoring", pauseMonitoringListener);
         } catch (EventNotFound ex) {
             LOG.warn("Can't register WpsProcessPanel Listener at EventHandler.", ex);
         }
@@ -210,6 +219,7 @@ public class WpsProcessPanel extends JPanel {
             if (response.isWpsException()) {
                 MessageDialogs.showDetailedError(mainFrame,
                         "WPS exception",
+                        "A WPS-Exception is occurd at the execution of the test request",
                         response.getExceptionMessage());
 
                 result = false;
@@ -228,13 +238,27 @@ public class WpsProcessPanel extends JPanel {
         showMeasuredDataButton.setEnabled(true);
     }
 
-    private void processRequestException(WpsProcessEntity process) {
+    private void processRequestException(final Object msg) {
+        if (msg instanceof WpsProcessEntity) {
+            WpsProcessEntity process = (WpsProcessEntity) msg;
+            processRequestException(process);
+        }
+    }
+
+    private void processRequestException(final WpsProcessEntity process) {
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
         }
     }
 
-    private void monitoringPauseEvent(WpsProcessEntity process) {
+    private void monitoringPauseEvent(final Object msg) {
+        if (msg instanceof WpsProcessEntity) {
+            WpsProcessEntity process = (WpsProcessEntity) msg;
+            monitoringPauseEvent(process);
+        }
+    }
+
+    private void monitoringPauseEvent(final WpsProcessEntity process) {
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             rescheduleButton.setEnabled(true);
         }
@@ -374,7 +398,7 @@ public class WpsProcessPanel extends JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 156, Short.MAX_VALUE))
+                        .addGap(55, 145, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -460,15 +484,23 @@ public class WpsProcessPanel extends JPanel {
     }
 
     private void deleteProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
-        if (saved) {
-            mainFrame.getMonitorReference()
-                    .getMonitorControl()
-                    .deleteProcess(wpsProcess);
-        }
+        Boolean yes = MessageDialogs.showQuestionDialog(this,
+                "Delete WPS Process Entry",
+                "Are you sure you want to permanently delete this WPS-Process-Entry out of the Monitor?");
 
-        parent.remove(this);
-        parent.revalidate();
-        parent.repaint();
+        if (yes) {
+            if (saved) {
+                mainFrame.getMonitorReference()
+                        .getMonitorControl()
+                        .deleteProcess(wpsProcess);
+            }
+
+            removeMonitoringEvents();
+
+            parent.remove(this);
+            parent.revalidate();
+            parent.repaint();
+        }
     }//GEN-LAST:event_deleteProcessButtonActionPerformed
 
     private void testRequestTextAreaKeyReleased(KeyEvent evt) {//GEN-FIRST:event_testRequestTextAreaKeyReleased

@@ -50,6 +50,8 @@ public class WpsPanel extends javax.swing.JPanel {
     private WpsProcessDialog wpsProcessDialog;
     private WpsEntity wps;
 
+    private final MonitorEventListener wpsExceptionListener;
+
     /**
      * Constructor.
      *
@@ -65,6 +67,13 @@ public class WpsPanel extends javax.swing.JPanel {
         initComponents();
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
 
+        wpsExceptionListener = new MonitorEventListener() {
+            @Override
+            public void execute(MonitorEvent event) {
+                processMonitoringPaused(event.getMsg());
+            }
+        };
+        
         init();
     }
 
@@ -92,18 +101,18 @@ public class WpsPanel extends javax.swing.JPanel {
             monitorMainFrame
                     .getMonitorReference()
                     .getEventHandler()
-                    .registerListener("measurement.wpsjob.wpsexception", new MonitorEventListener() {
-
-                        @Override
-                        public void execute(MonitorEvent event) {
-
-                            if (event.getMsg() instanceof WpsProcessEntity) {
-                                WpsProcessEntity wpsProcess = (WpsProcessEntity) event.getMsg();
-                                processMonitoringPaused(wpsProcess);
-                            }
-                        }
-
-                    });
+                    .registerListener("measurement.wpsjob.wpsexception", wpsExceptionListener);
+        } catch (EventNotFound ex) {
+            Logger.getLogger(WpsMonitorAdminGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void removeMonitoringPausedEvent() {
+        try {
+            monitorMainFrame
+                    .getMonitorReference()
+                    .getEventHandler()
+                    .removeListener("measurement.wpsjob.wpsexception", wpsExceptionListener);
         } catch (EventNotFound ex) {
             Logger.getLogger(WpsMonitorAdminGui.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,10 +148,10 @@ public class WpsPanel extends javax.swing.JPanel {
         this.wpsNameLabel.setText(wps.getIdentifier());
         this.wpsUriLabel.setText(wps.getUri().toString());
     }
-    
+
     /**
      * Gets the wpsProcessDialog instance.
-     * 
+     *
      * @return WpsProcessDialog instance
      */
     public WpsProcessDialog getWpsProcessDialog() {
@@ -154,7 +163,7 @@ public class WpsPanel extends javax.swing.JPanel {
      *
      * @param process WpsProcessEntity instance
      */
-    public void processMonitoringPaused(WpsProcessEntity process) {
+    public void processMonitoringPaused(final WpsProcessEntity process) {
         if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
             showErrorIndicator();
         }
@@ -172,6 +181,12 @@ public class WpsPanel extends javax.swing.JPanel {
      */
     public void showErrorIndicator() {
         errorIcon.setEnabled(true);
+    }
+
+    private void processMonitoringPaused(final Object msg) {
+        if (msg instanceof WpsProcessEntity) {
+            processMonitoringPaused((WpsProcessEntity) msg);
+        }
     }
 
     /**
@@ -286,8 +301,8 @@ public class WpsPanel extends javax.swing.JPanel {
 
     private void deleteWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
         Boolean sure = MessageDialogs.showQuestionDialog(this,
-                "Delete WPS",
-                "Are you sure you want to permanently delete this WPS out of the Monitor?"
+                "Delete WPS Entry",
+                "Are you sure you want to permanently delete this WPS-Entry out of the Monitor?"
         );
 
         if (sure) {
@@ -295,6 +310,8 @@ public class WpsPanel extends javax.swing.JPanel {
                     .getMonitorControl()
                     .deleteWps(wps);
 
+            removeMonitoringPausedEvent();
+            
             addPanelParent.remove(this);
             addPanelParent.revalidate();
 
