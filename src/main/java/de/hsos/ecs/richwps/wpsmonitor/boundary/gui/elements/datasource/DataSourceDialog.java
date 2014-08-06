@@ -56,6 +56,7 @@ public class DataSourceDialog extends JDialog {
     private final Set<DataSourceCreator> creators;
     private final Set<DataSource> sources;
     private final WpsMonitorAdminGui mainFrame;
+    private final WpsDialog wpsDialog;
 
     /**
      * Creates new form DataSourceDialog
@@ -69,6 +70,7 @@ public class DataSourceDialog extends JDialog {
         this.creators = creators;
         this.mainFrame = monitorMainFrame;
         this.sources = new HashSet<>();
+        this.wpsDialog = new WpsDialog(mainFrame, sources);
 
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
@@ -130,7 +132,6 @@ public class DataSourceDialog extends JDialog {
      * through the DataSource instances.
      */
     public void showWpsDialog() {
-        WpsDialog wpsDialog = new WpsDialog(mainFrame, sources);
         wpsDialog.setVisible(true);
     }
 

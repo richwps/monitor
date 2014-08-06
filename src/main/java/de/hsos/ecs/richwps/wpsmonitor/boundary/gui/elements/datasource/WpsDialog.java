@@ -50,8 +50,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * A Dialog to display the WPS Server- and Processes of the given DataSource
@@ -61,9 +59,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class WpsDialog extends JDialog {
 
-    private WpsMonitorAdminGui mainFrame;
-
-    private final static Logger LOG = LogManager.getLogger();
+    private final WpsMonitorAdminGui mainFrame;
+    private final Set<DataSource> sources;
 
     /**
      * Creates a new WpsDialog instance.
@@ -74,11 +71,12 @@ public class WpsDialog extends JDialog {
     public WpsDialog(final WpsMonitorAdminGui parent, final Set<DataSource> sources) {
         super(parent, true);
         this.mainFrame = parent;
+        this.sources = sources == null ? new HashSet<DataSource>() : sources;
 
         initComponents();
         setLocationRelativeTo(parent);
 
-        initTree(sources == null ? new HashSet<DataSource>() : sources);
+        init();
     }
 
     /**
@@ -89,6 +87,28 @@ public class WpsDialog extends JDialog {
      */
     public WpsDialog(final WpsMonitorAdminGui parent, final DataSource source) {
         this(parent, new HashSet<>(Arrays.asList(new DataSource[]{source})));
+    }
+
+    private void init() {
+        addComponentListener(new ComponentListener() {
+
+            @Override
+            public void componentResized(ComponentEvent ce) {
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent ce) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent ce) {
+                initTree(sources);
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent ce) {
+            }
+        });
     }
 
     /**
@@ -256,8 +276,8 @@ public class WpsDialog extends JDialog {
 
     private void initTree(final Set<DataSource> sources) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Data Sources");
-        List<Exception> exceptions = new ArrayList<Exception>();
-        
+        List<Exception> exceptions = new ArrayList<>();
+
         for (DataSource source : sources) {
 
             String rootTitle = source.getUsedDriver() + ": " + source.getRessource();
@@ -281,47 +301,25 @@ public class WpsDialog extends JDialog {
 
             root.add(wpsRoot);
         }
-        
-        showErrorMessageAfterDisplay(exceptionListToString(exceptions));
+
+        if (!exceptions.isEmpty()) {
+            showErrorMessage(exceptionListToString(exceptions));
+        }
 
         wpsTree = new JTree(root);
         treeScrollPane.setViewportView(wpsTree);
     }
-    
+
     private String exceptionListToString(List<Exception> exs) {
         StringBuilder str = new StringBuilder();
-        
-        for(Exception ex : exs) {
+
+        for (Exception ex : exs) {
             str.append(ExceptionUtils.getStackTrace(ex));
             str.append('\n');
             str.append('\n');
         }
-        
+
         return str.toString();
-    }
-
-    private void showErrorMessageAfterDisplay(final String msg) {
-        final ComponentListener componentListener = new ComponentListener() {
-            
-            @Override
-            public void componentResized(ComponentEvent ce) {
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent ce) {
-            }
-
-            @Override
-            public void componentShown(ComponentEvent ce) {
-                showErrorMessage(msg);
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent ce) {
-            }
-        };
-        
-        addComponentListener(componentListener);
     }
 
     private void showErrorMessage(final String msg) {
