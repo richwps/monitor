@@ -26,9 +26,13 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.WpsTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
@@ -45,41 +49,46 @@ import javax.swing.WindowConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * A Dialog to display the WPS Server- and Processes of the given DataSource 
+ * A Dialog to display the WPS Server- and Processes of the given DataSource
  * instances.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsDialog extends JDialog {
 
     private WpsMonitorAdminGui mainFrame;
 
+    private final static Logger LOG = LogManager.getLogger();
+
     /**
      * Creates a new WpsDialog instance.
-     * 
+     *
      * @param parent Monitor gui mainframe
      * @param sources Set of DataSources
      */
     public WpsDialog(final WpsMonitorAdminGui parent, final Set<DataSource> sources) {
         super(parent, true);
         this.mainFrame = parent;
-        
+
         initComponents();
         setLocationRelativeTo(parent);
- 
+
         initTree(sources == null ? new HashSet<DataSource>() : sources);
     }
 
     /**
      * Creates a new WpsDialog instance.
-     * 
+     *
      * @param parent Monitor gui mainframe
      * @param source DataSource instance
      */
     public WpsDialog(final WpsMonitorAdminGui parent, final DataSource source) {
-        this(parent, new HashSet<>(Arrays.asList(new DataSource[] { source })));
+        this(parent, new HashSet<>(Arrays.asList(new DataSource[]{source})));
     }
 
     /**
@@ -247,31 +256,79 @@ public class WpsDialog extends JDialog {
 
     private void initTree(final Set<DataSource> sources) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Data Sources");
-
+        List<Exception> exceptions = new ArrayList<Exception>();
+        
         for (DataSource source : sources) {
+
+            String rootTitle = source.getUsedDriver() + ": " + source.getRessource();
+            DefaultMutableTreeNode wpsRoot = new DefaultMutableTreeNode(rootTitle);
+
             try {
-                String rootTitle = source.getUsedDriver() + ": " + source.getRessource();
-                DefaultMutableTreeNode wpsRoot = new DefaultMutableTreeNode(rootTitle);
-                
                 for (WpsDescription wpsDesc : source.getWpsList()) {
                     DefaultMutableTreeNode wps = new WpsTreeNode(wpsDesc, WpsTreeNode.NodeType.WPS);
-                    
+
                     for (WpsProcessDescription processDesc : wpsDesc.getProcesses()) {
                         DefaultMutableTreeNode processNode = new WpsTreeNode(processDesc, WpsTreeNode.NodeType.PROCESS);
                         wps.add(processNode);
                     }
-                    
+
                     wpsRoot.add(wps);
                 }
-                
-                root.add(wpsRoot);
             } catch (DataSourceException ex) {
-                MessageDialogs.showError(this, "Error", "An Exception occourd while loading the WPS List. Message was: " + ex.toString());
+                // gather occured exceptions for later displaying
+                exceptions.add(ex);
             }
+
+            root.add(wpsRoot);
         }
+        
+        showErrorMessageAfterDisplay(exceptionListToString(exceptions));
 
         wpsTree = new JTree(root);
         treeScrollPane.setViewportView(wpsTree);
+    }
+    
+    private String exceptionListToString(List<Exception> exs) {
+        StringBuilder str = new StringBuilder();
+        
+        for(Exception ex : exs) {
+            str.append(ExceptionUtils.getStackTrace(ex));
+            str.append('\n');
+            str.append('\n');
+        }
+        
+        return str.toString();
+    }
+
+    private void showErrorMessageAfterDisplay(final String msg) {
+        final ComponentListener componentListener = new ComponentListener() {
+            
+            @Override
+            public void componentResized(ComponentEvent ce) {
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent ce) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent ce) {
+                showErrorMessage(msg);
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent ce) {
+            }
+        };
+        
+        addComponentListener(componentListener);
+    }
+
+    private void showErrorMessage(final String msg) {
+        MessageDialogs.showDetailedError(this,
+                "Error",
+                "DataSource Exceptions occurd.",
+                msg);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
