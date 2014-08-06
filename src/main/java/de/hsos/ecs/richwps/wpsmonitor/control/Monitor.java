@@ -110,6 +110,7 @@ public class Monitor {
         if (isActive()) {
             
             LOG.trace("Monitor is shutting down ...");
+            eventHandler.fireEvent(new MonitorEvent("monitor.shutdown"));
             
             for(AutoCloseable c : shutdownCalls) {
                 try {
@@ -118,8 +119,6 @@ public class Monitor {
                     LOG.warn("Exception occured at try to calling a shutdown routine", ex);
                 }
             }
-
-            eventHandler.fireEvent(new MonitorEvent("monitor.shutdown"));
         }
     }
 
