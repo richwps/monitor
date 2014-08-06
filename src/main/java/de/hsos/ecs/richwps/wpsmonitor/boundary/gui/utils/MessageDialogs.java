@@ -17,6 +17,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  * Helper class for JOptionPane dialogs.
@@ -53,6 +54,23 @@ public class MessageDialogs {
     public static void showError(Component frame, String title, String message) {
         JOptionPane.showMessageDialog(frame,
                 message,
+                title,
+                JOptionPane.ERROR_MESSAGE);
+    }
+    
+    /**
+     * Shows an error dialog.
+     *
+     * @param frame Parentframe
+     * @param title Title text
+     * @param message Error message text
+     */
+    public static void showDetailedError(Component frame, String title, String message) {
+        JTextArea txt = new JTextArea(message);
+        txt.setEditable(false);
+        
+        JOptionPane.showMessageDialog(frame,
+                txt,
                 title,
                 JOptionPane.ERROR_MESSAGE);
     }

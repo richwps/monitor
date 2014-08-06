@@ -208,11 +208,9 @@ public class WpsProcessPanel extends JPanel {
             }
 
             if (response.isWpsException()) {
-                MessageDialogs.showError(mainFrame,
+                MessageDialogs.showDetailedError(mainFrame,
                         "WPS exception",
-                        "The testrequest produced an exception! "
-                        + "I will use the previous version of the Testrequest."
-                        + "The old request is shown after a restart. This gives you a chance to edit the errornous request. :)");
+                        response.getExceptionMessage());
 
                 result = false;
             }
