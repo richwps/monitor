@@ -17,6 +17,8 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
@@ -34,7 +36,7 @@ public class MessageDialogs {
      * @param question Question text
      * @return JOptionPane enum value for evaluate YES or NO option
      */
-    public static Boolean showQuestionDialog(Component frame, String title, String question) {
+    public static Boolean showQuestionDialog(final Component frame, final String title, final String question) {
         int n = JOptionPane.showConfirmDialog(
                 frame,
                 question,
@@ -51,7 +53,7 @@ public class MessageDialogs {
      * @param title Title text
      * @param message Error message text
      */
-    public static void showError(Component frame, String title, String message) {
+    public static void showError(final Component frame, final String title, final String message) {
         JOptionPane.showMessageDialog(frame,
                 message,
                 title,
@@ -63,18 +65,18 @@ public class MessageDialogs {
      *
      * @param frame Parentframe
      * @param title Title text
+     * @param description Description of the error
      * @param message Error message text
      */
-    public static void showDetailedError(Component frame, String title, String message) {
-        JTextArea txt = new JTextArea(message);
-        txt.setEditable(false);
+    public static void showDetailedError(final Component frame, final String title, final String description, final String message) {
+        DetailedMessage detailedMessage = new DetailedMessage(description, message);
         
         JOptionPane.showMessageDialog(frame,
-                txt,
+                detailedMessage,
                 title,
                 JOptionPane.ERROR_MESSAGE);
     }
-
+    
     /**
      * private to prevent instantiation.
      */
