@@ -1,5 +1,7 @@
 /derby.log
+/monitor.properties
 /MonitoredData/
 /QuartzJobStore/
-/*~
+/Database/
 /logs/
+/*~
