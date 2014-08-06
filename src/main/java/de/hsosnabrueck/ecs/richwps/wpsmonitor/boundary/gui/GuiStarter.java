@@ -16,7 +16,6 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
 import java.util.Set;
 import javax.swing.UIManager;
@@ -25,8 +24,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Sets a look and feel up and starts the monitor gui with the montior-instance
- * and DataDrivers - if exists - as dependency.
+ * Sets a look and feel up at the first call and starts the monitor gui with the
+ * montior-instance, the directory of logs and DataDrivers - if exists - as
+ * dependency.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -34,19 +34,39 @@ public class GuiStarter {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    public static void start(final Monitor controlDependency, final String logDirectory) {
-        start(controlDependency, logDirectory, null);
+    static {
+        setupLookAndFeel();
     }
 
     /**
+     * Starts the Java Swing gui as new thread.
      *
-     * @param controlDependency
-     * @param logDirectory
-     * @param drivers
+     * @param monitor {@link Monitor} instance
+     * @param logDirectory Directory to the log files
      */
-    public static void start(final Monitor controlDependency, final String logDirectory, final Set<DataSourceCreator> drivers) {
+    public static void start(final Monitor monitor, final String logDirectory) {
+        start(monitor, logDirectory, null);
+    }
+
+    /**
+     * Starts the Java Swing gui as new thread.
+     *
+     * @param monitor {@link Monitor} instance
+     * @param logDirectory Directory to the log files
+     * @param dataSourceCreators Set of DataSourceCreator-Instances
+     */
+    public static void start(final Monitor monitor, final String logDirectory, final Set<DataSourceCreator> dataSourceCreators) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                WpsMonitorAdminGui wpsMonitorGui = new WpsMonitorAdminGui(monitor, logDirectory, dataSourceCreators);
+                wpsMonitorGui.setVisible(true);
+            }
+        });
+    }
+
+    private static void setupLookAndFeel() {
         try {
-            // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException e) {
@@ -54,19 +74,11 @@ public class GuiStarter {
                 LOG.warn("Can't load SystemLookAndFeel! Try to fallback to CrossPlatformLookAndFeel!");
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); // Fallback
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                LOG.error("Can't load SystemLookAndFeel.", ex);
+                LOG.error("Can't load CrossPlatformLookAndFeel.", ex);
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             LOG.error("Can't load SystemLookAndFeel.", ex);
         }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                WpsMonitorAdminGui wpsMonitorGui = new WpsMonitorAdminGui(controlDependency, logDirectory, drivers);
-                wpsMonitorGui.setVisible(true);
-            }
-        });
     }
 
     private GuiStarter() {

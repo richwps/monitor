@@ -41,13 +41,12 @@ import org.quartz.JobExecutionException;
  *
  * If no wps exception occurs, then the registred QosProbe instances are called.
  * Otherwise a error flag is set, which is evaluated by the
- * {@link MeasureJobListener}.
+ * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MeasureJobListener}.
  *
  * The dependencies should be thread save or new instantiated by the
  * {@link MeasureJobFactory}.
  *
  * @see WpsProcessEntity
- * @see MeasureJobListener
  * @see MeasureJobFactory
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -63,7 +62,7 @@ public class MeasureJob implements Job {
     protected Boolean error;
 
     /**
-     * Constructor.
+     * Creates a new MeasureJob instance.
      *
      * @param probes List of QosProbe instances
      * @param entity WpsProcessEntity which the specific job take care of

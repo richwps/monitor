@@ -15,14 +15,14 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
@@ -32,6 +32,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle;
@@ -41,10 +42,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Dialog which can be used to manage and create DataSource instances through
+ * DataSourceCreator instances. The dialog registered a new shutdown listener in
+ * the Monitor instance to store created DataSource instances in the Monitor
+ * Properties.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class DataSourceDialog extends javax.swing.JDialog {
+public class DataSourceDialog extends JDialog {
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -55,8 +60,8 @@ public class DataSourceDialog extends javax.swing.JDialog {
     /**
      * Creates new form DataSourceDialog
      *
-     * @param monitorMainFrame
-     * @param creators
+     * @param monitorMainFrame Mainframe of the monitor
+     * @param creators Set of DataSourceCreator instances
      */
     public DataSourceDialog(final WpsMonitorAdminGui monitorMainFrame, final Set<DataSourceCreator> creators) {
         super(monitorMainFrame, true);
@@ -73,7 +78,7 @@ public class DataSourceDialog extends javax.swing.JDialog {
     private void init() {
         if (creators != null) {
             for (DataSourceCreator driver : creators) {
-                driverAddPanel.add(new DataDriverPanel(this, driver));
+                driverAddPanel.add(new DataSourceCreatorPanel(this, driver));
             }
 
             readSources();
@@ -93,6 +98,85 @@ public class DataSourceDialog extends javax.swing.JDialog {
             }
 
             driverAddPanel.revalidate();
+        }
+    }
+
+    /**
+     * Creates and adds a new DataSourcePanel instance to this dialog. The
+     * method is typically used by DataSourcePanel instances.
+     *
+     * @param source DataSource instance to add
+     */
+    public void addDataSource(final DataSource source) {
+        dataSourceAddPanel.add(new DataSourcePanel(mainFrame, this, source));
+        sources.add(source);
+        dataSourceAddPanel.revalidate();
+    }
+
+    /**
+     * Removes a DataSourcePanel.
+     *
+     * @param panel The Panel instance which should be removed
+     */
+    public void removeDataSource(final DataSourcePanel panel) {
+        dataSourceAddPanel.remove(panel);
+        removeDataSource(panel.getSource());
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * Creates and shows up a new WpsDialog instance which initliazid the tree
+     * through the DataSource instances.
+     */
+    public void showWpsDialog() {
+        WpsDialog wpsDialog = new WpsDialog(mainFrame, sources);
+        wpsDialog.setVisible(true);
+    }
+
+    private void removeDataSource(final DataSource source) {
+        sources.remove(source);
+    }
+
+    private void storeSources() {
+        MonitorConfig config = mainFrame.getMonitorReference()
+                .getConfig();
+
+        StringBuilder serializedDataSources = new StringBuilder();
+        for (DataSource s : sources) {
+            serializedDataSources.append(s.getUsedDriver());
+            serializedDataSources.append("||");
+            serializedDataSources.append(s.getRessource());
+            serializedDataSources.append(";;");
+        }
+
+        config.setCustomProperty("datasource", serializedDataSources.toString());
+    }
+
+    private void readSources() {
+        MonitorConfig config = mainFrame.getMonitorReference()
+                .getConfig();
+
+        String dataSources = config.getCustomProperty("datasource");
+
+        if (dataSources != null && !dataSources.isEmpty()) {
+            String[] dataSourcesArr = dataSources.split(";;");
+
+            for (String source : dataSourcesArr) {
+                String[] sourceResourceDriver = source.split("\\|\\|");
+                String driverName = sourceResourceDriver[0];
+                String resource = sourceResourceDriver[1];
+
+                for (DataSourceCreator driver : creators) {
+                    if (driver.getCreatorName().equals(driverName)) {
+                        try {
+                            addDataSource(driver.create(resource));
+                        } catch (DataSourceException ex) {
+                            LOG.error("Can't restore the DataSource of MonitorConfig custom properties. : ", ex);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -223,73 +307,6 @@ public class DataSourceDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
-    public void addDataSource(final DataSource source) {
-        dataSourceAddPanel.add(new DataSourcePanel(mainFrame, this, source));
-        sources.add(source);
-        dataSourceAddPanel.revalidate();
-    }
-
-    public void removeDataSource(DataSource source) {
-        sources.remove(source);
-    }
-
-    public void removeDataSource(final DataSource source, final DataSourcePanel panel) {
-        dataSourceAddPanel.remove(panel);
-        removeDataSource(source);
-        revalidate();
-        repaint();
-    }
-
-    private void storeSources() {
-        MonitorConfig config = mainFrame.getMonitorReference()
-                .getConfig();
-
-        StringBuilder serializedDataSources = new StringBuilder();
-        for (DataSource s : sources) {
-            serializedDataSources.append(s.getUsedDriver());
-            serializedDataSources.append("||");
-            serializedDataSources.append(s.getRessource());
-            serializedDataSources.append(";;");
-        }
-
-        config.setCustomProperty("datasource", serializedDataSources.toString());
-    }
-
-    private void readSources() {
-        MonitorConfig config = mainFrame.getMonitorReference()
-                .getConfig();
-
-        String dataSources = config.getCustomProperty("datasource");
-
-        if (dataSources != null && !dataSources.isEmpty()) {
-            String[] dataSourcesArr = dataSources.split(";;");
-
-            for (String source : dataSourcesArr) {
-                String[] sourceResourceDriver = source.split("\\|\\|");
-                String driverName = sourceResourceDriver[0];
-                String resource = sourceResourceDriver[1];
-
-                for (DataSourceCreator driver : creators) {
-                    if (driver.getCreatorName().equals(driverName)) {
-                        try {
-                            addDataSource(driver.create(resource));
-                        } catch (DataSourceException ex) {
-                            LOG.error("Can't restore the DataSource of MonitorConfig custom properties. : ", ex);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public Set<DataSource> getSources() {
-        return sources;
-    }
-
-    public void showWpsDialog() {
-        WpsDialog wpsDialog = new WpsDialog(mainFrame, sources);
-        wpsDialog.setVisible(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton closeButton;

@@ -15,11 +15,11 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -77,8 +77,8 @@ public interface MonitorControl {
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
-     * @param config TriggerConfig instance
-     * @return TriggerKey instance; the TriggerKey name can be random
+     * @param config {@link TriggerConfig} instance
+     * @return {@link TriggerConfig} instance
      */
     public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
 
@@ -87,8 +87,8 @@ public interface MonitorControl {
      * processEntity.identifier and group name of processEntity.wps.identifier.
      *
      * @param processEntity WpsProcessEntity instance
-     * @param config TriggerConfig instance
-     * @return TriggerKey instance; the TriggerKey name can be random
+     * @param config {@link TriggerConfig} instance
+     * @return {@link TriggerConfig} instance
      */
     public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
 
@@ -182,7 +182,7 @@ public interface MonitorControl {
     /**
      * Checks if the job is paused which is identified by the
      * &lt;WpsProcessEntity.Identifier, WpsProcessEntity.wps.processIdentifier>
-     * {@link JobKey}.
+     * {@link org.quartz.JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
      * @return true if the job is paused
@@ -191,7 +191,7 @@ public interface MonitorControl {
 
     /**
      * Resumes the monitoring of the WpsProcess-Job which is identified by the
-     * &lt;wpsIdentifier, processIdentifier> {@link JobKey} .
+     * &lt;wpsIdentifier, processIdentifier> {@link org.quartz.JobKey} .
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -201,7 +201,7 @@ public interface MonitorControl {
     /**
      * Resumes the monitoring of the WpsProcess-Job which is identified by the
      * &lt;WpsProcessEntity.Identifier, WpsProcessEntity.wps.processIdentifier>
-     * {@link JobKey}.
+     * {@link org.quartz.JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
      */
@@ -209,7 +209,7 @@ public interface MonitorControl {
 
     /**
      * Pauses a job which is identified by the &lt;wpsIdentifier,
-     * processIdentifier> {@link JobKey} .
+     * processIdentifier> {@link org.quartz.JobKey} .
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
@@ -218,7 +218,7 @@ public interface MonitorControl {
 
     /**
      * Pauses a job which is identified by the &lt;WpsProcessEntity.Identifier,
-     * WpsProcessEntity.wps.processIdentifier> {@link JobKey}.
+     * WpsProcessEntity.wps.processIdentifier> {@link org.quartz.JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
      */
@@ -244,21 +244,21 @@ public interface MonitorControl {
 
     /**
      * Gets all {@link TriggerConfig} instances of the job which are identified
-     * by the &lt;wpsIdentifier, processIdentifier> {@link JobKey}.
+     * by the &lt;wpsIdentifier, processIdentifier> {@link org.quartz.JobKey}.
      *
      * @param wpsIdentifier WpsEntity identifier
      * @param processIdentifier WpsProcessEntity identifier
-     * @return List of TriggerConfig instances
+     * @return List of {@link TriggerConfig} instances
      */
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
 
     /**
      * Gets all {@link TriggerConfig} instances of the job which are identified
      * by the &lt;WpsProcessEntity.Identifier,
-     * WpsProcessEntity.wps.processIdentifier> {@link JobKey}.
+     * WpsProcessEntity.wps.processIdentifier> {@link org.quartz.JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
-     * @return
+     * @return List of {@link TriggerConfig} instances
      */
     public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity);
 
@@ -347,7 +347,7 @@ public interface MonitorControl {
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
 
     /**
-     * Deletes a trigger whith the given TriggerConfig.
+     * Deletes a trigger whith the given {@link TriggerConfig}.
      *
      * @param config {@link TriggerConfig} instance
      * @return true if successfully deleted

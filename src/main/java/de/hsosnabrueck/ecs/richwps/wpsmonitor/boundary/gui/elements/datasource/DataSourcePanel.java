@@ -16,7 +16,7 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,19 +29,24 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 
 /**
- *
+ * Representates a DataSource instance GUI element.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class DataSourcePanel extends javax.swing.JPanel {
+public class DataSourcePanel extends JPanel {
 
     private final DataSource source;
     private final WpsMonitorAdminGui monitorMainFrame;
     private final DataSourceDialog parent;
 
     /**
-     * Creates new form DataSourcePanel
+     * Creates a new DataSourcePanel instance.
+     * 
+     * @param monitorMainFrame The mainframe of the monitor gui
+     * @param parent Parent frame
+     * @param source DataSource instance which will be used by this panel
      */
-    public DataSourcePanel(WpsMonitorAdminGui monitorMainFrame, DataSourceDialog parent, DataSource source) {
+    public DataSourcePanel(final WpsMonitorAdminGui monitorMainFrame, final DataSourceDialog parent, final DataSource source) {
         this.source = source;
         this.monitorMainFrame = monitorMainFrame;
         this.parent = parent;
@@ -49,6 +54,15 @@ public class DataSourcePanel extends javax.swing.JPanel {
         initComponents();
         this.dataSourceLabel.setText(source.getUsedDriver());
         this.resourceLabel.setText(source.getRessource());
+    }
+
+    /**
+     * Gets the DataSource instance of these DataSourcePanel.
+     * 
+     * @return DataSource instance 
+     */
+    public DataSource getSource() {
+        return source;
     }
 
     /**
@@ -142,7 +156,7 @@ public class DataSourcePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteSourceActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteSourceActionPerformed
-        parent.removeDataSource(source, this);
+        parent.removeDataSource(this);
     }//GEN-LAST:event_deleteSourceActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

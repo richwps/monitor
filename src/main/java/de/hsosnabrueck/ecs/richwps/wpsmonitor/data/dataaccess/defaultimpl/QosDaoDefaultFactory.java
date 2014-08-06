@@ -34,6 +34,10 @@ public class QosDaoDefaultFactory implements Factory<QosDataAccess> {
 
     @Override
     public QosDataAccess create() {
+        if(!jpaInstance.isOpen()) {
+            jpaInstance.open();
+        }
+        
         return new QosDao(jpaInstance);
     }
 }

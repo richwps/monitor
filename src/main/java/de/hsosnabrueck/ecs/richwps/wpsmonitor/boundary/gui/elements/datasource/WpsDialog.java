@@ -15,14 +15,14 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessDialog;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.WpsTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +35,7 @@ import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,24 +47,37 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- *
+ * A Dialog to display the WPS Server- and Processes of the given DataSource 
+ * instances.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsDialog extends javax.swing.JDialog {
+public class WpsDialog extends JDialog {
 
     private WpsMonitorAdminGui mainFrame;
 
+    /**
+     * Creates a new WpsDialog instance.
+     * 
+     * @param parent Monitor gui mainframe
+     * @param sources Set of DataSources
+     */
     public WpsDialog(final WpsMonitorAdminGui parent, final Set<DataSource> sources) {
         super(parent, true);
         this.mainFrame = parent;
         
         initComponents();
         setLocationRelativeTo(parent);
-
-        
+ 
         initTree(sources == null ? new HashSet<DataSource>() : sources);
     }
 
+    /**
+     * Creates a new WpsDialog instance.
+     * 
+     * @param parent Monitor gui mainframe
+     * @param source DataSource instance
+     */
     public WpsDialog(final WpsMonitorAdminGui parent, final DataSource source) {
         this(parent, new HashSet<>(Arrays.asList(new DataSource[] { source })));
     }

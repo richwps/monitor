@@ -20,7 +20,7 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
 
 /**
- * Holds all necessary data to configure a {@link Trigger}.
+ * Holds all necessary data to configure a {@link org.quartz.Trigger}.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -51,16 +51,36 @@ public class TriggerConfig {
      */
     private Pair<String, String> triggerKey;
 
+    /**
+     * Creates a new TriggerConfig instance
+     */
     public TriggerConfig() {
 
     }
 
+    /**
+     * Creates a new TriggerConfig instance.
+     * 
+     * @param start Start time of the interval
+     * @param end End time of the interval
+     * @param interval Interval
+     * @param intervalType Interval type
+     */
     public TriggerConfig(final Date start, final Date end, final Integer interval,
             final IntervalUnit intervalType) {
 
         this(start, end, interval, intervalType, null);
     }
 
+    /**
+     * Creates a new TriggerConfig instance.
+     * 
+     * @param start Start time of the interval
+     * @param end End time of the interval
+     * @param interval Interval
+     * @param intervalType Interval type
+     * @param triggerKey Key of the trigger
+     */
     public TriggerConfig(final Date start, final Date end, final Integer interval,
             final IntervalUnit intervalType, Pair<String, String> triggerKey) {
 
@@ -71,6 +91,11 @@ public class TriggerConfig {
         this.triggerKey = triggerKey;
     }
 
+    /**
+     * Creates TriggerConfig instance based of the given other one.
+     * 
+     * @param other TriggerConfig instance.
+     */
     public TriggerConfig(TriggerConfig other) {
         this.end = other.end;
         this.interval = other.interval;

@@ -24,8 +24,8 @@ import de.hsos.richwps.sp.client.wps.Process;
 import de.hsos.richwps.sp.client.wps.SPClient;
 import de.hsos.richwps.sp.client.wps.Vocabulary;
 import de.hsos.richwps.sp.client.wps.WPS;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
@@ -41,7 +41,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * SemanticProxy implementation of DataSourceCreator and DataSource.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class SemanticProxyData extends DataSourceCreator implements DataSource {

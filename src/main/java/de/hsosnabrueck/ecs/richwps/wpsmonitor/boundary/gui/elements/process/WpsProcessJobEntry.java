@@ -16,11 +16,11 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import com.toedter.calendar.JDateChooser;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.IntervalComboBoxItem;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -47,7 +47,7 @@ import javax.swing.text.DateFormatter;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcessJobEntry extends javax.swing.JPanel {
+public class WpsProcessJobEntry extends JPanel {
 
     private WpsMonitorAdminGui mainFrame;
     private WpsProcessEntity wpsProcess;
@@ -61,7 +61,9 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
      * @param parent Parent panel; is needed for delete operation
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      */
-    public WpsProcessJobEntry(WpsMonitorAdminGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
+    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+            final WpsProcessEntity wpsProcess) {
+        
         this(mainFrame, parent, wpsProcess, null);
     }
 
@@ -73,7 +75,9 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      * @param triggerConfig TriggerConfig instance to restore this panel
      */
-    public WpsProcessJobEntry(WpsMonitorAdminGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, TriggerConfig triggerConfig) {
+    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+            final WpsProcessEntity wpsProcess, final TriggerConfig triggerConfig) {
+        
         initComponents();
 
         this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
@@ -92,7 +96,7 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         init(triggerConfig);
     }
 
-    private void init(TriggerConfig triggerConfig) {
+    private void init(final TriggerConfig triggerConfig) {
         initComboBox();
 
         if (triggerConfig != null) {
@@ -147,7 +151,29 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
     private Boolean isEmpty(JTextField validate) {
         return validate == null || "".equals(validate.getText().trim());
     }
+    
+    
+    private Date mergeDateAndTime(Date date, Date time) {
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
 
+        Calendar calTime = Calendar.getInstance();
+        calTime.setTime(time);
+
+        calDate.set(Calendar.HOUR_OF_DAY, calTime.get(Calendar.HOUR_OF_DAY));
+        calDate.set(Calendar.MINUTE, calTime.get(Calendar.MINUTE));
+        calDate.set(Calendar.SECOND, calTime.get(Calendar.SECOND));
+
+        return calDate.getTime();
+    }
+
+    private void removeVisual() {
+        parent.remove(this);
+
+        parent.revalidate();
+        parent.repaint();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -287,19 +313,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_saveJobActionPerformed
 
-    private Date mergeDateAndTime(Date date, Date time) {
-        Calendar calDate = Calendar.getInstance();
-        calDate.setTime(date);
-
-        Calendar calTime = Calendar.getInstance();
-        calTime.setTime(time);
-
-        calDate.set(Calendar.HOUR_OF_DAY, calTime.get(Calendar.HOUR_OF_DAY));
-        calDate.set(Calendar.MINUTE, calTime.get(Calendar.MINUTE));
-        calDate.set(Calendar.SECOND, calTime.get(Calendar.SECOND));
-
-        return calDate.getTime();
-    }
     private void deleteJobActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
         if (triggerConfig.isSaved()) {
             Boolean deleteTrigger = mainFrame.getMonitorReference()
@@ -320,13 +333,6 @@ public class WpsProcessJobEntry extends javax.swing.JPanel {
 
         // repaint required, otherwise the last element will not disappear
     }//GEN-LAST:event_deleteJobActionPerformed
-
-    private void removeVisual() {
-        parent.remove(this);
-
-        parent.revalidate();
-        parent.repaint();
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton deleteJob;

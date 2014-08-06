@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MeasuredDataPanel extends javax.swing.JPanel {
+public class MeasuredDataPanel extends JPanel {
 
     /**
      * Creates new form MeasuredDataPane

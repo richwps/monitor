@@ -17,14 +17,13 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder;
 
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -169,6 +168,10 @@ public class MonitorBuilderCollector {
 
     public boolean addJobListener(JobListener e) {
         return jobListeners.add(e);
+    }
+
+    public boolean remove(JobListener o) {
+        return jobListeners.remove(o);
     }
 
     public List<JobListener> getJobListeners() throws BuilderException {

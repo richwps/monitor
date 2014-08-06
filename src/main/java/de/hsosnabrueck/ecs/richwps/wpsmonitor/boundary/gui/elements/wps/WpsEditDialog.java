@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.event.ActionEvent;
@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
@@ -38,7 +39,7 @@ import javax.swing.WindowConstants;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsEditDialog extends javax.swing.JDialog {
+public class WpsEditDialog extends JDialog {
 
     private final WpsPanel addParentPanel;
     private final WpsMonitorAdminGui monitorMainFrame;
@@ -49,7 +50,7 @@ public class WpsEditDialog extends javax.swing.JDialog {
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param addParentPanel Parent panel; is needed for delete operation
      */
-    public WpsEditDialog(WpsMonitorAdminGui monitorMainFrame, WpsPanel addParentPanel) {
+    public WpsEditDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsPanel addParentPanel) {
         super(monitorMainFrame, true);
         initComponents();
 

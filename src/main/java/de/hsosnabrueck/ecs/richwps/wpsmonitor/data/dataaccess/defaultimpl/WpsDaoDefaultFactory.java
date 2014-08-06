@@ -34,6 +34,10 @@ public class WpsDaoDefaultFactory implements Factory<WpsDataAccess> {
 
     @Override
     public WpsDataAccess create() {
+        if(!jpaInstance.isOpen()) {
+            jpaInstance.open();
+        }
+        
         return new WpsDao(jpaInstance);
     }
 }

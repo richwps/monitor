@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 
 /**

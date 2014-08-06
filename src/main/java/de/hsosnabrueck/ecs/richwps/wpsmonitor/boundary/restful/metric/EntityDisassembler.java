@@ -59,7 +59,7 @@ public class EntityDisassembler {
      * Dissassembles the given dataList to the specific metrics.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return
+     * @return Map instance, the key is the metric name and the value the metric
      */
     public Map<String, QosMetric> disassembleToConverters(final List<MeasuredDataEntity> dataList) {
         Map<String, Set<QosMetric>> metrics = createNewBunchOfConverters();
@@ -71,7 +71,7 @@ public class EntityDisassembler {
      * Disassembles the given dataList to a default metric.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return Map instance
+     * @return Map instance, the key is the metric name and the value the metric
      */
     public Map<String, QosMetric> disassembleToDummyConverter(final List<MeasuredDataEntity> dataList) {
         return disassembleLoop(dataList);
@@ -81,7 +81,7 @@ public class EntityDisassembler {
      * Disassembles the given dataList to the registred metrics.
      *
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return Map Instance
+     * @return Map Instance, the key is the metric name and the value the metric
      */
     public Map<String, QosMetric> disassembleToMetricssWithRawData(final List<MeasuredDataEntity> dataList) {
         Map<String, Set<QosMetric>> metrics = createNewBunchOfConverters();
@@ -102,7 +102,7 @@ public class EntityDisassembler {
      *
      * @param metrics QosMetric list
      * @param dataList List of {@link MeasuredDataEntity} instances
-     * @return Map Instance
+     * @return Map Instance, the key is the metric name and the value the metric
      */
     private Map<String, QosMetric> disassembleLoop(final List<MeasuredDataEntity> dataList, final Map<String, Set<QosMetric>> metrics) {
         Map<String, QosMetric> finalMetrics = new HashMap<>();

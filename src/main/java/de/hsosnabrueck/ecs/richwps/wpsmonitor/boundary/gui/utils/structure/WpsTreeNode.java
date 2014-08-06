@@ -42,7 +42,7 @@ public class WpsTreeNode extends DefaultMutableTreeNode {
     /**
      * Gets the type of the Node: Driver Node, WPS Node or WPS-Process Node
      *
-     * @return
+     * @return NideType instance
      */
     public NodeType getType() {
         return type;

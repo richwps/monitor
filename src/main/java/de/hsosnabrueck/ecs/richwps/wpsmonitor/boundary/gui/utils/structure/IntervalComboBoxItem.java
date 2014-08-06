@@ -54,7 +54,7 @@ public class IntervalComboBoxItem {
     /**
      * Creates an interval type item that matches the given dataKey.
      *
-     * @param dateKey {@link DateBuilder.IntervalUnit} instance
+     * @param dateKey TriggerConfig.IntervalUnit instance
      */
     public IntervalComboBoxItem(TriggerConfig.IntervalUnit dateKey) {
         this.dateKey = Validate.notNull(dateKey, "dateKey");

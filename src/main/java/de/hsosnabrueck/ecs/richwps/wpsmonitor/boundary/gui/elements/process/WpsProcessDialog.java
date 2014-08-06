@@ -15,57 +15,45 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
+import javax.swing.JDialog;
 
 /**
- * Dialog to show and allow operations on {@link WpsProcessEntities} and
- * {@link WPsProcessEntity} Jobs.
+ * Dialog to show and allow operations on WpsProcessEntities and
+ * {@link WpsProcessEntity} Jobs.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcessDialog extends javax.swing.JDialog {
+public class WpsProcessDialog extends JDialog {
 
     private final WpsMonitorAdminGui monitorMainFrame;
     private final WpsEntity wps;
 
     /**
-     * Constructor.
+     * Creates a new WpsProcessDialog instance.
      *
      * @param monitorMainFrame Reference to the WpsMonitorAdminGui of this gui
      * @param wps {@link WpsEntity} to request the right data from the monitor
      */
-    public WpsProcessDialog(WpsMonitorAdminGui monitorMainFrame, WpsEntity wps) {
+    public WpsProcessDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsEntity wps) {
         super(monitorMainFrame, true);
         this.wps = wps;
         this.monitorMainFrame = Validate.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
-
         setLocationRelativeTo(monitorMainFrame);
-
         init();
     }
 
     private void init() {
+        setTitle(getTitle() + " of " + wps.getIdentifier());
         List<WpsProcessEntity> processesOfWps = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
                 .getProcessesOfWps(wps);
@@ -87,9 +75,42 @@ public class WpsProcessDialog extends javax.swing.JDialog {
         revalidate();
         repaint();
     }
+    
+    /**
+     * Adds a new Process.
+     * 
+     * @param processName 
+     */
+    public void addProcess(final String processName) {
+        WpsProcessEntity p = new WpsProcessEntity(processName, wps);
 
+        WpsProcessPanel pPanel = createAndAddProcessPanel(p);
+        pPanel.saveProcess();
+    }
+    
     private Boolean isNotEmptyProcessName() {
         return !"".equals(processIdentifierInput.getText().trim());
+    }
+    
+    
+    private WpsProcessPanel createProcessPanel(WpsProcessEntity processEntity) {
+        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity);
+    }
+
+    private WpsProcessPanel createSavedProcessPanel(WpsProcessEntity processEntity) {
+        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity, true);
+    }
+
+    private void addProcessPanel(WpsProcessPanel panel) {
+        addProcessPane.add(panel, BorderLayout.SOUTH);
+        addProcessPane.revalidate();
+    }
+
+    private WpsProcessPanel createAndAddProcessPanel(WpsProcessEntity processEntity) {
+        WpsProcessPanel panel = createProcessPanel(processEntity);
+        addProcessPanel(panel);
+
+        return panel;
     }
 
     /**
@@ -229,33 +250,6 @@ public class WpsProcessDialog extends javax.swing.JDialog {
             createAndAddProcessPanel(wpsProcessEntity);
         }
     }//GEN-LAST:event_createNewProcessButtonActionPerformed
-
-    private WpsProcessPanel createProcessPanel(WpsProcessEntity processEntity) {
-        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity);
-    }
-
-    private WpsProcessPanel createSavedProcessPanel(WpsProcessEntity processEntity) {
-        return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity, true);
-    }
-
-    private void addProcessPanel(WpsProcessPanel panel) {
-        addProcessPane.add(panel, BorderLayout.SOUTH);
-        addProcessPane.revalidate();
-    }
-
-    private WpsProcessPanel createAndAddProcessPanel(WpsProcessEntity processEntity) {
-        WpsProcessPanel panel = createProcessPanel(processEntity);
-        addProcessPanel(panel);
-
-        return panel;
-    }
-
-    public void addProcess(String processName) {
-        WpsProcessEntity p = new WpsProcessEntity(processName, wps);
-
-        WpsProcessPanel pPanel = createAndAddProcessPanel(p);
-        pPanel.saveProcess();
-    }
 
     private void processIdentifierInputActionPerformed(ActionEvent evt) {//GEN-FIRST:event_processIdentifierInputActionPerformed
         createNewProcessButtonActionPerformed(evt);

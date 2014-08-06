@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Class to describe WPS.
+ * Class to describe WPS. WPS-Identifier- and URI are mandatory.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -42,12 +42,19 @@ public class WpsDescription {
      */
     private final Set<WpsProcessDescription> processes;
 
+    /**
+     * Creates an immutable WpsDescription instance with the WPS identifier and
+     * uri.
+     * 
+     * @param identifier Identifier of the WPS
+     * @param wpsUri URI instance
+     */
     public WpsDescription(final String identifier, final URI wpsUri) {
         this(identifier, wpsUri, null);
     }
 
     /**
-     * Creates an imutable WpsDescription instance with a set of
+     * Creates an immutable WpsDescription instance with a set of
      * WpsProcessDescription-Instances and the URI which should point to the
      * described WPS.
      *

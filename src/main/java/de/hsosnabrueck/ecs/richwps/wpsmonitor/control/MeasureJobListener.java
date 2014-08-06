@@ -15,11 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.JobExecutedHandlerThread;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;

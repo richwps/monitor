@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -33,21 +33,23 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 
 /**
+ * Panel which representate a DataSourceCreator instance. Through this panel new
+ * DataSource instances can be created.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class DataDriverPanel extends javax.swing.JPanel {
+public class DataSourceCreatorPanel extends JPanel {
 
     private final DataSourceDialog parent;
     private final DataSourceCreator driver;
 
     /**
-     * Creates new form DataAdapterPanel
+     * Creates new form DataSourceCreatorPanel
      *
      * @param parent Reference to the parent frame
      * @param driver Driver instance which should cares of
      */
-    public DataDriverPanel(DataSourceDialog parent, DataSourceCreator driver) {
+    public DataSourceCreatorPanel(final DataSourceDialog parent, final DataSourceCreator driver) {
         this.parent = parent;
         this.driver = driver;
 

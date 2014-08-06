@@ -16,8 +16,8 @@
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import com.toedter.calendar.JDateChooser;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -54,18 +54,19 @@ public class ShowMeasuredDataDialog extends JDialog {
     private static final Logger LOG = LogManager.getLogger();
 
     /**
-     * Constructor.
+     * Creates a new ShowMeasuredDataDialog instance.
      *
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param process WpsProcessEntity to select the right measured data
      */
-    public ShowMeasuredDataDialog(WpsMonitorAdminGui monitorMainFrame, WpsProcessEntity process) {
+    public ShowMeasuredDataDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsProcessEntity process) {
         super(monitorMainFrame, true);
         initComponents();
         setLocationRelativeTo(monitorMainFrame);
 
         this.monitorMainFrame = monitorMainFrame;
         this.wpsProcess = process;
+        setTitle(getTitle() + " of " + process.getIdentifier());
     }
 
     /**
@@ -114,7 +115,7 @@ public class ShowMeasuredDataDialog extends JDialog {
         closeButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Show measured data of Process");
+        setTitle("Measured data of Process");
         setIconImage(new ImageIcon(getClass().getResource("/icons/measure.png")).getImage());
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Measured Data"));
@@ -216,11 +217,6 @@ public class ShowMeasuredDataDialog extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * Action behavior for the deleteAllButton button.
-     *
-     * @param evt
-     */
     private void deleteAllButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteAllButtonActionPerformed
         this.monitorMainFrame
                 .getMonitorReference()
@@ -230,11 +226,6 @@ public class ShowMeasuredDataDialog extends JDialog {
         recaptureData();
     }//GEN-LAST:event_deleteAllButtonActionPerformed
 
-    /**
-     * Action behavior for the deleteByDateButton.
-     *
-     * @param evt
-     */
     private void deleteByDateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteByDateButtonActionPerformed
         if (deleteOlderAsDate.getDate() == null) {
             MessageDialogs.showError(this, "Error", "Please select a valid Date!");
@@ -263,11 +254,6 @@ public class ShowMeasuredDataDialog extends JDialog {
         return cal.getTime();
     }
 
-    /**
-     * Action behavior for the refreh button.
-     *
-     * @param evt
-     */
     private void refreshButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         recaptureData();
     }//GEN-LAST:event_refreshButtonActionPerformed

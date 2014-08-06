@@ -29,7 +29,8 @@ import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * About Dialog with license informations.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class AboutDialog extends JDialog {
@@ -38,9 +39,8 @@ public class AboutDialog extends JDialog {
      * Creates new form About
      *
      * @param parent Parent frame
-     * @param modal
      */
-    public AboutDialog(Frame parent) {
+    public AboutDialog(final Frame parent) {
         super(parent, true);
 
         initComponents();

@@ -15,8 +15,8 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.logviewer;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.FileUtils;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.FileUtils;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -24,8 +24,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -40,7 +38,8 @@ import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * A Dialog to view files in a directory.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class LogViewerDialog extends JDialog {
@@ -56,6 +55,9 @@ public class LogViewerDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
+    /**
+     * init and revalidated the frame.
+     */
     public void prepare() {
         init();
         revalidate();
@@ -114,8 +116,9 @@ public class LogViewerDialog extends JDialog {
 
         logFileArea.setEditable(false);
         logFileArea.setColumns(20);
-        logFileArea.setFont(new Font("Monospaced", 0, 10)); // NOI18N
+        logFileArea.setFont(new Font("Monospaced", 0, 11)); // NOI18N
         logFileArea.setRows(5);
+        logFileArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(logFileArea);
 
         fileSelectorComboBox.addActionListener(new ActionListener() {

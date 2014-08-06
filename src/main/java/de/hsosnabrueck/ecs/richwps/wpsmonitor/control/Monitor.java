@@ -15,9 +15,12 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
@@ -28,12 +31,12 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJobFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJobFactory;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.CalendarIntervalScheduleBuilder;
@@ -66,25 +69,24 @@ public class Monitor {
     private MonitorBuilder builderInstance;
     private MonitorConfig config;
     private MonitorEventHandler eventHandler;
+    private final Set<AutoCloseable> shutdownCalls;
 
-    public Monitor(MonitorBuilder builder) throws MonitorConfigException {
+    public Monitor(final MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");
-
+        shutdownCalls = new HashSet<>();
+        
         initMonitorWithBuilder(builder);
-        registerShutdownHook();
+        prepareShutdown();
     }
 
     /**
      * Starts the monitor if not already running.
-     * 
-     * @throws MonitorException 
+     *
+     * @throws MonitorException
      */
     public void start() throws MonitorException {
         if (!isActive()) {
-            beforeStart();
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitor.start"));
+            prepareStart();
 
             try {
                 monitorControl
@@ -93,28 +95,32 @@ public class Monitor {
             } catch (SchedulerException ex) {
                 throw new MonitorException("Can't start monitor.", ex);
             }
+            
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitor.start"));
         }
     }
 
     /**
      * Shutting down the monitor if it is running.
-     * 
-     * @throws MonitorException 
+     *
+     * @throws MonitorException
      */
     public void shutdown() throws MonitorException {
+        
         if (isActive()) {
-            LOG.debug("Monitor shutdown.");
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitor.shutdown"));
-
-            config.save();
-            try {
-                monitorControl.getSchedulerControl()
-                        .shutdown();
-            } catch (SchedulerException ex) {
-                throw new MonitorException("Can't shutdown monitor.", ex);
+            
+            LOG.trace("Monitor is shutting down ...");
+            
+            for(AutoCloseable c : shutdownCalls) {
+                try {
+                    c.close();
+                } catch (Exception ex) {
+                    LOG.warn("Exception occured at try to calling a shutdown routine", ex);
+                }
             }
+
+            eventHandler.fireEvent(new MonitorEvent("monitor.shutdown"));
         }
     }
 
@@ -123,18 +129,18 @@ public class Monitor {
                 .fireEvent(new MonitorEvent("monitor.restart"));
 
         shutdown();
-        
+
         try {
             builderInstance.reConfigure();
+            initMonitorWithBuilder(builderInstance);
         } catch (BuilderException ex) {
-            throw new MonitorException("A Builder Exception is occourd.", ex);
+            throw new MonitorException("A Builder Exception is occurd.", ex);
         }
-        
-        initMonitorWithBuilder(builderInstance);
+
         start();
     }
 
-    private void initMonitorWithBuilder(MonitorBuilder builder) throws MonitorConfigException {
+    private void initMonitorWithBuilder(final MonitorBuilder builder) throws MonitorConfigException {
         try {
             this.monitorControl = builder.buildMonitorControl();
             this.builderInstance = builder;
@@ -151,6 +157,13 @@ public class Monitor {
         } catch (BuilderException ex) {
             throw new AssertionError("Builder exception at initialising procedure of the monitor instance. Execution aborted.", ex);
         }
+    }
+    
+    private void prepareShutdown() {
+        registerShutdownHook();
+        
+        addShutdownRoutine(config);
+        addShutdownRoutine(monitorControl.getSchedulerControl());
     }
 
     private void registerShutdownHook() {
@@ -221,7 +234,7 @@ public class Monitor {
                 ).build();
     }
 
-    private void beforeStart() {
+    private void prepareStart() {
         setupJobFactories();
         cleanupJob();
     }
@@ -249,7 +262,7 @@ public class Monitor {
             jobFactoryService.register(CleanUpJob.class, cleanupJobFactory);
         } catch (CreateException | BuilderException ex) {
             throw new AssertionError("Can't setup the Jobfactories. Execution aborted.", ex);
-        } 
+        }
     }
 
     public MonitorControl getMonitorControl() {
@@ -297,5 +310,11 @@ public class Monitor {
         }
 
         return active;
+    }
+    
+    public void addShutdownRoutine(final AutoCloseable routine) {
+        Validate.notNull(routine, "routine");
+        
+        shutdownCalls.add(routine);
     }
 }

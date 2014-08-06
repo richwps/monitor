@@ -15,6 +15,7 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,7 @@ import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,16 +45,16 @@ import javax.swing.text.NumberFormatter;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MonitorPropertiesDialog extends javax.swing.JDialog {
+public class MonitorPropertiesDialog extends JDialog {
 
     private final WpsMonitorAdminGui monitorMainFrame;
 
     /**
-     * Constructor.
+     * Creates a new MonitorPropertiesDialog instance.
      *
      * @param monitorMainFrame Reference to the MainFrame of this gui
      */
-    public MonitorPropertiesDialog(WpsMonitorAdminGui monitorMainFrame) {
+    public MonitorPropertiesDialog(final WpsMonitorAdminGui monitorMainFrame) {
         super(monitorMainFrame, true);
 
         this.monitorMainFrame = monitorMainFrame;

@@ -15,14 +15,14 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.wps;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process.WpsProcessDialog;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -138,6 +138,40 @@ public class WpsPanel extends javax.swing.JPanel {
     private void setWpsTextLabels(final WpsEntity wps) {
         this.wpsNameLabel.setText(wps.getIdentifier());
         this.wpsUriLabel.setText(wps.getUri().toString());
+    }
+    
+    /**
+     * Gets the wpsProcessDialog instance.
+     * 
+     * @return WpsProcessDialog instance
+     */
+    public WpsProcessDialog getWpsProcessDialog() {
+        return wpsProcessDialog;
+    }
+
+    /**
+     * Listener method for a MonitorEvent
+     *
+     * @param process WpsProcessEntity instance
+     */
+    public void processMonitoringPaused(WpsProcessEntity process) {
+        if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
+            showErrorIndicator();
+        }
+    }
+
+    /**
+     * hides the error indicator
+     */
+    public void hideErrorIndicator() {
+        errorIcon.setEnabled(false);
+    }
+
+    /**
+     * displays the error indicator
+     */
+    public void showErrorIndicator() {
+        errorIcon.setEnabled(true);
     }
 
     /**
@@ -277,39 +311,6 @@ public class WpsPanel extends javax.swing.JPanel {
     private void editWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
         new WpsEditDialog(monitorMainFrame, this).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
-
-    public WpsProcessDialog getWpsProcessDialog() {
-        return wpsProcessDialog;
-    }
-
-    public void setWpsProcessDialog(WpsProcessDialog wpsProcessDialog) {
-        this.wpsProcessDialog = wpsProcessDialog;
-    }
-
-    /**
-     * Listener method for a MonitorEvent
-     *
-     * @param process WpsProcessEntity instance
-     */
-    public void processMonitoringPaused(WpsProcessEntity process) {
-        if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
-            showErrorIndicator();
-        }
-    }
-
-    /**
-     * hides the error indicator
-     */
-    public void hideErrorIndicator() {
-        errorIcon.setEnabled(false);
-    }
-
-    /**
-     * displays the error indicator
-     */
-    public void showErrorIndicator() {
-        errorIcon.setEnabled(true);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton addProcessToWpsButton;

@@ -25,8 +25,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Representate the configuration of a {@link Monitor} instance. For this
- * purpose, the MonitorConfig will be used a extended version of the
+ * Representate the configuration of a
+ * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor} instance. For
+ * this purpose, the MonitorConfig will be used a extended version of the
  * {@link Properties} class. All configurations will be read out of a properties
  * file. If the save-method is called, all changed properties will be written
  * back into the properties file.
@@ -35,7 +36,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class MonitorConfig {
+public final class MonitorConfig implements AutoCloseable {
 
     private static final Logger LOG = LogManager.getLogger();
     private static final Properties DEFAULT_PROPERTIES;
@@ -61,6 +62,12 @@ public final class MonitorConfig {
     private final Properties properties;
     private final File propertiesFile;
 
+    /**
+     * Creates a new MonitorConfig instance.
+     *
+     * @param propertiesFile Properties file instance
+     * @throws MonitorConfigException
+     */
     public MonitorConfig(final File propertiesFile) throws MonitorConfigException {
         this.properties = new Properties(DEFAULT_PROPERTIES);
         this.propertiesFile = propertiesFile == null ? new File("monitor.properties") : propertiesFile;
@@ -125,7 +132,7 @@ public final class MonitorConfig {
     }
 
     /**
-     * Try to save the changed properties into the defined properties file
+     * Tries to save the changed properties into the defined properties file
      */
     public void save() {
         assignVarsToPropertieObj();
@@ -248,6 +255,11 @@ public final class MonitorConfig {
         if (wpsClientTimeout > 0) {
             this.wpsClientTimeout = wpsClientTimeout;
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        save();
     }
 
 }

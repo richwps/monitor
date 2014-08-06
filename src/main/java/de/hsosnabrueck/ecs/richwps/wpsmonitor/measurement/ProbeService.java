@@ -66,7 +66,7 @@ public class ProbeService {
     }
 
     /**
-     * Creates a new list of {@link QosProbes}.
+     * Creates a new list of {@link QosProbe}s.
      *
      * @return list of QosProbes
      */

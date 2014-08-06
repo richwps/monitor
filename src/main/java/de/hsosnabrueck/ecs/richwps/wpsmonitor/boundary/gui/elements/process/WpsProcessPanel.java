@@ -15,18 +15,18 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -54,7 +54,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcessPanel extends javax.swing.JPanel {
+public class WpsProcessPanel extends JPanel {
 
     private WpsMonitorAdminGui mainFrame;
     private WpsProcessJobDialog wpsProcessJobDialog;
@@ -72,7 +72,9 @@ public class WpsProcessPanel extends javax.swing.JPanel {
      * @param parent Parent panel; is needed for delete operation
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      */
-    public WpsProcessPanel(WpsMonitorAdminGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess) {
+    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+            final WpsProcessEntity wpsProcess) {
+        
         this(mainFrame, parent, wpsProcess, false);
     }
 
@@ -84,7 +86,9 @@ public class WpsProcessPanel extends javax.swing.JPanel {
      * @param restored true if the form is only restored by its parent (e.g. the
      * monitor is restarted)
      */
-    public WpsProcessPanel(WpsMonitorAdminGui mainFrame, JPanel parent, WpsProcessEntity wpsProcess, Boolean restored) {
+    public WpsProcessPanel(final WpsMonitorAdminGui mainFrame, final JPanel parent, WpsProcessEntity wpsProcess, 
+            final Boolean restored) {
+        
         this.mainFrame = mainFrame;
         this.parent = parent;
         this.wpsProcess = Validate.notNull(wpsProcess, "wpsProcess");
@@ -226,23 +230,23 @@ public class WpsProcessPanel extends javax.swing.JPanel {
         showMeasuredDataButton.setEnabled(true);
     }
 
-    public void processRequestException(WpsProcessEntity process) {
+    private void processRequestException(WpsProcessEntity process) {
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             indicateError();
         }
     }
 
-    public void monitoringPauseEvent(WpsProcessEntity process) {
+    private void monitoringPauseEvent(WpsProcessEntity process) {
         if (wpsProcess.getIdentifier().equals(process.getIdentifier())) {
             rescheduleButton.setEnabled(true);
         }
     }
 
-    public void indicateError() {
+    private void indicateError() {
         this.setBackground(new Color(255, 102, 102));
     }
 
-    public void clearError() {
+    private void clearError() {
         this.setBackground(new Color(240, 240, 240));
     }
 

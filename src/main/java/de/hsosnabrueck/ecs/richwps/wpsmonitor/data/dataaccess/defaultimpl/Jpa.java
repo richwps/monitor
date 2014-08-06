@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class Jpa {
+public final class Jpa implements AutoCloseable {
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -53,10 +53,20 @@ public final class Jpa {
             entityStorage = new ThreadLocal<>();
         }
     }
+    
+    /**
+     * Checks if the EntityManagerFactory is open.
+     * 
+     * @return true if open, otherwise false 
+     */
+    public Boolean isOpen() {
+        return emf != null && emf.isOpen();
+    }
 
     /**
      * Closes the entitymanager factory and all used entitymanagers
      */
+    @Override
     public void close() {
         if (emf.isOpen()) {
             LOG.debug("Close EntityManager Factory...");

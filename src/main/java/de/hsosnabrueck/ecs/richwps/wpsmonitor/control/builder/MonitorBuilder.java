@@ -21,8 +21,11 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientF
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MeasureJobListener;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.SchedulerControl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
@@ -38,29 +41,20 @@ import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDao
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.ProbeService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.EventNotFound;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.SchedulerFactory;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.io.File;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
- * Builder pattern to build a Monitor-instance. First, call setupDefault()
- and then personalize the build with the with-methods. If an exception occurs,
- the builder will catch the exception and rethrow it as a
- {@link BuilderException}.
+ * Builder pattern to build a Monitor-instance. First, call setupDefault() and
+ * then personalize the build with the with-methods. If an exception occurs, the
+ * builder will catch the exception and rethrow it as a
+ * {@link BuilderException}.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorBuilder {
 
-    private static final Logger LOG = LogManager.getLogger();
-    private MonitorBuilderCollector storage;
+    private final MonitorBuilderCollector storage;
 
     /**
      * Config object for the monitor instance
@@ -94,6 +88,11 @@ public class MonitorBuilder {
     private Jpa jpaInstance;
 
     /**
+     * The default MeasureJobListener
+     */
+    private MeasureJobListener jobListener;
+
+    /**
      * Creates a MonitorBuilder instance which can be used to configure and
      * create a Monitor instance.
      */
@@ -112,15 +111,21 @@ public class MonitorBuilder {
     public Monitor build() throws BuilderException {
         try {
             buildAllPieces();
+            storage.addJobListener(jobListener);
 
-            storage.addJobListener(buildMeasureJobListener());
             setupEventHandler();
 
             if (!storage.isValid()) {
                 throw new BuilderException("The State of the MonitorBuilder Instance is not valid.");
             }
 
-            return new Monitor(this);
+            Monitor m = new Monitor(this);
+
+            if (isJpaUsed()) {
+                m.addShutdownRoutine(jpaInstance);
+            }
+
+            return m;
         } catch (MonitorConfigException ex) {
             throw new BuilderException(ex);
         }
@@ -149,7 +154,9 @@ public class MonitorBuilder {
      * @throws BuilderException
      */
     public void reConfigure() throws BuilderException {
+        storage.remove(jobListener);
         buildAllPieces();
+        storage.addJobListener(jobListener);
     }
 
     private MonitorBuilder buildAllPieces() throws BuilderException {
@@ -158,6 +165,7 @@ public class MonitorBuilder {
         wpsDaoFactory = buildWpsDaoFactory();
         wpsProcessDaoFactory = buildWpsProcessDaoFactory();
         wpsClientFactory = buildWpsClientFactory(buildWpsClientConfig(monitorConfig));
+        jobListener = buildMeasureJobListener();
 
         return this;
     }
@@ -380,7 +388,7 @@ public class MonitorBuilder {
      * Gets the name of the persistence unit. If the value is not set, a
      * BuilderException instance will be thrown.
      *
-     * @return
+     * @return Name of the persitence unit
      * @throws BuilderException
      */
     public String getPersistenceUnit() throws BuilderException {
@@ -391,7 +399,7 @@ public class MonitorBuilder {
      * Sets the name of the persistence unit. This value is only needed, if the
      * default JPA implemenation is used.
      *
-     * @param persistenceUnit
+     * @param persistenceUnit Name of the persistence unit
      * @return MonitorBuilder instance
      */
     public MonitorBuilder withPersistenceUnit(final String persistenceUnit) {
@@ -419,7 +427,8 @@ public class MonitorBuilder {
     }
 
     /**
-     * Sets the default WpsClientFactory. By default the {@link SimpleWpsClient}
+     * Sets the default WpsClientFactory. By default the
+     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClient}
      * Implementation is used. This implementation is very simple and does not
      * support chung request or some other nice feature.
      *
@@ -432,7 +441,8 @@ public class MonitorBuilder {
     /**
      * Sets the default {@link QosDataAccess} factory instance. By default,
      * {@link QosDaoDefaultFactory} is used and the {@link Jpa} class will be
-     * instantiated once and used for every other default {@link DataAccess}
+     * instantiated once and used for every other default
+     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
      * implementation.
      *
      * @return MonitorBuilder instance
@@ -445,7 +455,8 @@ public class MonitorBuilder {
     /**
      * Sets the default {@link WpsDataAccess} factory instance. By default,
      * {@link WpsDaoDefaultFactory} is used and the {@link Jpa} class will be
-     * instantiated once and used for every other default {@link DataAccess}
+     * instantiated once and used for every other default
+     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
      * implementation.
      *
      * @return MonitorBuilder instance
@@ -459,7 +470,8 @@ public class MonitorBuilder {
      * Sets the default {@link WpsProcessDataAccess} factory instance. By
      * default, {@link WpsProcessDaoDefaultFactory} is used and the {@link Jpa}
      * class will be instantiated once and used for every other default
-     * {@link DataAccess} implementation.
+     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
+     * implementation.
      *
      * @return MonitorBuilder instance
      * @throws BuilderException
@@ -551,9 +563,11 @@ public class MonitorBuilder {
     }
 
     /**
-     * Builds the {@link MonitorControl}-instance with the needed dependencies.
+     * Builds the
+     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl}-instance
+     * with the needed dependencies.
      *
-     * @return {@link MonitorControl} instance.
+     * @return {@link MonitorControlImpl} instance.
      * @throws BuilderException
      */
     public MonitorControlImpl buildMonitorControl() throws BuilderException {
@@ -578,38 +592,6 @@ public class MonitorBuilder {
                 .registerEvent("monitor.restart");
         storage.getEventHandler()
                 .registerEvent("monitor.shutdown");
-
-        if (isJpaUsed()) {
-            setupJpaListeners();
-        }
-    }
-
-    private void setupJpaListeners() throws BuilderException {
-        try {
-            // register JPA start
-            storage.getEventHandler().registerListener("monitor.start",
-                    new MonitorEventListener() {
-
-                        @Override
-                        public void execute(MonitorEvent event) {
-                            jpaInstance.open();
-                        }
-                    }
-            );
-
-            // register JPA Shutdown
-            storage.getEventHandler().registerListener("monitor.shutdown",
-                    new MonitorEventListener() {
-
-                        @Override
-                        public void execute(MonitorEvent event) {
-                            jpaInstance.close();
-                        }
-                    }
-            );
-        } catch (EventNotFound ex) {
-            LOG.error("Can't register the JPA listener.", ex);
-        }
     }
 
     private Boolean isJpaUsed() {

@@ -15,9 +15,9 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.elements.WpsMonitorAdminGui;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +26,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,11 +37,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Shows all {@link Trigger}s of the selected Wps-Process.
+ * Shows all configured Quartz triggerss of the selected Wps-Process.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsProcessJobDialog extends javax.swing.JDialog {
+public class WpsProcessJobDialog extends JDialog {
 
     private final WpsMonitorAdminGui mainframe;
     private final WpsProcessEntity wpsProcess;
@@ -53,7 +54,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
      * @param mainFrame Reference to the WpsMonitorAdminGui of this gui
      * @param wpsProcess WpsProcessEntity instance to request the right trigger
      */
-    public WpsProcessJobDialog(WpsMonitorAdminGui mainFrame, WpsProcessEntity wpsProcess) {
+    public WpsProcessJobDialog(final WpsMonitorAdminGui mainFrame, final WpsProcessEntity wpsProcess) {
         super(mainFrame, true);
         initComponents();
 
@@ -66,6 +67,7 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     }
 
     private void init() {
+        setTitle(getTitle() + " of " + wpsProcess.getIdentifier());
         List<TriggerConfig> triggers = mainframe.getMonitorReference()
                 .getMonitorControl()
                 .getTriggers(wpsProcess);
@@ -79,6 +81,26 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
 
             addJobEntryPane(jobEntryPane);
         }
+    }
+    
+    private WpsProcessJobEntry createNewJobEntryPane() {
+        return new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
+    }
+
+    private void addJobEntryPane(final WpsProcessJobEntry pane) {
+        addJobPane.add(pane);
+        addJobPane.revalidate();
+        addJobPane.repaint();
+    }
+
+    /**
+     * reinitialize the form
+     */
+    public void reInit() {
+        addJobPane.removeAll();
+        init();
+        revalidate();
+        repaint();
     }
 
     /**
@@ -190,30 +212,6 @@ public class WpsProcessJobDialog extends javax.swing.JDialog {
     private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
-
-    private WpsProcessJobEntry createNewJobEntryPane() {
-        return new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
-    }
-
-    private void addJobEntryPane(WpsProcessJobEntry pane) {
-        addJobPane.add(pane);
-        addJobPane.revalidate();
-        addJobPane.repaint();
-    }
-
-    /**
-     * reinitialize the form
-     */
-    public void reInit() {
-        addJobPane.removeAll();
-        init();
-        revalidate();
-        repaint();
-    }
-
-    private void appendTitle(String name) {
-        this.setTitle(getTitle() + " " + name);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JPanel addJobPane;

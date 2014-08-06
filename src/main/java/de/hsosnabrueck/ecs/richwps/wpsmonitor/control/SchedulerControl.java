@@ -15,10 +15,10 @@
  */
 package de.hsosnabrueck.ecs.richwps.wpsmonitor.control;
 
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import de.hsosnabrueck.ecs.richwps.wpsmonitor.measurement.MeasureJob;
 import de.hsosnabrueck.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class SchedulerControl {
+public final class SchedulerControl implements AutoCloseable {
 
     protected final Scheduler scheduler;
     protected final JobFactoryService jobFactoryService;
@@ -553,5 +553,10 @@ public final class SchedulerControl {
                 throw new AssertionError(quartzIntervalUnit.name());
 
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        shutdown();
     }
 }

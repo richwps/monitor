@@ -34,6 +34,10 @@ public class WpsProcessDaoDefaultFactory implements Factory<WpsProcessDataAccess
 
     @Override
     public WpsProcessDataAccess create() {
+        if(!jpaInstance.isOpen()) {
+            jpaInstance.open();
+        }
+        
         return new WpsProcessDao(jpaInstance);
     }
 }
