@@ -45,7 +45,7 @@ import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public final class SchedulerControl implements AutoCloseable {
+public final class SchedulerControl {
 
     protected final Scheduler scheduler;
     protected final JobFactoryService jobFactoryService;
@@ -553,10 +553,5 @@ public final class SchedulerControl implements AutoCloseable {
                 throw new AssertionError(quartzIntervalUnit.name());
 
         }
-    }
-
-    @Override
-    public void close() throws Exception {
-        shutdown();
     }
 }

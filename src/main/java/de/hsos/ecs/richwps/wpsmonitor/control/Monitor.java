@@ -73,7 +73,7 @@ public class Monitor {
     public Monitor(final MonitorBuilder builder) throws MonitorConfigException {
         Validate.notNull(builder, "builder");
         shutdownCalls = new HashSet<>();
-        
+
         initMonitorWithBuilder(builder);
         prepareShutdown();
     }
@@ -94,7 +94,7 @@ public class Monitor {
             } catch (SchedulerException ex) {
                 throw new MonitorException("Can't start monitor.", ex);
             }
-            
+
             eventHandler
                     .fireEvent(new MonitorEvent("monitor.start"));
         }
@@ -106,13 +106,20 @@ public class Monitor {
      * @throws MonitorException
      */
     public void shutdown() throws MonitorException {
-        
+
         if (isActive()) {
-            
+
             LOG.trace("Monitor is shutting down ...");
             eventHandler.fireEvent(new MonitorEvent("monitor.shutdown"));
-            
-            for(AutoCloseable c : shutdownCalls) {
+
+            // end scheduler first
+            try {
+                monitorControl.getSchedulerControl().shutdown();
+            } catch (SchedulerException ex) {
+                LOG.warn("Exception occured at try to shut down the scheduler.");
+            }
+
+            for (AutoCloseable c : shutdownCalls) {
                 try {
                     c.close();
                 } catch (Exception ex) {
@@ -132,7 +139,7 @@ public class Monitor {
             builderInstance.reConfigure();
             initMonitorWithBuilder(builderInstance);
         } catch (BuilderException ex) {
-            throw new MonitorException("A Builder Exception is occurd.", ex);
+            throw new MonitorException("An Exception is occurd at reconfiguration of the builder instance", ex);
         }
 
         start();
@@ -140,6 +147,8 @@ public class Monitor {
 
     private void initMonitorWithBuilder(final MonitorBuilder builder) throws MonitorConfigException {
         try {
+            shutdownCalls.remove(config);
+
             this.monitorControl = builder.buildMonitorControl();
             this.builderInstance = builder;
             this.config = builder.getMonitorConfig();
@@ -152,16 +161,15 @@ public class Monitor {
             } else {
                 this.eventHandler = tmpEventHandler;
             }
+
+            addShutdownRoutine(config);
         } catch (BuilderException ex) {
             throw new AssertionError("Builder exception at initialising procedure of the monitor instance. Execution aborted.", ex);
         }
     }
-    
+
     private void prepareShutdown() {
         registerShutdownHook();
-        
-        addShutdownRoutine(config);
-        addShutdownRoutine(monitorControl.getSchedulerControl());
     }
 
     private void registerShutdownHook() {
@@ -263,26 +271,56 @@ public class Monitor {
         }
     }
 
+    /**
+     * Gets the MonitorControl-Facade.
+     *
+     * @return MonitorControl instance
+     */
     public MonitorControl getMonitorControl() {
         return monitorControl;
     }
 
+    /**
+     * Gets the MonitorEventHandler.
+     *
+     * @return MonitorEventHandler instance
+     */
     public MonitorEventHandler getEventHandler() {
         return eventHandler;
     }
 
+    /**
+     * Gets the Scheduler control.
+     *
+     * @return SchedulerControl instance
+     */
     public SchedulerControl getSchedulerControl() {
         return monitorControl.getSchedulerControl();
     }
 
+    /**
+     * Gets the used MonitorBuilder instance.
+     *
+     * @return MonitorBuilder instance
+     */
     public MonitorBuilder getBuilderInstance() {
         return builderInstance;
     }
 
+    /**
+     * Gets the MonitorConfig instance,
+     *
+     * @return MonitorConfig instance
+     */
     public MonitorConfig getConfig() {
         return config;
     }
 
+    /**
+     * Gets the ProbeService instance.
+     *
+     * @return ProbeService instance
+     */
     public ProbeService getProbeService() {
         try {
             return builderInstance
@@ -293,6 +331,11 @@ public class Monitor {
         }
     }
 
+    /**
+     * Checks if the monitor is running.
+     *
+     * @return true if running, otherwise null will be returned
+     */
     public Boolean isActive() {
         Boolean active;
 
@@ -309,10 +352,27 @@ public class Monitor {
 
         return active;
     }
-    
+
+    /**
+     * Adds an AutoCloseable implementation to the shutdown routine Set.
+     *
+     * @param routine Instance which should be closed after shutdown
+     */
     public void addShutdownRoutine(final AutoCloseable routine) {
-        Validate.notNull(routine, "routine");
-        
-        shutdownCalls.add(routine);
+        if (routine != null) {
+            shutdownCalls.add(routine);
+        }
+    }
+
+    /**
+     * Removes an AutoCloseable implementation to the shutdown routine Set.
+     *
+     * @param routine Instance which should be removed from the shutdown routine
+     * Set
+     */
+    public void removeShutdownRoutine(final AutoCloseable routine) {
+        if (routine != null) {
+            shutdownCalls.remove(routine);
+        }
     }
 }
