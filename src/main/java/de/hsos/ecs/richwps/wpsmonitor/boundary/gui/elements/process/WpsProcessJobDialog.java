@@ -58,8 +58,6 @@ public class WpsProcessJobDialog extends JDialog {
         super(mainFrame, true);
         initComponents();
 
-        setLocationRelativeTo(mainFrame);
-
         this.wpsProcess = wpsProcess;
         this.mainframe = Validate.notNull(mainFrame, "mainFrame");
 
@@ -82,7 +80,7 @@ public class WpsProcessJobDialog extends JDialog {
             addJobEntryPane(jobEntryPane);
         }
     }
-    
+
     private WpsProcessJobEntry createNewJobEntryPane() {
         return new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
     }
@@ -101,6 +99,13 @@ public class WpsProcessJobDialog extends JDialog {
         init();
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(mainframe);
+
+        super.setVisible(b);
     }
 
     /**

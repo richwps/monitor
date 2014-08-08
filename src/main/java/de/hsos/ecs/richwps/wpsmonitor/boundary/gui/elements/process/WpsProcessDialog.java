@@ -60,7 +60,6 @@ public class WpsProcessDialog extends JDialog {
         this.monitorMainFrame = Validate.notNull(monitorMainFrame, "mainFrame");
 
         initComponents();
-        setLocationRelativeTo(monitorMainFrame);
         init();
     }
 
@@ -123,6 +122,13 @@ public class WpsProcessDialog extends JDialog {
         addProcessPanel(panel);
 
         return panel;
+    }
+    
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(monitorMainFrame);
+        
+        super.setVisible(b);
     }
 
     /**

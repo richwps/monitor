@@ -73,7 +73,6 @@ public class DataSourceDialog extends JDialog {
         this.wpsDialog = new WpsDialog(mainFrame, sources);
 
         initComponents();
-        setLocationRelativeTo(monitorMainFrame);
         init();
     }
 
@@ -180,6 +179,13 @@ public class DataSourceDialog extends JDialog {
             }
         }
     }
+    
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(mainFrame);
+        
+        super.setVisible(b);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -260,7 +266,8 @@ public class DataSourceDialog extends JDialog {
             }
         });
 
-        showWpsOfSourcesButton.setText("Show WPS of Sources");
+        showWpsOfSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
+        showWpsOfSourcesButton.setText("Show WPS of registered Sources");
         showWpsOfSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 showWpsOfSourcesButtonActionPerformed(evt);

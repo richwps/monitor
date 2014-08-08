@@ -91,6 +91,13 @@ public class LogViewerDialog extends JDialog {
             MessageDialogs.showError(this, "Error", "Can't open the selected file.");
         }
     }
+    
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(super.getParent());
+        
+        super.setVisible(b);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

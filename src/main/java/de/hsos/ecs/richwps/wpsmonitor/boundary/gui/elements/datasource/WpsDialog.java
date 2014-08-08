@@ -74,8 +74,6 @@ public class WpsDialog extends JDialog {
         this.sources = sources == null ? new HashSet<DataSource>() : sources;
 
         initComponents();
-        setLocationRelativeTo(parent);
-
         init();
     }
 
@@ -320,6 +318,13 @@ public class WpsDialog extends JDialog {
         }
 
         return str.toString();
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(mainFrame);
+
+        super.setVisible(b);
     }
 
     private void showErrorMessage(final String msg) {

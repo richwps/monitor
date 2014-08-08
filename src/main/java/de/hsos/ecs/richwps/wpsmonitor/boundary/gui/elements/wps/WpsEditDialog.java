@@ -54,8 +54,6 @@ public class WpsEditDialog extends JDialog {
         super(monitorMainFrame, true);
         initComponents();
 
-        setLocationRelativeTo(monitorMainFrame);
-
         this.monitorMainFrame = monitorMainFrame;
         this.addParentPanel = Validate.notNull(addParentPanel, "parent");
         this.newIdentifierTextField.setText(addParentPanel.getWps()
@@ -67,6 +65,13 @@ public class WpsEditDialog extends JDialog {
         );
 
         appendTitle(addParentPanel.getWps().getIdentifier());
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(monitorMainFrame);
+
+        super.setVisible(b);
     }
 
     /**

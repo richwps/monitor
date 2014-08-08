@@ -62,7 +62,6 @@ public class ShowMeasuredDataDialog extends JDialog {
     public ShowMeasuredDataDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsProcessEntity process) {
         super(monitorMainFrame, true);
         initComponents();
-        setLocationRelativeTo(monitorMainFrame);
 
         this.monitorMainFrame = monitorMainFrame;
         this.wpsProcess = process;
@@ -93,6 +92,13 @@ public class ShowMeasuredDataDialog extends JDialog {
 
         measuredDataAddPanel.revalidate();
         repaint();
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        setLocationRelativeTo(monitorMainFrame);
+
+        super.setVisible(b);
     }
 
     /**

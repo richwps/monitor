@@ -94,13 +94,13 @@ public class WpsMonitorAdminGui extends JFrame {
      */
     public WpsMonitorAdminGui(final Monitor monitor, final String logDirectory, final Set<DataSourceCreator> dataSources) {
         initComponents();
+        setLocationRelativeTo(null);
 
         this.monitor = Validate.notNull(monitor, "monitor");
         this.dsDialog = new DataSourceDialog(this, dataSources);
         this.lvDialog = new LogViewerDialog(this, Paths.get(logDirectory));
 
-        init();
-        setLocationRelativeTo(null);
+        init();  
     }
 
     /**
