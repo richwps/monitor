@@ -23,6 +23,8 @@ import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -45,17 +47,19 @@ import org.junit.Test;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-@Ignore
 public class SimpleWpsClientTest {
 
     private static final String WPS_URI = "http://localhost:8080/wps/WebProcessingService";
     private static final String TEST_REQUEST_FILE = "/request.xml";
+    private static final String TEST_RESPONSE_EXCEPTION_FILE = "/exception.xml";
+    
     private static WpsClientFactory wpsClientFactory;
 
     private static String rawRequest;
+    private static String exceptionResponse;
 
-    private static Path getFilePath() {
-        String strPath = SimpleWpsClientTest.class.getResource(TEST_REQUEST_FILE).getPath();
+    private static Path getFilePath(String fileName) {
+        String strPath = SimpleWpsClientTest.class.getResource(fileName).getPath();
 
         // Windows Path fix
         if (strPath.charAt(2) == ':') {
@@ -64,28 +68,28 @@ public class SimpleWpsClientTest {
 
         return Paths.get(strPath);
     }
-
-    @BeforeClass
-    public static void setUpClass() {
-        wpsClientFactory = new WpsClientFactory(new SimpleWpsClientFactory());
+    
+    private static String getFileContent(String fileName) {
         StringBuilder buf = new StringBuilder();
-        Scanner scan = null;
-        try {
-            Path path = getFilePath();
-            scan = new Scanner(path, StandardCharsets.UTF_8.name());
+
+        try(Scanner scan = new Scanner(getFilePath(fileName), StandardCharsets.UTF_8.name())) {
             while (scan.hasNextLine()) {
                 buf.append(scan.nextLine());
             }
         } catch (IOException ex) {
             Logger.getLogger(SimpleWpsClientTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SimpleWpsClientTest.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (scan != null) {
-                scan.close();
-            }
         }
-        rawRequest = buf.toString();
+        
+        return buf.toString();
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+        wpsClientFactory = new WpsClientFactory(new SimpleWpsClientFactory());
+        
+        
+        rawRequest = getFileContent(TEST_REQUEST_FILE);
+        exceptionResponse = getFileContent(TEST_RESPONSE_EXCEPTION_FILE);
     }
 
     @AfterClass
@@ -125,7 +129,7 @@ public class SimpleWpsClientTest {
     @Test
     public void testValidExecute() {
         WpsResponse response = doDefaultRequest();
-        Assert.assertTrue(!response.isException() && response.getResponseBody() != null && !response.getResponseBody().isEmpty());
+        Assert.assertTrue(response.isConnectionException() || !response.isException() && response.getResponseBody() != null && !response.getResponseBody().isEmpty());
     }
 
     private WpsResponse doDefaultRequest() {
@@ -150,13 +154,21 @@ public class SimpleWpsClientTest {
     public void responseDateIsSet() {
         WpsResponse response = doDefaultRequest();
 
-        Assert.assertTrue(response.getResponseTime() != null);
+        Assert.assertTrue(response.isConnectionException() || response.getResponseTime() != null);
     }
 
     @Test
     public void testExceptionIdentification() {
-        WpsRequest request = new WpsRequest("", info);
-        WpsResponse response = client.execute(request);
+        WpsResponse response = new WpsResponse(exceptionResponse, new Date());
+        
+        try {
+            Method method = client.getClass().getDeclaredMethod("lookupForExceptions", WpsResponse.class);
+            method.setAccessible(true);
+            method.invoke(client, response);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+        }
+        
         Assert.assertTrue(response.isWpsException());
     }
 

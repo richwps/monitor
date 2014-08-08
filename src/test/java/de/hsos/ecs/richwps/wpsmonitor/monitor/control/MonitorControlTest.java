@@ -17,18 +17,14 @@ package de.hsos.ecs.richwps.wpsmonitor.monitor.control;
 
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
-import de.hsos.ecs.richwps.wpsmonitor.control.SchedulerControl;
 import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
-import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
 import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
@@ -401,69 +397,7 @@ public class MonitorControlTest {
         Assert.assertTrue(check);
     }
 
-    /**
-     * Test of deleteWps method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteWps_String() {
-        try {
-            WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
-            Boolean createWps = mControl.createWps(wpsProcess.getWps());
-            WpsEntity find = wpsDao.find(wpsProcess.getWps().getIdentifier());
-            if (!createWps) {
-                fail("Can't create WPS");
-            }
-            TriggerConfig triggerConfig = getTriggerConfigAndCreateJob(wpsProcess);
-            triggerConfig = mControl.saveTrigger(wpsProcess, triggerConfig);
-            if (triggerConfig == null) {
-                fail("Can't save trigger");
-            }
-            TriggerKey saveTrigger = new TriggerKey(triggerConfig.getTriggerName(), triggerConfig.getTriggerGroup());
-            JobKey jobKey = new JobKey(wpsProcess.getIdentifier(), wpsProcess.getWps().getIdentifier());
-            SchedulerControl schedulerControl = monitor.getSchedulerControl();
-            if (!schedulerControl.isJobRegistred(jobKey)) {
-                fail("Job key wasn't register at createAndScheduleJob call");
-            }
-            if (!schedulerControl.isTriggerRegistred(saveTrigger)) {
-                fail("Trigger wasn't register at saveTrigger call");
-            }
-            WpsProcessEntity dbWpsProcess = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
-            ResponseEntity qos = new ResponseEntity();
-            qos.setResponseTime(10000);
-            MeasuredDataEntity mData = new MeasuredDataEntity();
-            mData.add(qos);
-            mData.setCreateTime(new Date());
-            mData.setProcess(dbWpsProcess);
-            qosDao.persist(mData);
-            mData = qosDao.find(mData.getId());
-            Long qosId = mData.getData().get(0).getId();
-            AbstractQosEntity findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-            if (findAbstractQosEntity == null) {
-                fail("AbstractQosEntity wasn't stored in the database");
-            }
-            mControl.deleteWps(wpsProcess.getWps());
-            findAbstractQosEntity = qosDao.findAbstractQosEntityByid(qosId);
-            if (findAbstractQosEntity != null) {
-                fail("Qos Entity are not deleted too");
-            }
-            if (schedulerControl.isJobRegistred(jobKey)) {
-                fail("Job key already registred after deleteWps!");
-            }
-            if (schedulerControl.isTriggerRegistred(saveTrigger)) {
-                fail("TriggerKey already registred after deleteWps!");
-            }
-            WpsProcessEntity processFind = wpsProcessDao.find(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
-            WpsEntity wpsFind = wpsDao.find(wpsProcess.getWps().getIdentifier());
-            if (processFind != null) {
-                fail("Wps Process wasn't deleted");
-            }
-            if (wpsFind != null) {
-                fail("Wps wasn't deleted");
-            }
-        } catch (SchedulerException ex) {
-            fail(ex.toString());
-        }
-    }
+   
 
     /**
      * Test of deleteWps method, of class MonitorControl.
@@ -488,165 +422,94 @@ public class MonitorControlTest {
         Assert.assertTrue(check);
     }
 
+  
     /**
-     * Test of deleteProcess method, of class MonitorControl.
+     * Test of isPausedMonitoring method, of class MonitorControl.
      */
     @Test
-    public void testDeleteProcess_String_String() {
-    }
-
-    /**
-     * Test of deleteProcess method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteProcess_WpsProcessEntity() {
+    public void testPauseAndIsPausedMonitoring() {
+        WpsProcessEntity storedEntity = getStoredEntity();
+        mControl.createAndScheduleProcess(storedEntity);
+        mControl.pauseMonitoring(storedEntity);
+        
+        Assert.assertTrue(mControl.isPausedMonitoring(storedEntity));
     }
 
     /**
      * Test of isPausedMonitoring method, of class MonitorControl.
      */
-    @Test
-    public void testIsPausedMonitoring_String_String() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testIsPausedMonitoring_NullOneArgLeft() {
+        mControl.isPausedMonitoring(null, "hello world");
     }
-
-    /**
-     * Test of isPausedMonitoring method, of class MonitorControl.
-     */
-    @Test
-    public void testIsPausedMonitoring_WpsProcessEntity() {
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testIsPausedMonitoring_NullOneArgRight() {
+        mControl.isPausedMonitoring("Hello World", null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testIsPausedMonitoring_NullAllArgs() {
+        mControl.isPausedMonitoring("Hello World", null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testIsPausedMonitoring_Overloaded_NullAllArgs() {
+        mControl.isPausedMonitoring(null);
     }
 
     /**
      * Test of resumeMonitoring method, of class MonitorControl.
      */
     @Test
-    public void testResumeMonitoring_String_String() {
+    public void testResumeMonitoring() {
+        WpsProcessEntity storedEntity = getStoredEntity();
+        mControl.createAndScheduleProcess(storedEntity);
+        mControl.pauseMonitoring(storedEntity);
+       
+        mControl.resumeMonitoring(storedEntity);
+        
+        Assert.assertTrue(!mControl.isPausedMonitoring(storedEntity));
     }
 
     /**
      * Test of resumeMonitoring method, of class MonitorControl.
      */
-    @Test
-    public void testResumeMonitoring_WpsProcessEntity() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testResumeMonitoring_NullAllArgs() {
+        mControl.resumeMonitoring(null, null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testResumeMonitoring_NullOneLeftArgs() {
+        mControl.resumeMonitoring(null, "dad");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testResumeMonitoring_NullOneRightArgs() {
+        mControl.resumeMonitoring("dad", null);
+    }
+    
+     @Test(expected = IllegalArgumentException.class)
+    public void testResumeMonitoring_Overloaded_NullAllArgs() {
+        mControl.resumeMonitoring(null);
     }
 
     /**
      * Test of pauseMonitoring method, of class MonitorControl.
      */
-    @Test
-    public void testPauseMonitoring_String_String() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testPauseMonitoring_Null_AllArgs() {
+        mControl.pauseMonitoring(null, null);
     }
-
-    /**
-     * Test of pauseMonitoring method, of class MonitorControl.
-     */
-    @Test
-    public void testPauseMonitoring_WpsProcessEntity() {
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testPauseMonitoring_NullOneArgRight() {
+        mControl.pauseMonitoring("kdwlod", null);
     }
-
-    /**
-     * Test of getProcessesOfWps method, of class MonitorControl.
-     */
-    @Test
-    public void testGetProcessesOfWps_String() {
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testPauseMonitoring_OneArgLeft() {
+        mControl.pauseMonitoring(null, "kdwlod");
     }
-
-    /**
-     * Test of getProcessesOfWps method, of class MonitorControl.
-     */
-    @Test
-    public void testGetProcessesOfWps_WpsEntity() {
-    }
-
-    /**
-     * Test of getTriggers method, of class MonitorControl.
-     */
-    @Test
-    public void testGetTriggers_String_String() {
-    }
-
-    /**
-     * Test of getTriggers method, of class MonitorControl.
-     */
-    @Test
-    public void testGetTriggers_WpsProcessEntity() {
-    }
-
-    /**
-     * Test of getMeasuredData method, of class MonitorControl.
-     */
-    @Test
-    public void testGetMeasuredData_String_String() {
-    }
-
-    /**
-     * Test of getMeasuredData method, of class MonitorControl.
-     */
-    @Test
-    public void testGetMeasuredData_WpsProcessEntity() {
-    }
-
-    /**
-     * Test of getMeasuredData method, of class MonitorControl.
-     */
-    @Test
-    public void testGetMeasuredData_3args() {
-    }
-
-    /**
-     * Test of getMeasuredData method, of class MonitorControl.
-     */
-    @Test
-    public void testGetMeasuredData_WpsProcessEntity_Range() {
-    }
-
-    /**
-     * Test of deleteMeasuredDataOfProcess method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteMeasuredDataOfProcess_String_String() {
-    }
-
-    /**
-     * Test of deleteMeasuredDataOfProcess method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteMeasuredDataOfProcess_WpsProcessEntity() {
-    }
-
-    /**
-     * Test of deleteMeasuredDataOfProcess method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteMeasuredDataOfProcess_3args() {
-    }
-
-    /**
-     * Test of deleteMeasuredDataOfProcess method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteMeasuredDataOfProcess_WpsProcessEntity_Date() {
-    }
-
-    /**
-     * Test of deleteTrigger method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteTrigger() {
-    }
-
-    /**
-     * Test of getWpsList method, of class MonitorControl.
-     */
-    @Test
-    public void testGetWpsList() {
-    }
-
-    /**
-     * Test of deleteMeasuredData method, of class MonitorControl.
-     */
-    @Test
-    public void testDeleteMeasuredData() {
-    }
-
 }
