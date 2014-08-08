@@ -255,9 +255,10 @@ public class WpsMonitorAdminGui extends JFrame {
         JMenu monitorMenu = new JMenu();
         dataSourceMenuItem = new JMenuItem();
         showLogsMenuItem = new JMenuItem();
-        JMenuItem settingsMenuItem = new JMenuItem();
         JPopupMenu.Separator jSeparator1 = new JPopupMenu.Separator();
+        JMenuItem settingsMenuItem = new JMenuItem();
         restartButton = new JMenuItem();
+        jSeparator2 = new JPopupMenu.Separator();
         JMenuItem exitMenuItem = new JMenuItem();
         JMenu aboutMenu = new JMenu();
         JMenuItem aboutMenuItem = new JMenuItem();
@@ -402,7 +403,7 @@ public class WpsMonitorAdminGui extends JFrame {
         });
         monitorMenu.add(dataSourceMenuItem);
 
-        showLogsMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/logs.png"))); // NOI18N
+        showLogsMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/log.png"))); // NOI18N
         showLogsMenuItem.setText("Show Logs");
         showLogsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -410,6 +411,7 @@ public class WpsMonitorAdminGui extends JFrame {
             }
         });
         monitorMenu.add(showLogsMenuItem);
+        monitorMenu.add(jSeparator1);
 
         settingsMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/settings.png"))); // NOI18N
         settingsMenuItem.setText("Settings");
@@ -419,7 +421,6 @@ public class WpsMonitorAdminGui extends JFrame {
             }
         });
         monitorMenu.add(settingsMenuItem);
-        monitorMenu.add(jSeparator1);
 
         restartButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
         restartButton.setText("Restart");
@@ -429,6 +430,7 @@ public class WpsMonitorAdminGui extends JFrame {
             }
         });
         monitorMenu.add(restartButton);
+        monitorMenu.add(jSeparator2);
 
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
         exitMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
@@ -442,8 +444,9 @@ public class WpsMonitorAdminGui extends JFrame {
 
         menuBar.add(monitorMenu);
 
-        aboutMenu.setText("Help");
+        aboutMenu.setText("Info");
 
+        aboutMenuItem.setIcon(new ImageIcon(getClass().getResource("/icons/dialog-question-2.png"))); // NOI18N
         aboutMenuItem.setText("About WPS Monitor");
         aboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -545,6 +548,7 @@ public class WpsMonitorAdminGui extends JFrame {
     private JPanel controlPanel;
     private JMenuItem dataSourceMenuItem;
     private JButton dataSourcesButton;
+    private JPopupMenu.Separator jSeparator2;
     private JMenuBar menuBar;
     private JMenuItem restartButton;
     private JMenuItem showLogsMenuItem;

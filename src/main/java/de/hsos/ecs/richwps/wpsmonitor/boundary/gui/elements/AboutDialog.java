@@ -68,7 +68,7 @@ public class AboutDialog extends JDialog {
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("About"));
 
-        jLabel1.setText("<html><body style=\"text-align:center\">Copyright 2014 Florian Vogelpohl &lt;floriantobias@gmail.com&gt;.<br/> <br/> Licensed under the Apache License, Version 2.0 (the \"License\");<br/> you may not use this file except in compliance with the License.<br/> You may obtain a copy of the License at<br/><br/>      <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">http://www.apache.org/licenses/LICENSE-2.0</a><br/> <br/> Unless required by applicable law or agreed to in writing, software<br/> distributed under the License is distributed on an \"AS IS\" BASIS,<br/> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br/> See the License for the specific language governing permissions and<br/> limitations under the License.</body></html>");
+        jLabel1.setText("<html><body style=\"text-align:center\">Copyright 2014 Florian Vogelpohl &lt;floriantobias@gmail.com&gt;.<br/> <br/> Licensed under the Apache License, Version 2.0 (the \"License\");<br/>You may obtain a copy of the License at<br/><br/>      <a href=\"http://www.apache.org/licenses/LICENSE-2.0\">http://www.apache.org/licenses/LICENSE-2.0</a><br/> <br/> Unless required by applicable law or agreed to in writing, software<br/> distributed under the License is distributed on an \"AS IS\" BASIS,<br/> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br/> See the License for the specific language governing permissions and<br/> limitations under the License.</body></html>");
 
         jLabel2.setIcon(new ImageIcon(getClass().getResource("/images/Logo_HS_Osnabrueck.PNG"))); // NOI18N
 
@@ -102,7 +102,7 @@ public class AboutDialog extends JDialog {
                 .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );

@@ -91,7 +91,7 @@
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="47" max="32767" attributes="0"/>
+                  <EmptySpace pref="61" max="32767" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -101,7 +101,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;body style=&quot;text-align:center&quot;&gt;Copyright 2014 Florian Vogelpohl &amp;lt;floriantobias@gmail.com&amp;gt;.&lt;br/&gt; &lt;br/&gt; Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&lt;br/&gt; you may not use this file except in compliance with the License.&lt;br/&gt; You may obtain a copy of the License at&lt;br/&gt;&lt;br/&gt;      &lt;a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;&lt;br/&gt; &lt;br/&gt; Unless required by applicable law or agreed to in writing, software&lt;br/&gt; distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&lt;br/&gt; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&lt;br/&gt; See the License for the specific language governing permissions and&lt;br/&gt; limitations under the License.&lt;/body&gt;&lt;/html&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;body style=&quot;text-align:center&quot;&gt;Copyright 2014 Florian Vogelpohl &amp;lt;floriantobias@gmail.com&amp;gt;.&lt;br/&gt; &lt;br/&gt; Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&lt;br/&gt;You may obtain a copy of the License at&lt;br/&gt;&lt;br/&gt;      &lt;a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;&gt;http://www.apache.org/licenses/LICENSE-2.0&lt;/a&gt;&lt;br/&gt; &lt;br/&gt; Unless required by applicable law or agreed to in writing, software&lt;br/&gt; distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&lt;br/&gt; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&lt;br/&gt; See the License for the specific language governing permissions and&lt;br/&gt; limitations under the License.&lt;/body&gt;&lt;/html&gt;"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>

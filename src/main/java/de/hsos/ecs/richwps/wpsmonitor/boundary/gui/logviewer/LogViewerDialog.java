@@ -117,7 +117,7 @@ public class LogViewerDialog extends JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Log file Viewer");
-        setIconImage(new ImageIcon(getClass().getResource("/icons/logs.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/icons/log.png")).getImage());
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Log File"));
 
