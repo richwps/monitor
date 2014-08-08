@@ -218,7 +218,7 @@ public class WpsPanel extends javax.swing.JPanel {
         errorIcon.setEnabled(false);
 
         editWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
-        editWpsButton.setText("Edit Wps");
+        editWpsButton.setText("Edit WPS");
         editWpsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 editWpsButtonActionPerformed(evt);

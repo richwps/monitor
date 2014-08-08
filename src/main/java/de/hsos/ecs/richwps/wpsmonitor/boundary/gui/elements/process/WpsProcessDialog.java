@@ -174,20 +174,20 @@ public class WpsProcessDialog extends JDialog {
                 .addContainerGap()
                 .addComponent(processIdentifierDecoText)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(processIdentifierInput, GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(processIdentifierInput, GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(createNewProcessButton)
                 .addContainerGap())
         );
         decoPanelLayout.setVerticalGroup(
             decoPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addGroup(decoPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(createNewProcessButton)
                     .addComponent(processIdentifierDecoText)
                     .addComponent(processIdentifierInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Registred Processes"));

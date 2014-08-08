@@ -205,7 +205,7 @@ public class WpsMonitorAdminGui extends JFrame {
 
     private void resetAddWpsFields() {
         wpsToAddField.setText("");
-        wpsToAddField.setText("");
+        wpsToAddUriField.setText("");
 
         wpsToAddField.requestFocus();
     }
@@ -272,7 +272,7 @@ public class WpsMonitorAdminGui extends JFrame {
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Register a WPS Server in the Monitor"));
 
-        wpsIdentifierDecoText.setText("WPS Identifier");
+        wpsIdentifierDecoText.setText("WPS-Identifier");
 
         wpsToAddField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -280,7 +280,7 @@ public class WpsMonitorAdminGui extends JFrame {
             }
         });
 
-        wpsUrlDecoText.setText("WPS URL");
+        wpsUrlDecoText.setText("WPS-URL");
 
         wpsToAddUriField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -296,8 +296,8 @@ public class WpsMonitorAdminGui extends JFrame {
             }
         });
 
-        dataSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        dataSourcesButton.setText("Add through registered Data Source");
+        dataSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
+        dataSourcesButton.setText("Add from Data Sources");
         dataSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 dataSourcesButtonActionPerformed(evt);
@@ -311,38 +311,38 @@ public class WpsMonitorAdminGui extends JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(wpsIdentifierDecoText)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wpsToAddField, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(wpsUrlDecoText)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wpsToAddUriField, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(dataSourcesButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addWpsButton)))
+                    .addComponent(wpsIdentifierDecoText)
+                    .addComponent(wpsUrlDecoText))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(wpsToAddUriField, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 357, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wpsToAddField, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 357, GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(addWpsButton, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dataSourcesButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(wpsIdentifierDecoText)
-                    .addComponent(wpsToAddField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(wpsUrlDecoText)
-                    .addComponent(wpsToAddUriField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(dataSourcesButton)
-                    .addComponent(addWpsButton))
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(wpsIdentifierDecoText)
+                            .addComponent(wpsToAddField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(wpsUrlDecoText)
+                            .addComponent(wpsToAddUriField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(3, 3, 3))
+                    .addComponent(dataSourcesButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addWpsButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        decoPanelWpsScroll.setBorder(BorderFactory.createTitledBorder("Registered WPS Server"));
+        decoPanelWpsScroll.setBorder(BorderFactory.createTitledBorder("Registered WPS-Servers"));
 
         wpsScrollPane.setBorder(null);
         wpsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -365,7 +365,7 @@ public class WpsMonitorAdminGui extends JFrame {
             decoPanelWpsScrollLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelWpsScrollLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wpsScrollPane, GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                .addComponent(wpsScrollPane, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

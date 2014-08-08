@@ -89,7 +89,7 @@ public class WpsEditDialog extends JDialog {
         setTitle("Edit WPS");
         setIconImage(new ImageIcon(getClass().getResource("/icons/edit.png")).getImage());
 
-        identifierDecoText.setText("Identifier");
+        identifierDecoText.setText("WPS-Identifier");
 
         newIdentifierTextField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -97,7 +97,7 @@ public class WpsEditDialog extends JDialog {
             }
         });
 
-        uriDecoText.setText("URI");
+        uriDecoText.setText("WPS-URL");
 
         newUriTextField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -128,19 +128,20 @@ public class WpsEditDialog extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(identifierDecoText)
-                        .addGap(18, 18, 18)
-                        .addComponent(newIdentifierTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(uriDecoText)
-                        .addGap(44, 44, 44)
-                        .addComponent(newUriTextField, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE))
                     .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 220, Short.MAX_VALUE)
                         .addComponent(cancelButton)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton)))
+                        .addComponent(saveButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(identifierDecoText)
+                            .addComponent(uriDecoText))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newUriTextField, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                            .addComponent(newIdentifierTextField))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

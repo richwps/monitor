@@ -310,7 +310,7 @@ public class WpsProcessPanel extends JPanel {
         jToolBar1.add(showJobsButton);
 
         showMeasuredDataButton.setIcon(new ImageIcon(getClass().getResource("/icons/measure.png"))); // NOI18N
-        showMeasuredDataButton.setText("Show Measuredata");
+        showMeasuredDataButton.setText("Show Measured Data");
         showMeasuredDataButton.setEnabled(false);
         showMeasuredDataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -330,7 +330,7 @@ public class WpsProcessPanel extends JPanel {
         jToolBar1.add(stopMonitoringButton);
 
         rescheduleButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
-        rescheduleButton.setText("Re-schedule");
+        rescheduleButton.setText("Start Monitoring");
         rescheduleButton.setEnabled(false);
         rescheduleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -350,7 +350,7 @@ public class WpsProcessPanel extends JPanel {
 
         saveProcessButton.setBackground(new Color(255, 51, 0));
         saveProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
-        saveProcessButton.setText("Save");
+        saveProcessButton.setText("Save Process");
         saveProcessButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 saveProcessButtonActionPerformed(evt);
@@ -361,7 +361,7 @@ public class WpsProcessPanel extends JPanel {
         processNameText.setFont(new Font("Tahoma", 0, 24)); // NOI18N
         processNameText.setText("jLabel3");
 
-        jPanel2.setBorder(BorderFactory.createTitledBorder("Raw Request for testing"));
+        jPanel2.setBorder(BorderFactory.createTitledBorder("Test-Request"));
 
         testRequestTextArea.setColumns(20);
         testRequestTextArea.setRows(5);
@@ -398,7 +398,7 @@ public class WpsProcessPanel extends JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 145, Short.MAX_VALUE))
+                        .addGap(55, 77, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
