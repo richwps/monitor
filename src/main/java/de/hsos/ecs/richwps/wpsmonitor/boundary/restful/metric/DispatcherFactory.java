@@ -20,7 +20,7 @@ import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
  * Sets a EntityDispatcher up with the configured converterMap, which was set in
- * the {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.boundary.restful.RestInterfaceBuilder} instance.
+ * the {@link de.hsos.ecs.richwps.wpsmonitor.boundary.restful.RestInterfaceBuilder} instance.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

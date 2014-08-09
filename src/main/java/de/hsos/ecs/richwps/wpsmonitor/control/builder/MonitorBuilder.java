@@ -428,7 +428,7 @@ public class MonitorBuilder {
 
     /**
      * Sets the default WpsClientFactory. By default the
-     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClient}
+     * {@link de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClient}
      * Implementation is used. This implementation is very simple and does not
      * support chung request or some other nice feature.
      *
@@ -442,7 +442,7 @@ public class MonitorBuilder {
      * Sets the default {@link QosDataAccess} factory instance. By default,
      * {@link QosDaoDefaultFactory} is used and the {@link Jpa} class will be
      * instantiated once and used for every other default
-     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
+     * {@link de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
      * implementation.
      *
      * @return MonitorBuilder instance
@@ -456,7 +456,7 @@ public class MonitorBuilder {
      * Sets the default {@link WpsDataAccess} factory instance. By default,
      * {@link WpsDaoDefaultFactory} is used and the {@link Jpa} class will be
      * instantiated once and used for every other default
-     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
+     * {@link de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
      * implementation.
      *
      * @return MonitorBuilder instance
@@ -470,7 +470,7 @@ public class MonitorBuilder {
      * Sets the default {@link WpsProcessDataAccess} factory instance. By
      * default, {@link WpsProcessDaoDefaultFactory} is used and the {@link Jpa}
      * class will be instantiated once and used for every other default
-     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
+     * {@link de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess}
      * implementation.
      *
      * @return MonitorBuilder instance
@@ -564,7 +564,7 @@ public class MonitorBuilder {
 
     /**
      * Builds the
-     * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MonitorControl}-instance
+     * {@link de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl}-instance
      * with the needed dependencies.
      *
      * @return {@link MonitorControlImpl} instance.

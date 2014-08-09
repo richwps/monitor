@@ -503,7 +503,7 @@ public final class SchedulerControl {
             if (scheduler.getTriggerState(t.getKey()) == Trigger.TriggerState.PAUSED) {
                 return true;
             }
-        }
+        } 
 
         return false;
     }

@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Representate the configuration of a
- * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.Monitor} instance. For
+ * {@link de.hsos.ecs.richwps.wpsmonitor.control.Monitor} instance. For
  * this purpose, the MonitorConfig will be used a extended version of the
  * {@link Properties} class. All configurations will be read out of a properties
  * file. If the save-method is called, all changed properties will be written
@@ -51,7 +51,7 @@ public final class MonitorConfig implements AutoCloseable {
         DEFAULT_PROPERTIES.setProperty("qos.delete.afterdays", "360");
         DEFAULT_PROPERTIES.setProperty("qos.delete.attime", "9:00");
         DEFAULT_PROPERTIES.setProperty("qos.delete", "true");
-        DEFAULT_PROPERTIES.setProperty("wpsclient.timeout", "1");
+        DEFAULT_PROPERTIES.setProperty("wpsclient.timeout", "600000");
     }
 
     private Integer deleteIntervalInDays;
@@ -80,7 +80,6 @@ public final class MonitorConfig implements AutoCloseable {
 
     private void initPropertiesObject() {
         if (propertiesFile.exists()) {
-
             try {
                 FileInputStream fileInputStream = new FileInputStream(propertiesFile);
 
@@ -164,7 +163,7 @@ public final class MonitorConfig implements AutoCloseable {
      *
      * @param deleteIntervalInDays Integer instance
      */
-    public synchronized void setDeleteIntervalInDays(Integer deleteIntervalInDays) {
+    public synchronized void setDeleteIntervalInDays(final Integer deleteIntervalInDays) {
         if (deleteIntervalInDays != null && deleteIntervalInDays > 0) {
             this.deleteIntervalInDays = deleteIntervalInDays;
         }
@@ -188,7 +187,7 @@ public final class MonitorConfig implements AutoCloseable {
      *
      * @param deleteTime Calendar instance
      */
-    public synchronized void setDeleteTime(Calendar deleteTime) {
+    public synchronized void setDeleteTime(final Calendar deleteTime) {
         if (deleteTime != null) {
             this.deleteTime = deleteTime;
         }
@@ -208,7 +207,7 @@ public final class MonitorConfig implements AutoCloseable {
      *
      * @param deleteJobActiv true for active, otherwise false
      */
-    public synchronized void setDeleteJobActiv(Boolean deleteJobActiv) {
+    public synchronized void setDeleteJobActiv(final Boolean deleteJobActiv) {
         if (deleteJobActiv != null) {
             this.deleteJobActiv = deleteJobActiv;
         }
@@ -223,7 +222,7 @@ public final class MonitorConfig implements AutoCloseable {
      * @param string1 Property value
      * @return Previous Property
      */
-    public synchronized Object setCustomProperty(String string, String string1) {
+    public synchronized Object setCustomProperty(final String string, String string1) {
         return properties.setProperty("custom." + string, string1);
     }
 
@@ -233,7 +232,7 @@ public final class MonitorConfig implements AutoCloseable {
      * @param string Property name
      * @return Property
      */
-    public String getCustomProperty(String string) {
+    public String getCustomProperty(final String string) {
         return properties.getProperty("custom." + string);
     }
 
@@ -247,11 +246,11 @@ public final class MonitorConfig implements AutoCloseable {
     }
 
     /**
-     * Sets the WpsClient-Timeout value.
+     * Sets the WpsClient-Timeout value in ms.
      *
      * @param wpsClientTimeout Integer instance
      */
-    public void setWpsClientTimeout(Integer wpsClientTimeout) {
+    public void setWpsClientTimeout(final Integer wpsClientTimeout) {
         if (wpsClientTimeout > 0) {
             this.wpsClientTimeout = wpsClientTimeout;
         }

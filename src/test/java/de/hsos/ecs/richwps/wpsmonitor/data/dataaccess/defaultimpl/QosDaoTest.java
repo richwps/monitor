@@ -15,10 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
-import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoDefaultFactory;
-import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.QosDaoDefaultFactory;
-import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.Jpa;
-import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDaoDefaultFactory;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;

@@ -206,7 +206,7 @@ public class DataSourceDialog extends JDialog {
         showWpsOfSourcesButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("DataCreators- and Resources");
+        setTitle("Data Source Manager");
         setIconImage(new ImageIcon(getClass().getResource("/icons/database-add.png")).getImage());
         setResizable(false);
 

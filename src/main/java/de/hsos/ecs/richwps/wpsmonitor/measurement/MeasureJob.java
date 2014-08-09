@@ -41,7 +41,7 @@ import org.quartz.JobExecutionException;
  *
  * If no wps exception occurs, then the registred QosProbe instances are called.
  * Otherwise a error flag is set, which is evaluated by the
- * {@link de.hsosnabrueck.ecs.richwps.wpsmonitor.control.MeasureJobListener}.
+ * {@link de.hsos.ecs.richwps.wpsmonitor.control.MeasureJobListener}.
  *
  * The dependencies should be thread save or new instantiated by the
  * {@link MeasureJobFactory}.
@@ -85,13 +85,17 @@ public class MeasureJob implements Job {
             WpsRequest request = pair.getLeft();
             WpsResponse response = pair.getRight();
 
+            if (request.getRequestTime() == null || response.getResponseTime() == null) {
+                throw new AssertionError("RequestTime was not set in WpsRequest!");
+            }
+
             // if no execption occurs (except Connection exception), then call probes and store Data 
             error = response.isOtherException() || response.isWpsException();
 
-            if (!error && request.getRequestTime() != null) {
+            if (!error) {
                 callProbes(request, response);
                 persistMeasuredData(getMeasuredDatas());
-            } 
+            }
 
             LOG.info("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
                     context.getJobDetail().getKey(),
@@ -102,9 +106,6 @@ public class MeasureJob implements Job {
                     response.isOtherException() ? "true" : "false"
             );
 
-            if (request.getRequestTime() == null) {
-                throw new AssertionError("RequestTime was not set in WpsRequest!");
-            }
         } catch (Exception ex) {
             LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler.", ex);
         } finally {

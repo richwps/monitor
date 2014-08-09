@@ -213,13 +213,13 @@ public class WpsProcessPanel extends JPanel {
             if (response.isConnectionException()) {
                 result = MessageDialogs.showQuestionDialog(mainFrame,
                         "Not reachable",
-                        "The specified WPS is not reachable; do you want to proceed?");
+                        "The specified WPS is not reachable! Do you want to proceed?");
             }
 
             if (response.isWpsException()) {
                 MessageDialogs.showDetailedError(mainFrame,
-                        "WPS exception",
-                        "A WPS-Exception is occurd at the execution of the test request",
+                        "WPS Exception occurred",
+                        "A WPS Exception has occurred at the execution of the test request",
                         response.getExceptionMessage());
 
                 result = false;
@@ -486,7 +486,7 @@ public class WpsProcessPanel extends JPanel {
     private void deleteProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteProcessButtonActionPerformed
         Boolean yes = MessageDialogs.showQuestionDialog(this,
                 "Delete WPS Process Entry",
-                "Are you sure you want to permanently delete this WPS-Process-Entry out of the Monitor?");
+                "Are you sure you want to permanently delete this WPS-Process-Entry from the Monitor?");
 
         if (yes) {
             if (saved) {

@@ -17,9 +17,6 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils;
 
 import java.awt.Component;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  * Helper class for JOptionPane dialogs.

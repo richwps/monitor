@@ -15,9 +15,10 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
@@ -95,8 +96,10 @@ public class DataSourcePanel extends JPanel {
             }
         });
 
+        jLabel1.setFont(new Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Driver used:");
 
+        jLabel2.setFont(new Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Resource:");
 
         resourceLabel.setText("jLabel3");
@@ -105,22 +108,21 @@ public class DataSourcePanel extends JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(deleteSource)
-                .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addGroup(GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resourceLabel))
+                        .addComponent(resourceLabel)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
+                        .addComponent(deleteSource))
                     .addGroup(GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dataSourceLabel)))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(dataSourceLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -132,9 +134,9 @@ public class DataSourcePanel extends JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(resourceLabel))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(deleteSource))
+                    .addComponent(resourceLabel)
+                    .addComponent(deleteSource))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         GroupLayout layout = new GroupLayout(this);
@@ -150,8 +152,8 @@ public class DataSourcePanel extends JPanel {
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

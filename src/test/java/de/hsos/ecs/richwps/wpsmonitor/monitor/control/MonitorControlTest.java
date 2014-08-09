@@ -49,7 +49,6 @@ import org.quartz.TriggerKey;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-@Ignore
 public class MonitorControlTest {
 
     @BeforeClass
@@ -428,11 +427,15 @@ public class MonitorControlTest {
      */
     @Test
     public void testPauseAndIsPausedMonitoring() {
-        WpsProcessEntity storedEntity = getStoredEntity();
-        mControl.createAndScheduleProcess(storedEntity);
-        mControl.pauseMonitoring(storedEntity);
+        WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
+        wpsDao.persist(wpsProcess.getWps());
         
-        Assert.assertTrue(mControl.isPausedMonitoring(storedEntity));
+        TriggerConfig config = getTriggerConfigAndCreateJob(wpsProcess);
+        mControl.saveTrigger(wpsProcess, config);
+        
+        mControl.pauseMonitoring(wpsProcess);
+        
+        Assert.assertTrue(mControl.isPausedMonitoring(wpsProcess));
     }
 
     /**
@@ -463,13 +466,16 @@ public class MonitorControlTest {
      */
     @Test
     public void testResumeMonitoring() {
-        WpsProcessEntity storedEntity = getStoredEntity();
-        mControl.createAndScheduleProcess(storedEntity);
-        mControl.pauseMonitoring(storedEntity);
-       
-        mControl.resumeMonitoring(storedEntity);
+        WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
+        wpsDao.persist(wpsProcess.getWps());
+        TriggerConfig config = getTriggerConfigAndCreateJob(wpsProcess);
+        mControl.saveTrigger(wpsProcess, config);
         
-        Assert.assertTrue(!mControl.isPausedMonitoring(storedEntity));
+        mControl.pauseMonitoring(wpsProcess);
+       
+        mControl.resumeMonitoring(wpsProcess);
+        
+        Assert.assertTrue(!mControl.isPausedMonitoring(wpsProcess));
     }
 
     /**

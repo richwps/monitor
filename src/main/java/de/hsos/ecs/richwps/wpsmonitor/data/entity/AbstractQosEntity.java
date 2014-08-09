@@ -99,6 +99,6 @@ public abstract class AbstractQosEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "de.hsosnabrueck.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
+        return "de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity[ id=" + id + " ]";
     }
 }

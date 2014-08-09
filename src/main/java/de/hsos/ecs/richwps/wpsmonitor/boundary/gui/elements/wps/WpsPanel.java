@@ -302,7 +302,7 @@ public class WpsPanel extends javax.swing.JPanel {
     private void deleteWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteWpsButtonActionPerformed
         Boolean sure = MessageDialogs.showQuestionDialog(this,
                 "Delete WPS Entry",
-                "Are you sure you want to permanently delete this WPS-Entry out of the Monitor?"
+                "Are you sure you want to permanently delete this WPS-Entry from the Monitor?"
         );
 
         if (sure) {

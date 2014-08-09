@@ -121,7 +121,7 @@ public class Application {
      *
      * @param monitor Monitor instance
      * @return RestInterface Instance
-     * @throws de.hsosnabrueck.ecs.richwps.wpsmonitor.util.BuilderException
+     * @throws de.hsos.ecs.richwps.wpsmonitor.util.BuilderException
      */
     public RestInterface setupRest(MonitorControl monitor) throws BuilderException {
 

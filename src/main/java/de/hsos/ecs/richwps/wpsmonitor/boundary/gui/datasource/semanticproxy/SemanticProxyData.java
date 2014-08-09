@@ -15,6 +15,11 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
 import de.hsos.richwps.sp.client.CommunicationException;
 import de.hsos.richwps.sp.client.InternalSPException;
 import de.hsos.richwps.sp.client.RDFException;
@@ -24,11 +29,6 @@ import de.hsos.richwps.sp.client.wps.Process;
 import de.hsos.richwps.sp.client.wps.SPClient;
 import de.hsos.richwps.sp.client.wps.Vocabulary;
 import de.hsos.richwps.sp.client.wps.WPS;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSource;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;

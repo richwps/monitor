@@ -91,7 +91,7 @@
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="treeScrollPane" min="-2" pref="337" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" pref="23" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" pref="51" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="addToMonitorButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="closeButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -142,7 +142,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;body&gt;Here is a list of all registred data-sources. You can pick up processes and WPS and add your choice to the monitor through the &quot;Add WPS with Processes&quot;-Button. If you select only a WPS, all processes of this WPS will also  be added. The processes will  be saved, but they have no Jobs or a testrequest.&lt;/body&gt;&lt;/html&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;body&gt;Here is a list of all registered data-sources. You can pick up processes and WPS and add your choice to the monitor through the &quot;Add WPS with Processes&quot;-Button. If you select only a WPS, all processes of this WPS will also  be added. The processes will  be saved, but they have no Jobs or a testrequest.&lt;/body&gt;&lt;/html&gt;"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>

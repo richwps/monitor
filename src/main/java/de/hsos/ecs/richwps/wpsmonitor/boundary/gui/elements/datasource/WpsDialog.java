@@ -25,7 +25,6 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.WpsTreeNode;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
@@ -35,19 +34,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.LayoutStyle;
-import javax.swing.WindowConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -118,89 +108,89 @@ public class WpsDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JPanel jPanel1 = new JPanel();
-        closeButton = new JButton();
-        addToMonitorButton = new JButton();
-        treeScrollPane = new JScrollPane();
-        wpsTree = new JTree();
-        JLabel jLabel1 = new JLabel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        closeButton = new javax.swing.JButton();
+        addToMonitorButton = new javax.swing.JButton();
+        treeScrollPane = new javax.swing.JScrollPane();
+        wpsTree = new javax.swing.JTree();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("List of WPS-Servers- and Processes");
         setIconImage(new ImageIcon(getClass().getResource("/icons/database.png")).getImage());
         setMinimumSize(null);
         setResizable(false);
 
-        jPanel1.setBorder(BorderFactory.createTitledBorder(""));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        addToMonitorButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
+        addToMonitorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         addToMonitorButton.setText("Add WPS with Processes");
-        addToMonitorButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        addToMonitorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addToMonitorButtonActionPerformed(evt);
             }
         });
 
-        DefaultMutableTreeNode treeNode1 = new DefaultMutableTreeNode("root");
-        wpsTree.setModel(new DefaultTreeModel(treeNode1));
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        wpsTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         treeScrollPane.setViewportView(wpsTree);
 
-        jLabel1.setText("<html><body>Here is a list of all registred data-sources. You can pick up processes and WPS and add your choice to the monitor through the \"Add WPS with Processes\"-Button. If you select only a WPS, all processes of this WPS will also  be added. The processes will  be saved, but they have no Jobs or a testrequest.</body></html>");
+        jLabel1.setText("<html><body>Here is a list of all registered data-sources. You can pick up processes and WPS and add your choice to the monitor through the \"Add WPS with Processes\"-Button. If you select only a WPS, all processes of this WPS will also  be added. The processes will  be saved, but they have no Jobs or a testrequest.</body></html>");
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addToMonitorButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton))
-                    .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(treeScrollPane, GroupLayout.PREFERRED_SIZE, 630, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(treeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(treeScrollPane, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED, 23, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(treeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 51, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addToMonitorButton)
                     .addComponent(closeButton))
                 .addContainerGap())
         );
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -330,14 +320,14 @@ public class WpsDialog extends JDialog {
     private void showErrorMessage(final String msg) {
         MessageDialogs.showDetailedError(this,
                 "Error",
-                "DataSource Exceptions occurd.",
+                "DataSource Exceptions occurred.",
                 msg);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton addToMonitorButton;
-    private JButton closeButton;
-    private JScrollPane treeScrollPane;
-    private JTree wpsTree;
+    private javax.swing.JButton addToMonitorButton;
+    private javax.swing.JButton closeButton;
+    private javax.swing.JScrollPane treeScrollPane;
+    private javax.swing.JTree wpsTree;
     // End of variables declaration//GEN-END:variables
 }
