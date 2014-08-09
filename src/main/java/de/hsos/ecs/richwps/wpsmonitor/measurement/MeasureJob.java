@@ -93,8 +93,8 @@ public class MeasureJob implements Job {
             error = response.isOtherException() || response.isWpsException();
 
             if (!error) {
-                callProbes(request, response);
-                persistMeasuredData(getMeasuredDatas());
+                MeasuredDataEntity data = callProbes(request, response);
+                persistMeasuredData(data);
             }
 
             LOG.info("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
@@ -113,22 +113,30 @@ public class MeasureJob implements Job {
         }
     }
 
-    private void persistMeasuredData(List<AbstractQosEntity> measuredData) {
-        MeasuredDataEntity toPersist = new MeasuredDataEntity();
-        toPersist.setProcess(processEntity);
-        toPersist.setCreateTime(new Date());
-        toPersist.setData(measuredData);
+    private void persistMeasuredData(final MeasuredDataEntity data) {
+        data.setProcess(processEntity);
+        data.setCreateTime(new Date());
 
-        dao.persist(toPersist);
+        dao.persist(data);
     }
 
     /**
      * Calls the probes with the request and response data.
      */
-    private void callProbes(final WpsRequest request, final WpsResponse response) {
+    private MeasuredDataEntity callProbes(final WpsRequest request, final WpsResponse response) {
+        MeasuredDataEntity toPersist = new MeasuredDataEntity();
+
         for (QosProbe p : probes) {
             p.execute(request, response);
+
+            AbstractQosEntity measuredData = p.getMeasuredData();
+
+            if (measuredData != null) {
+                toPersist.add(measuredData);
+            }
         }
+
+        return toPersist;
     }
 
     /**
@@ -148,25 +156,6 @@ public class MeasureJob implements Job {
         }
 
         return new Pair<>(request, response);
-    }
-
-    /**
-     * Extracts the Entities out of the probes.
-     *
-     * @return List with the Entities
-     */
-    public List<AbstractQosEntity> getMeasuredDatas() {
-        List<AbstractQosEntity> measuredDatas = new ArrayList<>();
-
-        for (QosProbe p : probes) {
-            AbstractQosEntity measuredData = p.getMeasuredData();
-
-            if (measuredData != null) {
-                measuredDatas.add(measuredData);
-            }
-        }
-
-        return measuredDatas;
     }
 
     /**
