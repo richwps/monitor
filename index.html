@@ -1,159 +1,172 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <head>
-        <meta charset='utf-8'>
-        <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <meta name="description" content="Richwps-monitor : A Monitoring System to monitor Web Processing Services (WPS)">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-        <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <title>RichWPS Monitor by Fruchuxs</title>
+  </head>
 
-        <title>Richwps-monitor</title>
-    </head>
+  <body>
+    <header>
+      <div class="inner">
+        <h1>RichWPS Monitor</h1>
+        <h2>A monitoring System to monitor Web Processing Services (WPS)</h2>
+        <a href="https://github.com/Fruchuxs/RichWPS-Monitor" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <body>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="richwps-monitor" class="anchor" href="#richwps-monitor"><span class="octicon octicon-link"></span></a>RichWPS-Monitor</h1>
 
-        <!-- HEADER -->
-        <div id="header_wrap" class="outer">
-            <header class="inner">
-                <a id="forkme_banner" href="https://github.com/Fruchuxs/RichWPS-Monitor">View on GitHub</a>
+<p>A Monitoring System to monitor Web Processing Services (WPS)</p>
 
-                <h1 id="project_title">Richwps-monitor</h1>
-                <h2 id="project_tagline">A Monitoring System to monitor Web Processing Services (WPS)</h2>
+<h3>
+<a name="libraries-and-frameworks" class="anchor" href="#libraries-and-frameworks"><span class="octicon octicon-link"></span></a>Libraries and Frameworks</h3>
 
-                <section id="downloads">
-                    <a class="zip_download_link" href="https://github.com/Fruchuxs/RichWPS-Monitor/zipball/master">Download this project as a .zip file</a>
-                    <a class="tar_download_link" href="https://github.com/Fruchuxs/RichWPS-Monitor/tarball/master">Download this project as a tar.gz file</a>
-                </section>
-            </header>
-        </div>
+<ul>
+<li><a href="http://quartz-scheduler.org/">Quartz Scheduler Library</a></li>
+<li><a href="http://www.sparkjava.com/">Spark Micro Web Framewrok</a></li>
+<li>
+<a href="http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html">JPA</a> </li>
+<li><a href="https://code.google.com/p/google-gson/">GSON</a></li>
+<li>
+<a href="http://hc.apache.org/">Apache HTTP Components</a> (used for a simple WpsClient)</li>
+<li><a href="http://db.apache.org/derby/">Apache Derby</a></li>
+</ul><h3>
+<a name="architecture" class="anchor" href="#architecture"><span class="octicon octicon-link"></span></a>Architecture</h3>
 
-        <!-- MAIN CONTENT -->
-        <div id="main_content_wrap" class="outer">
-            <section id="main_content" class="inner">
-                <h3 class="unchanged level-one">
-                    <a name="user-content-libraries-and-frameworks" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#libraries-and-frameworks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Libraries and Frameworks</h3>
-                <ul class="task-list unchanged level-one">
-                    <li class="unchanged"><a href="http://quartz-scheduler.org/">Quartz Scheduler Library</a></li>
-                    <li class="unchanged"><a href="http://www.sparkjava.com/">Spark Micro Web Framewrok</a></li>
-                    <li class="unchanged">
-                        <a href="http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html">JPA</a> </li>
-                    <li class="unchanged"><a href="https://code.google.com/p/google-gson/">GSON</a></li>
-                    <li class="unchanged">
-                        <a href="http://hc.apache.org/">Apache HTTP Components</a> (used for a simple WpsClient)</li>
-                    <li class="unchanged"><a href="http://db.apache.org/derby/">Apache Derby</a></li>
-                </ul>
-                <h3 class="unchanged level-one">
-                    <a name="user-content-architecture" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Architecture</h3>
-                <p class="unchanged level-one"><a href="https://raw.githubusercontent.com/Fruchuxs/RichWPS-Monitor/master/projectfiles/softwarearchitecture.PNG" target="_blank"><img src="https://raw.githubusercontent.com/Fruchuxs/RichWPS-Monitor/master/projectfiles/softwarearchitecture.PNG" alt="Software Architecture image" style="max-width:100%;"></a></p>
-                <h3 class="unchanged level-one">
-                    <a name="user-content-monitor-events" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#monitor-events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Monitor Events</h3>
-                <h4 class="unchanged level-one">
-                    <a name="user-content-events-triggered-by-monitor" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#events-triggered-by-monitor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events triggered by Monitor</h4>
-                <table class="level-one">
-                    <thead><tr>
-                            <th>Event identifier</th>
-                            <th>Message datatype</th>
-                        </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td>monitor.start</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>monitor.restart</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>monitor.shutdown</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h4 class="unchanged level-one">
-                    <a name="user-content-events-triggered-by-monitorcontrol" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#events-triggered-by-monitorcontrol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events triggered by MonitorControl</h4>
-                <table class="level-one">
-                    <thead><tr>
-                            <th>Event identifier</th>
-                            <th>Message datatype</th>
-                        </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td>monitorcontrol.pauseMonitoring</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.resumeMonitoring</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.deleteProcess</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.deleteWps</td>
-                            <td>WpsEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.updateWps</td>
-                            <td>WpsEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.setTestRequest</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.createAndScheduleProcess</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.createWps</td>
-                            <td>WpsEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.deleteTrigger</td>
-                            <td>TriggerKey</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.saveTrigger</td>
-                            <td>TriggerKey</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h4 class="unchanged level-one">
-                    <a name="user-content-events-triggered-by-jobexecutedhandlerthread" class="anchor" href="/Fruchuxs/RichWPS-Monitor/blob/master/README.md#events-triggered-by-jobexecutedhandlerthread" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events triggered by JobExecutedHandlerThread</h4>
-                <table class="level-one">
-                    <thead><tr>
-                            <th>Event identifier</th>
-                            <th>Message datatype</th>
-                        </tr></thead>
-                    <tbody>
-                        <tr>
-                            <td>measurement.wpsjob.wpsexception</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>scheduler.wpsjob.wasexecuted</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                        <tr>
-                            <td>monitorcontrol.pauseMonitoring</td>
-                            <td>WpsProcessEntity</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
+<p><img src="https://raw.githubusercontent.com/Fruchuxs/RichWPS-Monitor/master/projectfiles/softwarearchitecture.PNG" alt="Software Architecture image"></p>
 
-        <!-- FOOTER  -->
-        <div id="footer_wrap" class="outer">
-            <footer class="inner">
-                <p class="copyright">Richwps-monitor maintained by <a href="https://github.com/Fruchuxs">Fruchuxs</a></p>
-                <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-            </footer>
-        </div>
+<h3>
+<a name="monitor-events" class="anchor" href="#monitor-events"><span class="octicon octicon-link"></span></a>Monitor Events</h3>
 
+<h4>
+<a name="events-triggered-by-monitor" class="anchor" href="#events-triggered-by-monitor"><span class="octicon octicon-link"></span></a>Events triggered by Monitor</h4>
 
+<table>
+<thead><tr>
+<th>Event identifier</th>
+<th>Message datatype</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>monitor.start</td>
+<td></td>
+</tr>
+<tr>
+<td>monitor.restart</td>
+<td></td>
+</tr>
+<tr>
+<td>monitor.shutdown</td>
+<td></td>
+</tr>
+</tbody>
+</table><h4>
+<a name="events-triggered-by-monitorcontrol" class="anchor" href="#events-triggered-by-monitorcontrol"><span class="octicon octicon-link"></span></a>Events triggered by MonitorControl</h4>
 
-    </body>
+<table>
+<thead><tr>
+<th>Event identifier</th>
+<th>Message datatype</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>monitorcontrol.pauseMonitoring</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.resumeMonitoring</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.deleteProcess</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.deleteWps</td>
+<td>WpsEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.updateWps</td>
+<td>WpsEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.setTestRequest</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.createAndScheduleProcess</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.createWps</td>
+<td>WpsEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.deleteTrigger</td>
+<td>TriggerKey</td>
+</tr>
+<tr>
+<td>monitorcontrol.saveTrigger</td>
+<td>TriggerKey</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="events-triggered-by-jobexecutedhandlerthread" class="anchor" href="#events-triggered-by-jobexecutedhandlerthread"><span class="octicon octicon-link"></span></a>Events triggered by JobExecutedHandlerThread</h4>
+
+<table>
+<thead><tr>
+<th>Event identifier</th>
+<th>Message datatype</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>measurement.wpsjob.wpsexception</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>scheduler.wpsjob.wasexecuted</td>
+<td>WpsProcessEntity</td>
+</tr>
+<tr>
+<td>monitorcontrol.pauseMonitoring</td>
+<td>WpsProcessEntity</td>
+</tr>
+</tbody>
+</table>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/Fruchuxs/RichWPS-Monitor/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Fruchuxs/RichWPS-Monitor/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/Fruchuxs/RichWPS-Monitor"></a> is maintained by <a href="https://github.com/Fruchuxs">Fruchuxs</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
 </html>
