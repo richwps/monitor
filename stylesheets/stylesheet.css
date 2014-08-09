@@ -157,6 +157,10 @@ aside a.button {
   font-size: 21px;
 }
 
+aside a.link-button {
+    background: transparent url(../images/link-button.png) 0 0 no-repeat;
+}
+
 code, pre {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   color: #222;
@@ -211,6 +215,7 @@ th {
 
 td {
   border: 1px solid #333333;
+  padding:2px 3px;
   text-align: left; 
   font-weight: 300;
 }
