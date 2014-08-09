@@ -20,6 +20,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -150,13 +151,13 @@ public class WpsProcessDialog extends JDialog {
         closeButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Add or edit Process");
-        setIconImage(new ImageIcon(getClass().getResource("/icons/add.png")).getImage());
+        setTitle("Manage Processes");
+        setIconImage(new ImageIcon(getClass().getResource("/icons/manage.png")).getImage());
         setResizable(false);
 
         decoPanel.setBorder(BorderFactory.createTitledBorder("Add Process to WPS"));
 
-        processIdentifierDecoText.setText("Process Identifier");
+        processIdentifierDecoText.setText("Process-Identifier");
 
         processIdentifierInput.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -165,7 +166,7 @@ public class WpsProcessDialog extends JDialog {
         });
 
         createNewProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        createNewProcessButton.setText("Create new Process");
+        createNewProcessButton.setText("Add Process");
         createNewProcessButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 createNewProcessButtonActionPerformed(evt);
@@ -180,7 +181,7 @@ public class WpsProcessDialog extends JDialog {
                 .addContainerGap()
                 .addComponent(processIdentifierDecoText)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(processIdentifierInput, GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+                .addComponent(processIdentifierInput, GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(createNewProcessButton)
                 .addContainerGap())
@@ -201,6 +202,7 @@ public class WpsProcessDialog extends JDialog {
         wpsProcessScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         wpsProcessScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        addProcessPane.setBackground(new Color(255, 255, 255));
         addProcessPane.setLayout(new BoxLayout(addProcessPane, BoxLayout.PAGE_AXIS));
         wpsProcessScrollPane.setViewportView(addProcessPane);
 

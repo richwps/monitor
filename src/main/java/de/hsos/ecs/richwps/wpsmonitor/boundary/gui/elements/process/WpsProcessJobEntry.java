@@ -52,7 +52,7 @@ public class WpsProcessJobEntry extends JPanel {
     private WpsMonitorAdminGui mainFrame;
     private WpsProcessEntity wpsProcess;
     private TriggerConfig triggerConfig;
-    private JPanel parent;
+    private WpsProcessJobDialog parent;
 
     /**
      * Constructor.
@@ -61,7 +61,7 @@ public class WpsProcessJobEntry extends JPanel {
      * @param parent Parent panel; is needed for delete operation
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      */
-    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final WpsProcessJobDialog parent, 
             final WpsProcessEntity wpsProcess) {
         
         this(mainFrame, parent, wpsProcess, null);
@@ -75,7 +75,7 @@ public class WpsProcessJobEntry extends JPanel {
      * @param wpsProcess WpsProcessEntity instance to create the right trigger
      * @param triggerConfig TriggerConfig instance to restore this panel
      */
-    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final JPanel parent, 
+    public WpsProcessJobEntry(final WpsMonitorAdminGui mainFrame, final WpsProcessJobDialog parent, 
             final WpsProcessEntity wpsProcess, final TriggerConfig triggerConfig) {
         
         initComponents();
@@ -168,10 +168,7 @@ public class WpsProcessJobEntry extends JPanel {
     }
 
     private void removeVisual() {
-        parent.remove(this);
-
-        parent.revalidate();
-        parent.repaint();
+        parent.removeJobEntry(this);
     }
     
     /**

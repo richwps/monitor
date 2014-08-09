@@ -56,10 +56,12 @@ import org.apache.logging.log4j.Logger;
  */
 public class WpsProcessPanel extends JPanel {
 
-    private WpsMonitorAdminGui mainFrame;
+    private static final Logger LOG = LogManager.getLogger();
+
+    private final WpsMonitorAdminGui mainFrame;
     private WpsProcessJobDialog wpsProcessJobDialog;
-    private JPanel parent;
-    private ShowMeasuredDataDialog measuredDataDialog;
+    private final JPanel parent;
+    private MeasuredDataDialog measuredDataDialog;
 
     private WpsProcessEntity wpsProcess;
     private Boolean saved;
@@ -67,7 +69,7 @@ public class WpsProcessPanel extends JPanel {
     private final MonitorEventListener exceptionListener;
     private final MonitorEventListener pauseMonitoringListener;
 
-    private static final Logger LOG = LogManager.getLogger();
+    private final String manageJobButtonText;
 
     /**
      *
@@ -96,16 +98,6 @@ public class WpsProcessPanel extends JPanel {
         this.parent = parent;
         this.wpsProcess = Validate.notNull(wpsProcess, "wpsProcess");
 
-        initComponents();
-        // fix for box layout
-        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
-
-        if (restored) {
-            triggerSaveState();
-        } else {
-            this.saved = false;
-        }
-
         // set up listeners. the fields are final to be save for reference changes
         exceptionListener = new MonitorEventListener() {
             @Override
@@ -121,12 +113,38 @@ public class WpsProcessPanel extends JPanel {
             }
         };
 
+        initComponents();
+        // fix for box layout
+        this.setMaximumSize(new Dimension(this.getMaximumSize().width, this.getPreferredSize().height));
+
+        if (restored) {
+            triggerSaveState();
+        } else {
+            this.saved = false;
+        }
+
+        this.manageJobButtonText = manageJobsButton.getText();
         init();
     }
 
+    /**
+     * Callback for WpsProcessJobDialog
+     *
+     * @param newCount New Count of Jobs
+     */
+    public void jobCountChanged(final Integer newCount) {
+        evaluateJobState(newCount);
+        changeManageJobText(newCount);
+    }
+
+    private void changeManageJobText(final Integer jobCount) {
+        String text = manageJobButtonText + '(' + jobCount + ')';
+        manageJobsButton.setText(text);
+    }
+
     private void init() {
-        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, wpsProcess);
-        this.measuredDataDialog = new ShowMeasuredDataDialog(mainFrame, wpsProcess);
+        this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, this, wpsProcess);
+        this.measuredDataDialog = new MeasuredDataDialog(mainFrame, wpsProcess);
 
         processNameText.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
@@ -135,17 +153,31 @@ public class WpsProcessPanel extends JPanel {
             indicateError();
         }
 
-        Boolean paused = mainFrame.getMonitorReference()
+        registerMonitoringEvents();
+        jobCountChanged(wpsProcessJobDialog.getCountOfJobs());
+    }
+
+    private void evaluateJobState(final Integer jobCount) {
+        if (jobCount > 0) {
+            if (isMonitoringActive()) {
+                triggerMonitoringCase();
+            } else {
+                triggerPauseCase();
+            }
+        } else {
+            triggerNoJobsCase();
+        }
+    }
+
+    private Boolean isMonitoringActive() {
+        return !mainFrame.getMonitorReference()
                 .getMonitorControl()
                 .isPausedMonitoring(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+    }
 
-        if (paused) {
-            triggerPauseCase();
-        } else {
-            triggerMonitoringCase();
-        }
-
-        registerMonitoringEvents();
+    private void triggerNoJobsCase() {
+        stopMonitoringButton.setEnabled(false);
+        rescheduleButton.setEnabled(false);
     }
 
     private void triggerPauseCase() {
@@ -233,7 +265,7 @@ public class WpsProcessPanel extends JPanel {
         this.saved = true;
 
         saveProcessButton.setBackground(new Color(153, 255, 153));
-        showJobsButton.setEnabled(true);
+        manageJobsButton.setEnabled(true);
         stopMonitoringButton.setEnabled(true);
         showMeasuredDataButton.setEnabled(true);
     }
@@ -283,7 +315,7 @@ public class WpsProcessPanel extends JPanel {
 
         JPanel jPanel1 = new JPanel();
         JToolBar jToolBar1 = new JToolBar();
-        showJobsButton = new JButton();
+        manageJobsButton = new JButton();
         showMeasuredDataButton = new JButton();
         stopMonitoringButton = new JButton();
         rescheduleButton = new JButton();
@@ -294,20 +326,22 @@ public class WpsProcessPanel extends JPanel {
         JScrollPane jScrollPane1 = new JScrollPane();
         testRequestTextArea = new JTextArea();
 
+        setBackground(new Color(255, 255, 255));
+
         jPanel1.setBorder(BorderFactory.createTitledBorder(""));
 
         jToolBar1.setBorder(null);
         jToolBar1.setRollover(true);
 
-        showJobsButton.setIcon(new ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
-        showJobsButton.setText("Show Jobs");
-        showJobsButton.setEnabled(false);
-        showJobsButton.addActionListener(new ActionListener() {
+        manageJobsButton.setIcon(new ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
+        manageJobsButton.setText("Manage Jobs");
+        manageJobsButton.setEnabled(false);
+        manageJobsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                showJobsButtonActionPerformed(evt);
+                manageJobsButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(showJobsButton);
+        jToolBar1.add(manageJobsButton);
 
         showMeasuredDataButton.setIcon(new ImageIcon(getClass().getResource("/icons/measure.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measured Data");
@@ -340,7 +374,7 @@ public class WpsProcessPanel extends JPanel {
         jToolBar1.add(rescheduleButton);
 
         deleteProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
-        deleteProcessButton.setText("Delete");
+        deleteProcessButton.setText("Delete Process");
         deleteProcessButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 deleteProcessButtonActionPerformed(evt);
@@ -396,16 +430,13 @@ public class WpsProcessPanel extends JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 77, Short.MAX_VALUE))
+                    .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(processNameText)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                            .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(processNameText))
+                        .addGap(0, 25, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -437,9 +468,9 @@ public class WpsProcessPanel extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void showJobsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showJobsButtonActionPerformed
+    private void manageJobsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_manageJobsButtonActionPerformed
         wpsProcessJobDialog.setVisible(true);
-    }//GEN-LAST:event_showJobsButtonActionPerformed
+    }//GEN-LAST:event_manageJobsButtonActionPerformed
 
     private void saveProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveProcessButtonActionPerformed
 
@@ -536,10 +567,10 @@ public class WpsProcessPanel extends JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton deleteProcessButton;
+    private JButton manageJobsButton;
     private JLabel processNameText;
     private JButton rescheduleButton;
     private JButton saveProcessButton;
-    private JButton showJobsButton;
     private JButton showMeasuredDataButton;
     private JButton stopMonitoringButton;
     private JTextArea testRequestTextArea;

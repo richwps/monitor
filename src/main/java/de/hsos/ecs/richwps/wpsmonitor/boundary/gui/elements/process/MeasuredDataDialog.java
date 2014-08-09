@@ -46,7 +46,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ShowMeasuredDataDialog extends JDialog {
+public class MeasuredDataDialog extends JDialog {
 
     private final WpsMonitorAdminGui monitorMainFrame;
     private final WpsProcessEntity wpsProcess;
@@ -59,7 +59,7 @@ public class ShowMeasuredDataDialog extends JDialog {
      * @param monitorMainFrame Reference to the MainFrame of this gui
      * @param process WpsProcessEntity to select the right measured data
      */
-    public ShowMeasuredDataDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsProcessEntity process) {
+    public MeasuredDataDialog(final WpsMonitorAdminGui monitorMainFrame, final WpsProcessEntity process) {
         super(monitorMainFrame, true);
         initComponents();
 
@@ -121,7 +121,7 @@ public class ShowMeasuredDataDialog extends JDialog {
         closeButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Measured data of Process");
+        setTitle("Measured data");
         setIconImage(new ImageIcon(getClass().getResource("/icons/measure.png")).getImage());
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Measured Data"));

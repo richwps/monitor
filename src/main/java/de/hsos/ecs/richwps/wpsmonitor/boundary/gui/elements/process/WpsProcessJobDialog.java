@@ -45,6 +45,7 @@ public class WpsProcessJobDialog extends JDialog {
 
     private final WpsMonitorAdminGui mainframe;
     private final WpsProcessEntity wpsProcess;
+    private final WpsProcessPanel parent;
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -52,15 +53,17 @@ public class WpsProcessJobDialog extends JDialog {
      * Creates new form WpsProcessJobDialog.
      *
      * @param mainFrame Reference to the WpsMonitorAdminGui of this gui
+     * @param parent Parent panel instance
      * @param wpsProcess WpsProcessEntity instance to request the right trigger
      */
-    public WpsProcessJobDialog(final WpsMonitorAdminGui mainFrame, final WpsProcessEntity wpsProcess) {
+    public WpsProcessJobDialog(final WpsMonitorAdminGui mainFrame, final WpsProcessPanel parent, final WpsProcessEntity wpsProcess) {
         super(mainFrame, true);
         initComponents();
 
         this.wpsProcess = wpsProcess;
+        this.parent = parent;
         this.mainframe = Validate.notNull(mainFrame, "mainFrame");
-
+        
         init();
     }
 
@@ -82,13 +85,37 @@ public class WpsProcessJobDialog extends JDialog {
     }
 
     private WpsProcessJobEntry createNewJobEntryPane() {
-        return new WpsProcessJobEntry(mainframe, addJobPane, wpsProcess);
+        return new WpsProcessJobEntry(mainframe, this, wpsProcess);
     }
 
     private void addJobEntryPane(final WpsProcessJobEntry pane) {
         addJobPane.add(pane);
         addJobPane.revalidate();
         addJobPane.repaint();
+        
+        parent.jobCountChanged(getCountOfJobs());
+    }
+    
+    /**
+     * Gets the amount of job entries.
+     * 
+     * @return Integer instance
+     */
+    public Integer getCountOfJobs() {
+        return addJobPane.getComponentCount();
+    }
+    
+    /**
+     * Removes a Job entry and revalidates the specific jpanel.
+     * 
+     * @param toRemove WpsProcessJobEntry instance
+     */
+    public void removeJobEntry(final WpsProcessJobEntry toRemove) {
+        addJobPane.remove(toRemove);
+        addJobPane.revalidate();
+        addJobPane.repaint();
+        
+        parent.jobCountChanged(getCountOfJobs());
     }
 
     /**
@@ -127,7 +154,7 @@ public class WpsProcessJobDialog extends JDialog {
         closeButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Add, remove or edit Process Job");
+        setTitle("Manage Jobs");
         setIconImage(new ImageIcon(getClass().getResource("/icons/time.png")).getImage());
         setResizable(false);
 

@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -208,6 +209,8 @@ public class WpsPanel extends javax.swing.JPanel {
 
         setBackground(new Color(255, 255, 255));
 
+        jPanel1.setBorder(BorderFactory.createTitledBorder(""));
+
         wpsNameLabel.setFont(new Font("Tahoma", 0, 24)); // NOI18N
         wpsNameLabel.setText("<Wps Name>");
 
@@ -225,8 +228,8 @@ public class WpsPanel extends javax.swing.JPanel {
             }
         });
 
-        addProcessToWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        addProcessToWpsButton.setText("Add or Edit Processes");
+        addProcessToWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/manage.png"))); // NOI18N
+        addProcessToWpsButton.setText("Manage Processes");
         addProcessToWpsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 addProcessToWpsButtonActionPerformed(evt);
@@ -256,8 +259,8 @@ public class WpsPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(editWpsButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteWpsButton))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteWpsButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(addProcessToWpsButton, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
