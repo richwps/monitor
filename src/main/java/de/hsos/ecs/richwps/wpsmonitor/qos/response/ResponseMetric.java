@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response;
+package de.hsos.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
@@ -75,7 +75,7 @@ public class ResponseMetric extends QosMetric {
         return data;
     }
 
-    private Double computeMedian(Integer[] values) {
+    private Double computeMedian(final Integer[] values) {
         Double median = null;
 
         if (values != null && values.length > 0) {
@@ -84,13 +84,12 @@ public class ResponseMetric extends QosMetric {
 
             Arrays.sort(values);
 
-            if (index % 2 == 0) {
-                unboxedMedian = (double) (values[index] + values[index - 1]) / 2;
+            if (values.length % 2 == 0) {
+                unboxedMedian = (values[index] + values[index - 1]) / 2;
             } else {
                 unboxedMedian = values[index];
             }
 
-            // better as (Double)(double) ..
             median = unboxedMedian;
         }
 

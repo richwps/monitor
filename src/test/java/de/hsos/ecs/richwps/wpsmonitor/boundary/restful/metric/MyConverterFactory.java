@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.presentation.converter;
+package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
+
+import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
 
 /**
  *
  * @author FloH
  */
-public class MyPresentate {
+public class MyConverterFactory implements Factory<QosMetric> {
 
-    private Integer sum;
-
-    public MyPresentate() {
-    }
-
-    public MyPresentate(Integer sum) {
-        this.sum = sum;
-    }
-
-    public Integer getSum() {
-        return sum;
+    @Override
+    public QosMetric create() {
+        return new MyConverter();
     }
 
 }

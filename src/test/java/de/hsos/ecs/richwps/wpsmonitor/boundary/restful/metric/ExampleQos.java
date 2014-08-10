@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.presentation.converter;
+package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 

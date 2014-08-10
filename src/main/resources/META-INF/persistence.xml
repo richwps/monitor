@@ -7,7 +7,7 @@
     <class>de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity</class>
     <class>de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity</class>
     <class>de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement</class>
-    <class>de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseEntity</class>
+    <class>de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby:Database/MonitoredData;create=true"/>
       <property name="javax.persistence.jdbc.password" value=""/>

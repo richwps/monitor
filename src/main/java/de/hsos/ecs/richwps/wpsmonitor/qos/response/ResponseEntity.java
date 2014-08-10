@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response;
+package de.hsos.ecs.richwps.wpsmonitor.qos.response;
 
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import javax.persistence.Entity;

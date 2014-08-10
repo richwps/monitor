@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.presentation.converter;
+package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;

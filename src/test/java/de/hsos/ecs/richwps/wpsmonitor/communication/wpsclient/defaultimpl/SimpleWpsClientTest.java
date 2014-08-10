@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.client.defaultimpl;
+package de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl;
 
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
-import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl.SimpleWpsClientFactory;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

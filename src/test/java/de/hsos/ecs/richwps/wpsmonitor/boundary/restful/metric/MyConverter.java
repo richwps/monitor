@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
+ * Copyright 2014 FloH.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response;
-
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 /**
  *
- * @author Florian Vogelpohl <floriantobias@gmail.com>
+ * @author FloH
  */
-public class ResponseMetricFactory implements Factory<QosMetric> {
+public class MyConverter extends QosMetric {
 
     @Override
-    public QosMetric create() throws CreateException {
-        return new ResponseMetric();
+    public Object calculate() {
+        ExampleQos q;
+        Integer sum = 0;
+
+        for (Measurement e : getEntities()) {
+            q = e.getEntity();
+            sum += q.getValue();
+        }
+
+        return new MyPresentate(sum);
+    }
+
+    @Override
+    public String getName() {
+        return "MyTestConverter";
     }
 
 }

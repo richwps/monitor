@@ -25,7 +25,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Pair;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;

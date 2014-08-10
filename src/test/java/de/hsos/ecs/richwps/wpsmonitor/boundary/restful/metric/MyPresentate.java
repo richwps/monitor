@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.presentation.converter;
-
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
+package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 /**
  *
  * @author FloH
  */
-public class MyConverter extends QosMetric {
+public class MyPresentate {
 
-    @Override
-    public Object calculate() {
-        ExampleQos q;
-        Integer sum = 0;
+    private Integer sum;
 
-        for (Measurement e : getEntities()) {
-            q = e.getEntity();
-            sum += q.getValue();
-        }
-
-        return new MyPresentate(sum);
+    public MyPresentate() {
     }
 
-    @Override
-    public String getName() {
-        return "MyTestConverter";
+    public MyPresentate(Integer sum) {
+        this.sum = sum;
+    }
+
+    public Integer getSum() {
+        return sum;
     }
 
 }

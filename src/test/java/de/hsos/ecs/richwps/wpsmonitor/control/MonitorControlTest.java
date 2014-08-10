@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.monitor.control;
+package de.hsos.ecs.richwps.wpsmonitor.control;
 
-import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
 import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
@@ -25,7 +23,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
+import de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
 import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -39,7 +37,6 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
