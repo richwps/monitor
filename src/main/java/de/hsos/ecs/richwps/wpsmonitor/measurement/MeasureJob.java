@@ -60,6 +60,8 @@ public class MeasureJob implements Job {
     protected List<QosProbe> probes;
     protected Boolean error;
 
+    protected Boolean fatalError;
+
     /**
      * Creates a new MeasureJob instance.
      *
@@ -84,8 +86,10 @@ public class MeasureJob implements Job {
             WpsRequest request = pair.getLeft();
             WpsResponse response = pair.getRight();
 
-            if (request.getRequestTime() == null || response.getResponseTime() == null) {
-                throw new AssertionError("RequestTime was not set in WpsRequest!");
+            if (request.getRequestTime() == null
+                    || !response.isConnectionException()
+                    && response.getResponseTime() == null) {
+                throw new JobExecutionException("Request- or response time was not set correctly.", false);
             }
 
             // if no execption occurs (except Connection exception), then call probes and store Data 
@@ -93,28 +97,29 @@ public class MeasureJob implements Job {
 
             if (!error) {
                 MeasuredDataEntity data = callProbes(request, response);
-                persistMeasuredData(data);
+                persistMeasuredData(data, request.getRequestTime());
             }
 
-            LOG.info("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
-                    context.getJobDetail().getKey(),
-                    context.getTrigger().getKey(),
-                    processEntity.toString(),
-                    response.isWpsException() ? "true" : "false",
-                    response.isConnectionException() ? "true" : "false",
-                    response.isOtherException() ? "true" : "false"
-            );
-
-        } catch (Exception ex) {
-            LOG.warn("Unknown exception in MeasureJob execute Method. This exception was caught because of preventing re-schedule loop in the scheduler.", ex);
+            logInfo(context, response);
         } finally {
             dao.close();
         }
     }
 
-    private void persistMeasuredData(final MeasuredDataEntity data) {
+    private void logInfo(final JobExecutionContext context, final WpsResponse response) {
+        LOG.info("MeasureJob with JobKey {} and TriggerKey {} of Process {} executed! isWpsException: {} isConnectionException: {} isOtherException: {}",
+                context.getJobDetail().getKey(),
+                context.getTrigger().getKey(),
+                processEntity.toString(),
+                response.isWpsException() ? "true" : "false",
+                response.isConnectionException() ? "true" : "false",
+                response.isOtherException() ? "true" : "false"
+        );
+    }
+
+    private void persistMeasuredData(final MeasuredDataEntity data, final Date measureDate) {
         data.setProcess(processEntity);
-        data.setCreateTime(new Date());
+        data.setCreateTime(measureDate);
 
         dao.persist(data);
     }
