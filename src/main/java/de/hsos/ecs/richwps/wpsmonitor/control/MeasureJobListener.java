@@ -15,13 +15,21 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.control;
 
+import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
+import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.MeasureJob;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
 import org.quartz.JobListener;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 
 /**
  * Evaluates if a job can't be measured because of an exception. In addition,
@@ -33,6 +41,8 @@ import org.quartz.JobListener;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MeasureJobListener implements JobListener {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     /**
      * WpsProcessDataAccess instance.
@@ -85,14 +95,68 @@ public class MeasureJobListener implements JobListener {
      * @param jobException JobExecutionException injected by quartz
      */
     @Override
-    public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
+    public void jobWasExecuted(final JobExecutionContext context, final JobExecutionException jobException) {
         try {
             if (context.getJobInstance() instanceof MeasureJob) {
-                Thread handleJobWasExecuted = new JobExecutedHandlerThread(context, eventHandler, wpsProcessDaoFactory.create());
-                handleJobWasExecuted.start();
+                final MeasureJob specificJob = (MeasureJob) context.getJobInstance();
+
+                if (jobException != null) {
+                    throw new AssertionError(jobException.getMessage(), jobException);
+                }
+
+                Thread worker = new Thread() {
+                    @Override
+                    public void run() {
+                        
+                        WpsProcessEntity process = specificJob.getProcessEntity();
+
+                        LOG.debug("MeasureJobListener: Fire scheduler.job.wasexecuted Event!");
+                        eventHandler
+                                .fireEvent(new MonitorEvent("scheduler.wpsjob.wasexecuted", process));
+
+                        if (specificJob.cantMeasure()) {
+                            try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+                                Scheduler scheduler = context.getScheduler();
+
+                                handleCantMeasure(wpsProcessDao, scheduler, process);
+                            } catch (CreateException ex) {
+                                throw new AssertionError("Can't create Exception in Measure layer.", ex);
+                            }
+                        }
+                    }
+                };
+
+                worker.start();
             }
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao to handel the JobWasExecuted Event.", ex);
+        } catch (AssertionError ex) {
+            // not clean, but save
+            LOG.fatal("AssertionError occurred in Measure Layer. Can't throw this exception to main-Method. Exit the monitor here.", ex);
+            System.exit(1);
+        }
+    }
+
+    private void handleCantMeasure(WpsProcessDataAccess wpsProcessDao, Scheduler scheduler,
+            WpsProcessEntity wpsProcess) {
+
+        String wpsIdentifier = wpsProcess.getWps().getIdentifier();
+        String processIdentifier = wpsProcess.getIdentifier();
+
+        WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+
+        if (find != null && !find.isWpsException()) {
+            wpsProcess.setWpsException(true);
+            wpsProcessDao.update(wpsProcess);
+
+            try {
+                scheduler.pauseJob(new JobKey(wpsIdentifier, processIdentifier));
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", wpsProcess));
+                eventHandler
+                        .fireEvent(new MonitorEvent("measurement.wpsjob.wpsexception", wpsProcess));
+            } catch (SchedulerException ex) {
+                LOG.error("SchedulerException occured while trying to pause the errornous job.");
+            }
         }
     }
 
