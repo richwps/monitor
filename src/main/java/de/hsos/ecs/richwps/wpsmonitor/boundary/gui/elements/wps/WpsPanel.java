@@ -79,6 +79,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     private void init() {
+        this.setName(wps.getIdentifier());
         this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps);
         setWpsTextLabels(wps);
 
@@ -213,8 +214,10 @@ public class WpsPanel extends javax.swing.JPanel {
 
         wpsNameLabel.setFont(new Font("Tahoma", 0, 24)); // NOI18N
         wpsNameLabel.setText("<Wps Name>");
+        wpsNameLabel.setName("wpsNameLabel"); // NOI18N
 
         wpsUriLabel.setText("<URI>");
+        wpsUriLabel.setName("wpsUriLabel"); // NOI18N
 
         errorIcon.setIcon(new ImageIcon(getClass().getResource("/icons/cancel-round.png"))); // NOI18N
         errorIcon.setToolTipText("One or more Processes encountered a Wps-Process Error");

@@ -274,17 +274,24 @@ public class WpsMonitorAdminGui extends JFrame {
         setResizable(false);
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Register a WPS Server in the Monitor"));
+        jPanel1.setName("registerWpsGroupPane"); // NOI18N
+
+        jPanel2.setName("groupRegisterTextFields"); // NOI18N
 
         wpsIdentifierDecoText.setText("WPS-Identifier");
+        wpsIdentifierDecoText.setName("wpsIdentifierDecoText"); // NOI18N
 
         wpsUrlDecoText.setText("WPS-URL");
+        wpsUrlDecoText.setName("wpsUrlDecoText"); // NOI18N
 
+        wpsToAddField.setName("wpsToAddField"); // NOI18N
         wpsToAddField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 wpsToAddFieldActionPerformed(evt);
             }
         });
 
+        wpsToAddUriField.setName("wpsToAddUriField"); // NOI18N
         wpsToAddUriField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 wpsToAddUriFieldActionPerformed(evt);
@@ -320,8 +327,11 @@ public class WpsMonitorAdminGui extends JFrame {
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3.setName("groupRegisterButtons"); // NOI18N
+
         addWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         addWpsButton.setText("Add WPS");
+        addWpsButton.setName("addWpsButton"); // NOI18N
         addWpsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 addWpsButtonActionPerformed(evt);
@@ -330,6 +340,7 @@ public class WpsMonitorAdminGui extends JFrame {
 
         dataSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
         dataSourcesButton.setText("Add from Data Sources");
+        dataSourcesButton.setName("dataSourceButton"); // NOI18N
         dataSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 dataSourcesButtonActionPerformed(evt);
