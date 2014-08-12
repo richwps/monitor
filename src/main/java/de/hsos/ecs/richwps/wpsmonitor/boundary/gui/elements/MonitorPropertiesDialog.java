@@ -111,6 +111,7 @@ public class MonitorPropertiesDialog extends JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Settings");
+        setName("propertiesDialog"); // NOI18N
 
         saveButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveButton.setText("Save");
@@ -135,6 +136,7 @@ public class MonitorPropertiesDialog extends JDialog {
         timeoutSpinner.setEditor(new JSpinner.NumberEditor(timeoutSpinner, "####"));
         JFormattedTextField numberModelForTimeoutTxt = ((JSpinner.NumberEditor) timeoutSpinner.getEditor()).getTextField();
         ((NumberFormatter) numberModelForTimeoutTxt .getFormatter()).setAllowsInvalid(false);
+        timeoutSpinner.setName("wpsTimeoutTimePicker"); // NOI18N
 
         jLabel5.setText("Minutes.");
 
@@ -171,18 +173,21 @@ public class MonitorPropertiesDialog extends JDialog {
         formatter.setAllowsInvalid(false);
         formatter.setOverwriteMode(true);
         timeSpinner.setEditor(de);
+        timeSpinner.setName("deleteJobTimePicker"); // NOI18N
 
         jLabel1.setText("Everyday at");
 
         jLabel3.setText("Days.");
 
         deleteIsActiveCheckbox.setText("Delete QoS-Data");
+        deleteIsActiveCheckbox.setName("deleteJobActiveBox"); // NOI18N
 
         jLabel2.setText("older than");
 
         dateDeleteSpinner.setEditor(new JSpinner.NumberEditor(dateDeleteSpinner, "####"));
         JFormattedTextField numberModelForDeleteTxt = ((JSpinner.NumberEditor) dateDeleteSpinner.getEditor()).getTextField();
         ((NumberFormatter) numberModelForDeleteTxt.getFormatter()).setAllowsInvalid(false);
+        dateDeleteSpinner.setName("deleteJobDayPicker"); // NOI18N
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

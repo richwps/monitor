@@ -205,7 +205,7 @@ public class WpsPanel extends javax.swing.JPanel {
         wpsUriLabel = new JLabel();
         errorIcon = new JLabel();
         editWpsButton = new JButton();
-        addProcessToWpsButton = new JButton();
+        manageProcessesButton = new JButton();
         deleteWpsButton = new JButton();
 
         setBackground(new Color(255, 255, 255));
@@ -225,22 +225,25 @@ public class WpsPanel extends javax.swing.JPanel {
 
         editWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         editWpsButton.setText("Edit WPS");
+        editWpsButton.setName("editWpsButton"); // NOI18N
         editWpsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 editWpsButtonActionPerformed(evt);
             }
         });
 
-        addProcessToWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/manage.png"))); // NOI18N
-        addProcessToWpsButton.setText("Manage Processes");
-        addProcessToWpsButton.addActionListener(new ActionListener() {
+        manageProcessesButton.setIcon(new ImageIcon(getClass().getResource("/icons/manage.png"))); // NOI18N
+        manageProcessesButton.setText("Manage Processes");
+        manageProcessesButton.setName("manageProcessesButton"); // NOI18N
+        manageProcessesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                addProcessToWpsButtonActionPerformed(evt);
+                manageProcessesButtonActionPerformed(evt);
             }
         });
 
         deleteWpsButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteWpsButton.setText("Delete WPS");
+        deleteWpsButton.setName("deleteWpsButton"); // NOI18N
         deleteWpsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 deleteWpsButtonActionPerformed(evt);
@@ -264,7 +267,7 @@ public class WpsPanel extends javax.swing.JPanel {
                         .addComponent(editWpsButton)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteWpsButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(addProcessToWpsButton, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(manageProcessesButton, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -279,7 +282,7 @@ public class WpsPanel extends javax.swing.JPanel {
                                 .addComponent(deleteWpsButton)
                                 .addComponent(editWpsButton)))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addProcessToWpsButton))
+                        .addComponent(manageProcessesButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(wpsNameLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -326,20 +329,20 @@ public class WpsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteWpsButtonActionPerformed
 
-    private void addProcessToWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addProcessToWpsButtonActionPerformed
+    private void manageProcessesButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_manageProcessesButtonActionPerformed
         wpsProcessDialog.setVisible(true);
         hideErrorIndicator();
-    }//GEN-LAST:event_addProcessToWpsButtonActionPerformed
+    }//GEN-LAST:event_manageProcessesButtonActionPerformed
 
     private void editWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editWpsButtonActionPerformed
         new WpsEditDialog(monitorMainFrame, this).setVisible(true);
     }//GEN-LAST:event_editWpsButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton addProcessToWpsButton;
     private JButton deleteWpsButton;
     private JButton editWpsButton;
     private JLabel errorIcon;
+    private JButton manageProcessesButton;
     private JLabel wpsNameLabel;
     private JLabel wpsUriLabel;
     // End of variables declaration//GEN-END:variables

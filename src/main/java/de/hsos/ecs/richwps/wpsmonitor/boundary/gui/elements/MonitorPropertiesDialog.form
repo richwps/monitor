@@ -4,6 +4,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Settings"/>
+    <Property name="name" type="java.lang.String" value="propertiesDialog" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -138,6 +139,9 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JSpinner" name="timeoutSpinner">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="wpsTimeoutTimePicker" noResource="true"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(numberModelForTimeout)"/>
             <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="SpinnerModel numberModelForTimeout = new SpinnerNumberModel(10, 0, null, 1);"/>
@@ -216,6 +220,9 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JSpinner" name="timeSpinner">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="deleteJobTimePicker" noResource="true"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(sm)"/>
             <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="spinnerTime = new Date();&#xa;SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);"/>
@@ -244,6 +251,7 @@
         <Component class="javax.swing.JCheckBox" name="deleteIsActiveCheckbox">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete QoS-Data"/>
+            <Property name="name" type="java.lang.String" value="deleteJobActiveBox" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -256,6 +264,9 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JSpinner" name="dateDeleteSpinner">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="deleteJobDayPicker" noResource="true"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(numberModelForDelete)"/>
             <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="SpinnerModel numberModelForDelete = new SpinnerNumberModel(10, 0, null, 1);"/>

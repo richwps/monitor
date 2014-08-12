@@ -79,7 +79,7 @@ public class DataSourceDialog extends JDialog {
     private void init() {
         if (creators != null) {
             for (DataSourceCreator driver : creators) {
-                driverAddPanel.add(new DataSourceCreatorPanel(this, driver));
+                creatorAddPanel.add(new DataSourceCreatorPanel(this, driver));
             }
 
             readSources();
@@ -98,7 +98,7 @@ public class DataSourceDialog extends JDialog {
                 LOG.warn("Can't register storeSource() Listener at monitor.shutdown Event.", ex);
             }
 
-            driverAddPanel.revalidate();
+            creatorAddPanel.revalidate();
         }
     }
 
@@ -198,7 +198,7 @@ public class DataSourceDialog extends JDialog {
 
         JPanel jPanel1 = new JPanel();
         JScrollPane jScrollPane1 = new JScrollPane();
-        driverAddPanel = new JPanel();
+        creatorAddPanel = new JPanel();
         JPanel jPanel2 = new JPanel();
         JScrollPane jScrollPane2 = new JScrollPane();
         dataSourceAddPanel = new JPanel();
@@ -208,14 +208,16 @@ public class DataSourceDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Data Source Manager");
         setIconImage(new ImageIcon(getClass().getResource("/icons/database-add.png")).getImage());
+        setName("dataSourceDialog"); // NOI18N
         setResizable(false);
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Registered Data Source Creatores"));
 
         jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        driverAddPanel.setLayout(new BoxLayout(driverAddPanel, BoxLayout.PAGE_AXIS));
-        jScrollPane1.setViewportView(driverAddPanel);
+        creatorAddPanel.setName("creatorAddPanel"); // NOI18N
+        creatorAddPanel.setLayout(new BoxLayout(creatorAddPanel, BoxLayout.PAGE_AXIS));
+        jScrollPane1.setViewportView(creatorAddPanel);
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -238,6 +240,7 @@ public class DataSourceDialog extends JDialog {
 
         jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        dataSourceAddPanel.setName("dataSourceAddPanel"); // NOI18N
         dataSourceAddPanel.setLayout(new BoxLayout(dataSourceAddPanel, BoxLayout.PAGE_AXIS));
         jScrollPane2.setViewportView(dataSourceAddPanel);
 
@@ -260,6 +263,7 @@ public class DataSourceDialog extends JDialog {
 
         closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
+        closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
@@ -268,6 +272,7 @@ public class DataSourceDialog extends JDialog {
 
         showWpsOfSourcesButton.setIcon(new ImageIcon(getClass().getResource("/icons/database.png"))); // NOI18N
         showWpsOfSourcesButton.setText("Show WPS of registered Sources");
+        showWpsOfSourcesButton.setName("showWpsOfSourcesButton"); // NOI18N
         showWpsOfSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 showWpsOfSourcesButtonActionPerformed(evt);
@@ -318,8 +323,8 @@ public class DataSourceDialog extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton closeButton;
+    private JPanel creatorAddPanel;
     private JPanel dataSourceAddPanel;
-    private JPanel driverAddPanel;
     private JButton showWpsOfSourcesButton;
     // End of variables declaration//GEN-END:variables
 }

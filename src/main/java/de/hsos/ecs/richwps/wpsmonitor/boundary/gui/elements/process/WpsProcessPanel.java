@@ -143,10 +143,11 @@ public class WpsProcessPanel extends JPanel {
     }
 
     private void init() {
+        setName(wpsProcess.getIdentifier());
         this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, this, wpsProcess);
         this.measuredDataDialog = new MeasuredDataDialog(mainFrame, wpsProcess);
 
-        processNameText.setText(wpsProcess.getIdentifier());
+        processNameLabel.setText(wpsProcess.getIdentifier());
         testRequestTextArea.setText(wpsProcess.getRawRequest());
 
         if (wpsProcess.isWpsException()) {
@@ -321,7 +322,7 @@ public class WpsProcessPanel extends JPanel {
         rescheduleButton = new JButton();
         deleteProcessButton = new JButton();
         saveProcessButton = new JButton();
-        processNameText = new JLabel();
+        processNameLabel = new JLabel();
         JPanel jPanel2 = new JPanel();
         JScrollPane jScrollPane1 = new JScrollPane();
         testRequestTextArea = new JTextArea();
@@ -336,6 +337,7 @@ public class WpsProcessPanel extends JPanel {
         manageJobsButton.setIcon(new ImageIcon(getClass().getResource("/icons/clock.png"))); // NOI18N
         manageJobsButton.setText("Manage Jobs");
         manageJobsButton.setEnabled(false);
+        manageJobsButton.setName("manageJobsButton"); // NOI18N
         manageJobsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 manageJobsButtonActionPerformed(evt);
@@ -346,6 +348,7 @@ public class WpsProcessPanel extends JPanel {
         showMeasuredDataButton.setIcon(new ImageIcon(getClass().getResource("/icons/measure.png"))); // NOI18N
         showMeasuredDataButton.setText("Show Measured Data");
         showMeasuredDataButton.setEnabled(false);
+        showMeasuredDataButton.setName("showMeasuredDataButton"); // NOI18N
         showMeasuredDataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 showMeasuredDataButtonActionPerformed(evt);
@@ -356,6 +359,7 @@ public class WpsProcessPanel extends JPanel {
         stopMonitoringButton.setIcon(new ImageIcon(getClass().getResource("/icons/stop.png"))); // NOI18N
         stopMonitoringButton.setText("Stop Monitoring");
         stopMonitoringButton.setEnabled(false);
+        stopMonitoringButton.setName("stopMonitoringButton"); // NOI18N
         stopMonitoringButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 stopMonitoringButtonActionPerformed(evt);
@@ -366,6 +370,7 @@ public class WpsProcessPanel extends JPanel {
         rescheduleButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
         rescheduleButton.setText("Start Monitoring");
         rescheduleButton.setEnabled(false);
+        rescheduleButton.setName("resheduleButton"); // NOI18N
         rescheduleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 rescheduleButtonActionPerformed(evt);
@@ -375,6 +380,7 @@ public class WpsProcessPanel extends JPanel {
 
         deleteProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteProcessButton.setText("Delete Process");
+        deleteProcessButton.setName("deleteProcessButton"); // NOI18N
         deleteProcessButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 deleteProcessButtonActionPerformed(evt);
@@ -385,6 +391,7 @@ public class WpsProcessPanel extends JPanel {
         saveProcessButton.setBackground(new Color(255, 51, 0));
         saveProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveProcessButton.setText("Save Process");
+        saveProcessButton.setName("saveProcessButton"); // NOI18N
         saveProcessButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 saveProcessButtonActionPerformed(evt);
@@ -392,13 +399,15 @@ public class WpsProcessPanel extends JPanel {
         });
         jToolBar1.add(saveProcessButton);
 
-        processNameText.setFont(new Font("Tahoma", 0, 24)); // NOI18N
-        processNameText.setText("jLabel3");
+        processNameLabel.setFont(new Font("Tahoma", 0, 24)); // NOI18N
+        processNameLabel.setText("jLabel3");
+        processNameLabel.setName("processNameLabel"); // NOI18N
 
         jPanel2.setBorder(BorderFactory.createTitledBorder("Test-Request"));
 
         testRequestTextArea.setColumns(20);
         testRequestTextArea.setRows(5);
+        testRequestTextArea.setName("testRequestTextArea"); // NOI18N
         testRequestTextArea.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent evt) {
                 testRequestTextAreaKeyReleased(evt);
@@ -434,7 +443,7 @@ public class WpsProcessPanel extends JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(processNameText))
+                            .addComponent(processNameLabel))
                         .addGap(0, 25, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -442,7 +451,7 @@ public class WpsProcessPanel extends JPanel {
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(processNameText, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                .addComponent(processNameLabel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -568,7 +577,7 @@ public class WpsProcessPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton deleteProcessButton;
     private JButton manageJobsButton;
-    private JLabel processNameText;
+    private JLabel processNameLabel;
     private JButton rescheduleButton;
     private JButton saveProcessButton;
     private JButton showMeasuredDataButton;

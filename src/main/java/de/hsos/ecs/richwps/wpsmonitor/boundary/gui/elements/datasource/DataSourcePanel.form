@@ -63,7 +63,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="resourceLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="133" max="32767" attributes="0"/>
-                          <Component id="deleteSource" min="-2" max="-2" attributes="0"/>
+                          <Component id="deleteSourceButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="resourceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteSource" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteSourceButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -99,17 +99,19 @@
         <Component class="javax.swing.JLabel" name="dataSourceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
+            <Property name="name" type="java.lang.String" value="dataSourceLabel" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="deleteSource">
+        <Component class="javax.swing.JButton" name="deleteSourceButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/database-delete.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="name" type="java.lang.String" value="deleteSourceButton" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSourceActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSourceButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
@@ -139,6 +141,7 @@
         <Component class="javax.swing.JLabel" name="resourceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel3"/>
+            <Property name="name" type="java.lang.String" value="resourceLabel" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

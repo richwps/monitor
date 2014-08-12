@@ -88,11 +88,12 @@ public class WpsProcessJobEntry extends JPanel {
 
         this.startDate.setDate(new Date());
 
-        saveJob.setBackground(new Color(255, 51, 51));
+        saveJobButton.setBackground(new Color(255, 51, 51));
         init();
     }
 
     private void init() {
+        setName("JobEntry" + parent.getComponentCount());
         init(triggerConfig);
     }
 
@@ -107,7 +108,7 @@ public class WpsProcessJobEntry extends JPanel {
             this.intervalField.setText(triggerConfig.getInterval().toString());
             this.triggerConfig = triggerConfig;
 
-            this.saveJob.setBackground(null);
+            this.saveJobButton.setBackground(null);
         } else {
             this.triggerConfig = new TriggerConfig();
         }
@@ -119,7 +120,7 @@ public class WpsProcessJobEntry extends JPanel {
      * @param config {@link TriggerConfig} instance
      */
     public void reInit(TriggerConfig config) {
-        saveJob.setBackground(new Color(240, 240, 240));
+        saveJobButton.setBackground(new Color(240, 240, 240));
         init(config);
 
         revalidate();
@@ -198,13 +199,15 @@ public class WpsProcessJobEntry extends JPanel {
         Box.Filler filler3 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
         JToolBar.Separator jSeparator2 = new JToolBar.Separator();
         Box.Filler filler8 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        saveJob = new JButton();
-        deleteJob = new JButton();
+        saveJobButton = new JButton();
+        deleteJobButton = new JButton();
 
         jToolBar1.setBorder(null);
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.setOpaque(false);
+
+        startDate.setName("startDate"); // NOI18N
         jToolBar1.add(startDate);
         jToolBar1.add(filler1);
 
@@ -220,10 +223,13 @@ public class WpsProcessJobEntry extends JPanel {
         formatter.setAllowsInvalid(false);
         formatter.setOverwriteMode(true);
         timeSpinner.setEditor(de);
+        timeSpinner.setName("timeSpinner"); // NOI18N
         jToolBar1.add(timeSpinner);
         jToolBar1.add(filler6);
         jToolBar1.add(jSeparator1);
         jToolBar1.add(filler7);
+
+        endDate.setName("endDate"); // NOI18N
         jToolBar1.add(endDate);
         jToolBar1.add(filler5);
         jToolBar1.add(jSeparator3);
@@ -231,28 +237,31 @@ public class WpsProcessJobEntry extends JPanel {
         jToolBar1.add(intervalField);
 
         intervalTypeCombooBox.setModel(new DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
+        intervalTypeCombooBox.setName("intervalTypeComboBox"); // NOI18N
         jToolBar1.add(intervalTypeCombooBox);
         jToolBar1.add(filler3);
         jToolBar1.add(jSeparator2);
         jToolBar1.add(filler8);
 
-        saveJob.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
-        saveJob.setText("Save");
-        saveJob.addActionListener(new ActionListener() {
+        saveJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
+        saveJobButton.setText("Save");
+        saveJobButton.setName("saveJobButton"); // NOI18N
+        saveJobButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                saveJobActionPerformed(evt);
+                saveJobButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(saveJob);
+        jToolBar1.add(saveJobButton);
 
-        deleteJob.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
-        deleteJob.setText("Delete");
-        deleteJob.addActionListener(new ActionListener() {
+        deleteJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteJobButton.setText("Delete");
+        deleteJobButton.setName("deleteJobButton"); // NOI18N
+        deleteJobButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                deleteJobActionPerformed(evt);
+                deleteJobButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(deleteJob);
+        jToolBar1.add(deleteJobButton);
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -272,7 +281,7 @@ public class WpsProcessJobEntry extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void saveJobActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveJobActionPerformed
+    private void saveJobButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveJobButtonActionPerformed
         if (isFieldsValid()) {
             IntervalComboBoxItem selectedItem = (IntervalComboBoxItem) intervalTypeCombooBox.getSelectedItem();
             String intervalValue = intervalField.getText();
@@ -299,7 +308,7 @@ public class WpsProcessJobEntry extends JPanel {
                             "Job was not created. Is Scheduler started? See the logs."
                     );
                 } else {
-                    this.saveJob.setBackground(null);
+                    this.saveJobButton.setBackground(null);
                 }
             } catch (NumberFormatException ex) {
                 MessageDialogs.showError(mainFrame,
@@ -308,9 +317,9 @@ public class WpsProcessJobEntry extends JPanel {
                 );
             }
         }
-    }//GEN-LAST:event_saveJobActionPerformed
+    }//GEN-LAST:event_saveJobButtonActionPerformed
 
-    private void deleteJobActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteJobActionPerformed
+    private void deleteJobButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteJobButtonActionPerformed
         if (triggerConfig.isSaved()) {
             Boolean deleteTrigger = mainFrame.getMonitorReference()
                     .getMonitorControl()
@@ -329,14 +338,14 @@ public class WpsProcessJobEntry extends JPanel {
         }
 
         // repaint required, otherwise the last element will not disappear
-    }//GEN-LAST:event_deleteJobActionPerformed
+    }//GEN-LAST:event_deleteJobButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton deleteJob;
+    private JButton deleteJobButton;
     private JDateChooser endDate;
     private JTextField intervalField;
     private JComboBox intervalTypeCombooBox;
-    private JButton saveJob;
+    private JButton saveJobButton;
     private JDateChooser startDate;
     private JSpinner timeSpinner;
     // End of variables declaration//GEN-END:variables

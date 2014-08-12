@@ -41,25 +41,26 @@ import javax.swing.LayoutStyle;
 public class DataSourceCreatorPanel extends JPanel {
 
     private final DataSourceDialog parent;
-    private final DataSourceCreator driver;
+    private final DataSourceCreator creator;
 
     /**
      * Creates new form DataSourceCreatorPanel
      *
      * @param parent Reference to the parent frame
-     * @param driver Driver instance which should cares of
+     * @param creator Driver instance which should cares of
      */
-    public DataSourceCreatorPanel(final DataSourceDialog parent, final DataSourceCreator driver) {
+    public DataSourceCreatorPanel(final DataSourceDialog parent, final DataSourceCreator creator) {
         this.parent = parent;
-        this.driver = driver;
+        this.creator = creator;
 
         initComponents();
         init();
     }
 
     private void init() {
-        drivername.setText(driver.getCreatorName());
-        expectedType.setText(driver.getExpectedResourceType());
+        setName(creator.getCreatorName());
+        drivername.setText(creator.getCreatorName());
+        expectedType.setText(creator.getExpectedResourceType());
     }
 
     /**
@@ -87,12 +88,14 @@ public class DataSourceCreatorPanel extends JPanel {
 
         addSourceButton.setIcon(new ImageIcon(getClass().getResource("/icons/database-add.png"))); // NOI18N
         addSourceButton.setText("Create new Data Source");
+        addSourceButton.setName("createDataSourceButton"); // NOI18N
         addSourceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 addSourceButtonActionPerformed(evt);
             }
         });
 
+        resourceField.setName("dataSourceCreatorResourceTextBox"); // NOI18N
         resourceField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 addSourceButtonActionPerformed(evt);
@@ -156,7 +159,7 @@ public class DataSourceCreatorPanel extends JPanel {
         String resource = resourceField.getText();
 
         try {
-            DataSource dataSource = driver.create(resource);
+            DataSource dataSource = creator.create(resource);
             parent.addDataSource(dataSource);
 
             resourceField.setText("");

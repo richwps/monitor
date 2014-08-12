@@ -53,6 +53,7 @@ public class DataSourcePanel extends JPanel {
         this.parent = parent;
 
         initComponents();
+        setName(source.getRessource());
         this.dataSourceLabel.setText(source.getUsedDriver());
         this.resourceLabel.setText(source.getRessource());
     }
@@ -77,7 +78,7 @@ public class DataSourcePanel extends JPanel {
 
         JPanel jPanel1 = new JPanel();
         dataSourceLabel = new JLabel();
-        deleteSource = new JButton();
+        deleteSourceButton = new JButton();
         JLabel jLabel1 = new JLabel();
         JLabel jLabel2 = new JLabel();
         resourceLabel = new JLabel();
@@ -87,12 +88,14 @@ public class DataSourcePanel extends JPanel {
         jPanel1.setBorder(BorderFactory.createTitledBorder(""));
 
         dataSourceLabel.setText("jLabel1");
+        dataSourceLabel.setName("dataSourceLabel"); // NOI18N
 
-        deleteSource.setIcon(new ImageIcon(getClass().getResource("/icons/database-delete.png"))); // NOI18N
-        deleteSource.setText("Delete");
-        deleteSource.addActionListener(new ActionListener() {
+        deleteSourceButton.setIcon(new ImageIcon(getClass().getResource("/icons/database-delete.png"))); // NOI18N
+        deleteSourceButton.setText("Delete");
+        deleteSourceButton.setName("deleteSourceButton"); // NOI18N
+        deleteSourceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                deleteSourceActionPerformed(evt);
+                deleteSourceButtonActionPerformed(evt);
             }
         });
 
@@ -103,6 +106,7 @@ public class DataSourcePanel extends JPanel {
         jLabel2.setText("Resource:");
 
         resourceLabel.setText("jLabel3");
+        resourceLabel.setName("resourceLabel"); // NOI18N
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -116,7 +120,7 @@ public class DataSourcePanel extends JPanel {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(resourceLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
-                        .addComponent(deleteSource))
+                        .addComponent(deleteSourceButton))
                     .addGroup(GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -135,7 +139,7 @@ public class DataSourcePanel extends JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(resourceLabel)
-                    .addComponent(deleteSource))
+                    .addComponent(deleteSourceButton))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -157,13 +161,13 @@ public class DataSourcePanel extends JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void deleteSourceActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteSourceActionPerformed
+    private void deleteSourceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_deleteSourceButtonActionPerformed
         parent.removeDataSource(this);
-    }//GEN-LAST:event_deleteSourceActionPerformed
+    }//GEN-LAST:event_deleteSourceButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JLabel dataSourceLabel;
-    private JButton deleteSource;
+    private JButton deleteSourceButton;
     private JLabel resourceLabel;
     // End of variables declaration//GEN-END:variables
 }

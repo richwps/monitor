@@ -65,6 +65,7 @@ public class AboutDialog extends JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About WPS Monitor");
+        setName("aboutDialog"); // NOI18N
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("About"));
 
@@ -109,6 +110,7 @@ public class AboutDialog extends JDialog {
 
         closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
+        closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);

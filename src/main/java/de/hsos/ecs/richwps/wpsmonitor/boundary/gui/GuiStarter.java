@@ -36,6 +36,7 @@ public class GuiStarter {
 
     static {
         setupLookAndFeel();
+        setButtonLanguage();
     }
 
     /**
@@ -79,6 +80,13 @@ public class GuiStarter {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             LOG.error("Can't load SystemLookAndFeel.", ex);
         }
+    }
+
+    private static void setButtonLanguage() {
+        UIManager.put("OptionPane.cancelButtonText", "Cancel");
+        UIManager.put("OptionPane.noButtonText", "No");
+        UIManager.put("OptionPane.okButtonText", "OK");
+        UIManager.put("OptionPane.yesButtonText", "Yes");
     }
 
     private GuiStarter() {

@@ -144,7 +144,7 @@ public class WpsProcessJobDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        newJobButton = new JButton();
+        addJobButton = new JButton();
         jobScrollPane = new JScrollPane();
         addJobPane = new JPanel();
         JLabel jLabel1 = new JLabel();
@@ -156,19 +156,22 @@ public class WpsProcessJobDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Manage Jobs");
         setIconImage(new ImageIcon(getClass().getResource("/icons/time.png")).getImage());
+        setName("jobDialog"); // NOI18N
         setResizable(false);
 
-        newJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/time.png"))); // NOI18N
-        newJobButton.setText("New Job");
-        newJobButton.addActionListener(new ActionListener() {
+        addJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/time.png"))); // NOI18N
+        addJobButton.setText("Add Job");
+        addJobButton.setName("addJobButton"); // NOI18N
+        addJobButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                newJobButtonActionPerformed(evt);
+                addJobButtonActionPerformed(evt);
             }
         });
 
         jobScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jobScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        addJobPane.setName("addJobPane"); // NOI18N
         addJobPane.setLayout(new BoxLayout(addJobPane, BoxLayout.PAGE_AXIS));
         jobScrollPane.setViewportView(addJobPane);
 
@@ -182,6 +185,7 @@ public class WpsProcessJobDialog extends JDialog {
 
         closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
+        closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);
@@ -199,7 +203,7 @@ public class WpsProcessJobDialog extends JDialog {
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(newJobButton)
+                                .addComponent(addJobButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(closeButton))
                             .addComponent(jobScrollPane)))
@@ -228,7 +232,7 @@ public class WpsProcessJobDialog extends JDialog {
                 .addComponent(jobScrollPane, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(newJobButton)
+                    .addComponent(addJobButton)
                     .addComponent(closeButton))
                 .addContainerGap())
         );
@@ -236,19 +240,19 @@ public class WpsProcessJobDialog extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newJobButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newJobButtonActionPerformed
+    private void addJobButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addJobButtonActionPerformed
         WpsProcessJobEntry newJobEntry = createNewJobEntryPane();
         addJobEntryPane(newJobEntry);
-    }//GEN-LAST:event_newJobButtonActionPerformed
+    }//GEN-LAST:event_addJobButtonActionPerformed
 
     private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
         dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton addJobButton;
     private JPanel addJobPane;
     private JButton closeButton;
     private JScrollPane jobScrollPane;
-    private JButton newJobButton;
     // End of variables declaration//GEN-END:variables
 }

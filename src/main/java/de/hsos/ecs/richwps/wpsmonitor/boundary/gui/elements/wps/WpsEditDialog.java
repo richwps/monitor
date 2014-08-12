@@ -93,9 +93,11 @@ public class WpsEditDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit WPS");
         setIconImage(new ImageIcon(getClass().getResource("/icons/edit.png")).getImage());
+        setName("editDialog"); // NOI18N
 
         identifierDecoText.setText("WPS-Identifier");
 
+        newIdentifierTextField.setName("newIdentifierTextField"); // NOI18N
         newIdentifierTextField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 newIdentifierTextFieldActionPerformed(evt);
@@ -104,6 +106,7 @@ public class WpsEditDialog extends JDialog {
 
         uriDecoText.setText("WPS-URL");
 
+        newUriTextField.setName("newUriTextField"); // NOI18N
         newUriTextField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 newUriTextFieldActionPerformed(evt);
@@ -112,6 +115,7 @@ public class WpsEditDialog extends JDialog {
 
         saveButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveButton.setText("Save");
+        saveButton.setName("saveButton"); // NOI18N
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 saveButtonActionPerformed(evt);
@@ -120,6 +124,7 @@ public class WpsEditDialog extends JDialog {
 
         cancelButton.setIcon(new ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
         cancelButton.setText("Cancel");
+        cancelButton.setName("cancelButton"); // NOI18N
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 cancelButtonActionPerformed(evt);

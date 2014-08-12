@@ -395,6 +395,7 @@ public class WpsMonitorAdminGui extends JFrame {
         wpsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         wpsAddPanel.setBackground(new Color(255, 255, 255));
+        wpsAddPanel.setName("wpsAddPanel"); // NOI18N
         wpsAddPanel.setLayout(new BoxLayout(wpsAddPanel, BoxLayout.PAGE_AXIS));
         wpsScrollPane.setViewportView(wpsAddPanel);
 

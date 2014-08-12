@@ -65,6 +65,7 @@ public class WpsProcessDialog extends JDialog {
     }
 
     private void init() {
+        setName(wps.getIdentifier() + "ProcessDialog");
         setTitle(getTitle() + " of " + wps.getIdentifier());
         List<WpsProcessEntity> processesOfWps = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
@@ -141,118 +142,122 @@ public class WpsProcessDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JPanel decoPanel = new JPanel();
-        JLabel processIdentifierDecoText = new JLabel();
-        processIdentifierInput = new JTextField();
-        createNewProcessButton = new JButton();
-        JPanel jPanel1 = new JPanel();
-        wpsProcessScrollPane = new JScrollPane();
-        addProcessPane = new JPanel();
-        closeButton = new JButton();
+        javax.swing.JPanel decoPanel = new javax.swing.JPanel();
+        javax.swing.JLabel processIdentifierDecoText = new javax.swing.JLabel();
+        processIdentifierInput = new javax.swing.JTextField();
+        addProcessButton = new javax.swing.JButton();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        wpsProcessScrollPane = new javax.swing.JScrollPane();
+        addProcessPane = new javax.swing.JPanel();
+        closeButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Manage Processes");
         setIconImage(new ImageIcon(getClass().getResource("/icons/manage.png")).getImage());
         setResizable(false);
 
-        decoPanel.setBorder(BorderFactory.createTitledBorder("Add Process to WPS"));
+        decoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Add Process to WPS"));
 
         processIdentifierDecoText.setText("Process-Identifier");
 
-        processIdentifierInput.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        processIdentifierInput.setName("processIdentifierInput"); // NOI18N
+        processIdentifierInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processIdentifierInputActionPerformed(evt);
             }
         });
 
-        createNewProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
-        createNewProcessButton.setText("Add Process");
-        createNewProcessButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                createNewProcessButtonActionPerformed(evt);
+        addProcessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
+        addProcessButton.setText("Add Process");
+        addProcessButton.setName("addProcessButton"); // NOI18N
+        addProcessButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProcessButtonActionPerformed(evt);
             }
         });
 
-        GroupLayout decoPanelLayout = new GroupLayout(decoPanel);
+        javax.swing.GroupLayout decoPanelLayout = new javax.swing.GroupLayout(decoPanel);
         decoPanel.setLayout(decoPanelLayout);
         decoPanelLayout.setHorizontalGroup(
-            decoPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            decoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(processIdentifierDecoText)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(processIdentifierInput, GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(createNewProcessButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(processIdentifierInput, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addProcessButton)
                 .addContainerGap())
         );
         decoPanelLayout.setVerticalGroup(
-            decoPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            decoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(decoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(decoPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(createNewProcessButton)
+                .addGroup(decoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addProcessButton)
                     .addComponent(processIdentifierDecoText)
-                    .addComponent(processIdentifierInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(processIdentifierInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(BorderFactory.createTitledBorder("Registred Processes"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Registred Processes"));
 
-        wpsProcessScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        wpsProcessScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        wpsProcessScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wpsProcessScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        addProcessPane.setBackground(new Color(255, 255, 255));
-        addProcessPane.setLayout(new BoxLayout(addProcessPane, BoxLayout.PAGE_AXIS));
+        addProcessPane.setBackground(new java.awt.Color(255, 255, 255));
+        addProcessPane.setName("addProcessPane"); // NOI18N
+        addProcessPane.setLayout(new javax.swing.BoxLayout(addProcessPane, javax.swing.BoxLayout.PAGE_AXIS));
         wpsProcessScrollPane.setViewportView(addProcessPane);
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(wpsProcessScrollPane)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(wpsProcessScrollPane, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(wpsProcessScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
+        closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        closeButton.setName("closeButton"); // NOI18N
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(decoPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(decoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(closeButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(decoPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(decoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
@@ -260,7 +265,7 @@ public class WpsProcessDialog extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void createNewProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_createNewProcessButtonActionPerformed
+    private void addProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addProcessButtonActionPerformed
         if (isNotEmptyProcessName()) {
             String wpsProcessIdentifier = processIdentifierInput.getText();
             processIdentifierInput.setText("");
@@ -269,10 +274,10 @@ public class WpsProcessDialog extends JDialog {
 
             createAndAddProcessPanel(wpsProcessEntity);
         }
-    }//GEN-LAST:event_createNewProcessButtonActionPerformed
+    }//GEN-LAST:event_addProcessButtonActionPerformed
 
     private void processIdentifierInputActionPerformed(ActionEvent evt) {//GEN-FIRST:event_processIdentifierInputActionPerformed
-        createNewProcessButtonActionPerformed(evt);
+        addProcessButtonActionPerformed(evt);
     }//GEN-LAST:event_processIdentifierInputActionPerformed
 
     private void closeButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
@@ -280,10 +285,10 @@ public class WpsProcessDialog extends JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JPanel addProcessPane;
-    private JButton closeButton;
-    private JButton createNewProcessButton;
-    private JTextField processIdentifierInput;
-    private JScrollPane wpsProcessScrollPane;
+    private javax.swing.JButton addProcessButton;
+    private javax.swing.JPanel addProcessPane;
+    private javax.swing.JButton closeButton;
+    private javax.swing.JTextField processIdentifierInput;
+    private javax.swing.JScrollPane wpsProcessScrollPane;
     // End of variables declaration//GEN-END:variables
 }

@@ -51,6 +51,9 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
         <Component class="com.toedter.calendar.JDateChooser" name="startDate">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="startDate" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.Box$Filler" name="filler1">
           <Properties>
@@ -98,6 +101,9 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JSpinner" name="timeSpinner">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="timeSpinner" noResource="true"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="Date spinnerTime = new Date();&#xa;SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);&#xa;timeSpinner = new javax.swing.JSpinner(sm);&#xa;JSpinner.DateEditor de = new JSpinner.DateEditor(timeSpinner, &quot;HH:mm:ss&quot;);&#xa;DateFormatter formatter = (DateFormatter)de.getTextField().getFormatter();&#xa;formatter.setAllowsInvalid(false);&#xa;formatter.setOverwriteMode(true);&#xa;timeSpinner.setEditor(de);"/>
           </AuxValues>
@@ -145,6 +151,9 @@
           </AuxValues>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="endDate">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="endDate" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.Box$Filler" name="filler5">
           <Properties>
@@ -204,6 +213,7 @@
                 <StringItem index="7" value="Year"/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="intervalTypeComboBox" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.Box$Filler" name="filler3">
@@ -248,26 +258,28 @@
             <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.HorizontalGlue"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="saveJob">
+        <Component class="javax.swing.JButton" name="saveJobButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/save.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Save"/>
+            <Property name="name" type="java.lang.String" value="saveJobButton" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJobActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveJobButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="deleteJob">
+        <Component class="javax.swing.JButton" name="deleteJobButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/trash.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="name" type="java.lang.String" value="deleteJobButton" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteJobActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteJobButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

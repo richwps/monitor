@@ -123,14 +123,17 @@ public class MeasuredDataDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Measured data");
         setIconImage(new ImageIcon(getClass().getResource("/icons/measure.png")).getImage());
+        setName("measuredDataDialog"); // NOI18N
 
         jPanel1.setBorder(BorderFactory.createTitledBorder("Measured Data"));
 
+        measuredDataAddPanel.setName("measuredDataAddPanel"); // NOI18N
         measuredDataAddPanel.setLayout(new BoxLayout(measuredDataAddPanel, BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(measuredDataAddPanel);
 
         deleteAllButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteAllButton.setText("Delete All");
+        deleteAllButton.setName("deleteAllButton"); // NOI18N
         deleteAllButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 deleteAllButtonActionPerformed(evt);
@@ -139,6 +142,7 @@ public class MeasuredDataDialog extends JDialog {
 
         deleteByDateButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteByDateButton.setText("Delete");
+        deleteByDateButton.setName("deleteByDateButton"); // NOI18N
         deleteByDateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 deleteByDateButtonActionPerformed(evt);
@@ -147,8 +151,11 @@ public class MeasuredDataDialog extends JDialog {
 
         jLabel1.setText("Delete all older as");
 
+        deleteOlderAsDate.setName("deleteOlderAsDate"); // NOI18N
+
         refreshButton.setIcon(new ImageIcon(getClass().getResource("/icons/refresh.png"))); // NOI18N
         refreshButton.setText("Refresh");
+        refreshButton.setName("refreshButton"); // NOI18N
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
@@ -157,6 +164,7 @@ public class MeasuredDataDialog extends JDialog {
 
         closeButton.setIcon(new ImageIcon(getClass().getResource("/icons/apply.png"))); // NOI18N
         closeButton.setText("Close");
+        closeButton.setName("closeButton"); // NOI18N
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 closeButtonActionPerformed(evt);

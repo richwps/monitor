@@ -79,7 +79,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="processIdentifierInput" pref="584" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="createNewProcessButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="addProcessButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -89,7 +89,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="createNewProcessButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addProcessButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="processIdentifierDecoText" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="processIdentifierInput" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -109,19 +109,23 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JTextField" name="processIdentifierInput">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="processIdentifierInput" noResource="true"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="processIdentifierInputActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="createNewProcessButton">
+        <Component class="javax.swing.JButton" name="addProcessButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/add.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Add Process"/>
+            <Property name="name" type="java.lang.String" value="addProcessButton" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createNewProcessButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addProcessButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -173,6 +177,7 @@
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
+                <Property name="name" type="java.lang.String" value="addProcessPane" noResource="true"/>
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
@@ -189,6 +194,7 @@
           <Image iconType="3" name="/icons/apply.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Close"/>
+        <Property name="name" type="java.lang.String" value="closeButton" noResource="true"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeButtonActionPerformed"/>
