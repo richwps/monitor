@@ -36,7 +36,7 @@ public class EntityDispatcher {
      *
      * @param disassembler EntityDisassembler instance
      */
-    public EntityDispatcher(EntityDisassembler disassembler) {
+    public EntityDispatcher(final EntityDisassembler disassembler) {
         this.disassembler = Validate.notNull(disassembler, "disassembler");
     }
 
@@ -47,7 +47,7 @@ public class EntityDispatcher {
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
-    public Map<String, Object> dispatchToMetric(List<MeasuredDataEntity> data) {
+    public Map<String, Object> dispatchToMetric(final List<MeasuredDataEntity> data) {
         Map<String, QosMetric> disassemble = disassembler.disassembleToConverters(data);
 
         return dispatch(disassemble);
@@ -60,7 +60,7 @@ public class EntityDispatcher {
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
-    public Map<String, Object> dispatchData(List<MeasuredDataEntity> data) {
+    public Map<String, Object> dispatchData(final List<MeasuredDataEntity> data) {
         Map<String, QosMetric> disassemble = disassembler.disassembleToDummyConverter(data);
 
         return dispatch(disassemble);
@@ -72,13 +72,13 @@ public class EntityDispatcher {
      * @param data List of {@link MeasuredDataEntity} instances
      * @return Map with Entity name as key and converted data as value
      */
-    public Map<String, Object> dispatchBoth(List<MeasuredDataEntity> data) {
+    public Map<String, Object> dispatchBoth(final List<MeasuredDataEntity> data) {
         Map<String, QosMetric> disassemble = disassembler.disassembleToMetricssWithRawData(data);
 
         return dispatch(disassemble);
     }
 
-    private Map<String, Object> dispatch(Map<String, QosMetric> disassemble) {
+    private Map<String, Object> dispatch(final Map<String, QosMetric> disassemble) {
         Map<String, Object> merged = new HashMap<>();
 
         for (Map.Entry e : disassemble.entrySet()) {
