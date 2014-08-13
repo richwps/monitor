@@ -100,7 +100,7 @@ public class WpsMonitorAdminGui extends JFrame {
         this.dsDialog = new DataSourceDialog(this, dataSources);
         this.lvDialog = new LogViewerDialog(this, Paths.get(logDirectory));
 
-        init();  
+        init();
     }
 
     /**
@@ -114,8 +114,8 @@ public class WpsMonitorAdminGui extends JFrame {
         for (WpsEntity wps : wpsList) {
             createAndAddWpsPanel(wps);
         }
-    } 
-    
+    }
+
     /**
      * reInit the monitorgui
      */
@@ -126,8 +126,8 @@ public class WpsMonitorAdminGui extends JFrame {
     }
 
     /**
-     * Adds and returns new WpsPanel instance to the Mainframe. 
-     * 
+     * Adds and returns new WpsPanel instance to the Mainframe.
+     *
      * @param identifier WPS Identifier String
      * @param uri WPS Uri
      * @return The created WpsPanel instance
@@ -159,7 +159,7 @@ public class WpsMonitorAdminGui extends JFrame {
     }
 
     /**
-     * Adds and returns a new WpsPanel instance to the Mainframe. 
+     * Adds and returns a new WpsPanel instance to the Mainframe.
      *
      * @param identifier WPS Identifier String
      * @param uri WPS Uri
@@ -194,7 +194,7 @@ public class WpsMonitorAdminGui extends JFrame {
 
         return panel;
     }
-    
+
     public void setWpsToAddUriField(final JTextField wpsToAddUriField) {
         this.wpsToAddUriField = wpsToAddUriField;
     }
@@ -521,13 +521,27 @@ public class WpsMonitorAdminGui extends JFrame {
 
 
     private void addWpsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addWpsButtonActionPerformed
-        if (isCreateFieldsNotEmpty()) {
-            addWps(wpsToAddField.getText(),
-                    wpsToAddUriField.getText());
-        } else {
+        String wpsIdentifier = wpsToAddField.getText();
+        String wpsUri = wpsToAddUriField.getText();
+
+        try {
+            if (!isCreateFieldsNotEmpty()) {
+                MessageDialogs.showError(this,
+                        "Error!",
+                        "One of the fields is empty!"
+                );
+            } else if (monitor.getMonitorControl().isWpsExists(wpsIdentifier)) {
+                MessageDialogs.showError(this,
+                        "Already exists!",
+                        "A WPS-Server with this identifier is already registered in the monitor. Choose another Identifier instead."
+                );
+            } else {
+                addWps(wpsIdentifier, wpsUri);
+            }
+        } catch (IllegalArgumentException ex) {
             MessageDialogs.showError(this,
-                    "Error",
-                    "One of the fields is empty!"
+                    "Error!",
+                    ex.getMessage()
             );
         }
     }//GEN-LAST:event_addWpsButtonActionPerformed
@@ -550,14 +564,14 @@ public class WpsMonitorAdminGui extends JFrame {
 
         if (yes) {
             dispose();
-            
+
             try {
                 monitor.shutdown();
             } catch (MonitorException ex) {
 
             }
         }
-        
+
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 

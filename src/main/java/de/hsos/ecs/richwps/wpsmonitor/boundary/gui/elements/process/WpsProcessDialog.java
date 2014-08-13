@@ -16,11 +16,13 @@
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -88,11 +90,11 @@ public class WpsProcessDialog extends JDialog {
         revalidate();
         repaint();
     }
-    
+
     /**
      * Adds a new Process.
-     * 
-     * @param processName 
+     *
+     * @param processName
      */
     public void addProcess(final String processName) {
         WpsProcessEntity p = new WpsProcessEntity(processName, wps);
@@ -100,12 +102,11 @@ public class WpsProcessDialog extends JDialog {
         WpsProcessPanel pPanel = createAndAddProcessPanel(p);
         pPanel.saveProcess();
     }
-    
+
     private Boolean isNotEmptyProcessName() {
         return !"".equals(processIdentifierInput.getText().trim());
     }
-    
-    
+
     private WpsProcessPanel createProcessPanel(WpsProcessEntity processEntity) {
         return new WpsProcessPanel(monitorMainFrame, addProcessPane, processEntity);
     }
@@ -125,12 +126,32 @@ public class WpsProcessDialog extends JDialog {
 
         return panel;
     }
-    
+
     @Override
     public void setVisible(boolean b) {
         setLocationRelativeTo(monitorMainFrame);
-        
+
         super.setVisible(b);
+    }
+
+    private Boolean processAlreadyRegistred(final String processName) {
+        return monitorMainFrame.getMonitorReference()
+                .getMonitorControl()
+                .isProcessExists(wps.getIdentifier(), processName);
+    }
+
+    private Boolean isNotSavedWithSameNameExists(final String processName) {
+        Component[] components = addProcessPane.getComponents();
+
+        for (int i = 0; i < addProcessPane.getComponentCount(); i++) {
+            if (components[i] instanceof WpsProcessPanel) {
+                WpsProcessPanel p = (WpsProcessPanel) components[i];
+                
+                return p.getWpsProcess().getIdentifier().equals(processName);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -266,13 +287,28 @@ public class WpsProcessDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addProcessButtonActionPerformed
+
         if (isNotEmptyProcessName()) {
+
             String wpsProcessIdentifier = processIdentifierInput.getText();
-            processIdentifierInput.setText("");
+            try {
+                if (!isNotSavedWithSameNameExists(wpsProcessIdentifier) && !processAlreadyRegistred(wpsProcessIdentifier)) {
+                    processIdentifierInput.setText("");
+                    WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
 
-            WpsProcessEntity wpsProcessEntity = new WpsProcessEntity(wpsProcessIdentifier, wps);
-
-            createAndAddProcessPanel(wpsProcessEntity);
+                    createAndAddProcessPanel(wpsProcessEntity);
+                } else {
+                    MessageDialogs.showError(this,
+                            "Already registered",
+                            "The process is already registered in the monitor. Please choose another process identifier."
+                    );
+                }
+            } catch (IllegalArgumentException ex) {
+                MessageDialogs.showError(this,
+                        "The given Processname is not valid!",
+                        ex.getMessage()
+                );
+            }
         }
     }//GEN-LAST:event_addProcessButtonActionPerformed
 
