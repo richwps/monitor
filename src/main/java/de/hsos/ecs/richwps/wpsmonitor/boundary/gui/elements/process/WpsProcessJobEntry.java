@@ -181,26 +181,28 @@ public class WpsProcessJobEntry extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JToolBar jToolBar1 = new JToolBar();
-        startDate = new JDateChooser();
-        Box.Filler filler1 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        JLabel jLabel1 = new JLabel();
-        Box.Filler filler2 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        timeSpinner = new JSpinner();
-        Box.Filler filler6 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        JToolBar.Separator jSeparator1 = new JToolBar.Separator();
-        Box.Filler filler7 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        endDate = new JDateChooser();
-        Box.Filler filler5 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        JToolBar.Separator jSeparator3 = new JToolBar.Separator();
-        Box.Filler filler4 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        intervalField = new JTextField();
-        intervalTypeCombooBox = new JComboBox();
-        Box.Filler filler3 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        JToolBar.Separator jSeparator2 = new JToolBar.Separator();
-        Box.Filler filler8 = new Box.Filler(new Dimension(5, 0), new Dimension(10, 0), new Dimension(32767, 0));
-        saveJobButton = new JButton();
-        deleteJobButton = new JButton();
+        javax.swing.JToolBar jToolBar1 = new javax.swing.JToolBar();
+        startDate = new com.toedter.calendar.JDateChooser();
+        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        timeSpinner = new javax.swing.JSpinner();
+        javax.swing.Box.Filler filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.JToolBar.Separator jSeparator1 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        endDate = new com.toedter.calendar.JDateChooser();
+        javax.swing.Box.Filler filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.JToolBar.Separator jSeparator3 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        intervalField = new javax.swing.JTextField();
+        intervalTypeCombooBox = new javax.swing.JComboBox();
+        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.JToolBar.Separator jSeparator2 = new javax.swing.JToolBar.Separator();
+        javax.swing.Box.Filler filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(32767, 0));
+        saveJobButton = new javax.swing.JButton();
+        deleteJobButton = new javax.swing.JButton();
+
+        setName(""); // NOI18N
 
         jToolBar1.setBorder(null);
         jToolBar1.setFloatable(false);
@@ -217,7 +219,7 @@ public class WpsProcessJobEntry extends JPanel {
 
         Date spinnerTime = new Date();
         SpinnerDateModel sm = new SpinnerDateModel(spinnerTime, null, null, Calendar.HOUR_OF_DAY);
-        timeSpinner = new JSpinner(sm);
+        timeSpinner = new javax.swing.JSpinner(sm);
         JSpinner.DateEditor de = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
         DateFormatter formatter = (DateFormatter)de.getTextField().getFormatter();
         formatter.setAllowsInvalid(false);
@@ -234,50 +236,52 @@ public class WpsProcessJobEntry extends JPanel {
         jToolBar1.add(filler5);
         jToolBar1.add(jSeparator3);
         jToolBar1.add(filler4);
+
+        intervalField.setName("intervalField"); // NOI18N
         jToolBar1.add(intervalField);
 
-        intervalTypeCombooBox.setModel(new DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
+        intervalTypeCombooBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Milliseconds", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year" }));
         intervalTypeCombooBox.setName("intervalTypeComboBox"); // NOI18N
         jToolBar1.add(intervalTypeCombooBox);
         jToolBar1.add(filler3);
         jToolBar1.add(jSeparator2);
         jToolBar1.add(filler8);
 
-        saveJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
+        saveJobButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save.png"))); // NOI18N
         saveJobButton.setText("Save");
         saveJobButton.setName("saveJobButton"); // NOI18N
-        saveJobButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        saveJobButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveJobButtonActionPerformed(evt);
             }
         });
         jToolBar1.add(saveJobButton);
 
-        deleteJobButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
+        deleteJobButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteJobButton.setText("Delete");
         deleteJobButton.setName("deleteJobButton"); // NOI18N
-        deleteJobButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
+        deleteJobButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteJobButtonActionPerformed(evt);
             }
         });
         jToolBar1.add(deleteJobButton);
 
-        GroupLayout layout = new GroupLayout(this);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToolBar1, GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -341,12 +345,12 @@ public class WpsProcessJobEntry extends JPanel {
     }//GEN-LAST:event_deleteJobButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton deleteJobButton;
-    private JDateChooser endDate;
-    private JTextField intervalField;
-    private JComboBox intervalTypeCombooBox;
-    private JButton saveJobButton;
-    private JDateChooser startDate;
-    private JSpinner timeSpinner;
+    private javax.swing.JButton deleteJobButton;
+    private com.toedter.calendar.JDateChooser endDate;
+    private javax.swing.JTextField intervalField;
+    private javax.swing.JComboBox intervalTypeCombooBox;
+    private javax.swing.JButton saveJobButton;
+    private com.toedter.calendar.JDateChooser startDate;
+    private javax.swing.JSpinner timeSpinner;
     // End of variables declaration//GEN-END:variables
 }
