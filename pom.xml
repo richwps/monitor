@@ -136,7 +136,7 @@
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
-            <artifactId>assertj-swing</artifactId>
+            <artifactId>assertj-swing-junit-4.5</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
             <type>jar</type>
