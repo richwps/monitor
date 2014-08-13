@@ -386,4 +386,29 @@ public interface MonitorControl {
      * @return true if the job is exists
      */
     public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier);
+    
+    /**
+     * Checks if the Process is exists.
+     * 
+     * @param wpsIdentifier {@link WpsEntity} identifier
+     * @param processIdentifier {@link WpsProcessEntity} identifier
+     * @return true if the process is exists
+     */
+    public Boolean isProcessExists(final String wpsIdentifier, final String processIdentifier);
+    
+    /**
+     * Checks if the Process is exists.
+     * 
+     * @param wpsProcess{@link WpsProcessEntity} instance
+     * @return true if the process is exists
+     */
+    public Boolean isProcessExists(final WpsProcessEntity wpsProcess);
+    
+    /**
+     * Checks if the Wps is exists.
+     * 
+     * @param wpsIdentifier WpsEntity identifier
+     * @return true if the wps is exists
+     */
+    public Boolean isWpsExists(final String wpsIdentifier);
 }

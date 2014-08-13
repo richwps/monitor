@@ -58,6 +58,7 @@ public class MonitorControlImpl implements MonitorControl {
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
     private final MonitorEventHandler eventHandler;
+    private final MonitorControlValidator validator;
 
     /**
      * Constructor.
@@ -76,7 +77,9 @@ public class MonitorControlImpl implements MonitorControl {
         this.wpsDaoFactory = Validate.notNull(wpsDao, "wpsDao");
         this.wpsProcessDaoFactory = Validate.notNull(wpsProcessDao, "wpsProcessDao");
         this.eventHandler = Validate.notNull(eventHandler, "eventHandler");
-
+        
+        this.validator = new MonitorControlValidator(3L, 255L);
+        
         initMonitorControlEvents();
     }
 
@@ -104,8 +107,9 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, TriggerConfig config) {
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
+        
         TriggerConfig newConfig = null;
-
         try {
             if (isProcessExists(wpsIdentifier, processIdentifier)) {
                 if (config.getTriggerKey() == null) {
@@ -127,9 +131,10 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier) {
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
+        
         JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
         List<TriggerConfig> result = new ArrayList<>();
-
         try {
             List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
 
@@ -163,7 +168,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean createWps(final String wpsIdentifier, final URI uri) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
+        validator.validateStringParam(wpsIdentifier);
         Validate.notNull(uri, "uri");
 
         WpsEntity wps = new WpsEntity(wpsIdentifier, uri);
@@ -183,11 +188,9 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean createAndScheduleProcess(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         Boolean isPersisted = false;
-
         try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
 
             if (isWpsExists(wpsIdentifier) && !isProcessExists(wpsIdentifier, processIdentifier)) {
@@ -207,13 +210,13 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     private void scheduleProcess(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityDeep(processEntity);
         
         try {
-            schedulerControl.addWpsAsJob(entity);
+            schedulerControl.addWpsAsJob(processEntity);
 
             eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", entity));
+                    .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", processEntity));
         } catch (SchedulerException ex) {
             LOG.warn("MonitorControl: {}", ex);
         }
@@ -221,11 +224,9 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         Boolean exists = false;
-
         try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
 
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
@@ -247,8 +248,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri) {
-        Validate.notNull(oldWpsIdentifier, "oldWpsIdentifier");
-        Validate.notNull(newWpsIdentifier, "newWpsIdentifier");
+        validator.validateStringParam(oldWpsIdentifier, newWpsIdentifier);
         Validate.notNull(newUri, "newUri");
 
         WpsEntity wps = getWps(oldWpsIdentifier);
@@ -305,7 +305,7 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     private void removeWpsJob(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
+        validator.validateWpsEntity(wpsEntity);
         
         try {
             schedulerControl
@@ -317,11 +317,9 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         Boolean deleteable = false;
-
         try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
 
             WpsProcessEntity process = wpsProcessDao
@@ -361,7 +359,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<WpsProcessEntity> getProcessesOfWps(final String identifier) {
-        Validate.notNull(identifier, "identifier");
+        validator.validateStringParam(identifier);
 
         List<WpsProcessEntity> processes = null;
 
@@ -381,8 +379,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         List<MeasuredDataEntity> measuredData = null;
 
@@ -398,8 +395,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         try {
             WpsProcessEntity find = getWpsProcessEntity(wpsIdentifier, processIdentifier);
@@ -418,8 +414,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
             WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
@@ -454,8 +449,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         try (QosDataAccess qosDao = qosDaoFactory.create()) {
             qosDao.deleteByProcess(wpsIdentifier, processIdentifier, olderAs);
@@ -466,6 +460,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void pauseMonitoring(final String wpsIdentifier, final String processIdentifier) {
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
         JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
 
         try {
@@ -486,10 +481,8 @@ public class MonitorControlImpl implements MonitorControl {
     public void deleteMeasuredData(final Date olderAs) {
         Validate.notNull(olderAs, "olderAs");
 
-        QosDataAccess qosDao;
-
         try {
-            qosDao = qosDaoFactory.create();
+            QosDataAccess qosDao = qosDaoFactory.create();
             qosDao.deleteAllOlderAs(olderAs);
         } catch (CreateException ex) {
             throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
@@ -498,18 +491,18 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean createWps(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
+        validator.validateWpsEntity(wpsEntity);
 
         return createWps(wpsEntity.getIdentifier(), wpsEntity.getUri());
     }
 
     @Override
     public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return createAndScheduleProcess(wpsIdentifier, processIdentifier);
@@ -517,11 +510,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return saveTrigger(wpsIdentifier, processIdentifier, config);
@@ -529,11 +522,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return setTestRequest(wpsIdentifier, processIdentifier, testRequest);
@@ -541,25 +534,25 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public WpsEntity updateWps(final String oldWpsIdentifier, final WpsEntity newWps) {
-        Validate.notNull(newWps, "newWps");
+        validator.validateWpsEntity(newWps);
 
         return updateWps(oldWpsIdentifier, newWps.getIdentifier(), newWps.getUri());
     }
 
     @Override
     public Boolean deleteWps(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
+        validator.validateWpsEntity(wpsEntity);
 
         return deleteWps(wpsEntity.getIdentifier());
     }
 
     @Override
     public Boolean deleteProcess(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return deleteProcess(wpsIdentifier, processIdentifier);
@@ -567,11 +560,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean isPausedMonitoring(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return isPausedMonitoring(wpsIdentifier, processIdentifier);
@@ -579,11 +572,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void resumeMonitoring(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         resumeMonitoring(wpsIdentifier, processIdentifier);
@@ -591,11 +584,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void pauseMonitoring(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         pauseMonitoring(wpsIdentifier, processIdentifier);
@@ -603,18 +596,18 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<WpsProcessEntity> getProcessesOfWps(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
+        validator.validateWpsEntity(wpsEntity);
 
         return getProcessesOfWps(wpsEntity.getIdentifier());
     }
 
     @Override
     public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return getTriggers(wpsIdentifier, processIdentifier);
@@ -627,11 +620,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return getMeasuredData(wpsIdentifier, processIdentifier, range);
@@ -639,11 +632,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier);
@@ -651,34 +644,35 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier, olderAs);
     }
 
-    private Boolean isProcessExists(final String wpsIdentifier, final String processIdentifier) {
+    @Override
+    public Boolean isProcessExists(final String wpsIdentifier, final String processIdentifier) {
         return getWpsProcessEntity(wpsIdentifier, processIdentifier) != null;
     }
 
-    private Boolean isProcessExists(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+    @Override
+    public Boolean isProcessExists(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return isProcessExists(wpsIdentifier, processIdentifier);
     }
 
     private WpsProcessEntity getWpsProcessEntity(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
+        validator.validateStringParam(wpsIdentifier, processIdentifier);
 
         WpsProcessEntity result = null;
 
@@ -691,18 +685,19 @@ public class MonitorControlImpl implements MonitorControl {
         return result;
     }
 
-    private Boolean isWpsExists(final String wpsIdentifier) {
+    @Override
+    public Boolean isWpsExists(final String wpsIdentifier) {
         return getWps(wpsIdentifier) != null;
     }
 
     private Boolean isWpsExists(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
+        validator.validateWpsEntity(wpsEntity); 
 
         return isWpsExists(wpsEntity.getIdentifier());
     }
 
     private WpsEntity getWps(final String wpsIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
+        validator.validateStringParam(wpsIdentifier);
 
         WpsEntity result = null;
 
@@ -716,18 +711,15 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     private JobKey getJobKey(final String wpsIdentifier, final String processIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-        Validate.notNull(processIdentifier, "processIdentifier");
-
         return new JobKey(processIdentifier, wpsIdentifier);
     }
 
     private JobKey getJobKey(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return getJobKey(wpsIdentifier, processIdentifier);
@@ -735,11 +727,11 @@ public class MonitorControlImpl implements MonitorControl {
 
     @Override
     public Boolean isProcessScheduled(final WpsProcessEntity processEntity) {
-        WpsProcessEntity entity = validateProcessEntity(processEntity);
+        validator.validateProcessEntityFlat(processEntity);
 
-        String wpsIdentifier = entity.getWps()
+        String wpsIdentifier = processEntity.getWps()
                 .getIdentifier();
-        String processIdentifier = entity
+        String processIdentifier = processEntity
                 .getIdentifier();
 
         return isProcessScheduled(wpsIdentifier, processIdentifier);
@@ -757,12 +749,5 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         return result;
-    }
-    
-    private WpsProcessEntity validateProcessEntity(final WpsProcessEntity toValidate) {
-        Validate.notNull(toValidate, "WpsProcessEntity Parameter");
-        Validate.notNull(toValidate.getWps(), "The WPS Identifier of the inner WpsEntity of the given WpsProcessEntity");
-        
-        return toValidate;
     }
 }

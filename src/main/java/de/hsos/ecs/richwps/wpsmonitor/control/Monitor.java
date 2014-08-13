@@ -129,6 +129,12 @@ public class Monitor {
         }
     }
 
+    /**
+     * Restarts the Monitor-Instance.
+     * 
+     * @throws MonitorException
+     * @throws MonitorConfigException 
+     */
     public void restart() throws MonitorException, MonitorConfigException {
         eventHandler
                 .fireEvent(new MonitorEvent("monitor.restart"));
