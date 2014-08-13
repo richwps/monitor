@@ -41,11 +41,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * This Tests need to be adjusted on systems with other languages! This 
+ * problem is cause through JOptionPaneDialog language spelling.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsMonitorAdminGuiTest extends AssertJSwingJUnitTestCase {
 
+    private static final String YES = "Ja";
+    private static final Integer DELAY_BETWEEN_EVENTS = 2;
     private static Monitor monitor;
     private FrameFixture gui;
     
@@ -70,7 +74,7 @@ public class WpsMonitorAdminGuiTest extends AssertJSwingJUnitTestCase {
             }
         });
 
-        robot().settings().delayBetweenEvents(2);
+        robot().settings().delayBetweenEvents(DELAY_BETWEEN_EVENTS);
         gui = new FrameFixture(robot(), mg);
         gui.show();
         
@@ -171,7 +175,7 @@ public class WpsMonitorAdminGuiTest extends AssertJSwingJUnitTestCase {
         JOptionPaneFixture optionpane = JOptionPaneFinder.findOptionPane()
                 .using(robot());
 
-        optionpane.button(withText("Ja"))
+        optionpane.button(withText(YES))
                 .click();
 
         gui.panel(wpsIdentifier);
@@ -201,7 +205,7 @@ public class WpsMonitorAdminGuiTest extends AssertJSwingJUnitTestCase {
         JOptionPaneFixture optionpane = JOptionPaneFinder.findOptionPane()
                 .using(robot());
 
-        optionpane.button(withText("Ja"))
+        optionpane.button(withText(YES))
                 .click();
 
         gui.panel(wpsProcessIdentifier);

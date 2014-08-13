@@ -50,6 +50,7 @@ public class SimpleWpsClientTest {
     private static final String WPS_URI = "http://localhost:8080/wps/WebProcessingService";
     private static final String TEST_REQUEST_FILE = "/request.xml";
     private static final String TEST_RESPONSE_EXCEPTION_FILE = "/exception.xml";
+    private static final String TEST_VALID_RESPONSE_FILE = "/response.xml";
     
     private static WpsClientFactory wpsClientFactory;
 
@@ -156,7 +157,7 @@ public class SimpleWpsClientTest {
     }
 
     @Test
-    public void testExceptionIdentification() {
+    public void testExceptionIdentificationIdentifyException() {
         WpsResponse response = new WpsResponse(exceptionResponse, new Date());
         
         try {
@@ -169,5 +170,34 @@ public class SimpleWpsClientTest {
         
         Assert.assertTrue(response.isWpsException());
     }
+    
+    @Test
+    public void testExceptionIdentificationDoNotIdentifyExceptionAtValidResponse() {
+        WpsResponse response = new WpsResponse(getFileContent(TEST_VALID_RESPONSE_FILE), new Date());
+        
+        try {
+            Method method = client.getClass().getDeclaredMethod("lookupForExceptions", WpsResponse.class);
+            method.setAccessible(true);
+            method.invoke(client, response);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+        }
+        
+        Assert.assertTrue(!response.isWpsException());
+    }
 
+    @Test
+    public void testExceptionIdentificationDoNotIdentifyExceptionAtUnvalidResponse() {
+        WpsResponse response = new WpsResponse("Hello World", new Date());
+        
+        try {
+            Method method = client.getClass().getDeclaredMethod("lookupForExceptions", WpsResponse.class);
+            method.setAccessible(true);
+            method.invoke(client, response);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+        }
+        
+        Assert.assertTrue(response.isConnectionException() && !response.isWpsException());
+    }
 }
