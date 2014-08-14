@@ -21,24 +21,11 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
 
 /**
  * Dialog to show and allow operations on WpsProcessEntities and

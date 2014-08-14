@@ -15,7 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
-import com.toedter.calendar.JDateChooser;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.structure.IntervalComboBoxItem;
@@ -24,20 +23,12 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.SpinnerDateModel;
 import javax.swing.text.DateFormatter;
 

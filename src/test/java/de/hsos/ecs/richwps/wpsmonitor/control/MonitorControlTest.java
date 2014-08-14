@@ -26,7 +26,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
 import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
