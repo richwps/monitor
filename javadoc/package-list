@@ -27,5 +27,5 @@ de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl
 de.hsos.ecs.richwps.wpsmonitor.data.entity
 de.hsos.ecs.richwps.wpsmonitor.measurement
 de.hsos.ecs.richwps.wpsmonitor.measurement.clean
-de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response
+de.hsos.ecs.richwps.wpsmonitor.qos.response
 de.hsos.ecs.richwps.wpsmonitor.util
