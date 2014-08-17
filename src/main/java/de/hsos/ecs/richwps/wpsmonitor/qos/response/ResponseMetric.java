@@ -78,7 +78,7 @@ public class ResponseMetric extends QosMetric {
     private Double computeMedian(final Integer[] values) {
         Double median = null;
 
-        if (values != null && values.length > 0) {
+        if (values != null) {
             Integer index = values.length / 2;
             double unboxedMedian;
 
