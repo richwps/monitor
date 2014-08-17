@@ -31,10 +31,20 @@ public class MetricFactoryMap {
 
     private final Map<String, Set<Factory<QosMetric>>> converterMap;
 
+    /**
+     * Creates a new MetricConverterMap
+     */
     public MetricFactoryMap() {
         this.converterMap = new HashMap<>();
     }
 
+    /**
+     * Adds a metric to a AbstractQosEntity instances name
+     * 
+     * @param index Name of the AbstractQosEntity instance
+     * @param converterFactory The specific converter for the AbstractQosEntity instance
+     * @return this for method chaining
+     */
     public MetricFactoryMap add(final String index, final Factory<QosMetric> converterFactory) {
         Validate.notNull(index, "index");
         Validate.notNull(converterFactory, "converterFactory");
