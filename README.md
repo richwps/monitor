@@ -1,7 +1,7 @@
 RichWPS-Monitor
 ===============
 
-A Monitoring System to monitor Web Processing Services (WPS)
+A Monitoring System to monitor Web Processing Services (WPS).
 See the [Project Site](http://fruchuxs.github.io/RichWPS-Monitor/) for Releases and JavaDoc!
 
 ## Libraries and Frameworks
