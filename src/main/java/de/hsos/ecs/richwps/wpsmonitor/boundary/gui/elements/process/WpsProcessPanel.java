@@ -443,7 +443,6 @@ public class WpsProcessPanel extends JPanel {
         jScrollPane2.setMaximumSize(new Dimension(610, 32767));
 
         jPanel3.setMaximumSize(null);
-        jPanel3.setMinimumSize(null);
 
         processNameLabel.setFont(new Font("Tahoma", 0, 24)); // NOI18N
         processNameLabel.setText("jLabel3");
