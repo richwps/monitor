@@ -41,9 +41,9 @@ public class RestInterfaceBuilder {
     private MonitorControl monitorControl;
 
     /**
-     * Converter Map.
+     * Metric factory Map.
      */
-    private MetricFactoryMap converterMap;
+    private MetricFactoryMap metricFactoryMap;
 
     /**
      * Port for Jetty
@@ -54,7 +54,7 @@ public class RestInterfaceBuilder {
      * Creates a new RestInterfaceBuilder instance.
      */
     public RestInterfaceBuilder() {
-        this.converterMap = new MetricFactoryMap();
+        this.metricFactoryMap = new MetricFactoryMap();
         this.port = 4567;
     }
 
@@ -65,7 +65,7 @@ public class RestInterfaceBuilder {
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder withConverterMap(MetricFactoryMap converterMap) {
-        this.converterMap = Validate.notNull(converterMap, "converterMap");
+        this.metricFactoryMap = Validate.notNull(converterMap, "converterMap");
 
         return this;
     }
@@ -103,17 +103,17 @@ public class RestInterfaceBuilder {
     }
 
     /**
-     * Adds a Metric factory instance.
+     * Adds a Metric factory instance to an AbstractQosEntity instance.
      *
-     * @param abstractQosEntityName
-     * @param metricFactory
+     * @param abstractQosEntityName Name of an AbstractQosEntity-Instance
+     * @param metricFactory A factory instance of a concrete metric
      * @return RestInterfaceBuilder instance
      */
     public RestInterfaceBuilder addMetric(final String abstractQosEntityName, final Factory<QosMetric> metricFactory) {
         Validate.notNull(abstractQosEntityName, "abstractQosEntityName");
         Validate.notNull(metricFactory, "converterFactory");
 
-        converterMap.add(abstractQosEntityName, metricFactory);
+        metricFactoryMap.add(abstractQosEntityName, metricFactory);
 
         return this;
     }
@@ -129,7 +129,7 @@ public class RestInterfaceBuilder {
             throw new BuilderException("Strategy and MonitorControl instances must be set.");
         }
 
-        DispatcherFactory dispatchFactory = new DispatcherFactory(converterMap);
+        DispatcherFactory dispatchFactory = new DispatcherFactory(metricFactoryMap);
         RestInterface rest = new RestInterface(strategy, monitorControl, dispatchFactory);
 
         rest.setPort(port);
