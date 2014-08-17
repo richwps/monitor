@@ -46,7 +46,15 @@ public class Validate {
      */
     public static String max(final String var, final Long count) {
         if(var.length() > count) {
-            throw new IllegalArgumentException("The given String instance is longer as allowed (" + count + ')');
+            throw new IllegalArgumentException("The given String is longer as allowed (" + count + ")");
+        }
+        
+        return var;
+    }
+    
+    public static String matchesRegex(final String var, final String regex) {
+        if(!var.matches(regex)) {
+            throw new IllegalArgumentException("The given String has not the right format.");
         }
         
         return var;
@@ -61,7 +69,7 @@ public class Validate {
      */
     public static String min(final String var, final Long count) {
         if(var.length() < count) {
-            throw new IllegalArgumentException("The given String instance is shorter as allowed (" + count + ')');
+            throw new IllegalArgumentException("The given String is shorter as allowed (" + count + ").");
         }
         
         return var;
@@ -75,7 +83,7 @@ public class Validate {
      */
     public static String notEmpty(final String var) {
         if(var == null || var.isEmpty()) {
-            throw new IllegalArgumentException("The given String instance is empty");
+            throw new IllegalArgumentException("The given String is empty.");
         }
         
         return var;

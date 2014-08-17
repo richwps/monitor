@@ -40,6 +40,7 @@ public class MonitorControlValidator {
             Validate.notEmpty(t);
             Validate.max(t, maxStringLength);
             Validate.min(t, minStringLength);
+            Validate.matchesRegex(t, "[\\w_\\-!-~'()*]*");
         }
     }
 
