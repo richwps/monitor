@@ -399,7 +399,7 @@ public interface MonitorControl {
     /**
      * Checks if the Process is exists.
      * 
-     * @param wpsProcess{@link WpsProcessEntity} instance
+     * @param wpsProcess {@link WpsProcessEntity} instance
      * @return true if the process is exists
      */
     public Boolean isProcessExists(final WpsProcessEntity wpsProcess);

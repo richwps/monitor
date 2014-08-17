@@ -90,7 +90,6 @@ public class MeasureJobListener implements JobListener {
      * slow down the system because the listener runs in the mainthread and the
      * jobs runs in its own thread.
      *
-     * @see JobExecutedHandlerThread
      * @param context JobExecutionContext contexten, injected by quartz
      * @param jobException JobExecutionException injected by quartz
      */
