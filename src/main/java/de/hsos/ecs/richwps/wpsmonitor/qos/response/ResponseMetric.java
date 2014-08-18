@@ -46,7 +46,7 @@ public class ResponseMetric extends QosMetric {
                 }
 
                 if (best == null) {
-                    best = 0;
+                    best = compare;
                 }
 
                 if (compare > worst) {
