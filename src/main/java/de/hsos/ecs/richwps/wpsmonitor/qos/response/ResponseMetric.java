@@ -80,17 +80,13 @@ public class ResponseMetric extends QosMetric {
 
         if (values != null) {
             Integer index = values.length / 2;
-            double unboxedMedian;
-
             Arrays.sort(values);
 
             if (values.length % 2 == 0) {
-                unboxedMedian = (values[index] + values[index - 1]) / 2;
+                median = (values[index] + values[index - 1]) / 2.;
             } else {
-                unboxedMedian = values[index];
+                median = new Double(values[index]);
             }
-
-            median = unboxedMedian;
         }
 
         return median;
