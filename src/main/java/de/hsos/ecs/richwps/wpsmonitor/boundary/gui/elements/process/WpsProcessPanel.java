@@ -39,12 +39,14 @@ import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.LayoutStyle;
+import org.apache.batik.util.gui.xmleditor.XMLEditorKit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -144,11 +146,13 @@ public class WpsProcessPanel extends JPanel {
 
     private void init() {
         setName(wpsProcess.getIdentifier());
+        testRequestTextArea.setEditorKit(new XMLEditorKit());
+        
         this.wpsProcessJobDialog = new WpsProcessJobDialog(mainFrame, this, wpsProcess);
         this.measuredDataDialog = new MeasuredDataDialog(mainFrame, wpsProcess);
 
         processNameLabel.setText(wpsProcess.getIdentifier());
-        testRequestTextArea.setText(wpsProcess.getRawRequest());
+        setEnteredTestRequest(wpsProcess.getRawRequest());
 
         if (wpsProcess.isWpsException()) {
             indicateError();
@@ -217,51 +221,6 @@ public class WpsProcessPanel extends JPanel {
         }
     }
 
-    private WpsResponse doTestRequest(String testRequest) {
-        WpsResponse response = null;
-
-        try {
-            WpsClient wpsClient = mainFrame.getMonitorReference()
-                    .getBuilderInstance()
-                    .getWpsClientFactory()
-                    .create();
-
-            WpsProcessInfo info = new WpsProcessInfo(wpsProcess.getWps().getUri(), wpsProcess.getIdentifier());
-            WpsRequest request = new WpsRequest(testRequest, info);
-
-            response = wpsClient.execute(request);
-        } catch (CreateException ex) {
-            LOG.error("Can't create WpsClient instance in doTestRequest-method.", ex);
-        }
-
-        return response;
-    }
-
-    private Boolean evaluateTestRequest(String testRequest) {
-        WpsResponse response = doTestRequest(testRequest);
-        Boolean result = true;
-
-        if (response != null) {
-
-            if (response.isConnectionException()) {
-                result = MessageDialogs.showQuestionDialog(mainFrame,
-                        "Not reachable",
-                        "The specified WPS is not reachable! Do you want to proceed?");
-            }
-
-            if (response.isWpsException()) {
-                MessageDialogs.showDetailedError(mainFrame,
-                        "WPS Exception occurred",
-                        "A WPS Exception has occurred at the execution of the test request",
-                        response.getExceptionMessage());
-
-                result = false;
-            }
-        }
-
-        return result;
-    }
-
     private void triggerSaveState() {
         this.saved = true;
 
@@ -307,11 +266,20 @@ public class WpsProcessPanel extends JPanel {
 
     /**
      * Gets the process entity of this wpspanel
-     * 
+     *
      * @return WpsProcessEntity instance
      */
     public WpsProcessEntity getWpsProcess() {
         return wpsProcess;
+    }
+
+    public String getEnteredRequest() {
+        return testRequestTextArea.getText();
+    }
+
+    public void setEnteredTestRequest(final String testRequest) {
+        testRequestTextArea.setText(testRequest);
+        testRequestTextArea.setCaretPosition(0);
     }
 
     /**
@@ -329,11 +297,12 @@ public class WpsProcessPanel extends JPanel {
         showMeasuredDataButton = new JButton();
         stopMonitoringButton = new JButton();
         rescheduleButton = new JButton();
+        jButton1 = new JButton();
         deleteProcessButton = new JButton();
         saveProcessButton = new JButton();
         JPanel jPanel2 = new JPanel();
-        JScrollPane jScrollPane1 = new JScrollPane();
-        testRequestTextArea = new JTextArea();
+        jScrollPane1 = new JScrollPane();
+        testRequestTextArea = new JEditorPane();
         JScrollPane jScrollPane2 = new JScrollPane();
         JPanel jPanel3 = new JPanel();
         processNameLabel = new JLabel();
@@ -389,6 +358,15 @@ public class WpsProcessPanel extends JPanel {
         });
         jToolBar1.add(rescheduleButton);
 
+        jButton1.setIcon(new ImageIcon(getClass().getResource("/icons/testProcess.png"))); // NOI18N
+        jButton1.setText("Test Request");
+        jButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+
         deleteProcessButton.setIcon(new ImageIcon(getClass().getResource("/icons/trash.png"))); // NOI18N
         deleteProcessButton.setText("Delete Process");
         deleteProcessButton.setName("deleteProcessButton"); // NOI18N
@@ -412,14 +390,9 @@ public class WpsProcessPanel extends JPanel {
 
         jPanel2.setBorder(BorderFactory.createTitledBorder("Test-Request"));
 
-        testRequestTextArea.setColumns(20);
-        testRequestTextArea.setRows(5);
-        testRequestTextArea.setName("testRequestTextArea"); // NOI18N
-        testRequestTextArea.addKeyListener(new KeyAdapter() {
-            public void keyReleased(KeyEvent evt) {
-                testRequestTextAreaKeyReleased(evt);
-            }
-        });
+        testRequestTextArea.setMaximumSize(null);
+        testRequestTextArea.setMinimumSize(null);
+        testRequestTextArea.setPreferredSize(null);
         jScrollPane1.setViewportView(testRequestTextArea);
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
@@ -428,14 +401,14 @@ public class WpsProcessPanel extends JPanel {
             jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -471,14 +444,11 @@ public class WpsProcessPanel extends JPanel {
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(jToolBar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 601, GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jToolBar1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 601, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -515,28 +485,24 @@ public class WpsProcessPanel extends JPanel {
     }//GEN-LAST:event_manageJobsButtonActionPerformed
 
     private void saveProcessButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveProcessButtonActionPerformed
-
         String testRequest = testRequestTextArea.getText();
+        Boolean inserted = true;
+        clearError();
 
-        if (evaluateTestRequest(testRequest)) {
-            Boolean inserted = true;
-            clearError();
+        if (!saved) {
+            inserted = saveProcess();
+        }
 
-            if (!saved) {
-                inserted = saveProcess();
-            }
+        if (inserted) {
+            mainFrame.getMonitorReference()
+                    .getMonitorControl()
+                    .setTestRequest(wpsProcess, testRequest);
+        }
 
-            if (inserted) {
-                mainFrame.getMonitorReference()
-                        .getMonitorControl()
-                        .setTestRequest(wpsProcess, testRequest);
-            }
-
-            if (wpsProcess.isWpsException()) {
-                mainFrame.getMonitorReference()
-                        .getMonitorControl()
-                        .resumeMonitoring(wpsProcess);
-            }
+        if (wpsProcess.isWpsException()) {
+            mainFrame.getMonitorReference()
+                    .getMonitorControl()
+                    .resumeMonitoring(wpsProcess);
         }
     }//GEN-LAST:event_saveProcessButtonActionPerformed
 
@@ -576,10 +542,6 @@ public class WpsProcessPanel extends JPanel {
         }
     }//GEN-LAST:event_deleteProcessButtonActionPerformed
 
-    private void testRequestTextAreaKeyReleased(KeyEvent evt) {//GEN-FIRST:event_testRequestTextAreaKeyReleased
-        this.saveProcessButton.setEnabled(true);
-    }//GEN-LAST:event_testRequestTextAreaKeyReleased
-
     private void showMeasuredDataButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showMeasuredDataButtonActionPerformed
         measuredDataDialog.recaptureData();
 
@@ -607,14 +569,21 @@ public class WpsProcessPanel extends JPanel {
         triggerPauseCase();
     }//GEN-LAST:event_stopMonitoringButtonActionPerformed
 
+    private void jButton1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        WpsRequestTesterDialog wpsProcessTest = new WpsRequestTesterDialog(mainFrame, this);
+        wpsProcessTest.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton deleteProcessButton;
+    private JButton jButton1;
+    private JScrollPane jScrollPane1;
     private JButton manageJobsButton;
     private JLabel processNameLabel;
     private JButton rescheduleButton;
     private JButton saveProcessButton;
     private JButton showMeasuredDataButton;
     private JButton stopMonitoringButton;
-    private JTextArea testRequestTextArea;
+    private JEditorPane testRequestTextArea;
     // End of variables declaration//GEN-END:variables
 }
