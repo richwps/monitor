@@ -36,56 +36,69 @@ public class Validate {
 
         return var;
     }
-    
+
+    /**
+     * Checks if one of the Parameters is null.
+     * 
+     * @param vars List of Parameters
+     */
+    public static void notNull(final Object... vars) {
+        for (Object var : vars) {
+            if (var == null) {
+                throw new IllegalArgumentException("One of the given Parameters was null.");
+            }
+        }
+    }
+
     /**
      * Checks the maximal length of a String.
-     * 
+     *
      * @param var String instance to validate
      * @param count max allowed characters
      * @return var
      */
     public static String max(final String var, final Long count) {
-        if(var.length() > count) {
+        if (var.length() > count) {
             throw new IllegalArgumentException("The given String is longer as allowed (" + count + ")");
         }
-        
+
         return var;
     }
-    
+
     public static String matchesRegex(final String var, final String regex) {
-        if(!var.matches(regex)) {
+        if (!var.matches(regex)) {
             throw new IllegalArgumentException("The given String has not the right format.");
         }
-        
+
         return var;
     }
-    
+
     /**
      * Checks the minimal length of a String.
-     * 
+     *
      * @param var String instance to validate
      * @param count minimal allowed characters
      * @return var
      */
     public static String min(final String var, final Long count) {
-        if(var.length() < count) {
+        if (var.length() < count) {
             throw new IllegalArgumentException("The given String is shorter as allowed (" + count + ").");
         }
-        
+
         return var;
     }
-    
+
     /**
      * Checks if the given String is not Empty
-     * 
+     *
      * @param var String to validate
      * @return var
      */
     public static String notEmpty(final String var) {
-        if(var == null || var.isEmpty()) {
+        if (var == null || var.isEmpty()) {
             throw new IllegalArgumentException("The given String is empty.");
         }
-        
+
         return var;
     }
 
