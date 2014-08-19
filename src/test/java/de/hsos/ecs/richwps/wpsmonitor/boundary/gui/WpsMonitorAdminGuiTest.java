@@ -109,14 +109,6 @@ public class WpsMonitorAdminGuiTest extends AssertJSwingJUnitTestCase {
         gui.panel(processIdentifier)
                 .button("saveProcessButton")
                 .click();
-
-        JOptionPaneFixture optionpane = JOptionPaneFinder.findOptionPane()
-                .withTimeout(monitor.getConfig().getWpsClientTimeout())
-                .using(robot());
-
-        // must be german .. dunno why
-        optionpane.button(withText("Ja"))
-                .click();
     }
 
     private void addProcess(String wpsIdentifier, String wpsUri, String processIdentifier) {
