@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 FloH.
+ * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,17 +30,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
- * @author FloH
+ * Tests the metrics.
+ * 
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class ConverterTest {
+public class MetricTest {
 
     private static DispatcherFactory dispatchFactory;
 
     @BeforeClass
     public static void setUpClass() {
         MetricFactoryMap converterMap = new MetricFactoryMap();
-        converterMap.add("exampleMeasurement", new MyConverterFactory());
+        converterMap.add("exampleMeasurement", new MyMetricFactory());
 
         dispatchFactory = new DispatcherFactory(converterMap);
     }
@@ -50,8 +51,8 @@ public class ConverterTest {
     }
 
     public static void main(String[] args) {
-        ConverterTest.setUpClass();
-        ConverterTest t = new ConverterTest();
+        MetricTest.setUpClass();
+        MetricTest t = new MetricTest();
 
         t.setUp();
         PresentateStrategy json = new JsonPresentateStrategy();
@@ -60,7 +61,7 @@ public class ConverterTest {
     private EntityDispatcher dispatch;
     private List<MeasuredDataEntity> data;
 
-    public ConverterTest() {
+    public MetricTest() {
     }
 
     @Before

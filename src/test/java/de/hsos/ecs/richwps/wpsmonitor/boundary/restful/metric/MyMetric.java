@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 FloH.
+ * Copyright 2014 Florian Vogelpohl <floriantobias@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MyConverter extends QosMetric {
+public class MyMetric extends QosMetric {
 
     @Override
     public Object calculate() {

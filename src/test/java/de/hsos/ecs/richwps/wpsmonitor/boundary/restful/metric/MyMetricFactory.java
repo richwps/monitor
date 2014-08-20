@@ -19,13 +19,13 @@ import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
 
 /**
  *
- * @author FloH
+ * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class MyConverterFactory implements Factory<QosMetric> {
+public class MyMetricFactory implements Factory<QosMetric> {
 
     @Override
     public QosMetric create() {
-        return new MyConverter();
+        return new MyMetric();
     }
 
 }

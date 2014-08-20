@@ -38,6 +38,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Tests for the GUI.
+ * 
  * This Tests need to be adjusted on systems with other languages! This 
  * problem is cause through JOptionPaneDialog language spelling.
  * 
