@@ -242,6 +242,7 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
         cancelButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(new ImageIcon(getClass().getResource("/icons/testProcess.png")).getImage());
         setResizable(false);
 
         jPanel2.setBorder(BorderFactory.createTitledBorder("Request"));
