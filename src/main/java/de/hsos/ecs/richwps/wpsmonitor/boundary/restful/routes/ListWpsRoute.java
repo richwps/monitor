@@ -22,7 +22,8 @@ import spark.Request;
 import spark.Response;
 
 /**
- *
+ * Lists all registered WPS-Server.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListWpsRoute extends MonitorRoute {

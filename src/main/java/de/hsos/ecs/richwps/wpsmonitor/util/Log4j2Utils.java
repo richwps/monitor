@@ -25,7 +25,8 @@ import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 /**
- *
+ * Utils to get some Log4J things.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Log4j2Utils {

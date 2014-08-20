@@ -23,7 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Encapsulates a complex datastructure.
+ * Encapsulates a very complex datastructure. It's a part of the RESTful
+ * Webservice mechanism to map factories to the name of AbstractQosEntity names.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -40,9 +41,10 @@ public class MetricFactoryMap {
 
     /**
      * Adds a metric to a AbstractQosEntity instances name
-     * 
+     *
      * @param index Name of the AbstractQosEntity instance
-     * @param converterFactory The specific converter for the AbstractQosEntity instance
+     * @param converterFactory The specific converter for the AbstractQosEntity
+     * instance
      * @return this for method chaining
      */
     public MetricFactoryMap add(final String index, final Factory<QosMetric> converterFactory) {

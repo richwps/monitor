@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Metric for ResponseEntity instances. Calculates the best-, the worst- and the
+ * median value for the given ResponseEntity-Instances.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseMetric extends QosMetric {

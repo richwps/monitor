@@ -23,7 +23,8 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.Hide;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 
 /**
- *
+ * The prefered PresentateStrategy. It uses Gson.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class JsonPresentateStrategy implements PresentateStrategy {

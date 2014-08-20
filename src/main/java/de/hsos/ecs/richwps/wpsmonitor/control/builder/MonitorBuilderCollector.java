@@ -34,7 +34,8 @@ import org.apache.logging.log4j.Logger;
 import org.quartz.JobListener;
 
 /**
- *
+ * A container for the dependecies of the monitor.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorBuilderCollector {

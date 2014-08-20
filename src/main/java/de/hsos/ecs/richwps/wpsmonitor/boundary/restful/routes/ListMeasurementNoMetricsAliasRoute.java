@@ -16,6 +16,7 @@
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes;
 
 /**
+ * An Alias of the ListMeasurement Route.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

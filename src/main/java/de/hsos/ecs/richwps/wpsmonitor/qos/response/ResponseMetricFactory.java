@@ -20,7 +20,8 @@ import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
 
 /**
- *
+ * Creates a new ResponseMetric-Instance.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseMetricFactory implements Factory<QosMetric> {

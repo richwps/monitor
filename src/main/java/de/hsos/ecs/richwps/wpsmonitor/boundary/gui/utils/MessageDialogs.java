@@ -58,7 +58,7 @@ public class MessageDialogs {
     }
     
     /**
-     * Shows an error dialog.
+     * Shows an detailed error dialog in use of a textarea.
      *
      * @param frame Parentframe
      * @param title Title text

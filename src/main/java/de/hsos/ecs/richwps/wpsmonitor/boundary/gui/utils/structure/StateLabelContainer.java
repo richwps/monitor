@@ -22,7 +22,9 @@ import java.util.Map;
 import javax.swing.JLabel;
 
 /**
- *
+ * A container which maps JLabel instances to Strings. This container can 
+ * be helpful for different messages to different states.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class StateLabelContainer {

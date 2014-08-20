@@ -20,7 +20,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
 
 /**
- *
+ * A very bad JAXB alternative. The XML string is not good.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class XmlPresentateStategy implements PresentateStrategy {

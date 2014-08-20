@@ -19,7 +19,8 @@ import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.QosProbe;
 
 /**
- *
+ * Factory which creates a {@link ResponseProbe}-Instance.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseFactory implements Factory<QosProbe> {

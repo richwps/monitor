@@ -27,6 +27,16 @@ import spark.Request;
 import spark.Response;
 
 /**
+ * This is the main route of the RESTful Webservice. It's has the following
+ * parameters: 
+ * 
+ * :wps - for the WPS-Identifier :process - for the WPS-Process
+ * Identifier 
+ * :count - for the amount of data which would be selected 
+ * :display - * the display mode; both for Measurements and metrics, metrics 
+ * for only metrics and values for only measurements
+ * 
+ * Through this route you can select all measured datas of the monitor.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

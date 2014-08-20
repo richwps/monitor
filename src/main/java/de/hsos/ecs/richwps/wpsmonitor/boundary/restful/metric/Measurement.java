@@ -20,6 +20,8 @@ import static de.hsos.ecs.richwps.wpsmonitor.util.Validate.notNull;
 import java.util.Date;
 
 /**
+ * Representates a simple AbstractQosEntity instance  with the date of the
+ * MeasuredDataEntity.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

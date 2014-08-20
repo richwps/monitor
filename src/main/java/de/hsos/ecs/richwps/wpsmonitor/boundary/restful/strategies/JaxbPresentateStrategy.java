@@ -25,7 +25,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * A not useful implementation of a JAXB presentate strategy. The problem is,
+ * that you must registered als used classes. Maybe a algorithmen to gather
+ * the classes will be usefull.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class JaxbPresentateStrategy implements PresentateStrategy {

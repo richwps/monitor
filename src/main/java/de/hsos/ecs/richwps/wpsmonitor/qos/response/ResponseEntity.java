@@ -19,7 +19,8 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import javax.persistence.Entity;
 
 /**
- *
+ * Entity for Response Time values.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 @Entity

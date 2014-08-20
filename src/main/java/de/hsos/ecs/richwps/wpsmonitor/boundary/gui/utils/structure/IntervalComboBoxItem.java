@@ -21,7 +21,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * A ComboBox item for interval type selection.
+ * A ComboBox item for the interval type selection.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

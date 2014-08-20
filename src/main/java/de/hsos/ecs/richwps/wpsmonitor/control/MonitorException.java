@@ -16,7 +16,8 @@
 package de.hsos.ecs.richwps.wpsmonitor.control;
 
 /**
- *
+ * Wraps an Exception instance which is occurred in the Monitor.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorException extends Exception {

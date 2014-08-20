@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defgault implementation of a WpsDataAccess interface
+ * Default implementation of a WpsDataAccess interface
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

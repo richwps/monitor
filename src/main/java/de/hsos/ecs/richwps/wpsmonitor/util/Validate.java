@@ -16,7 +16,8 @@
 package de.hsos.ecs.richwps.wpsmonitor.util;
 
 /**
- *
+ * Class which many validation methods.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Validate {
@@ -65,6 +66,13 @@ public class Validate {
         return var;
     }
 
+    /**
+     * Checks if the given string var is matched the given regex.
+     * 
+     * @param var
+     * @param regex
+     * @return var
+     */
     public static String matchesRegex(final String var, final String regex) {
         if (!var.matches(regex)) {
             throw new IllegalArgumentException("The given String has not the right format.");

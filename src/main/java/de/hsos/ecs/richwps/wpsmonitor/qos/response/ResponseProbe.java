@@ -20,7 +20,8 @@ import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.QosProbe;
 
 /**
- *
+ * Will be used to calculate the response time.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ResponseProbe extends QosProbe {

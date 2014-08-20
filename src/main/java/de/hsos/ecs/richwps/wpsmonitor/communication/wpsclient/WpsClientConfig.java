@@ -16,7 +16,9 @@
 package de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient;
 
 /**
- *
+ * Config of a WPS-Client. This class will be used at the init-method of 
+ * WpsClient implementations.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class WpsClientConfig {

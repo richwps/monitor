@@ -35,8 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -51,7 +49,6 @@ import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -59,6 +56,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.batik.util.gui.xmleditor.XMLEditorKit;
 
 /**
+ * A Dialog to use a WpsClient instance to test the request for WPS-Processes.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -73,6 +71,9 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
 
     private static final Map<String, IconLabel> states;
 
+    /**
+     * Initialize the static states field.
+     */
     static {
         states = new HashMap<>();
 
@@ -87,8 +88,8 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
     /**
      * Creates new form WpsProcessTest
      *
-     * @param mainFrame
-     * @param parent
+     * @param mainFrame Mainframe of this GUI
+     * @param parent Direct parent of this dialog
      */
     public WpsRequestTesterDialog(final WpsMonitorAdminGui mainFrame, final WpsProcessPanel parent) {
         super(mainFrame, true);
@@ -107,7 +108,6 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
 
         requestTextarea.setEditorKit(new XMLEditorKit());
         responseTextarea.setEditorKit(new XMLEditorKit());
-        
 
         stateContainer.mergeWith(states);
         stateContainer.applyState("jobless", statusIndicatorLabel);
@@ -163,17 +163,17 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
         }
 
         setResponseText(response.getResponseBody());
-responseTextarea.revalidate();
+        responseTextarea.revalidate();
 
         doRequestButton.setEnabled(true);
         cancelButton.setEnabled(false);
     }
-    
+
     private void setResponseText(final String responseText) {
         responseTextarea.setText(formatXml(responseText));
-        responseTextarea.setCaretPosition(0);        
+        responseTextarea.setCaretPosition(0);
     }
-    
+
     private void setRequestText(final String requestText) {
         requestTextarea.setText(requestText);
         requestTextarea.setCaretPosition(0);
@@ -181,26 +181,26 @@ responseTextarea.revalidate();
 
     private String formatXml(final String format) {
         String result = format;
-        
+
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            
+
             StringWriter writer = new StringWriter();
             StringReader reader = new StringReader(format);
-            
+
             StreamResult res = new StreamResult(writer);
             StreamSource sou = new StreamSource(reader);
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(sou, res);
-            
-            
+
             result = writer.getBuffer().toString();
-        } catch (TransformerException ignore) {} 
-        
+        } catch (TransformerException ignore) {
+        }
+
         return result;
     }
-    
+
     @Override
     public void setVisible(boolean b) {
         setLocationRelativeTo(mainFrame);

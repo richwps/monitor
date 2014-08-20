@@ -41,7 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * SemanticProxy implementation of DataSourceCreator and DataSource.
+ * SemanticProxy client implementation of DataSourceCreator and DataSource.
  * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */

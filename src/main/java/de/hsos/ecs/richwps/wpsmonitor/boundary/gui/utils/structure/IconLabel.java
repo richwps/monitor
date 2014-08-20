@@ -16,14 +16,13 @@
 
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.structure;
 
-import de.hsos.ecs.richwps.wpsmonitor.util.FileUtils;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 /**
- *
+ * A simple JLabel specialisation which directly sets a path as icon and a text
+ * as text. It's more like a helper.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class IconLabel extends JLabel {

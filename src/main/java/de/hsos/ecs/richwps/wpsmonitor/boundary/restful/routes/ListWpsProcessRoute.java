@@ -22,7 +22,8 @@ import spark.Request;
 import spark.Response;
 
 /**
- *
+ * Lists all WPS-Processes of registered WPS-Server.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListWpsProcessRoute extends MonitorRoute {

@@ -24,7 +24,8 @@ import java.util.Scanner;
 import java.util.Set;
 
 /**
- *
+ * Utils to read files and check some circumstances.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class FileUtils {

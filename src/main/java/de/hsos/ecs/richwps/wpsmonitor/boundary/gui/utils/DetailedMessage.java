@@ -23,7 +23,8 @@ import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 
 /**
- *
+ * A JPanel which reprasentated a detailed message in a textarea.
+ * 
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class DetailedMessage extends JPanel {
