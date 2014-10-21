@@ -37,8 +37,8 @@ See the [Project Site](http://fruchuxs.github.io/RichWPS-Monitor/) for Releases 
 | monitorcontrol.setTestRequest           | WpsProcessEntity  |
 | monitorcontrol.createAndScheduleProcess | WpsProcessEntity  |
 | monitorcontrol.createWps                | WpsEntity         |  
-| monitorcontrol.deleteTrigger            | TriggerKey        |
-| monitorcontrol.saveTrigger              | TriggerKey        |
+| monitorcontrol.deleteTrigger            | TriggerConfig     |
+| monitorcontrol.saveTrigger              | TriggerConfig     |
 
 ### Events triggered by JobExecutedHandlerThread
 
