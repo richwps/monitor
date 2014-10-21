@@ -77,9 +77,9 @@ public class MonitorControlImpl implements MonitorControl {
         this.wpsDaoFactory = Validate.notNull(wpsDao, "wpsDao");
         this.wpsProcessDaoFactory = Validate.notNull(wpsProcessDao, "wpsProcessDao");
         this.eventHandler = Validate.notNull(eventHandler, "eventHandler");
-        
+
         this.validator = new MonitorControlValidator(3L, 255L);
-        
+
         initMonitorControlEvents();
     }
 
@@ -108,7 +108,7 @@ public class MonitorControlImpl implements MonitorControl {
     @Override
     public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, TriggerConfig config) {
         validator.validateStringParam(wpsIdentifier, processIdentifier);
-        
+
         TriggerConfig newConfig = null;
         try {
             if (isProcessExists(wpsIdentifier, processIdentifier)) {
@@ -132,7 +132,7 @@ public class MonitorControlImpl implements MonitorControl {
     @Override
     public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier) {
         validator.validateStringParam(wpsIdentifier, processIdentifier);
-        
+
         JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
         List<TriggerConfig> result = new ArrayList<>();
         try {
@@ -175,12 +175,32 @@ public class MonitorControlImpl implements MonitorControl {
         Boolean result = false;
 
         try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            checkEndpointEqual(wpsDao.getAll(), uri);
+
             result = wpsDao.persist(wps);
 
             eventHandler
                     .fireEvent(new MonitorEvent("monitorcontrol.createWps", wps));
         } catch (CreateException ex) {
             throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+
+        return result;
+    }
+
+    private void checkEndpointEqual(final List<WpsEntity> elements, final URI uri) {
+        if (isWpsEndpoindAlreadyExists(elements, uri)) {
+            throw new IllegalArgumentException("A WPS Server with the same URI already exists.");
+        }
+    }
+
+    private Boolean isWpsEndpoindAlreadyExists(final List<WpsEntity> elements, final URI uri) {
+        Boolean result = false;
+
+        for (WpsEntity e : elements) {
+            if (e.getUri().equals(uri)) {
+                result = true;
+            }
         }
 
         return result;
@@ -211,7 +231,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     private void scheduleProcess(final WpsProcessEntity processEntity) {
         validator.validateProcessEntityDeep(processEntity);
-        
+
         try {
             schedulerControl.addWpsAsJob(processEntity);
 
@@ -258,6 +278,8 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            checkEndpointEqual(wpsDao.getAll(), newUri);
+            
             wps.setIdentifier(newWpsIdentifier);
             wps.setUri(newUri);
 
@@ -306,7 +328,7 @@ public class MonitorControlImpl implements MonitorControl {
 
     private void removeWpsJob(final WpsEntity wpsEntity) {
         validator.validateWpsEntity(wpsEntity);
-        
+
         try {
             schedulerControl
                     .removeWpsJobs(wpsEntity.getIdentifier());
@@ -691,7 +713,7 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     private Boolean isWpsExists(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity); 
+        validator.validateWpsEntity(wpsEntity);
 
         return isWpsExists(wpsEntity.getIdentifier());
     }
