@@ -63,10 +63,10 @@ public class ResponseMetric extends QosMetric {
             }
         }
 
-        if (!getEntities().isEmpty()) {
+        if (!getEntities().isEmpty() && !averageList.isEmpty()) {
             median = computeMedian(averageList.toArray(new Integer[averageList.size()]));
         } else {
-            return "No Data available";
+            return "No Data for metric calculation are available";
         }
 
         Map<String, Object> data = new HashMap<>();
