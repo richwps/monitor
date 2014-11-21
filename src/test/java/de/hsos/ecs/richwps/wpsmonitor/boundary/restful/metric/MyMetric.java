@@ -15,6 +15,10 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.units.MeasureUnit;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -22,7 +26,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 public class MyMetric extends QosMetric {
 
     @Override
-    public Object calculate() {
+    public Map<String, MeasuredValue> calculate() {
         ExampleQos q;
         Integer sum = 0;
 
@@ -30,8 +34,11 @@ public class MyMetric extends QosMetric {
             q = e.getEntity();
             sum += q.getValue();
         }
-
-        return new MyPresentate(sum);
+        
+        Map<String, MeasuredValue> r = new HashMap<>();
+        r.put("presentate", new MeasuredValue(sum, MeasureUnit.BYTE));
+        
+        return r;
     }
 
     @Override

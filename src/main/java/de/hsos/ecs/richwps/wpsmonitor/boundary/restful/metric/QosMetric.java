@@ -18,6 +18,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Absract QosMetric, which will be filled up with {@link AbstractQosEntity},
@@ -58,7 +59,7 @@ public abstract class QosMetric {
      *
      * @return Object which can be displayed over toString or JAXB or JSON ..
      */
-    public abstract Object calculate();
+    public abstract Map<String, MeasuredValue> calculate();
 
     /**
      * Gets the name of the metric.

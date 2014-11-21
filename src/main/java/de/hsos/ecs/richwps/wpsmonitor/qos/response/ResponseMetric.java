@@ -15,8 +15,10 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.qos.response;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.MeasuredValue;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.Measurement;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.units.MeasureUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,8 +34,8 @@ import java.util.Map;
 public class ResponseMetric extends QosMetric {
 
     @Override
-    public Object calculate() {
-        Integer worst = null, best = null;
+    public Map<String, MeasuredValue> calculate() {
+        Double worst = null, best = null;
         Double median;
 
         List<Integer> averageList = new ArrayList<>();
@@ -44,19 +46,19 @@ public class ResponseMetric extends QosMetric {
 
             if (compare != null) {
                 if (worst == null) {
-                    worst = 0;
+                    worst = 0.;
                 }
 
                 if (best == null) {
-                    best = compare;
+                    best = compare * 1.0;
                 }
 
                 if (compare > worst) {
-                    worst = compare;
+                    worst = compare * 1.0;
                 }
 
                 if (compare < best) {
-                    best = compare;
+                    best = compare * 1.0;
                 }
 
                 averageList.add(compare);
@@ -66,13 +68,13 @@ public class ResponseMetric extends QosMetric {
         if (!getEntities().isEmpty() && !averageList.isEmpty()) {
             median = computeMedian(averageList.toArray(new Integer[averageList.size()]));
         } else {
-            return "No Data for metric calculation are available";
+            return null;
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("median", median);
-        data.put("worst", worst);
-        data.put("best", best);
+        Map<String, MeasuredValue> data = new HashMap<>();
+        data.put("median", new MeasuredValue(median / 1000, MeasureUnit.SECOND));
+        data.put("worst", new MeasuredValue(worst / 1000, MeasureUnit.SECOND));
+        data.put("best", new MeasuredValue(best / 1000, MeasureUnit.SECOND));
 
         return data;
     }

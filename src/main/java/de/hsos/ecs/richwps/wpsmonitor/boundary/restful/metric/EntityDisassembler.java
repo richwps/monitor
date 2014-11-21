@@ -115,11 +115,12 @@ public class EntityDisassembler {
                 Measurement measurement = new Measurement(abstractQosEntity, measuredDataEntity.getCreateTime());
                 // if converters is null, use defaultConverter
                 if (metrics == null || !metrics.containsKey(converterEntityIndex)) {
-                    if (!finalMetrics.containsKey(noConverterIndex)) {
+                    // TODO fix this
+                    /*if (!finalMetrics.containsKey(noConverterIndex)) {
                         finalMetrics.put(noConverterIndex, getDummyMetric());
                     }
 
-                    finalMetrics.get(noConverterIndex).add(measurement);
+                    finalMetrics.get(noConverterIndex).add(measurement);*/ 
                 } else {
 
                     // assign to the specific converter
@@ -136,20 +137,6 @@ public class EntityDisassembler {
         return finalMetrics;
     }
 
-    private QosMetric getDummyMetric() {
-        return new QosMetric() {
-
-            @Override
-            public Object calculate() {
-                return getEntities();
-            }
-
-            @Override
-            public String getName() {
-                return noConverterIndex;
-            }
-        };
-    }
 
     /**
      * Creates new instances of the entity converters.

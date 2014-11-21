@@ -15,7 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import com.google.gson.Gson;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.units.MeasureUnit;
 
 /**
@@ -42,14 +41,5 @@ public class MeasuredValue {
     @Override
     public String toString() {
         return value.toString() + measureUnit.toString();
-    }
-    
-    public static void main(String[] args) {
-        MeasureUnit measureUnit = new MeasureUnit(MeasureUnit.Prefix.MILLI, MeasureUnit.Unit.SECOND);
-        MeasuredValue value = new MeasuredValue(2.3, measureUnit);
-        Gson g = new Gson();
-        
-        System.out.println(value);
-        System.out.println(g.toJson(value));
     }
 }
