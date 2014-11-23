@@ -143,22 +143,6 @@ public class Application {
                         return new ListMeasurementRoute();
                     }
                 })
-                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
-                    @Override
-                    public MonitorRoute create() throws CreateException {
-                        // Alias for the ListMeasurementRoute
-                        // /measurement/wps/:wps/process/:process
-                        return new ListMeasurementAllAliasRoute();
-                    }
-                })
-                .addStatelessRoute(HttpOperation.GET, new Factory<MonitorRoute>() {
-                    @Override
-                    public MonitorRoute create() throws CreateException {
-                        // Alias for the ListMeasurementRoute
-                        // /measurement/wps/:wps/process/:process/count/:count
-                        return new ListMeasurementNoMetricsAliasRoute();
-                    }
-                })
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 

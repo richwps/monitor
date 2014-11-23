@@ -78,8 +78,10 @@ public class ListMeasurementRoute extends MonitorRoute {
                     case "values":
                         toPresentate = getRaw(measuredData);
                         break;
-                    default:
+                    case "both":
                         toPresentate = getRawAndMetrics(measuredData);
+                    default:
+                        toPresentate = getMetrics(measuredData);
                         break;
                 }
             }
