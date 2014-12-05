@@ -176,11 +176,6 @@
             <version>1.4.7</version>
         </dependency>
         <dependency>
-            <groupId>de.hsos.richwps.sp</groupId>
-            <artifactId>SemanticProxyClient</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
@@ -207,8 +202,13 @@
             <artifactId>batik-xml</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>de.hsos.richwps.sp</groupId>
+            <artifactId>SemanticProxyClient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-    <properties>
+    <properties> 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>

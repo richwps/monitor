@@ -22,13 +22,13 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
 import de.hsos.richwps.sp.client.CommunicationException;
 import de.hsos.richwps.sp.client.InternalSPException;
+import de.hsos.richwps.sp.client.BadRequestException;
 import de.hsos.richwps.sp.client.RDFException;
-import de.hsos.richwps.sp.client.ResourceNotFoundException;
-import de.hsos.richwps.sp.client.wps.Network;
-import de.hsos.richwps.sp.client.wps.Process;
-import de.hsos.richwps.sp.client.wps.SPClient;
-import de.hsos.richwps.sp.client.wps.Vocabulary;
-import de.hsos.richwps.sp.client.wps.WPS;
+import de.hsos.richwps.sp.client.ows.SPClient;
+import de.hsos.richwps.sp.client.ows.Vocabulary;
+import de.hsos.richwps.sp.client.ows.gettypes.Network;
+import de.hsos.richwps.sp.client.ows.gettypes.WPS;
+import de.hsos.richwps.sp.client.ows.gettypes.Process;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,8 +102,8 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
                 WpsDescription wpsDescription = new WpsDescription(wpsIdentifier, uri, processes);
 
                 result.add(wpsDescription);
-            }
-        } catch (ResourceNotFoundException | InternalSPException | CommunicationException | RDFException | URISyntaxException ex) {
+            }     
+        } catch (Exception ex) {
             throw new DataSourceException("Exception at getWpsList-method implementation of SemanticProxy-Client.", ex);
         }
 
