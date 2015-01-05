@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.client;
 
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientCreateException;
 import com.google.gson.Gson;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.HttpException;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.WpsMonitorRequester;

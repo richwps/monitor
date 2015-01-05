@@ -26,6 +26,6 @@ import java.net.MalformedURLException;
 public class ResourceConverter {
 
     public static WpsResource WpsEntityToResource(final WpsEntity entity) {
-        return new WpsResource(entity.getUri(), entity.getIdentifier());
+        return new WpsResource(entity.getEndpoint(), entity.getId());
     }
 }

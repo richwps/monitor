@@ -21,7 +21,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 
-
 /**
  * Entity for WPS.
  *
@@ -31,41 +30,30 @@ public class WpsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String identifier;
 
-    private URL route;
+    private URL endpoint;
 
     public WpsEntity() {
     }
 
-    public WpsEntity(String identifier, URL route) {
-        this.identifier = identifier;
-        this.route = route;
+    public WpsEntity(final URL endpoint) {
+        this.endpoint = endpoint;
     }
 
-    public WpsEntity(String identifier, String route) throws MalformedURLException, URISyntaxException {
-        this.identifier = identifier;
-        this.setUri(route);
+    public WpsEntity(final String endpoint) throws MalformedURLException, URISyntaxException {
+        this.setEndpoint(endpoint);
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public URL getEndpoint() {
+        return endpoint;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setEndpoint(final URL route) {
+        this.endpoint = route;
     }
 
-    public URL getUri() {
-        return route;
-    }
-
-    public void setUri(URL route) {
-        this.route = route;
-    }
-
-    public final void setUri(String route) throws MalformedURLException, URISyntaxException {
-        this.route = new URL(route);;
+    public final void setEndpoint(final String route) throws MalformedURLException, URISyntaxException {
+        this.endpoint = new URL(route);
     }
 
     @Override
@@ -76,7 +64,7 @@ public class WpsEntity implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -91,12 +79,13 @@ public class WpsEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "WpsEntity{" + "identifier=" + identifier + ", route=" + route + '}';
+        return "WpsEntity{" + "id=" + id + ", route=" + endpoint + '}';
     }
+
 }

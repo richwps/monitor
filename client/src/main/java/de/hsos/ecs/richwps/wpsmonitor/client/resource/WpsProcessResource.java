@@ -59,4 +59,9 @@ public class WpsProcessResource {
     public WpsResource getWpsResource() {
         return wpsResource;
     }
+
+    @Override
+    public String toString() {
+        return "WpsProcessResource{" + "wpsResource=" + wpsResource + ", processIdentifier=" + processIdentifier + ", metrics=" + metrics + '}';
+    }
 }

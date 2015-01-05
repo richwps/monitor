@@ -35,7 +35,6 @@ public class WpsMonitorJsonRequester {
     private final static String MEASUREMENT_RESOURCE = "measurement";
     private final static String WPS_RESOURCE = "wps";
     private final static String WPS_PROCESS_RESOURCE = "process";
-    private final static String DISPLAY_OPTION = "display";
     private final static String COUNT_OPTION = "count";
 
     public static String getJson(final URL endPoint) throws HttpException {
@@ -46,7 +45,9 @@ public class WpsMonitorJsonRequester {
             connection.setRequestMethod(REQUEST_METHOD);
             connection.setRequestProperty("Accept", MIME_TYPE);
 
-            if (connection.getResponseCode() != 200) {
+            if(connection.getResponseCode() == 404) {
+                return null;
+            } else if (connection.getResponseCode() != 200) {
                 throw new HttpException("Request failed: HTTP Error Code was: " + connection.getResponseCode());
             }
 
@@ -70,20 +71,18 @@ public class WpsMonitorJsonRequester {
         return result;
     }
 
-    public static URL buildWpsProcessMetricsURL(final URL monitorEndpoint, final String wpsIdentifier,
+    public static URL buildWpsProcessMetricsURL(final URL monitorEndpoint, final Long wpsId,
             final String wpsProcessIdentifier, final Integer count)
             throws HttpException {
         
         try {
             String buildUrl = concatUrlStr(new String[] {
                 WPS_RESOURCE,
-                wpsIdentifier,
+                wpsId.toString(),
                 WPS_PROCESS_RESOURCE,
                 wpsProcessIdentifier,
                 COUNT_OPTION,
-                count.toString(),
-                DISPLAY_OPTION,
-                "metric"
+                count.toString()
             });
             
             return new URL(monitorEndpoint, buildUrl);

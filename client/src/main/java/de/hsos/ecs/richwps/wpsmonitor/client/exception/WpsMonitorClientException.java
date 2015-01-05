@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hsos.ecs.richwps.wpsmonitor.client;
+package de.hsos.ecs.richwps.wpsmonitor.client.exception;
 
 /**
+ * WpsMonitorClientException capsule any Exceptions, e.g. HttpException.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class WpsMonitorClientCreateException extends Exception {
+public class WpsMonitorClientException extends Exception {
 
-    public WpsMonitorClientCreateException(String string, Throwable thrwbl) {
-        super(string, thrwbl);
+    public WpsMonitorClientException(final Throwable cause) {
+        super(cause);
     }
-    
+
+    public WpsMonitorClientException(final String msg, final Throwable cause) {
+        super(msg, cause);
+    }
+
+    public WpsMonitorClientException(final String msg) {
+        super(msg);
+    }
 }

@@ -26,31 +26,30 @@ import org.apache.commons.lang.Validate;
 public class WpsResource {
 
     private final URL wpsEndPoint;
-    private final String wpsIdentifier;
+    private final Long wpsId;
 
     /**
      * Creates a new WpsResource instance. The WpsIdentifier String is used by
      * the WpsMonitor internally.
      *
      * @param wpsEndPoint URL of the WPS-Server
-     * @param wpsIdentifier WPS Identifier which is used by the WpsMonitor
-     * internally and must be registred by each entry in the Monitor. It's not
-     * necessary for the use of the WpsMonitor Client.
+     * @param wpsId WPS Id which is used by the WpsMonitor
+     * internally.
      */
-    public WpsResource(final URL wpsEndPoint, final String wpsIdentifier) {
+    public WpsResource(final URL wpsEndPoint, final Long wpsId) {
         Validate.notNull(wpsEndPoint);
-        Validate.notNull(wpsIdentifier);
-        Validate.notEmpty(wpsIdentifier);
+        Validate.notNull(wpsId);
 
         this.wpsEndPoint = wpsEndPoint;
-        this.wpsIdentifier = wpsIdentifier;
+        this.wpsId = wpsId;
     }
 
     public URL getWpsEndPoint() {
         return wpsEndPoint;
     }
 
-    public String getWpsIdentifier() {
-        return wpsIdentifier;
+    public Long getWpsId() {
+        return wpsId;
     }
+    
 }

@@ -15,6 +15,9 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.client;
 
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientException;
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsProcessNotFoundException;
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsNotFoundException;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.HttpException;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.WpsMonitorRequester;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
@@ -71,7 +74,7 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
             List<WpsEntity> wpsList = requester.getWpsList();
 
             for (final WpsEntity entity : wpsList) {
-                wpsContext.put(entity.getUri(), ResourceConverter.WpsEntityToResource(entity));
+                wpsContext.put(entity.getEndpoint(), ResourceConverter.WpsEntityToResource(entity));
             }
         }
     }
@@ -100,7 +103,13 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
     public WpsProcessResource getWpsProcess(final WpsResource wpsResource, final String wpsProcessIdentifier, final Integer consider)
             throws WpsMonitorClientException {
         try {
-            return requester.getProcess(wpsResource, wpsProcessIdentifier, consider);
+            WpsProcessResource process = requester.getProcess(wpsResource, wpsProcessIdentifier, consider);
+            
+            if(process == null) {
+                throw new WpsMonitorClientWpsProcessNotFoundException(wpsProcessIdentifier, wpsResource.getWpsEndPoint());
+            }
+            
+            return process;
         } catch (HttpException ex) {
             throw new WpsMonitorClientException("Can't Request Process metrics.", ex);
         }
@@ -120,7 +129,11 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
         try {
             initContext(forceRefresh);
             WpsResource result = wpsContext.get(wpsEndPoint);
-
+            
+            if(result == null) {
+                throw new WpsMonitorClientWpsNotFoundException(wpsEndPoint);
+            }
+            
             return result;
         } catch (HttpException ex) {
             throw new WpsMonitorClientException("Can't initalize WpsContent.", ex);
@@ -140,7 +153,7 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
             initContext(forceRefresh);
             return new ArrayList<>(wpsContext.values());
         } catch (HttpException ex) {
-            throw new WpsMonitorClientException("Can't request List of WPS.", ex);
+            throw new WpsMonitorClientException("Can't request List of WPS. Maybe the Monitor is offline (used endpoint: " + monitorEndpoint.toString() + ")", ex);
         }
     }
 

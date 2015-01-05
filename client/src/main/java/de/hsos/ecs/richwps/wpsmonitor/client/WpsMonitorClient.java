@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.client;
 
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientException;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;
 import java.net.URL;

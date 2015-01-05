@@ -48,29 +48,39 @@ public class WpsMonitorRequester {
         this.monitorEndpoint = monitorEndpoint;
         this.gson = gson;
 
-        this.wpsUrl = WpsMonitorJsonRequester.buildWpsURL(monitorEndpoint);
+        this.wpsUrl = buildWpsUrl();
     }
 
     public List<WpsEntity> getWpsList() throws HttpException {
-        String wpsListJson = WpsMonitorJsonRequester.getJson(wpsUrl);
-
+        String wpsListJson = getJson(wpsUrl);
+        
         return gson.fromJson(wpsListJson, new TypeToken<List<WpsEntity>>() {
         }.getType());
     }
-
+    
     public WpsProcessResource getProcess(final WpsResource wpsResource, final String wpsProcessIdentifier, final Integer considerMeasuredValue) throws HttpException {
+        Validate.notNull(wpsResource, "wpsResource");
+        Validate.notNull(wpsProcessIdentifier, "wpsProcessIdentifier");
+        Validate.notNull(considerMeasuredValue, "considerMeasuredValue");
+        
         /* Build REST endpoint URL and get the JSON Data */
-        URL processURL = WpsMonitorJsonRequester.buildWpsProcessMetricsURL(monitorEndpoint,
-                wpsResource.getWpsIdentifier(), wpsProcessIdentifier, considerMeasuredValue);
-        String metricJson = WpsMonitorJsonRequester.getJson(processURL);
+        URL processURL = buildWpsProcessMetricsUrl(wpsResource.getWpsId(), wpsProcessIdentifier, considerMeasuredValue);
+        String metricJson = getJson(processURL);
+        
+        WpsProcessResource result = null;
 
-        /* Restore object structure */
-        Map<String, Map<String, MeasuredValue>> fromJson = gson.fromJson(metricJson, new TypeToken<Map<String, Map<String, MeasuredValue>>>() {
-        }.getType());
-        Map<String, WpsMetricResource> metrics = getMetrics(fromJson);
+        if (metricJson != null && !metricJson.isEmpty()) {
+
+            /* Restore object structure */
+            Map<String, Map<String, MeasuredValue>> fromJson = gson.fromJson(metricJson, new TypeToken<Map<String, Map<String, MeasuredValue>>>() {
+            }.getType());
+            Map<String, WpsMetricResource> metrics = getMetrics(fromJson);
+            
+            result = new WpsProcessResource(wpsResource, wpsProcessIdentifier, metrics);
+        }
 
         /* Return new WpsProcessResource instance */
-        return new WpsProcessResource(wpsResource, wpsProcessIdentifier, metrics);
+        return result;
     }
 
     private Map<String, WpsMetricResource> getMetrics(final Map<String, Map<String, MeasuredValue>> metricsMap) {
@@ -90,5 +100,20 @@ public class WpsMonitorRequester {
 
     public Gson getGson() {
         return gson;
+    }
+    
+    /*
+     * Encapsulate Static helpers
+     */
+    private String getJson(final URL endpoint) throws HttpException {
+        return WpsMonitorJsonRequester.getJson(endpoint);
+    }
+    
+    private URL buildWpsUrl() throws HttpException {
+        return WpsMonitorJsonRequester.buildWpsURL(monitorEndpoint);
+    }
+    
+    private URL buildWpsProcessMetricsUrl(final Long wpsId, final String processIdentifier, final Integer considerMeasuredValue) throws HttpException {
+        return WpsMonitorJsonRequester.buildWpsProcessMetricsURL(monitorEndpoint, wpsId, processIdentifier, considerMeasuredValue);
     }
 }
