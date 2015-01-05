@@ -1,5 +1,7 @@
-/derby.log
+/monitor/derby.log
 /monitor.properties
-/logs/
+/monitor/logs/
+/monitor/Database/
+/monitor/target/
+/client/target/
 /*~
-/Database/
