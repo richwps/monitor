@@ -84,7 +84,7 @@ WpsMonitorClient wpsMonitorClient = new WpsMonitorClientFactory()
 ### Get Metrics 
 You can use the `getWpsProcess(wpsEndpoint : URL, wpsProcessIdentifier : String) : WpsProcessResource` method to get metrics from the monitor.
 
-e.h.
+e.g.
 ``` java 
 WpsProcessResource wpsProcess = client.getWpsProcess(
 		new URL("http://example.com/WebProcessingService", 
