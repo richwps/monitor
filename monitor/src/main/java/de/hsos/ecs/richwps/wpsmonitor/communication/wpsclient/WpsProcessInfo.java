@@ -16,7 +16,7 @@
 package de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient;
 
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.net.URI;
+import java.net.URL;
 
 /**
  * Contains all necessary data to call a Wps-Process.
@@ -27,9 +27,9 @@ import java.net.URI;
 public class WpsProcessInfo {
 
     /**
-     * URI of the WPS-Server.
+     * URL of the WPS-Server.
      */
-    private URI wpsUri;
+    private URL wpsEndpoint;
 
     /**
      * Identifier of the Process.
@@ -39,20 +39,20 @@ public class WpsProcessInfo {
     /**
      * Constructor.
      *
-     * @param wpsUri URI of the WPS-Server
+     * @param wpsEndpoint Endpoint of the WPS-Server
      * @param processIdentifier Identifier of the Process
      */
-    public WpsProcessInfo(final URI wpsUri, final String processIdentifier) {
-        this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
+    public WpsProcessInfo(final URL wpsEndpoint, final String processIdentifier) {
+        this.wpsEndpoint = Validate.notNull(wpsEndpoint, "wpsUri");
         this.processIdentifier = Validate.notNull(processIdentifier, "processIdentifier");
     }
 
-    public URI getWpsUri() {
-        return wpsUri;
+    public URL getWpsEndpoint() {
+        return wpsEndpoint;
     }
 
-    public void setWpsUri(URI wpsUri) {
-        this.wpsUri = wpsUri;
+    public void setWpsEndpoint(final URL wpsUrl) {
+        this.wpsEndpoint = wpsUrl;
     }
 
     public String getProcessIdentifier() {

@@ -134,20 +134,20 @@ public class MeasureJobListener implements JobListener {
         }
     }
 
-    private void handleCantMeasure(WpsProcessDataAccess wpsProcessDao, Scheduler scheduler,
-            WpsProcessEntity wpsProcess) {
+    private void handleCantMeasure(final WpsProcessDataAccess wpsProcessDao, final Scheduler scheduler,
+            final WpsProcessEntity wpsProcess) {
 
-        String wpsIdentifier = wpsProcess.getWps().getIdentifier();
+        Long wpsId = wpsProcess.getWps().getId();
         String processIdentifier = wpsProcess.getIdentifier();
 
-        WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        WpsProcessEntity find = wpsProcessDao.find(wpsId, processIdentifier);
 
         if (find != null && !find.isWpsException()) {
             wpsProcess.setWpsException(true);
             wpsProcessDao.update(wpsProcess);
 
             try {
-                scheduler.pauseJob(new JobKey(wpsIdentifier, processIdentifier));
+                scheduler.pauseJob(new JobKey(wpsId.toString(), processIdentifier));
 
                 eventHandler
                         .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", wpsProcess));

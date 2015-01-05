@@ -11,7 +11,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,11 +29,12 @@ import javax.persistence.NamedQuery;
      * Selects all wps entities.
      */
     @NamedQuery(name = "wps.getAll", query = "SELECT t FROM WpsEntity t"),
-
+    
     /**
-     * Selects a specific wps that matches the given identifier parameter.
+     * Selects an WPS entry by the given endpoint parameter
      */
-    @NamedQuery(name = "wps.findByIdentifier", query = "SELECT t FROM WpsEntity t WHERE t.identifier = :identifier"),})
+    @NamedQuery(name = "wps.findByEndpoint", query = "SELECT t FROM WpsEntity t WHERE t.endpoint = :endpoint"),
+})
 public class WpsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,46 +42,39 @@ public class WpsEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(unique = true)
-    private String identifier;
-
-    private URI route;
+    private String endpoint;
 
     public WpsEntity() {
     }
 
-    public WpsEntity(String identifier, URI route) {
-        this.identifier = identifier;
-        this.route = route;
+    public WpsEntity(final URL endpoint) {
+        this.setEndpoint(endpoint);
     }
 
-    public WpsEntity(String identifier, String route) throws MalformedURLException, URISyntaxException {
-        this.identifier = identifier;
-        this.setUri(route);
+    public WpsEntity(final String endpoint) 
+            throws MalformedURLException {
+        this.endpoint = new URL(endpoint).toString();
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public URL getEndpoint() {
+        URL realEndpoint = null;
+        
+        try {
+            realEndpoint = new URL(endpoint);
+        } catch (MalformedURLException ex) {
+            // this should never happens
+        }
+        
+        return realEndpoint;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setEndpoint(final URL endpoint) {
+        this.endpoint = endpoint.toString();
     }
-
-    public URI getUri() {
-        return route;
-    }
-
-    public void setUri(URI route) {
-        this.route = route;
-    }
-
-    public final void setUri(String route) throws MalformedURLException, URISyntaxException {
-        URL url = new URL(route);
-        URI uri = url.toURI();
-
-        this.route = uri;
+    
+    public void setEndpoint(final String endpoint) 
+            throws MalformedURLException {
+        this.setEndpoint(new URL(endpoint));
     }
 
     @Override
@@ -113,6 +106,7 @@ public class WpsEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "WpsEntity{" + "identifier=" + identifier + ", route=" + route + '}';
+        return "WpsEntity{" + "id=" + id + ", endpoint=" + endpoint + '}';
     }
+
 }

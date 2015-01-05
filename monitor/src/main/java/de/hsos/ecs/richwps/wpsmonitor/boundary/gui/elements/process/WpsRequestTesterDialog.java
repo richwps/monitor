@@ -104,7 +104,7 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
     }
 
     private void init() {
-        setTitle("Test Request on " + process.getWps().getUri().toString());
+        setTitle("Test Request on " + process.getWps().getEndpoint().toString());
 
         requestTextarea.setEditorKit(new XMLEditorKit());
         responseTextarea.setEditorKit(new XMLEditorKit());
@@ -148,7 +148,7 @@ public class WpsRequestTesterDialog extends javax.swing.JDialog {
     }
 
     private WpsRequest getRequest() {
-        WpsProcessInfo info = new WpsProcessInfo(process.getWps().getUri(), process.getIdentifier());
+        WpsProcessInfo info = new WpsProcessInfo(process.getWps().getEndpoint(), process.getIdentifier());
 
         return new WpsRequest(requestTextarea.getText(), info);
     }

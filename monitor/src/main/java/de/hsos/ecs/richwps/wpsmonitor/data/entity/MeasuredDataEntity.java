@@ -43,35 +43,62 @@ import javax.persistence.Temporal;
     /**
      * Selects all MeasuredDataEntity objects by process and wps identifier.
      */
-    @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :identifier AND "
-            + "t.process.wps.identifier = :wpsIdentifier "
+    @NamedQuery(name = "qos.getQosByProcess", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :processIdentifier AND "
+            + "t.process.wps.id = :wpsId "
+            + "ORDER BY t.createTime DESC"),
+    
+    /**
+     * Selects all MeasuredDataEntity objects by process and wps identifier.
+     */
+    @NamedQuery(name = "qos.getQosByProcessEndpoint", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.identifier = :processIdentifier "
+            + "AND t.process.wps.endpoint = :endpoint "
             + "ORDER BY t.createTime DESC"),
 
     /**
      * Selects all MeasuredDataEntity objects by wps identifier.
      */
-    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :identifier ORDER BY t.createTime DESC"),
-
-    /**
-     * Deletes all MeasuredDataEntity instances which are associated by the
-     * given :wpsIdentifier parameter.
+    @NamedQuery(name = "qos.getQosByWps", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.id = :wpsId ORDER BY t.createTime DESC"),
+    
+     /**
+     * Selects all MeasuredDataEntity objects by wps identifier.
      */
-    @NamedQuery(name = "qos.deleteByWps", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.wps.identifier = :wpsIdentifier"),
+    @NamedQuery(name = "qos.getQosByWpsEndpoint", query = "SELECT t FROM MeasuredDataEntity t WHERE t.process.wps.endpoint = :endpoint ORDER BY t.createTime DESC"),
 
     /**
      * Deletes all MeasuredDataEntity instances which are associated by the
-     * given :wpsIdentifier and :processIdentifier parameters.
+     * given :wpsId parameter.
+     */
+    @NamedQuery(name = "qos.deleteByWps", query = "DELETE FROM MeasuredDataEntity t WHERE t.process.wps.id = :wpsId"),
+
+    /**
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsId and :processIdentifier parameters.
      */
     @NamedQuery(name = "qos.deleteByWpsProcess", query = "DELETE FROM MeasuredDataEntity t WHERE "
-            + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier"),
+            + "t.process.identifier = :processIdentifier AND t.process.wps.id = :wpsId"),
+    
+    /**
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsId and :processIdentifier parameters.
+     */
+    @NamedQuery(name = "qos.deleteByWpsProcessEndpoint", query = "DELETE FROM MeasuredDataEntity t WHERE "
+            + "t.process.identifier = :processIdentifier AND t.process.wps.endpoint = :endpoint"),
 
     /**
      * Deletes all MeasuredDataEntity instances which are associated by the
-     * given :wpsIdentifier and :processIdentifier parameters and are older as
+     * given :wpsId and :processIdentifier parameters and are older as
      * :date.
      */
     @NamedQuery(name = "qos.deleteByWpsProcessOlderAs", query = "DELETE FROM MeasuredDataEntity t WHERE "
-            + "t.process.identifier = :processIdentifier AND t.process.wps.identifier = :wpsIdentifier AND t.createTime < :date"),
+            + "t.process.identifier = :processIdentifier AND t.process.wps.id = :wpsId AND t.createTime < :date"),
+    
+    /**
+     * Deletes all MeasuredDataEntity instances which are associated by the
+     * given :wpsId and :processIdentifier parameters and are older as
+     * :date.
+     */
+    @NamedQuery(name = "qos.deleteByWpsProcessOlderAsEndpoint", query = "DELETE FROM MeasuredDataEntity t WHERE "
+            + "t.process.identifier = :processIdentifier AND t.process.wps.endpoint = :endpoint AND t.createTime < :date"),
 
     /**
      * Deletes all MeasuredDataEntity instances which are older as :date.

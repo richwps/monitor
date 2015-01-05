@@ -37,9 +37,9 @@ public abstract class QosProbe {
         return measuredData;
     }
 
-    public void setMeasuredData(AbstractQosEntity measuredData) {
+    public void setMeasuredData(final AbstractQosEntity measuredData) {
         this.measuredData = measuredData;
     }
 
-    public abstract void execute(WpsRequest request, WpsResponse response);
+    public abstract void execute(final WpsRequest request, final WpsResponse response);
 }

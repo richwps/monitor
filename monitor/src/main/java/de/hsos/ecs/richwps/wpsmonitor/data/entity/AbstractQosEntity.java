@@ -33,24 +33,38 @@ import javax.persistence.NamedQuery;
 @NamedQueries({
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
-     * given :wpsIdentifier.
+     * given :wpsId.
      */
-    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity q WHERE q.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier)"),
+    @NamedQuery(name = "abstractQos.deleteByWps", query = "DELETE FROM AbstractQosEntity q WHERE q.id IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.id = :wpsId)"),
 
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
-     * given :wpsIdentifier and :processIdentifier.
+     * given :wpsId and :processIdentifier.
      */
     @NamedQuery(name = "abstractQos.deleteByWpsProcess", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
-            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier)"),
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.id = :wpsId AND m.process.identifier = :processIdentifier)"),
+    
+    /**
+     * Deletes all AbstractQosEntity instances which are associated with the
+     * given :wpsId and :processIdentifier.
+     */
+    @NamedQuery(name = "abstractQos.deleteByWpsProcessEndpoint", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.endpoint = :endpoint AND m.process.identifier = :processIdentifier)"),
 
     /**
      * Deletes all AbstractQosEntity instances which are associated with the
-     * given :wpsIdentifier and :processIdentifier and are older as :date.
+     * given :wpsId and :processIdentifier and are older as :date.
      */
     @NamedQuery(name = "abstractQos.deleteByWpsProcessOlderAs", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
-            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.identifier = :wpsIdentifier AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.id = :wpsId AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
 
+    /**
+     * Deletes all AbstractQosEntity instances which are associated with the
+     * given :wpsId and :processIdentifier and are older as :date.
+     */
+    @NamedQuery(name = "abstractQos.deleteByWpsProcessOlderAsEndpoint", query = "DELETE FROM AbstractQosEntity t WHERE t.id "
+            + "IN(SELECT md.id FROM MeasuredDataEntity m JOIN m.data md WHERE m.process.wps.endpoint = :endpoint AND m.process.identifier = :processIdentifier AND m.createTime < :date)"),
+    
     /**
      * Deletes all AbstractQosEntity instances which are older as :date.
      */

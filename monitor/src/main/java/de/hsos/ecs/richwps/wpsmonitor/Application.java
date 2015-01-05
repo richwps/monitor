@@ -22,10 +22,9 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.HttpOperation;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.RestInterface;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.RestInterfaceBuilder;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementAllAliasRoute;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementNoMetricsAliasRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListMeasurementRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessRoute;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessesRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
@@ -144,6 +143,7 @@ public class Application {
                     }
                 })
                 .addRoute(HttpOperation.GET, new ListWpsProcessRoute())
+                .addRoute(HttpOperation.GET, new ListWpsProcessesRoute())
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 
         return restInterface;

@@ -18,29 +18,37 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import spark.Request;
 import spark.Response;
 
 /**
  * Lists all WPS-Processes of registered WPS-Server.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class ListWpsProcessRoute extends MonitorRoute {
 
+    private final static Logger LOG = LogManager.getLogger();
     public ListWpsProcessRoute() {
-        super("/measurement/wps/:wpsidentifier/process");
+        super("/measurement/wps/:wpsid/process");
     }
 
     @Override
-    public Object handle(Request request, Response response) {
+    public Object handle(final Request request, final Response response) {
 
-        String wpsIdentifier = request.params(":wpsidentifier");
+        try {
+            final Long wpsId = Long.parseLong(request.params(":wpsid"));
+            List<WpsProcessEntity> processesOfWps = getMonitorControl().getProcesses(wpsId);
 
-        List<WpsProcessEntity> processesOfWps = getMonitorControl().getProcessesOfWps(wpsIdentifier);
+            response.type(getStrategy().getMimeType());
+            return getStrategy().presentate(processesOfWps);
+        } catch (NumberFormatException ex) {
+            LOG.warn("Can't cast wpsid Parameter to Long.", ex);
+        }
 
-        response.type(getStrategy().getMimeType());
-
-        return getStrategy().presentate(processesOfWps);
+        response.status(404);
+        return null;
     }
 }

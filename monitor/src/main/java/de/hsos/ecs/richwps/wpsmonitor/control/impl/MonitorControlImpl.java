@@ -28,14 +28,16 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
+import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDao;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -53,12 +55,12 @@ public class MonitorControlImpl implements MonitorControl {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private final SchedulerControl schedulerControl;
+    private final MonitorEventHandler eventHandler;
     private final QosDaoFactory qosDaoFactory;
+    private final SchedulerControl schedulerControl;
+    private final MonitorControlValidator validator;
     private final WpsDaoFactory wpsDaoFactory;
     private final WpsProcessDaoFactory wpsProcessDaoFactory;
-    private final MonitorEventHandler eventHandler;
-    private final MonitorControlValidator validator;
 
     /**
      * Constructor.
@@ -83,6 +85,98 @@ public class MonitorControlImpl implements MonitorControl {
         initMonitorControlEvents();
     }
 
+    private void checkEndpointUnique(final List<WpsEntity> wpsEntities, final URL compare) {
+        if (isWpsEndpoindAlreadyExists(wpsEntities, compare)) {
+            throw new IllegalArgumentException("A WPS Server with the same endpoint already exists.");
+        }
+    }
+
+    private JobKey getJobKey(final Long wpsId, final String processIdentifier) {
+        return new JobKey(processIdentifier, wpsId.toString());
+    }
+
+    private JobKey getJobKey(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString(), processIdentifier);
+        
+        WpsEntity wps = getWps(endpoint);
+        JobKey result = null;
+
+        if (wps != null) {
+            result = getJobKey(wps.getId(), processIdentifier);
+        }
+
+        return result;
+    }
+
+    private JobKey getJobKey(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        Long wpsId = processEntity.getWps()
+                .getId();
+        String processIdentifier = processEntity
+                .getIdentifier();
+
+        JobKey result;
+        if (wpsId == null) {
+            result = getJobKey(processEntity.getWps().getEndpoint(), processIdentifier);
+        } else {
+            result = getJobKey(wpsId, processIdentifier);
+        }
+
+        return result;
+    }
+
+    private WpsEntity getWps(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            return wpsDao.find(endpoint);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+    }
+
+    private WpsEntity getWps(final Long wpsId) {
+        Validate.notNull(wpsId, "wpsid");
+
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            return wpsDao.find(wpsId);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+    }
+
+    private WpsProcessEntity getWpsProcessEntity(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString(), processIdentifier);
+
+        WpsProcessEntity result = null;
+
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            result = wpsProcessDao.find(endpoint, processIdentifier);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        }
+
+        return result;
+    }
+
+    private WpsProcessEntity getWpsProcessEntity(final Long wpsId, final String processIdentifier) {
+        validator.validateStringParam(processIdentifier);
+
+        WpsProcessEntity result = null;
+
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            result = wpsProcessDao.find(wpsId, processIdentifier);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        }
+
+        return result;
+    }
+
     /**
      * Register all necessary events which are fired by the MonitorControlImpl
      */
@@ -105,49 +199,257 @@ public class MonitorControlImpl implements MonitorControl {
         }
     }
 
-    @Override
-    public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, TriggerConfig config) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    private Boolean isWpsEndpoindAlreadyExists(final List<WpsEntity> elements, final URL compare) {
+        Boolean result = false;
 
-        TriggerConfig newConfig = null;
-        try {
-            if (isProcessExists(wpsIdentifier, processIdentifier)) {
-                if (config.getTriggerKey() == null) {
-                    JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-                    newConfig = schedulerControl.addTriggerToJob(jobKey, config);
-                } else {
-                    newConfig = schedulerControl.updateTrigger(config);
-                }
-
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.saveTrigger", config));
+        for (WpsEntity e : elements) {
+            if (e.getEndpoint().equals(compare)) {
+                return true;
             }
-        } catch (SchedulerException ex) {
-            LOG.error("Can't save trigger because of Scheduler Exception.", ex);
         }
 
-        return newConfig;
+        return result;
+    }
+
+    private void removeWpsJob(final WpsEntity wpsEntity) {
+        validator.validateWpsEntity(wpsEntity, true);
+
+        try {
+            schedulerControl
+                    .removeWpsJobs(wpsEntity.getId());
+        } catch (SchedulerException ex) {
+            LOG.error("MonitorControl: {}", ex);
+        }
+    }
+
+    private void scheduleProcess(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        try {
+            schedulerControl.addWpsAsJob(processEntity);
+        } catch (SchedulerException ex) {
+            LOG.warn("MonitorControl: {}", ex);
+        }
     }
 
     @Override
-    public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
 
-        JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-        List<TriggerConfig> result = new ArrayList<>();
-        try {
-            List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
+        if (processEntity.getId() != null && processEntity.getId() > 0) {
+            return createAndScheduleProcess(
+                    processEntity.getWps().getId(),
+                    processEntity.getIdentifier()
+            );
+        } else {
+            return createAndScheduleProcess(
+                    processEntity.getWps().getEndpoint(),
+                    processEntity.getIdentifier()
+            );
+        }
+    }
 
-            for (TriggerKey triggerKey : triggerKeysOfJob) {
-                result.add(schedulerControl.getConfigOfTrigger(triggerKey));
+    @Override
+    public Boolean createAndScheduleProcess(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+        WpsEntity wps = getWps(endpoint);
+
+        return wps != null && createAndScheduleProcess(wps, processIdentifier);
+    }
+
+    @Override
+    public final Boolean createAndScheduleProcess(final Long wpsId, final String processIdentifier) {
+        WpsEntity wps = getWps(wpsId);
+
+        return wps != null && createAndScheduleProcess(wps, processIdentifier);
+    }
+
+    private Boolean createAndScheduleProcess(final WpsEntity wps, final String processIdentifier) {
+
+        validator.validateStringParam(processIdentifier);
+        validator.validateWpsEntity(wps);
+
+        WpsEntity usedWpsEntity = wps;
+
+        if (wps.getId() == null) {
+            if (!createWps(wps)) {
+                throw new IllegalArgumentException("WPS ID was null and the attempt to create a new WPS entry with the given endpoint has failed.");
+            } else {
+                usedWpsEntity = getWps(wps.getEndpoint());
+            }
+        }
+
+        Boolean isPersisted = false;
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            WpsProcessEntity process = new WpsProcessEntity(processIdentifier, usedWpsEntity);
+            isPersisted = wpsProcessDao.persist(process);
+
+            if (isPersisted) {
+                scheduleProcess(process);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", process));
+            }
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        }
+
+        return isPersisted;
+    }
+
+    @Override
+    public Boolean createWps(final WpsEntity wpsEntity) {
+        validator.validateWpsEntity(wpsEntity);
+        return createWps(wpsEntity.getEndpoint());
+    }
+
+    @Override
+    public Boolean createWps(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+
+        WpsEntity wps = new WpsEntity(endpoint);
+        Boolean result = false;
+
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            checkEndpointUnique(wpsDao.getAll(), endpoint);
+            result = wpsDao.persist(wps);
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.createWps", wps));
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void deleteMeasuredData(final Date olderAs) {
+        Validate.notNull(olderAs, "olderAs");
+
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
+            qosDao.deleteAllOlderAs(olderAs);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
+        }
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final URL endpoint, final String processIdentifier) {
+        deleteMeasuredDataOfProcess(endpoint, processIdentifier, null);
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final Long wpsId, final String processIdentifier) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity) {
+        deleteMeasuredDataOfProcess(processEntity, null);
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final URL endpoint, final String processIdentifier, final Date olderAs) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+
+        WpsEntity wps = getWps(endpoint);
+
+        if (wps != null) {
+            deleteMeasuredDataOfProcess(wps.getId(), processIdentifier, olderAs);
+        }
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs) {
+        validator.validateProcessEntity(processEntity);
+
+        final Long wpsId = processEntity.getWps().getId();
+        if (wpsId != null && wpsId > 0) {
+            deleteMeasuredDataOfProcess(
+                    wpsId,
+                    processEntity.getIdentifier(),
+                    olderAs
+            );
+        } else {
+            deleteMeasuredDataOfProcess(
+                    processEntity.getWps().getEndpoint(),
+                    processEntity.getIdentifier(),
+                    olderAs
+            );
+        }
+    }
+
+    @Override
+    public void deleteMeasuredDataOfProcess(final Long wpsId, final String processIdentifier, final Date olderAs) {
+        Validate.notNull(wpsId, "WPS ID");
+        validator.validateStringParam(processIdentifier);
+
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
+            qosDao.deleteByProcess(wpsId, processIdentifier, olderAs);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
+        }
+    }
+
+    @Override
+    public Boolean deleteProcess(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        Boolean deleteable = false;
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            WpsProcessEntity founded = processEntity;
+            WpsEntity wps = processEntity.getWps();
+            Long wpsId = wps.getId();
+
+            // Check the IDS
+            // this is necessary to prevent unecessary DB queries
+            if (processEntity.getId() == null || processEntity.getId() <= 0
+                    || wpsId == null || wpsId <= 0) {
+                if (wpsId != null && wpsId > 0) {
+                    founded = wpsProcessDao.find(wpsId, processEntity.getIdentifier());
+                } else {
+                    founded = wpsProcessDao.find(wps.getEndpoint(), processEntity.getIdentifier());
+                }
             }
 
-            return result;
-        } catch (SchedulerException ex) {
-            LOG.warn("MonitorControl: {}", ex);
+            deleteable = (founded != null);
+            if (deleteable) {
+                JobKey jobKey = getJobKey(founded);
 
-            return null;
+                schedulerControl.removeJob(jobKey);
+                wpsProcessDao.remove(founded);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.deleteProcess", processEntity));
+            }
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        } catch (SchedulerException ex) {
+            LOG.error("Can't delete job of process {}.", processEntity, ex);
         }
+
+        return deleteable;
+    }
+
+    @Override
+    public Boolean deleteProcess(final Long wpsId, final String processIdentifier) {
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+
+        return wpsProcessEntity != null && deleteProcess(wpsProcessEntity);
+    }
+
+    @Override
+    public Boolean deleteProcess(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+        
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        return wpsProcessEntity != null && deleteProcess(wpsProcessEntity);
     }
 
     @Override
@@ -167,134 +469,20 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public Boolean createWps(final String wpsIdentifier, final URI uri) {
-        validator.validateStringParam(wpsIdentifier);
-        Validate.notNull(uri, "uri");
+    public Boolean deleteWps(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        WpsEntity wps = getWps(endpoint);
 
-        WpsEntity wps = new WpsEntity(wpsIdentifier, uri);
-        Boolean result = false;
-
-        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
-            checkEndpointEqual(wpsDao.getAll(), uri);
-
-            result = wpsDao.persist(wps);
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.createWps", wps));
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
-        }
-
-        return result;
-    }
-
-    private void checkEndpointEqual(final List<WpsEntity> elements, final URI uri) {
-        if (isWpsEndpoindAlreadyExists(elements, uri)) {
-            throw new IllegalArgumentException("A WPS Server with the same URI already exists.");
-        }
-    }
-
-    private Boolean isWpsEndpoindAlreadyExists(final List<WpsEntity> elements, final URI uri) {
-        Boolean result = false;
-
-        for (WpsEntity e : elements) {
-            if (e.getUri().equals(uri)) {
-                result = true;
-            }
-        }
-
-        return result;
+        return wps != null && deleteWps(wps);
     }
 
     @Override
-    public Boolean createAndScheduleProcess(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public Boolean deleteWps(final Long wpsId) {
+        WpsEntity wps = getWps(wpsId);
 
-        Boolean isPersisted = false;
-        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-
-            if (isWpsExists(wpsIdentifier) && !isProcessExists(wpsIdentifier, processIdentifier)) {
-
-                WpsProcessEntity process = new WpsProcessEntity(processIdentifier, getWps(wpsIdentifier));
-                isPersisted = wpsProcessDao.persist(process);
-
-                if (isPersisted) {
-                    scheduleProcess(process);
-                }
-            }
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
-        }
-
-        return isPersisted;
-    }
-
-    private void scheduleProcess(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityDeep(processEntity);
-
-        try {
-            schedulerControl.addWpsAsJob(processEntity);
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.createAndScheduleProcess", processEntity));
-        } catch (SchedulerException ex) {
-            LOG.warn("MonitorControl: {}", ex);
-        }
-    }
-
-    @Override
-    public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
-
-        Boolean exists = false;
-        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-
-            WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
-            exists = (process != null);
-
-            if (exists) {
-                process.setRawRequest(testRequest);
-                wpsProcessDao.update(process);
-
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.setTestRequest", process));
-            }
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
-        }
-
-        return exists;
-    }
-
-    @Override
-    public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri) {
-        validator.validateStringParam(oldWpsIdentifier, newWpsIdentifier);
-        Validate.notNull(newUri, "newUri");
-
-        WpsEntity wps = getWps(oldWpsIdentifier);
-
-        if (wps == null || (wps.getIdentifier().equals(newWpsIdentifier) && wps.getUri().equals(newUri))) {
-            return wps;
-        }
-
-        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
-            checkEndpointEqual(wpsDao.getAll(), newUri);
-            
-            wps.setIdentifier(newWpsIdentifier);
-            wps.setUri(newUri);
-
-            wpsDao.update(wps);
-            schedulerControl.updateJobsWpsGroupName(oldWpsIdentifier, newWpsIdentifier);
-
-            eventHandler
-                    .fireEvent(new MonitorEvent("monitorcontrol.updateWps", new String[]{oldWpsIdentifier, newWpsIdentifier}));
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
-        } catch (SchedulerException ex) {
-            LOG.error("Scheduler exception while updating a wps.", ex);
-        }
-
-        return wps;
+        return wps != null && deleteWps(wps);
     }
 
     /*
@@ -304,17 +492,21 @@ public class MonitorControlImpl implements MonitorControl {
      * unnecessary redundancy.
      */
     @Override
-    public Boolean deleteWps(final String wpsIdentifier) {
+    public Boolean deleteWps(final WpsEntity wpsEntity) {
+        validator.validateWpsEntity(wpsEntity);
+
+        WpsEntity founded = wpsEntity;
         Boolean deleteable = false;
 
         try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            if (founded.getId() == null || founded.getId() <= 0) {
+                founded = wpsDao.find(founded.getEndpoint());
+            }
 
-            WpsEntity wpsEntity = getWps(wpsIdentifier);
-            deleteable = (wpsEntity != null);
-
+            deleteable = (founded != null);
             if (deleteable) {
-                wpsDao.remove(wpsEntity);
-                removeWpsJob(wpsEntity);
+                wpsDao.remove(founded);
+                removeWpsJob(founded);
 
                 eventHandler
                         .fireEvent(new MonitorEvent("monitorcontrol.deleteWps", wpsEntity));
@@ -326,44 +518,203 @@ public class MonitorControlImpl implements MonitorControl {
         return deleteable;
     }
 
-    private void removeWpsJob(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity);
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(final URL endpoint, final String processIdentifier) {
+        return getMeasuredData(endpoint, processIdentifier, null);
+    }
 
-        try {
-            schedulerControl
-                    .removeWpsJobs(wpsEntity.getIdentifier());
-        } catch (SchedulerException ex) {
-            LOG.error("MonitorControl: {}", ex);
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(final URL endpoint, final String processIdentifier, final Range range) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString(), processIdentifier);
+
+        List<MeasuredDataEntity> measuredData = null;
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
+            measuredData = qosDao
+                    .getByProcess(endpoint, processIdentifier, range);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
+        }
+
+        return measuredData;
+    }
+
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity) {
+        return getMeasuredData(processEntity, null);
+    }
+
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range) {
+        validator.validateProcessEntity(processEntity);
+
+        Long wpsId = processEntity.getWps().getId();
+        if (wpsId != null && wpsId > 0) {
+            return getMeasuredData(
+                    wpsId,
+                    processEntity.getIdentifier(),
+                    range
+            );
+        } else {
+            return getMeasuredData(
+                    processEntity.getWps().getEndpoint(),
+                    processEntity.getIdentifier(),
+                    range
+            );
         }
     }
 
     @Override
-    public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public List<MeasuredDataEntity> getMeasuredData(final Long wpsId, final String processIdentifier) {
+        return getMeasuredData(wpsId, processIdentifier, null);
+    }
 
-        Boolean deleteable = false;
+    @Override
+    public List<MeasuredDataEntity> getMeasuredData(final Long wpsId, final String processIdentifier, final Range range) {
+        Validate.notNull(wpsId, "wpsId");
+        validator.validateStringParam(processIdentifier);
+
+        List<MeasuredDataEntity> measuredData = null;
+        try (QosDataAccess qosDao = qosDaoFactory.create()) {
+            measuredData = qosDao
+                    .getByProcess(wpsId, processIdentifier, range);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
+        }
+
+        return measuredData;
+    }
+
+    @Override
+    public List<WpsProcessEntity> getProcesses(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        WpsEntity wps = getWps(endpoint);
+
+        if (wps == null) {
+            return null;
+        }
+
+        return getProcesses(wps);
+    }
+
+    @Override
+    public List<WpsProcessEntity> getProcesses(final Long wpsId) {
+        WpsEntity wps = getWps(wpsId);
+
+        if (wps == null) {
+            return null;
+        }
+
+        return getProcesses(wps);
+    }
+
+    @Override
+    public List<WpsProcessEntity> getProcesses(final WpsEntity wpsEntity) {
+        validator.validateWpsEntity(wpsEntity);
+
+        List<WpsProcessEntity> processes = null;
         try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-
-            WpsProcessEntity process = wpsProcessDao
-                    .find(wpsIdentifier, processIdentifier);
-            deleteable = (process != null);
-
-            if (deleteable) {
-                JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-
-                wpsProcessDao.remove(process);
-                schedulerControl.removeJob(jobKey);
-
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.deleteProcess", process));
+            Long wpsId = wpsEntity.getId();
+            if (wpsId != null && wpsId > 0) {
+                processes = wpsProcessDao.getAll(wpsId);
+            } else {
+                processes = wpsProcessDao.getAll(wpsEntity.getEndpoint());
             }
         } catch (CreateException ex) {
             throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
-        } catch (SchedulerException ex) {
-            LOG.error("Can't delete job of process {}.", processIdentifier, ex);
         }
 
-        return deleteable;
+        return processes;
+    }
+
+    public SchedulerControl getSchedulerControl() {
+        return schedulerControl;
+    }
+
+    @Override
+    public List<TriggerConfig> getTriggers(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+        
+        WpsEntity wps = getWps(endpoint);
+
+        if (wps == null) {
+            return null;
+        }
+
+        return getTriggers(wps, processIdentifier);
+    }
+
+    @Override
+    public List<TriggerConfig> getTriggers(final Long wpsId, final String processIdentifier) {
+        Validate.notNull(wpsId, "wpsId");
+        WpsEntity wps = getWps(wpsId);
+
+        if (wps == null) {
+            return null;
+        }
+
+        return getTriggers(wps, processIdentifier);
+    }
+
+    @Override
+    public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        Long wpsId = processEntity.getWps().getId();
+        if (wpsId != null && wpsId > 0) {
+            return getTriggers(
+                    wpsId,
+                    processEntity.getIdentifier()
+            );
+        } else {
+            return getTriggers(
+                    processEntity.getWps().getEndpoint(),
+                    processEntity.getIdentifier()
+            );
+        }
+    }
+
+    private List<TriggerConfig> getTriggers(final WpsEntity wps, final String processIdentifier) {
+        validator.validateStringParam(processIdentifier);
+        validator.validateWpsEntity(wps);
+
+        List<TriggerConfig> result = new ArrayList<>();
+        JobKey jobKey = getJobKey(wps.getId(), processIdentifier);
+
+        try {
+            List<TriggerKey> triggerKeysOfJob = schedulerControl.getTriggerKeysOfJob(jobKey);
+
+            for (TriggerKey triggerKey : triggerKeysOfJob) {
+                result.add(schedulerControl.getConfigOfTrigger(triggerKey));
+            }
+        } catch (SchedulerException ex) {
+            LOG.warn("MonitorControl: {}", ex);
+        }
+
+        return result;
+    }
+
+    @Override
+    public Long getWpsId(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        Long result = null;
+        
+        try(WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            WpsEntity find = wpsDao.find(endpoint);
+            
+            if(find != null) {
+                result = find.getId();
+            }
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+        
+        return result;
     }
 
     @Override
@@ -380,53 +731,60 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public List<WpsProcessEntity> getProcessesOfWps(final String identifier) {
-        validator.validateStringParam(identifier);
-
-        List<WpsProcessEntity> processes = null;
-
-        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-            processes = wpsProcessDao.getAll(identifier);
+    public Long getWpsProcessId(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+        
+        Long result = null;
+        try(WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            WpsProcessEntity find = wpsProcessDao.find(endpoint, processIdentifier);
+            
+            if(find != null) {
+                result = find.getId();
+            }
         } catch (CreateException ex) {
             throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
         }
-
-        return processes;
+        
+        return result;
     }
 
     @Override
-    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier) {
-        return getMeasuredData(wpsIdentifier, processIdentifier, null);
+    public Boolean isMonitoringPaused(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        WpsEntity wps = getWps(endpoint);
+
+        return wps != null && isMonitoringPaused(wps.getId(), processIdentifier);
     }
 
     @Override
-    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public Boolean isMonitoringPaused(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
 
-        List<MeasuredDataEntity> measuredData = null;
-
-        try (QosDataAccess qosDao = qosDaoFactory.create()) {
-            measuredData = qosDao
-                    .getByProcess(wpsIdentifier, processIdentifier, range);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
+        Long wpsId = processEntity.getWps().getId();
+        if (wpsId != null && wpsId > 0) {
+            return isMonitoringPaused(
+                    wpsId,
+                    processEntity.getIdentifier()
+            );
+        } else {
+            return isMonitoringPaused(
+                    processEntity.getWps().getEndpoint(),
+                    processEntity.getIdentifier()
+            );
         }
-
-        return measuredData;
     }
 
     @Override
-    public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public Boolean isMonitoringPaused(final Long wpsId, final String processIdentifier) {
+        Validate.notNull(wpsId, "wpsId");
+        validator.validateStringParam(processIdentifier);
 
         try {
-            WpsProcessEntity find = getWpsProcessEntity(wpsIdentifier, processIdentifier);
-
-            if (find != null) {
-                JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-
-                return schedulerControl.isPaused(jobKey);
-            }
+            JobKey jobKey = getJobKey(wpsId, processIdentifier);
+            return schedulerControl.isPaused(jobKey);
         } catch (SchedulerException ex) {
             LOG.warn("MonitorControl: {}", ex);
         }
@@ -435,333 +793,41 @@ public class MonitorControlImpl implements MonitorControl {
     }
 
     @Override
-    public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
+    public Boolean isProcessExists(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");  
+        validator.validateStringParam(processIdentifier, endpoint.toString());
 
-        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-            WpsProcessEntity process = wpsProcessDao.find(wpsIdentifier, processIdentifier);
-
-            if (process != null) {
-                schedulerControl.resume(new JobKey(processIdentifier, wpsIdentifier));
-                process.setWpsException(false);
-
-                wpsProcessDao.update(process);
-
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.resumeMonitoring", process));
-
-                LOG.debug("MonitorControl: resuming monitoring of WPS Process {}.{}", wpsIdentifier, processIdentifier);
-            }
-
-        } catch (SchedulerException ex) {
-            LOG.warn("MonitorControl: {}", ex);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
-        }
-    }
-
-    public SchedulerControl getSchedulerControl() {
-        return schedulerControl;
-    }
-
-    @Override
-    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier) {
-        deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier, null);
-    }
-
-    @Override
-    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
-
-        try (QosDataAccess qosDao = qosDaoFactory.create()) {
-            qosDao.deleteByProcess(wpsIdentifier, processIdentifier, olderAs);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
-        }
-    }
-
-    @Override
-    public void pauseMonitoring(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
-        JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
-
-        try {
-            if (schedulerControl.isJobRegistred(jobKey)) {
-                WpsProcessEntity process = getWpsProcessEntity(wpsIdentifier, processIdentifier);
-
-                schedulerControl.pauseJob(jobKey);
-
-                eventHandler
-                        .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", process));
-            }
-        } catch (SchedulerException ex) {
-            LOG.error("Can't pause the monitoring of process {} because of scheduler exception.", processIdentifier, ex);
-        }
-    }
-
-    @Override
-    public void deleteMeasuredData(final Date olderAs) {
-        Validate.notNull(olderAs, "olderAs");
-
-        try {
-            QosDataAccess qosDao = qosDaoFactory.create();
-            qosDao.deleteAllOlderAs(olderAs);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create qosDao. Execution aborted.", ex);
-        }
-    }
-
-    @Override
-    public Boolean createWps(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity);
-
-        return createWps(wpsEntity.getIdentifier(), wpsEntity.getUri());
-    }
-
-    @Override
-    public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return createAndScheduleProcess(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return saveTrigger(wpsIdentifier, processIdentifier, config);
-    }
-
-    @Override
-    public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return setTestRequest(wpsIdentifier, processIdentifier, testRequest);
-    }
-
-    @Override
-    public WpsEntity updateWps(final String oldWpsIdentifier, final WpsEntity newWps) {
-        validator.validateWpsEntity(newWps);
-
-        return updateWps(oldWpsIdentifier, newWps.getIdentifier(), newWps.getUri());
-    }
-
-    @Override
-    public Boolean deleteWps(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity);
-
-        return deleteWps(wpsEntity.getIdentifier());
-    }
-
-    @Override
-    public Boolean deleteProcess(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return deleteProcess(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public Boolean isPausedMonitoring(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return isPausedMonitoring(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public void resumeMonitoring(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        resumeMonitoring(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public void pauseMonitoring(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        pauseMonitoring(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public List<WpsProcessEntity> getProcessesOfWps(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity);
-
-        return getProcessesOfWps(wpsEntity.getIdentifier());
-    }
-
-    @Override
-    public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return getTriggers(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity) {
-        return getMeasuredData(processEntity, null);
-    }
-
-    @Override
-    public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return getMeasuredData(wpsIdentifier, processIdentifier, range);
-    }
-
-    @Override
-    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier);
-    }
-
-    @Override
-    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        deleteMeasuredDataOfProcess(wpsIdentifier, processIdentifier, olderAs);
-    }
-
-    @Override
-    public Boolean isProcessExists(final String wpsIdentifier, final String processIdentifier) {
-        return getWpsProcessEntity(wpsIdentifier, processIdentifier) != null;
+        return getWpsProcessEntity(endpoint, processIdentifier) != null;
     }
 
     @Override
     public Boolean isProcessExists(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
+        validator.validateProcessEntity(processEntity);
 
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return isProcessExists(wpsIdentifier, processIdentifier);
-    }
-
-    private WpsProcessEntity getWpsProcessEntity(final String wpsIdentifier, final String processIdentifier) {
-        validator.validateStringParam(wpsIdentifier, processIdentifier);
-
-        WpsProcessEntity result = null;
-
-        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
-            result = wpsProcessDao.find(wpsIdentifier, processIdentifier);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
-        }
-
-        return result;
+        return isProcessExists(
+                processEntity.getWps().getEndpoint(),
+                processEntity.getIdentifier()
+        );
     }
 
     @Override
-    public Boolean isWpsExists(final String wpsIdentifier) {
-        return getWps(wpsIdentifier) != null;
-    }
+    public Boolean isProcessExists(final Long wpsId, final String processIdentifier) {
+        validator.validateStringParam(processIdentifier);
+        Validate.notNull(wpsId, "WPS ID");
 
-    private Boolean isWpsExists(final WpsEntity wpsEntity) {
-        validator.validateWpsEntity(wpsEntity);
-
-        return isWpsExists(wpsEntity.getIdentifier());
-    }
-
-    private WpsEntity getWps(final String wpsIdentifier) {
-        validator.validateStringParam(wpsIdentifier);
-
-        WpsEntity result = null;
-
-        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
-            result = wpsDao.find(wpsIdentifier);
-        } catch (CreateException ex) {
-            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
-        }
-
-        return result;
-    }
-
-    private JobKey getJobKey(final String wpsIdentifier, final String processIdentifier) {
-        return new JobKey(processIdentifier, wpsIdentifier);
-    }
-
-    private JobKey getJobKey(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
-
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
-
-        return getJobKey(wpsIdentifier, processIdentifier);
+        return getWpsProcessEntity(wpsId, processIdentifier) != null;
     }
 
     @Override
     public Boolean isProcessScheduled(final WpsProcessEntity processEntity) {
-        validator.validateProcessEntityFlat(processEntity);
+        validator.validateProcessEntity(processEntity);
 
-        String wpsIdentifier = processEntity.getWps()
-                .getIdentifier();
-        String processIdentifier = processEntity
-                .getIdentifier();
+        JobKey jobKey = getJobKey(processEntity);
 
-        return isProcessScheduled(wpsIdentifier, processIdentifier);
-    }
+        if (jobKey == null) {
+            throw new IllegalArgumentException("Can't fetch JobKey. The given WPS is unregistred in the monitor (and was not fetchable by endpoint).");
+        }
 
-    @Override
-    public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier) {
-        JobKey jobKey = getJobKey(wpsIdentifier, processIdentifier);
         Boolean result = false;
 
         try {
@@ -771,5 +837,263 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         return result;
+    }
+
+    @Override
+    public Boolean isProcessScheduled(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        return wpsProcessEntity != null && isProcessScheduled(wpsProcessEntity);
+    }
+
+    @Override
+    public Boolean isProcessScheduled(final Long wpsId, final String processIdentifier) {
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+
+        return wpsProcessEntity != null && isProcessScheduled(wpsProcessEntity);
+    }
+
+    @Override
+    public Boolean isWpsExists(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        
+        return getWps(endpoint) != null;
+    }
+
+    @Override
+    public Boolean isWpsExists(final Long wpsId) {
+        return getWps(wpsId) != null;
+    }
+
+    @Override
+    public void pauseMonitoring(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+
+        WpsProcessEntity processEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        if (processEntity != null) {
+            pauseMonitoring(processEntity);
+        }
+    }
+
+    @Override
+    public void pauseMonitoring(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        JobKey jobKey = getJobKey(processEntity);
+        try {
+            if (schedulerControl.isJobRegistred(jobKey)) {
+                schedulerControl.pauseJob(jobKey);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.pauseMonitoring", processEntity));
+            }
+        } catch (SchedulerException ex) {
+            LOG.error("Can't pause the monitoring of process {} because of scheduler exception.", processEntity.getIdentifier(), ex);
+        }
+    }
+
+    @Override
+    public void pauseMonitoring(final Long wpsId, final String processIdentifier) {
+        Validate.notNull(wpsId, "WPS ID");
+        validator.validateStringParam(processIdentifier);
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+
+        if (wpsProcessEntity != null) {
+            pauseMonitoring(wpsProcessEntity);
+        }
+    }
+
+    @Override
+    public void resumeMonitoring(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        if (wpsProcessEntity != null) {
+            resumeMonitoring(wpsProcessEntity);
+        }
+    }
+
+    @Override
+    public void resumeMonitoring(final WpsProcessEntity processEntity) {
+        validator.validateProcessEntity(processEntity);
+
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+            WpsProcessEntity usedProcessEntity = processEntity;
+
+            if (processEntity.getId() == null || processEntity.getWps().getId() == null) {
+                usedProcessEntity = wpsProcessDao.find(
+                        processEntity.getWps().getEndpoint(),
+                        processEntity.getIdentifier()
+                );
+            }
+
+            if (usedProcessEntity != null) {
+                schedulerControl.resume(getJobKey(usedProcessEntity));
+                usedProcessEntity.setWpsException(false);
+
+                wpsProcessDao.update(usedProcessEntity);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.resumeMonitoring", usedProcessEntity));
+
+                LOG.debug("MonitorControl: resuming monitoring of WPS Process {}", usedProcessEntity);
+            }
+
+        } catch (SchedulerException ex) {
+            LOG.warn("MonitorControl: {}", ex);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        }
+    }
+
+    @Override
+    public void resumeMonitoring(final Long wpsId, final String processIdentifier) {
+        Validate.notNull(wpsId, "WPS ID");
+        validator.validateStringParam(processIdentifier);
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+
+        if (wpsProcessEntity != null) {
+            resumeMonitoring(wpsProcessEntity);
+        }
+    }
+
+    @Override
+    public TriggerConfig saveTrigger(final URL endpoint, final String processIdentifier, final TriggerConfig config) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(processIdentifier, endpoint.toString());        
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        if (wpsProcessEntity == null) {
+            return null;
+        }
+
+        return saveTrigger(wpsProcessEntity, config);
+    }
+
+    @Override
+    public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config) {
+        validator.validateProcessEntity(processEntity);
+
+        TriggerConfig newConfig = null;
+        try {
+            if (config.getTriggerKey() == null) {
+                JobKey jobKey = getJobKey(processEntity);
+                newConfig = schedulerControl.addTriggerToJob(jobKey, config);
+            } else {
+                newConfig = schedulerControl.updateTrigger(config);
+            }
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.saveTrigger", config));
+        } catch (SchedulerException ex) {
+            LOG.error("Can't save trigger because of Scheduler Exception.", ex);
+        }
+
+        return newConfig;
+    }
+
+    @Override
+    public TriggerConfig saveTrigger(final Long wpsId, final String processIdentifier, final TriggerConfig config) {
+        validator.validateStringParam(processIdentifier);
+        Validate.notNull(wpsId, "WPS ID");
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+
+        if (wpsProcessEntity == null) {
+            return null;
+        }
+
+        return saveTrigger(wpsProcessEntity, config);
+    }
+
+    @Override
+    public Boolean setTestRequest(final URL endpoint, final String processIdentifier, final String testRequest) {
+        validator.validateStringParam(processIdentifier);
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(endpoint, processIdentifier);
+
+        return wpsProcessEntity != null && setTestRequest(wpsProcessEntity, testRequest);
+    }
+
+    @Override
+    public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest) {
+        validator.validateProcessEntity(processEntity);
+
+        Boolean exists = false;
+        try (WpsProcessDataAccess wpsProcessDao = wpsProcessDaoFactory.create()) {
+
+            WpsProcessEntity usedProcessEntity = processEntity;
+
+            if (processEntity.getId() == null || processEntity.getWps().getId() == null) {
+                usedProcessEntity = wpsProcessDao.find(processEntity.getWps().getEndpoint(), processEntity.getIdentifier());
+            }
+
+            exists = (usedProcessEntity != null);
+
+            if (exists) {
+                usedProcessEntity.setRawRequest(testRequest);
+                wpsProcessDao.update(usedProcessEntity);
+
+                eventHandler
+                        .fireEvent(new MonitorEvent("monitorcontrol.setTestRequest", usedProcessEntity));
+            }
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsProcessDao. Execution aborted.", ex);
+        }
+
+        return exists;
+    }
+
+    @Override
+    public Boolean setTestRequest(final Long wpsId, final String processIdentifier, final String testRequest) {
+        Validate.notNull(wpsId, "WPS ID");
+        validator.validateStringParam(processIdentifier);
+
+        WpsProcessEntity wpsProcessEntity = getWpsProcessEntity(wpsId, processIdentifier);
+        return wpsProcessEntity != null && setTestRequest(wpsProcessEntity, testRequest);
+    }
+
+    @Override
+    public WpsEntity updateWps(final URL oldEndpoint, final URL newEndpoint) {
+        Validate.notNull(oldEndpoint, "oldEndpoint");
+        Validate.notNull(newEndpoint, "newEndpoint");
+
+        WpsEntity wps = getWps(oldEndpoint);
+
+        if (wps == null || wps.getEndpoint().equals(newEndpoint)) {
+            return wps;
+        }
+
+        try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
+            checkEndpointUnique(wpsDao.getAll(), newEndpoint);
+
+            wps.setEndpoint(newEndpoint);
+            wpsDao.update(wps);
+
+            eventHandler
+                    .fireEvent(new MonitorEvent("monitorcontrol.updateWps", new URL[]{oldEndpoint, newEndpoint}));
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create wpsDao. Execution aborted.", ex);
+        }
+
+        return wps;
+    }
+
+    @Override
+    public WpsEntity updateWps(final Long wpsId, final URL newEndpoint) {
+        WpsEntity wps = getWps(wpsId); // TODO: find better solution. atm the getWps methode is called twice
+
+        return updateWps(wps.getEndpoint(), newEndpoint);
     }
 }

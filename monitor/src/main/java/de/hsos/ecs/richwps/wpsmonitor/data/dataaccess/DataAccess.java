@@ -34,7 +34,7 @@ public interface DataAccess<T> extends AutoCloseable {
      * @return The Object that match the given primarykey. Otherwise null is
      * returned if no result is found.
      */
-    public T find(Object primaryKey);
+    public T find(Long primaryKey);
 
     /**
      * Tries to persist the given object.

@@ -19,9 +19,13 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Default implementation of a WpsDataAccess interface
@@ -32,28 +36,6 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
 
     public WpsDao(final Jpa jpa) {
         super(jpa);
-    }
-
-    /**
-     * Finds a WpsEntity instance by the wpsIdentifier String.
-     *
-     * @param wpsIdentifier wpsIdentifier String
-     * @return WpsEntity instance or null if not found
-     */
-    @Override
-    public WpsEntity find(String wpsIdentifier) {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("identifier", wpsIdentifier);
-
-        List<WpsEntity> wpsEntities = getBy("wps.findByIdentifier", parameters, WpsEntity.class);
-
-        if (wpsEntities != null && !wpsEntities.isEmpty()) {
-            return wpsEntities.get(0);
-        }
-
-        return null;
     }
 
     @Override
@@ -67,20 +49,13 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     }
 
     @Override
-    public void remove(final String wpsIdentifier) {
-        WpsEntity find = find(wpsIdentifier);
-
-        remove(find);
-    }
-
-    @Override
     public void remove(final WpsEntity o) {
 
         Validate.notNull(o, "WpsEntity");
-        Validate.notNull(o.getIdentifier(), "WpsEntity Identifier");
+        Validate.notNull(o.getId(), "WPS ID");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("wpsIdentifier", o.getIdentifier());
+        parameters.put("wpsId", o.getId());
 
         beginTransaction();
         // first remove from AbstractQosEntity
@@ -97,8 +72,35 @@ public class WpsDao extends AbstractDataAccess<WpsEntity> implements WpsDataAcce
     }
 
     @Override
-    public WpsEntity find(Object primaryKey) {
+    public WpsEntity find(final Long primaryKey) {
         return getEntityManager()
                 .find(WpsEntity.class, primaryKey);
+    }
+
+    @Override
+    public WpsEntity find(final URL endpoint) {
+        Validate.notNull(endpoint, "Endpoint");
+        
+        WpsEntity result = null;
+        
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("endpoint", endpoint.toString());
+        
+        List<WpsEntity> by = getBy("wps.findByEndpoint", parameters, WpsEntity.class);
+        
+        if(!by.isEmpty()) {
+            result = by.get(0);
+        }
+        
+        return result;
+    }
+    
+    @Override
+    public Boolean persist(final WpsEntity persist) {
+        if(find(persist.getEndpoint()) != null) {
+            return false;
+        }
+        
+        return super.persist(persist);
     }
 }

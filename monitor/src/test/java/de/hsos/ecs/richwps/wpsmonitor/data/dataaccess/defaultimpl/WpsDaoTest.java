@@ -24,6 +24,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -55,7 +57,7 @@ public class WpsDaoTest {
         jpa.close();
     }
     private WpsDataAccess wpsDao;
-    private String[] insertedIds;
+    private Long[] insertedIds;
 
     public WpsDaoTest() {
     }
@@ -66,19 +68,19 @@ public class WpsDaoTest {
 
             wpsDao = wpsFactory.create();
             wpsDao.setAutoCommit(false);
-            insertedIds = new String[GENERATE_COUNT];
+            insertedIds = new Long[GENERATE_COUNT];
 
             for (int i = 0; i < GENERATE_COUNT; i++) {
-                WpsEntity wps = new WpsEntity(UUID.randomUUID().toString(), "http://" + UUID.randomUUID().toString());
+                WpsEntity wps = new WpsEntity("http://" + UUID.randomUUID().toString());
                 wpsDao.persist(wps);
-                insertedIds[i] = wps.getIdentifier();
+                insertedIds[i] = wps.getId();
             }
 
         } catch (CreateException ex) {
             fail("Can't create DAO!");
-        } catch (MalformedURLException | URISyntaxException ex) {
-            fail(ex.toString());
-        }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(WpsDaoTest.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 
     @After
@@ -132,7 +134,7 @@ public class WpsDaoTest {
     @Test
     public void testFind_String() {
         WpsEntity findById = wpsDao.find(insertedIds[0]);
-        WpsEntity findByIdentifier = wpsDao.find(findById.getIdentifier());
+        WpsEntity findByIdentifier = wpsDao.find(findById.getId());
 
         Assert.assertTrue(findByIdentifier != null && findById.equals(findByIdentifier));
     }
@@ -143,9 +145,17 @@ public class WpsDaoTest {
     @Test
     public void testRemove_String() {
         WpsEntity findById = wpsDao.find(insertedIds[0]);
-        wpsDao.remove(findById.getIdentifier());
+        wpsDao.remove(findById);
 
         WpsEntity compare = wpsDao.find(insertedIds[0]);
         Assert.assertTrue(compare == null);
+    }
+    
+    @Test
+    public void findByEndpoint() {
+        WpsEntity findById = wpsDao.find(insertedIds[0]);
+        WpsEntity founded = wpsDao.find(findById.getEndpoint());
+
+        Assert.assertTrue(findById.equals(founded));
     }
 }

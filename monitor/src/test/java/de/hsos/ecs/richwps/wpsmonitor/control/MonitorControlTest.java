@@ -106,9 +106,10 @@ public class MonitorControlTest {
     private WpsProcessEntity getUnstoredProcessEntity() {
         WpsProcessEntity process = null;
         try {
-            WpsEntity wps = new WpsEntity(UUID.randomUUID().toString(), "http://example.com");
-            process = new WpsProcessEntity(UUID.randomUUID().toString(), wps);
-        } catch (MalformedURLException | URISyntaxException ex) {
+            String rnd = UUID.randomUUID().toString();
+            WpsEntity wps = new WpsEntity("http://example"+ rnd +".com");
+            process = new WpsProcessEntity(rnd, wps);
+        } catch (MalformedURLException ex) {
             fail(ex.toString());
         }
 
@@ -116,10 +117,9 @@ public class MonitorControlTest {
     }
 
     private Boolean checkIsCreateAndScheduledProcess(WpsProcessEntity processEntity) {
-        String wpsIdentifier = processEntity.getWps().getIdentifier();
         String processIdentifier = processEntity.getIdentifier();
 
-        JobKey jobKey = new JobKey(processIdentifier, wpsIdentifier);
+        JobKey jobKey = new JobKey(processIdentifier, processEntity.getWps().getId().toString());
 
         Boolean isRegistred = false;
         try {
@@ -129,11 +129,10 @@ public class MonitorControlTest {
 
         }
 
-        WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        WpsProcessEntity find = wpsProcessDao.find(processEntity.getWps().getEndpoint(), processIdentifier);
 
         return find != null
                 && find.getIdentifier().equals(processIdentifier)
-                && find.getWps().getIdentifier().equals(wpsIdentifier)
                 && isRegistred;
     }
 
@@ -169,8 +168,8 @@ public class MonitorControlTest {
     public void testCreateWps_WpsEntity() {
         WpsEntity wpsEntity = getUnstoredProcessEntity().getWps();
         Boolean createWps = mControl.createWps(wpsEntity);
-        WpsEntity find = wpsDao.find(wpsEntity.getIdentifier());
-        Assert.assertTrue(createWps && find != null && find.getIdentifier().equals(wpsEntity.getIdentifier()));
+        WpsEntity find = wpsDao.find(wpsEntity.getEndpoint());
+        Assert.assertTrue(createWps && find != null && find.getEndpoint().equals(wpsEntity.getEndpoint()));
     }
 
     /**
@@ -179,9 +178,9 @@ public class MonitorControlTest {
     @Test
     public void testCreateWps_String_URI() {
         WpsEntity wpsEntity = getUnstoredProcessEntity().getWps();
-        Boolean createWps = mControl.createWps(wpsEntity.getIdentifier(), wpsEntity.getUri());
-        WpsEntity find = wpsDao.find(wpsEntity.getIdentifier());
-        Assert.assertTrue(createWps && find != null && find.getIdentifier().equals(wpsEntity.getIdentifier()));
+        Boolean createWps = mControl.createWps(wpsEntity.getEndpoint());
+        WpsEntity find = wpsDao.find(wpsEntity.getEndpoint());
+        Assert.assertTrue(createWps && find != null && find.getEndpoint().equals(wpsEntity.getEndpoint()));
     }
 
     /**
@@ -191,9 +190,9 @@ public class MonitorControlTest {
     public void testCreateAndScheduleProcess_String_String() {
         WpsProcessEntity unstoredProcessEntity = getUnstoredProcessEntity();
         wpsDao.persist(unstoredProcessEntity.getWps());
-        String wpsIdentifier = unstoredProcessEntity.getWps().getIdentifier();
         String processIdentifier = unstoredProcessEntity.getIdentifier();
-        Boolean registred = mControl.createAndScheduleProcess(wpsIdentifier, processIdentifier);
+        
+        Boolean registred = mControl.createAndScheduleProcess(unstoredProcessEntity.getWps().getEndpoint(), processIdentifier);
         Boolean checkIsCreateAndScheduledProcess = checkIsCreateAndScheduledProcess(unstoredProcessEntity);
         Assert.assertTrue(registred && checkIsCreateAndScheduledProcess);
     }
@@ -243,7 +242,7 @@ public class MonitorControlTest {
         WpsProcessEntity storedEntity = getStoredEntity();
         mControl.setTestRequest(storedEntity, "hello world");
         wpsProcessDao.update(storedEntity);
-        WpsProcessEntity find = wpsProcessDao.find(storedEntity.getWps().getIdentifier(), storedEntity.getIdentifier());
+        WpsProcessEntity find = wpsProcessDao.find(storedEntity.getWps().getEndpoint(), storedEntity.getIdentifier());
         Assert.assertTrue(find != null && find.getRawRequest().equals("hello world"));
     }
 
@@ -254,25 +253,29 @@ public class MonitorControlTest {
     public void testUpdateWps_3args() {
         WpsProcessEntity wpsProcess = getUnstoredProcessEntity();
         wpsDao.persist(wpsProcess.getWps());
-        String oldWpsIdentifier = wpsProcess.getWps().getIdentifier();
+
         Boolean createAndScheduleProcess = mControl.createAndScheduleProcess(wpsProcess);
+        
         if (!createAndScheduleProcess) {
             fail("Can't create and schedule process");
         }
         WpsEntity newWps = getUnstoredProcessEntity().getWps();
-        mControl.updateWps(oldWpsIdentifier, newWps);
-        JobKey k = new JobKey(wpsProcess.getIdentifier(), newWps.getIdentifier());
-        try {
-            if (!monitor.getSchedulerControl().isJobRegistred(k)) {
-                fail("Job was not modified.");
-            }
-        } catch (SchedulerException ex) {
-            fail(ex.toString());
+        mControl.updateWps(wpsProcess.getWps().getEndpoint(), newWps.getEndpoint());
+        
+        Boolean founded = false;
+        for(WpsEntity en : mControl.getWpsList()) {
+            if(en.equals(wpsProcess.getWps()) && en.getEndpoint().equals(newWps.getEndpoint())) {
+                founded = true;
+            } 
+        }
+        
+        if(!founded) {
+            fail("update failed");
         }
     }
 
     /**
-     * Test of isPausedMonitoring method, of class MonitorControl.
+     * Test of isMonitoringPaused method, of class MonitorControl.
      */
     @Test
     public void testPauseAndIsPausedMonitoring() {
@@ -284,7 +287,7 @@ public class MonitorControlTest {
 
         mControl.pauseMonitoring(wpsProcess);
 
-        Assert.assertTrue(mControl.isPausedMonitoring(wpsProcess));
+        Assert.assertTrue(mControl.isMonitoringPaused(wpsProcess));
     }
 
     /**
@@ -301,6 +304,6 @@ public class MonitorControlTest {
 
         mControl.resumeMonitoring(wpsProcess);
 
-        Assert.assertTrue(!mControl.isPausedMonitoring(wpsProcess));
+        Assert.assertTrue(!mControl.isMonitoringPaused(wpsProcess));
     }
 }

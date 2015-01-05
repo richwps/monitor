@@ -24,8 +24,10 @@ import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -111,9 +113,8 @@ public class SimpleWpsClientTest {
             fail("Can't load testrequest from file");
         }
         try {
-            info = new WpsProcessInfo(new URI(WPS_URI), rawRequest);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SimpleWpsClientTest.class.getName()).log(Level.SEVERE, null, ex);
+            info = new WpsProcessInfo(new URL(WPS_URI), rawRequest);
+        } catch (MalformedURLException ex) {
             fail("Invalid URI");
         }
     }

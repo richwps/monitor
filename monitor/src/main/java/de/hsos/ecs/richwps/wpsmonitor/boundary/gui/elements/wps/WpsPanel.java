@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -80,7 +81,7 @@ public class WpsPanel extends javax.swing.JPanel {
     }
 
     private void init() {
-        this.setName(wps.getIdentifier());
+        this.setName(wps.getEndpoint().toString());
         this.wpsProcessDialog = new WpsProcessDialog(monitorMainFrame, wps);
         setWpsTextLabels(wps);
 
@@ -136,20 +137,19 @@ public class WpsPanel extends javax.swing.JPanel {
      * @param wps WpsEntity instance
      */
     public void updateWps(WpsEntity wps) {
-        String oldIdentifier = this.wps.getIdentifier();
+        URL oldEndpoint = this.wps.getEndpoint();
 
         this.wps = this.monitorMainFrame
                 .getMonitorReference()
                 .getMonitorControl()
-                .updateWps(oldIdentifier, wps);
+                .updateWps(oldEndpoint, wps.getEndpoint());
 
         setWpsTextLabels(wps);
         revalidate();
     }
 
     private void setWpsTextLabels(final WpsEntity wps) {
-        this.wpsNameLabel.setText(wps.getIdentifier());
-        this.wpsUriLabel.setText(wps.getUri().toString());
+        this.wpsUriLabel.setText(wps.getEndpoint().toString());
     }
 
     /**
@@ -167,7 +167,7 @@ public class WpsPanel extends javax.swing.JPanel {
      * @param process WpsProcessEntity instance
      */
     public void processMonitoringPaused(final WpsProcessEntity process) {
-        if (process.getWps().getIdentifier().equals(wps.getIdentifier())) {
+        if (process.getWps().getEndpoint().equals(wps.getEndpoint())) {
             showErrorIndicator();
         }
     }
@@ -208,7 +208,6 @@ public class WpsPanel extends javax.swing.JPanel {
         deleteWpsButton = new JButton();
         JScrollPane jScrollPane1 = new JScrollPane();
         JPanel jPanel2 = new JPanel();
-        wpsNameLabel = new JLabel();
         wpsUriLabel = new JLabel();
 
         setBackground(new Color(255, 255, 255));
@@ -248,38 +247,27 @@ public class WpsPanel extends javax.swing.JPanel {
 
         jScrollPane1.setBorder(null);
 
-        wpsNameLabel.setFont(new Font("Tahoma", 0, 24)); // NOI18N
-        wpsNameLabel.setText("<Wps Name>");
-        wpsNameLabel.setName("wpsNameLabel"); // NOI18N
-
-        wpsUriLabel.setText("<URI>");
-        wpsUriLabel.setName("wpsUriLabel"); // NOI18N
+        wpsUriLabel.setText("<WPS Endpoint>");
+        wpsUriLabel.setName("wpsEndpointLabel"); // NOI18N
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(wpsNameLabel)
-                    .addComponent(wpsUriLabel))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(wpsNameLabel)
-                .addGap(5, 5, 5)
                 .addComponent(wpsUriLabel)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(245, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(wpsUriLabel)
+                .addGap(0, 53, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel2);
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
@@ -294,8 +282,7 @@ public class WpsPanel extends javax.swing.JPanel {
                     .addComponent(manageProcessesButton, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -313,15 +300,13 @@ public class WpsPanel extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -364,7 +349,6 @@ public class WpsPanel extends javax.swing.JPanel {
     private JButton editWpsButton;
     private JLabel errorIcon;
     private JButton manageProcessesButton;
-    private JLabel wpsNameLabel;
     private JLabel wpsUriLabel;
     // End of variables declaration//GEN-END:variables
 }

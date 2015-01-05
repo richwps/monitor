@@ -20,9 +20,6 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceException;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsDescription;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.WpsProcessDescription;
-import de.hsos.richwps.sp.client.CommunicationException;
-import de.hsos.richwps.sp.client.InternalSPException;
-import de.hsos.richwps.sp.client.BadRequestException;
 import de.hsos.richwps.sp.client.RDFException;
 import de.hsos.richwps.sp.client.ows.SPClient;
 import de.hsos.richwps.sp.client.ows.Vocabulary;
@@ -31,13 +28,11 @@ import de.hsos.richwps.sp.client.ows.gettypes.WPS;
 import de.hsos.richwps.sp.client.ows.gettypes.Process;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,7 +86,7 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
             Network net = spClient.getNetwork();
 
             for (WPS wps : net.getWPSs()) {
-                URI uri = new URI(wps.getEndpoint());
+                URL uri = new URL(wps.getEndpoint());
                 Set<WpsProcessDescription> processes = new HashSet<>();
 
                 for (Process process : wps.getProcesses()) {
@@ -99,7 +94,7 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
                 }
 
                 String wpsIdentifier = generateWpsIdentifier(uri.toString());
-                WpsDescription wpsDescription = new WpsDescription(wpsIdentifier, uri, processes);
+                WpsDescription wpsDescription = new WpsDescription(uri, processes);
 
                 result.add(wpsDescription);
             }     
@@ -119,7 +114,7 @@ public class SemanticProxyData extends DataSourceCreator implements DataSource {
     private WpsProcessDescription getDescription(Process process) throws RDFException {
         String title = process.getTitle();
         String strAbstract = process.getAbstract();
-        String identifier = process.getIdentifier();
+        String identifier = process.getIdentifier(); 
         String version = process.getProcessVersion();
 
         return new WpsProcessDescription(identifier, title, strAbstract, version);

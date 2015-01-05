@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -216,16 +217,16 @@ public class WpsDialog extends JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void addToMonitorButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addToMonitorButtonActionPerformed
-        Map<String, WpsDescription> wpsDescriptions = assignSelectionsToMap(wpsTree.getSelectionPaths());
+        Map<URL, WpsDescription> wpsDescriptions = assignSelectionsToMap(wpsTree.getSelectionPaths());
 
-        for (Map.Entry e : wpsDescriptions.entrySet()) {
-            WpsDescription desc = (WpsDescription) e.getValue();
-            String identifier = (String) e.getKey();
+        for (Map.Entry<URL, WpsDescription> e : wpsDescriptions.entrySet()) {
+            WpsDescription desc = e.getValue();
+            URL endpoint = e.getKey();
 
-            WpsPanel wpsPanel = mainFrame.getPanel(identifier);
+            WpsPanel wpsPanel = mainFrame.getPanel(endpoint);
 
             if (wpsPanel == null) {
-                wpsPanel = mainFrame.addWps(identifier, desc.getUri().toString());
+                wpsPanel = mainFrame.addWps(endpoint);
             }
 
             if (wpsPanel != null) {
@@ -237,8 +238,8 @@ public class WpsDialog extends JDialog {
         }
     }//GEN-LAST:event_addToMonitorButtonActionPerformed
 
-    private Map<String, WpsDescription> assignSelectionsToMap(final TreePath[] selections) {
-        Map<String, WpsDescription> wpsDescriptions = new HashMap<>();
+    private Map<URL, WpsDescription> assignSelectionsToMap(final TreePath[] selections) {
+        Map<URL, WpsDescription> wpsDescriptions = new HashMap<>();
 
         for (TreePath p : selections) {
             if (p.getLastPathComponent() instanceof WpsTreeNode) {
@@ -258,17 +259,16 @@ public class WpsDialog extends JDialog {
                     wpsDesc = wps.getDescription();
                 } else {
                     WpsDescription tmpDesc = wps.getDescription();
-                    wpsDesc = new WpsDescription(tmpDesc.getIdentifier(), tmpDesc.getUri());
+                    wpsDesc = new WpsDescription(tmpDesc.getEndpoint());
                 }
 
-                String identifier = wpsDesc.getIdentifier();
-                if (!wpsDescriptions.containsKey(identifier)) {
-                    wpsDescriptions.put(identifier, wpsDesc);
+                if (!wpsDescriptions.containsKey(wpsDesc.getEndpoint())) {
+                    wpsDescriptions.put(wpsDesc.getEndpoint(), wpsDesc);
                 }
 
                 if (node.getType() == WpsTreeNode.NodeType.PROCESS) {
                     WpsProcessDescription processDesc = node.getDescription();
-                    wpsDescriptions.get(identifier).add(processDesc);
+                    wpsDescriptions.get(wpsDesc.getEndpoint()).add(processDesc);
                 }
             }
         }

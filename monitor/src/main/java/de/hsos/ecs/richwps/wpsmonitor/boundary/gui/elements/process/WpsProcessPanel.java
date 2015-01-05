@@ -17,15 +17,10 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.process;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
-import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
-import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
-import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
-import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.EventNotFound;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEventListener;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.awt.Color;
@@ -33,8 +28,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -43,7 +36,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.LayoutStyle;
 import org.apache.batik.util.gui.xmleditor.XMLEditorKit;
@@ -177,7 +169,7 @@ public class WpsProcessPanel extends JPanel {
     private Boolean isMonitoringActive() {
         return !mainFrame.getMonitorReference()
                 .getMonitorControl()
-                .isPausedMonitoring(wpsProcess.getWps().getIdentifier(), wpsProcess.getIdentifier());
+                .isMonitoringPaused(wpsProcess.getWps().getEndpoint(), wpsProcess.getIdentifier());
     }
 
     private void triggerNoJobsCase() {

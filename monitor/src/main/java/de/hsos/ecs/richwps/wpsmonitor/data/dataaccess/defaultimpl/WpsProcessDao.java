@@ -19,6 +19,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,8 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public Boolean persist(WpsProcessEntity e) {
-        if (find(e.getWps().getIdentifier(), e.getIdentifier()) != null) {
+    public Boolean persist(final WpsProcessEntity e) {
+        if (find(e.getWps().getId(), e.getIdentifier()) != null) {
             return false;
         }
 
@@ -44,8 +45,10 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public WpsProcessEntity find(final Object primaryKey) {
-        return getEntityManager().find(WpsProcessEntity.class, Validate.notNull(primaryKey, "primaryKey"));
+    public WpsProcessEntity find(final Long primaryKey) {
+        Validate.notNull(primaryKey, "primaryKey");
+        
+        return getEntityManager().find(WpsProcessEntity.class, primaryKey);
     }
 
     @Override
@@ -54,14 +57,18 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier) {
+    public WpsProcessEntity find(final Long wpsId, final String processIdentifier) {
+        Validate.notNull(wpsId, "wpsId");
+        Validate.notNull(processIdentifier, "processIdentifier");
+
+        
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("wpsidentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
-        parameters.put("identifier", Validate.notNull(processIdentifier, "processIdentifier"));
+        parameters.put("wpsId", wpsId);
+        parameters.put("processIdentifier", processIdentifier);
 
         List<WpsProcessEntity> resultList = getBy("wpsprocess.get", parameters, WpsProcessEntity.class);
+        
         WpsProcessEntity result = null;
-
         if (!resultList.isEmpty()) {
             result = resultList.get(0);
         }
@@ -70,24 +77,28 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
     }
 
     @Override
-    public List<WpsProcessEntity> getAll(final String wpsIdentifier) {
+    public List<WpsProcessEntity> getAll(final Long wpsId) {
+        Validate.notNull(wpsId, "WPS ID");   
+                
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("identifier", Validate.notNull(wpsIdentifier, "wpsidentifier"));
+        parameters.put("wpsId", wpsId);
 
         return getBy("wpsprocess.getAllOf", parameters, WpsProcessEntity.class);
     }
 
     @Override
-    public Integer deleteProcessesOfWps(String wpsIdentifier) {
+    public Integer deleteProcessesOfWps(final Long wpsId) {
+        Validate.notNull(wpsId, "WPS ID");
+        
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("wpsIdentifier", Validate.notNull(wpsIdentifier, "wpsIdentifier"));
+        parameters.put("wpsId", wpsId);
 
         return doNamedQuery("wpsprocess.deleteByWps", parameters);
     }
 
     @Override
-    public void remove(final String wpsIdentifier, final String processIdentifier) {
-        WpsProcessEntity find = find(wpsIdentifier, processIdentifier);
+    public void remove(final Long wpsId, final String processIdentifier) {
+        WpsProcessEntity find = find(wpsId, processIdentifier);
 
         remove(find);
     }
@@ -98,14 +109,15 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
         if (o == null
                 || o.getWps() == null
-                || o.getWps().getIdentifier() == null
+                || o.getWps().getEndpoint() == null
+                || o.getWps().getId() == null
                 || o.getIdentifier() == null) {
 
             Validate.notNull(null, "Given WpsProcessEntity");
         }
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("wpsIdentifier", o.getWps().getIdentifier());
+        parameters.put("wpsId", o.getWps().getId());
         parameters.put("processIdentifier", o.getIdentifier());
 
         // first remove from AbstractQosEntity
@@ -116,5 +128,55 @@ public class WpsProcessDao extends AbstractDataAccess<WpsProcessEntity> implemen
 
         super.remove(o);
         requestCommit();
+    }
+
+    @Override
+    public WpsProcessEntity find(final URL endpoint, final String processIdentifier) {
+        Validate.notNull(endpoint, "endpoint");
+        Validate.notNull(processIdentifier, "processIdentifier");
+
+        
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("endpoint", endpoint.toString());
+        parameters.put("processIdentifier", processIdentifier);
+
+        List<WpsProcessEntity> resultList = getBy("wpsprocess.getByEndpoint", parameters, WpsProcessEntity.class);
+        
+        WpsProcessEntity result = null;
+        if (!resultList.isEmpty()) {
+            result = resultList.get(0);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<WpsProcessEntity> getAll(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+                
+                
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("endpoint", endpoint.toString());
+
+        return getBy("wpsprocess.getAllOfEndpoint", parameters, WpsProcessEntity.class);
+    }
+
+    @Override
+    public Integer deleteProcessesOfWps(final URL endpoint) {
+        Validate.notNull(endpoint, "endpoint");
+        
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("endpoint", endpoint.toString());
+
+        return doNamedQuery("wpsprocess.deleteByWpsEndpoint", parameters);
+    }
+
+    @Override
+    public void remove(final URL endpoint, final String processIdentifier) {
+        WpsProcessEntity find = find(endpoint, processIdentifier);
+        
+        if(find != null) {
+            remove(find);
+        }
     }
 }

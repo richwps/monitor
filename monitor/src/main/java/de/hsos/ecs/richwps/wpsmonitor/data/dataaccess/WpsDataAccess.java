@@ -16,6 +16,7 @@
 package de.hsos.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -31,19 +32,12 @@ public interface WpsDataAccess extends DataAccess<WpsEntity> {
      * @return List of WpsEntity objects
      */
     public List<WpsEntity> getAll();
-
+    
     /**
-     * Finds a WpsEntity instance by its identifier String.
-     *
-     * @param wpsIdentifier WpsIdentifier String
-     * @return WpsEntity instance
+     * Gets a WpsEntity-Object which matches the given endpoint.
+     * 
+     * @param endpoint Endpoint of the specific WPS
+     * @return WpsEntity Instance
      */
-    public WpsEntity find(String wpsIdentifier);
-
-    /**
-     * Removes a stored {@link WpsEntity}.
-     *
-     * @param wpsIdentifier Wps entity identifier
-     */
-    public void remove(final String wpsIdentifier);
+    public WpsEntity find(final URL endpoint);
 }

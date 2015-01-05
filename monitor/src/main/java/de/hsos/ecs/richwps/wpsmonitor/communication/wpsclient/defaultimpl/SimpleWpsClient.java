@@ -97,7 +97,7 @@ public class SimpleWpsClient implements WpsClient {
                 // build http request
                 HttpPost httpRequest = buildRequest(wpsRequest);
 
-                LOG.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsUri());
+                LOG.debug("Sending Request to Server: {}", wpsRequest.getProcessInfo().getWpsEndpoint());
 
                 // prepare and do request (init requestTime)
                 wpsRequest.prepareRequest();
@@ -158,7 +158,7 @@ public class SimpleWpsClient implements WpsClient {
     }
 
     private HttpPost buildRequest(final WpsRequest wpsRequest) throws UnsupportedEncodingException {
-        HttpPost httpRequest = new HttpPost(wpsRequest.getProcessInfo().getWpsUri());
+        HttpPost httpRequest = new HttpPost(wpsRequest.getProcessInfo().getWpsEndpoint().toString());
         List<NameValuePair> body = new ArrayList<>();
         body.add(new BasicNameValuePair("request", wpsRequest.getRawRequest()));
 

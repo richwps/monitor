@@ -29,7 +29,12 @@ import javax.persistence.UniqueConstraint;
     /**
      * Gets all WpsProcess-entities by wps identifier.
      */
-    @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :identifier"),
+    @NamedQuery(name = "wpsprocess.getAllOf", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.id = :wpsId"),
+
+    /**
+     * Gets all WpsProcess-entities by wps endpoint.
+     */
+    @NamedQuery(name = "wpsprocess.getAllOfEndpoint", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.endpoint = :endpoint"),
 
     /**
      * Gets all WpsProcess-entities.
@@ -39,12 +44,22 @@ import javax.persistence.UniqueConstraint;
     /**
      * Gets a specific process entity by wps.identifier and process.identifier.
      */
-    @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsidentifier AND t.identifier = :identifier"),
+    @NamedQuery(name = "wpsprocess.get", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.id = :wpsId AND t.identifier = :processIdentifier"),
+
+    /**
+     * Gets a specific process entity by wps.endpoint and process.identifier.
+     */
+    @NamedQuery(name = "wpsprocess.getByEndpoint", query = "SELECT t FROM WpsProcessEntity t WHERE t.wps.endpoint = :endpoint AND t.identifier = :processIdentifier"),
 
     /**
      * Deletes all process entities that match the given wps identifier.
      */
-    @NamedQuery(name = "wpsprocess.deleteByWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.identifier = :wpsIdentifier")
+    @NamedQuery(name = "wpsprocess.deleteByWps", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.id = :wpsId"),
+
+    /**
+     * Deletes all process entities that match the given wps endpoint.
+     */
+    @NamedQuery(name = "wpsprocess.deleteByWpsEndpoint", query = "DELETE FROM WpsProcessEntity t WHERE t.wps.endpoint = :endpoint")
 })
 
 @Table(

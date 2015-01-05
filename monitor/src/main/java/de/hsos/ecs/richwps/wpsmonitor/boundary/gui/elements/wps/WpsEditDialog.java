@@ -19,6 +19,7 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.WpsMonitorAdminGui;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -56,15 +57,9 @@ public class WpsEditDialog extends JDialog {
 
         this.monitorMainFrame = monitorMainFrame;
         this.addParentPanel = Validate.notNull(addParentPanel, "parent");
-        this.newIdentifierTextField.setText(addParentPanel.getWps()
-                .getIdentifier()
-        );
-        this.newUriTextField.setText(addParentPanel.getWps()
-                .getUri()
-                .toString()
-        );
+        this.endpointField.setText(addParentPanel.getWps().getEndpoint().toString());
 
-        appendTitle(addParentPanel.getWps().getIdentifier());
+        appendTitle(addParentPanel.getWps().getEndpoint().toString());
     }
 
     @Override
@@ -83,33 +78,24 @@ public class WpsEditDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JLabel identifierDecoText = new JLabel();
-        newIdentifierTextField = new JTextField();
         JLabel uriDecoText = new JLabel();
-        newUriTextField = new JTextField();
+        endpointField = new JTextField();
         saveButton = new JButton();
         cancelButton = new JButton();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit WPS");
         setIconImage(new ImageIcon(getClass().getResource("/icons/edit.png")).getImage());
         setName("editDialog"); // NOI18N
 
-        identifierDecoText.setText("WPS-Identifier");
+        uriDecoText.setText("Endpoint");
 
-        newIdentifierTextField.setName("newIdentifierTextField"); // NOI18N
-        newIdentifierTextField.addActionListener(new ActionListener() {
+        endpointField.setName("endpointField"); // NOI18N
+        endpointField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                newIdentifierTextFieldActionPerformed(evt);
-            }
-        });
-
-        uriDecoText.setText("WPS-URL");
-
-        newUriTextField.setName("newUriTextField"); // NOI18N
-        newUriTextField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                newUriTextFieldActionPerformed(evt);
+                endpointFieldActionPerformed(evt);
             }
         });
 
@@ -131,45 +117,47 @@ public class WpsEditDialog extends JDialog {
             }
         });
 
+        jLabel1.setFont(new Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("Info:");
+
+        jLabel2.setText("Changes first affected after a restart (try out  Monitor > Restart)");
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 220, Short.MAX_VALUE)
-                        .addComponent(cancelButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(cancelButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(saveButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(uriDecoText)
+                            .addGap(43, 43, 43)
+                            .addComponent(endpointField, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(identifierDecoText)
-                            .addComponent(uriDecoText))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(newUriTextField, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                            .addComponent(newIdentifierTextField))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel1)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(identifierDecoText)
-                    .addComponent(newIdentifierTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(uriDecoText)
-                    .addComponent(newUriTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                    .addComponent(endpointField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(cancelButton))
-                .addContainerGap())
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -186,28 +174,23 @@ public class WpsEditDialog extends JDialog {
      */
     private void saveButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
 
-        String wpsIdentifier = newIdentifierTextField.getText();
-        String wpsUri = newUriTextField.getText();
+        String wpsEndpoint = endpointField.getText();
 
         try {
-            WpsEntity addWps = new WpsEntity(wpsIdentifier, wpsUri);
+            WpsEntity addWps = new WpsEntity(wpsEndpoint);
 
             addParentPanel.updateWps(addWps);
             addParentPanel.reInit();
 
             dispose();
-        } catch (MalformedURLException | URISyntaxException ex) {
+        } catch (MalformedURLException ex) {
             MessageDialogs.showError(this, "Malformed URL", "The entered URL is not valid!");
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void newIdentifierTextFieldActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newIdentifierTextFieldActionPerformed
-        newUriTextField.requestFocus();
-    }//GEN-LAST:event_newIdentifierTextFieldActionPerformed
-
-    private void newUriTextFieldActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newUriTextFieldActionPerformed
+    private void endpointFieldActionPerformed(ActionEvent evt) {//GEN-FIRST:event_endpointFieldActionPerformed
         saveButtonActionPerformed(evt);
-    }//GEN-LAST:event_newUriTextFieldActionPerformed
+    }//GEN-LAST:event_endpointFieldActionPerformed
 
     private void appendTitle(String name) {
         this.setTitle(getTitle() + " " + name);
@@ -215,8 +198,9 @@ public class WpsEditDialog extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton cancelButton;
-    private JTextField newIdentifierTextField;
-    private JTextField newUriTextField;
+    private JTextField endpointField;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
     private JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

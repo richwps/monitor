@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl;
 
+import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.DataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,9 @@ import org.apache.logging.log4j.Logger;
  * @see EntityManager
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public abstract class AbstractDataAccess<T> {
+
+
+public abstract class AbstractDataAccess<T> implements DataAccess<T> {
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -69,6 +72,7 @@ public abstract class AbstractDataAccess<T> {
      * @param o Entity instance to store
      * @return True if successfully stored, otherwise false
      */
+    @Override
     public Boolean persist(T o) {
         Boolean result = true;
         beginTransaction();
@@ -91,6 +95,7 @@ public abstract class AbstractDataAccess<T> {
      * @param t Entity instance to update/merge
      * @return The updated Entity-instance
      */
+    @Override
     public T update(T t) {
         beginTransaction();
         T merged = getEntityManager()
@@ -106,6 +111,7 @@ public abstract class AbstractDataAccess<T> {
      *
      * @param o Entity instance to remove
      */
+    @Override
     public void remove(final T o) {
         beginTransaction();
         // remanage the entity
@@ -134,6 +140,7 @@ public abstract class AbstractDataAccess<T> {
      *
      * @return Should be alway true, if an exception occurs, false is returned
      */
+    @Override
     public Boolean commit() {
         try {
             if (getEntityManager().getTransaction().isActive()) {
@@ -167,6 +174,7 @@ public abstract class AbstractDataAccess<T> {
     /**
      * If a transaction is active, the result will be resetted.
      */
+    @Override
     public void rollback() {
         if (getEntityManager().getTransaction().isActive()) {
             getEntityManager()
@@ -180,6 +188,7 @@ public abstract class AbstractDataAccess<T> {
      *
      * @param value true or fals for enable or disable autoCommit behavior
      */
+    @Override
     public void setAutoCommit(Boolean value) {
         if (value != null) {
             autoCommit = value;
@@ -237,7 +246,7 @@ public abstract class AbstractDataAccess<T> {
             final Class returnTypeClass,
             final Range range) {
 
-        List<T> result = null;
+        List<T> result;
 
         TypedQuery<T> query = getEntityManager()
                 .createNamedQuery(queryName, returnTypeClass);
@@ -305,6 +314,7 @@ public abstract class AbstractDataAccess<T> {
      * Calls the close-Method on the used EntityManager-Instance, if the
      * EntityManager instance is open
      */
+    @Override
     public void close() {
         if (getEntityManager().isOpen()) {
             getEntityManager().close();

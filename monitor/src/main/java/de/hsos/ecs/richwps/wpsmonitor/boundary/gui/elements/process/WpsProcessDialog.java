@@ -67,11 +67,11 @@ public class WpsProcessDialog extends JDialog {
     }
 
     private void init() {
-        setName(wps.getIdentifier() + "ProcessDialog");
-        setTitle(getTitle() + " of " + wps.getIdentifier());
+        setName(wps.getEndpoint().toString() + " ProcessDialog");
+        setTitle(getTitle() + " of " + wps.getEndpoint().toString());
         List<WpsProcessEntity> processesOfWps = monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
-                .getProcessesOfWps(wps);
+                .getProcesses(wps);
 
         for (WpsProcessEntity processEntity : processesOfWps) {
             WpsProcessPanel processPane = createSavedProcessPanel(processEntity);
@@ -137,7 +137,7 @@ public class WpsProcessDialog extends JDialog {
     private Boolean processAlreadyRegistred(final String processName) {
         return monitorMainFrame.getMonitorReference()
                 .getMonitorControl()
-                .isProcessExists(wps.getIdentifier(), processName);
+                .isProcessExists(wps.getEndpoint(), processName);
     }
 
     private Boolean isNotSavedWithSameNameExists(final String processName) {

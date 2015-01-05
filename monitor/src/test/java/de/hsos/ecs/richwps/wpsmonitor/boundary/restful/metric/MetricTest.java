@@ -22,6 +22,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -31,7 +32,7 @@ import org.junit.Test;
 
 /**
  * Tests the metrics.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MetricTest {
@@ -56,6 +57,9 @@ public class MetricTest {
 
         t.setUp();
         PresentateStrategy json = new JsonPresentateStrategy();
+        Map<String, Object> dispatchToMetric = t.getDispatch().dispatchToMetric(t.getData());
+
+        System.out.println(json.presentate(dispatchToMetric));
     }
 
     private EntityDispatcher dispatch;
@@ -125,10 +129,37 @@ public class MetricTest {
                 new JsonPresentateStrategy().presentate(dispatch.dispatchToMetric(data))
                 .equals("{\n"
                         + "  \"MyTestConverter\": {\n"
-                        + "    \"sum\": 84\n"
+                        + "    \"presentate\": {\n"
+                        + "      \"value\": 84,\n"
+                        + "      \"measureUnit\": \"BYTE\"\n"
+                        + "    }\n"
                         + "  }\n"
                         + "}")
         );
+    }
+
+    public static DispatcherFactory getDispatchFactory() {
+        return dispatchFactory;
+    }
+
+    public static void setDispatchFactory(DispatcherFactory dispatchFactory) {
+        MetricTest.dispatchFactory = dispatchFactory;
+    }
+
+    public EntityDispatcher getDispatch() {
+        return dispatch;
+    }
+
+    public void setDispatch(EntityDispatcher dispatch) {
+        this.dispatch = dispatch;
+    }
+
+    public List<MeasuredDataEntity> getData() {
+        return data;
+    }
+
+    public void setData(List<MeasuredDataEntity> data) {
+        this.data = data;
     }
 
 }

@@ -149,7 +149,7 @@ public class MeasureJob implements Job {
      * @return a pair consisting of WpsRequest and WpsResponse
      */
     private Pair<WpsRequest, WpsResponse> callWps() {
-        WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getUri(), processEntity.getIdentifier());
+        WpsProcessInfo info = new WpsProcessInfo(processEntity.getWps().getEndpoint(), processEntity.getIdentifier());
 
         WpsRequest request = new WpsRequest(processEntity.getRawRequest(), info);
         WpsResponse response = wpsClient.execute(request);

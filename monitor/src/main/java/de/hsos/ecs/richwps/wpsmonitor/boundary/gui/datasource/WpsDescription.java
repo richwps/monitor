@@ -17,6 +17,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +29,9 @@ import java.util.Set;
 public class WpsDescription {
 
     /**
-     * Identifier of the Wps
+     * Endpoint to the WPS-Server
      */
-    private final String identifier;
-
-    /**
-     * URI to the WPS-Server
-     */
-    private final URI wpsUri;
+    private final URL endpoint;
 
     /**
      * Set of {@link WpsProcessDescription} instances.
@@ -46,11 +42,10 @@ public class WpsDescription {
      * Creates an immutable WpsDescription instance with the WPS identifier and
      * uri.
      * 
-     * @param identifier Identifier of the WPS
-     * @param wpsUri URI instance
+     * @param endpoint URI instance
      */
-    public WpsDescription(final String identifier, final URI wpsUri) {
-        this(identifier, wpsUri, null);
+    public WpsDescription(final URL endpoint) {
+        this(endpoint, null);
     }
 
     /**
@@ -58,13 +53,11 @@ public class WpsDescription {
      * WpsProcessDescription-Instances and the URI which should point to the
      * described WPS.
      *
-     * @param identifier Identifier of the WPS
-     * @param wpsUri URI instance
+     * @param endpoint URI instance
      * @param processes Set of WpsProcessDescription instances
      */
-    public WpsDescription(final String identifier, final URI wpsUri, final Set<WpsProcessDescription> processes) {
-        this.identifier = Validate.notNull(identifier, "identifier");
-        this.wpsUri = Validate.notNull(wpsUri, "wpsUri");
+    public WpsDescription(final URL endpoint, final Set<WpsProcessDescription> processes) {
+        this.endpoint = Validate.notNull(endpoint, "endpoint");
 
         if (processes == null) {
             this.processes = new HashSet<>();
@@ -74,12 +67,12 @@ public class WpsDescription {
     }
 
     /**
-     * Get the URI of the WPS.
+     * Get the Endpoint of the WPS.
      *
-     * @return URI instance.
+     * @return URL instance.
      */
-    public URI getUri() {
-        return wpsUri;
+    public URL getEndpoint() {
+        return endpoint;
     }
 
     /**
@@ -101,17 +94,8 @@ public class WpsDescription {
         return processes.add(e);
     }
 
-    /**
-     * Gets the identifier of the WPS.
-     *
-     * @return String
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
-
     @Override
     public String toString() {
-        return wpsUri.toString();
+        return endpoint.toString();
     }
 }

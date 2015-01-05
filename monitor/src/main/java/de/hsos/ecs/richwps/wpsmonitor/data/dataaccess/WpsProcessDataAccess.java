@@ -16,6 +16,7 @@
 package de.hsos.ecs.richwps.wpsmonitor.data.dataaccess;
 
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -26,36 +27,70 @@ import java.util.List;
 public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
 
     /**
-     * Finds a {@link WpsProcessEntity}-object that matches the given
-     * wpsIdentifier && processIdentifier.
+     * Finds a {@link WpsProcessEntity}-object that matches the given wpsId &&
+     * processIdentifier.
      *
-     * @param wpsIdentifier Identifier of wps-entity
+     * @param wpsId WPS ID
      * @param processIdentifier Identifier of wpsProcess-entity
      * @return WpsProcessEntity instance; null if not exists
      */
-    public WpsProcessEntity find(final String wpsIdentifier, final String processIdentifier);
+    public WpsProcessEntity find(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Finds a {@link WpsProcessEntity}-object that matches the given endpoint
+     * of a WPS && processIdentifier.
+     *
+     * @param endpoint Endpoint of a WPS
+     * @param processIdentifier Identifier of wpsProcess-entity
+     * @return WpsProcessEntity instance; null if not exists
+     */
+    public WpsProcessEntity find(final URL endpoint, final String processIdentifier);
 
     /**
      * Gets all {@link WpsProcessEntity}-objects.
      *
-     * @param wpsIdentifier Identifier of wps-entity
+     * @param wpsId WPS ID
      * @return List of all WpsProcessEntity-objects; null if no result is found
      */
-    public List<WpsProcessEntity> getAll(final String wpsIdentifier);
+    public List<WpsProcessEntity> getAll(final Long wpsId);
 
     /**
-     * Deletes all processes from the wps that match the given wpsIdentifier.
+     * Gets all {@link WpsProcessEntity}-objects.
      *
-     * @param wpsIdentifier Identifier of wps-entity.
+     * @param endpoint Endpoint of a WPS
+     * @return List of all WpsProcessEntity-objects; null if no result is found
+     */
+    public List<WpsProcessEntity> getAll(final URL endpoint);
+
+    /**
+     * Deletes all processes from the wps that match the given WPS ID.
+     *
+     * @param wpsId WPS ID
      * @return Affected rows
      */
-    public Integer deleteProcessesOfWps(final String wpsIdentifier);
+    public Integer deleteProcessesOfWps(final Long wpsId);
+
+    /**
+     * Deletes all processes from the wps that match the given WPS Endpoint.
+     *
+     * @param endpoint Endpoint of a WPS
+     * @return Affected rows
+     */
+    public Integer deleteProcessesOfWps(final URL endpoint);
 
     /**
      * Removes a stored {@link WpsProcessEntity}
      *
-     * @param wpsIdentifier Wps entity identifier
+     * @param wpsId WPS ID
      * @param processIdentifier WpsProcess entity identifier
      */
-    public void remove(final String wpsIdentifier, final String processIdentifier);
+    public void remove(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Removes a stored {@link WpsProcessEntity}
+     *
+     * @param endpoint Endpoint of a WPS
+     * @param processIdentifier WpsProcess entity identifier
+     */
+    public void remove(final URL endpoint, final String processIdentifier);
 }

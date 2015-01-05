@@ -28,14 +28,13 @@ import spark.Response;
 
 /**
  * This is the main route of the RESTful Webservice. It's has the following
- * parameters: 
- * 
- * :wps - for the WPS-Identifier :process - for the WPS-Process
- * Identifier 
- * :count - for the amount of data which would be selected 
- * :display - * the display mode; both for Measurements and metrics, metrics 
- * for only metrics and values for only measurements
- * 
+ * parameters:
+ *
+ * :wps - for the WPS-Identifier :process - for the WPS-Process Identifier
+ * :count - for the amount of data which would be selected :display - * the
+ * display mode; both for Measurements and metrics, metrics for only metrics and
+ * values for only measurements
+ *
  * Through this route you can select all measured datas of the monitor.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
@@ -50,55 +49,37 @@ public class ListMeasurementRoute extends MonitorRoute {
     }
 
     public ListMeasurementRoute() {
-        super("/measurement/wps/:wps/process/:process/count/:count/display/:display");
+        super("/measurement/wps/:wps/process/:process/count/:count");
     }
 
     @Override
     public Object handle(Request request, Response response) {
         try {
-            String wpsIdentifier = Validate.notNull(request.params(":wps"), "Wps parameter");
+            String wpsIdString = Validate.notNull(request.params(":wps"), "Wps parameter");
             String processIdentifier = Validate.notNull(request.params(":process"), "Process parameter");
             String count = request.params(":count");
-            String display = request.params(":display");
 
-            List<MeasuredDataEntity> measuredData = getMonitorControl()
-                    .getMeasuredData(wpsIdentifier, processIdentifier, getRange(count));
+            Long wpsId = Long.parseLong(wpsIdString);
+            if (getMonitorControl().isProcessExists(wpsId, processIdentifier)) {
+                List<MeasuredDataEntity> measuredData = getMonitorControl()
+                        .getMeasuredData(wpsId, processIdentifier, getRange(count));
 
-            LOG.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}",
-                    wpsIdentifier, processIdentifier, count
-            );
+                LOG.debug("ListMeasurementRoute called with parameters wpsIdentifier: {} processIdentifier: {} count: {}",
+                        wpsIdString, processIdentifier, count
+                );
 
-            Map<String, Object> toPresentate = null;
+                Map<String, Object> toPresentate = getMetrics(measuredData);
+                
+                response.type(getStrategy().getMimeType());
 
-            if (display != null) {
-                switch (display) {
-                    case "metric":
-                        toPresentate = getMetrics(measuredData);
-                        break;
-                    case "values":
-                        toPresentate = getRaw(measuredData);
-                        break;
-                    case "both":
-                        toPresentate = getRawAndMetrics(measuredData);
-                    default:
-                        toPresentate = getMetrics(measuredData);
-                        break;
-                }
-            }
-
-            if (toPresentate == null) {
-                toPresentate = getRaw(measuredData);
-            }
-
-            response.type(getStrategy().getMimeType());
-
-            return getStrategy()
-                    .presentate(toPresentate);
+                return getStrategy()
+                        .presentate(toPresentate);
+            } 
         } catch (IllegalArgumentException ex) {
             LOG.warn("A value was null.", ex);
-            response.status(404);
         }
 
+        response.status(404);
         return null;
     }
 

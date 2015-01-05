@@ -20,7 +20,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import java.net.URI;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +30,44 @@ import java.util.List;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public interface MonitorControl {
+
+    /**
+     * Creates and stores a {@link WpsProcessEntity} instance and registers a
+     * new Job in the scheduler with the JobKey name as process identifier and
+     * the group name as wps id. The JobKey fact is a internally used thing.
+     *
+     * Here you must define to which WPS (identified through the endpoint
+     * parameter) the new Process should be added.
+     *
+     * @param endpoint The Endpoint of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return true if sucessfully created, otherwise false
+     */
+    public Boolean createAndScheduleProcess(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Creates and stores a {@link WpsProcessEntity} instance and registers a
+     * new Job in the scheduler with the JobKey name as process identifier and
+     * the group name as wps id. The JobKey fact is a internally used thing.
+     *
+     * Here you must define to which WPS (identified through the endpoint
+     * parameter) the new Process should be added.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return true if sucessfully created, otherwise false
+     */
+    public Boolean createAndScheduleProcess(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Creates and stores a {@link WpsProcessEntity} instance and registers a
+     * new Job in the scheduler with the JobKey name as process identifier and
+     * the group name as wps id. The JobKey fact is a internally used thing.
+     *
+     * @param processEntity WpsProcessEntity instance
+     * @return true if sucessfully created, otherwise false
+     */
+    public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity);
 
     /**
      * Stores a {@link WpsEntity} instance. Fires a "monitorcontrol.createWps"
@@ -44,122 +82,99 @@ public interface MonitorControl {
      * Creates and stores a {@link WpsEntity} instance. Fires a
      * "monitorcontrol.createWps" event.
      *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param uri Wps Uri
+     * @param endpoint Wps Uri
      * @return true if sucessfully created, otherwise false
      */
-    public Boolean createWps(final String wpsIdentifier, final URI uri);
+    public Boolean createWps(final URL endpoint);
 
     /**
-     * Creates and stores a {@link WpsProcessEntity} instance and registers a
-     * new Job in the scheduler with the JobKey name as process identifier and
-     * the group name as wps identifier.
+     * Deletes all {@link MeasuredDataEntity} instances which are older as
+     * olderAs.
      *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     * @return true if sucessfully created, otherwise false
+     * @param olderAs Date instance
      */
-    public Boolean createAndScheduleProcess(final String wpsIdentifier, final String processIdentifier);
+    public void deleteMeasuredData(final Date olderAs);
 
     /**
-     * Stores a {@link WpsProcessEntity} instance and registers a new Job in the
-     * scheduler with the JobKey name as process identifier and the group name
-     * as wps identifier.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by endpoint and processIdentifier.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void deleteMeasuredDataOfProcess(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by wpsId and processIdentifier.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void deleteMeasuredDataOfProcess(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the given {@link WpsProcessEntity}.
      *
      * @param processEntity WpsProcessEntity instance
-     * @return true if sucessfully created, otherwise false
      */
-    public Boolean createAndScheduleProcess(final WpsProcessEntity processEntity);
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity);
 
     /**
-     * Creates and saves a trigger for the job which matches the JobKey name of
-     * processIdentifier and group name of wpsIdentifier.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by endpoint and processIdentifier and they are older as
+     * olderAs.
      *
-     * @param wpsIdentifier WpsEntity identifier
+     * @param endpoint WPS Endpoint
      * @param processIdentifier WpsProcessEntity identifier
-     * @param config {@link TriggerConfig} instance
-     * @return {@link TriggerConfig} instance
+     * @param olderAs Date instance
      */
-    public TriggerConfig saveTrigger(final String wpsIdentifier, final String processIdentifier, final TriggerConfig config);
+    public void deleteMeasuredDataOfProcess(final URL endpoint, final String processIdentifier, final Date olderAs);
 
     /**
-     * Creates and saves a trigger for the job which matches the JobKey name of
-     * processEntity.identifier and group name of processEntity.wps.identifier.
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by wpsId and processIdentifier and they are older as olderAs.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param olderAs Date instance
+     */
+    public void deleteMeasuredDataOfProcess(final Long wpsId, final String processIdentifier, final Date olderAs);
+
+    /**
+     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} and they
+     * are older as olderAs.
      *
      * @param processEntity WpsProcessEntity instance
-     * @param config {@link TriggerConfig} instance
-     * @return {@link TriggerConfig} instance
+     * @param olderAs Date instance
      */
-    public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
-
-    /**
-     * Sets a test request string to {@link WpsProcessEntity} instance which
-     * matches the given wpsIdentifier and processIdentifier String.
-     *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     * @param testRequest Testrequest string as XML format
-     * @return true if the request ist sucessfully added to the WpsProcessEntity
-     */
-    public Boolean setTestRequest(final String wpsIdentifier, final String processIdentifier, final String testRequest);
-
-    /**
-     * Sets a test request string to {@link WpsProcessEntity} instance.
-     *
-     * @param processEntity WpsProcessEntity instance.
-     * @param testRequest Testrequest string as XML format
-     * @return true if the request ist sucessfully added to the WpsProcessEntity
-     */
-    public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest);
-
-    /**
-     * Selects a WpsEntity instance that matches the given oldWpsIdentifier
-     * string and replaces the WpsEntity's identifier and uri with the
-     * newWpsIdentifier and newUri instances.
-     *
-     * @param oldWpsIdentifier Old WpsEntity identifier
-     * @param newWpsIdentifier New WpsEntity identifier
-     * @param newUri New Wps Uri
-     * @return Updated WpsEntity instance
-     */
-    public WpsEntity updateWps(final String oldWpsIdentifier, final String newWpsIdentifier, final URI newUri);
-
-    /**
-     * Updates a WpsEntity instance that matches the given oldWpsIdentifier
-     * string and replaces the WpsEntity with the WpsEntity instance of newWps.
-     *
-     * @param oldWpsIdentifier Old Wps identifier
-     * @param newWps WpsEntity instance
-     * @return Updated WpsEntity instance
-     */
-    public WpsEntity updateWps(final String oldWpsIdentifier, final WpsEntity newWps);
-
-    /**
-     * Deletes a WpsEntity which is identified through the given wpsIdentifier
-     * string.
-     *
-     * @param wpsIdentifier WpsEntity identifier
-     * @return true if successfully removed
-     */
-    public Boolean deleteWps(final String wpsIdentifier);
-
-    /**
-     * Deletes the given {@link WpsEntity} instance.
-     *
-     * @param wpsEntity WpsEntity instance
-     * @return true if successfully removed
-     */
-    public Boolean deleteWps(final WpsEntity wpsEntity);
+    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
 
     /**
      * Deletes a {@link WpsProcessEntity} which is identified through the given
-     * wpsIdentifier and processIdentifier string.
+     * endpoint and processIdentifier string.
      *
-     * @param wpsIdentifier WpsEntity identifier
+     * @param endpoint WPS endpoint
      * @param processIdentifier WpsProcessEntity identifier
      * @return true if successfully removed
      */
-    public Boolean deleteProcess(final String wpsIdentifier, final String processIdentifier);
+    public Boolean deleteProcess(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Deletes a {@link WpsProcessEntity} which is identified through the given
+     * wpsId and processIdentifier string.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return true if successfully removed
+     */
+    public Boolean deleteProcess(final Long wpsId, final String processIdentifier);
 
     /**
      * Deletes the given {@link WpsProcessEntity} instance.
@@ -170,108 +185,70 @@ public interface MonitorControl {
     public Boolean deleteProcess(final WpsProcessEntity processEntity);
 
     /**
-     * Checks if the job is paused which is identified by the jobKey
-     * &lt;wpsIdentifier, processIdentifier>.
+     * Deletes a trigger whith the given {@link TriggerConfig}.
      *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     * @return true if the job is paused
+     * @param config {@link TriggerConfig} instance
+     * @return true if successfully deleted
      */
-    public Boolean isPausedMonitoring(final String wpsIdentifier, final String processIdentifier);
+    public Boolean deleteTrigger(final TriggerConfig config);
 
     /**
-     * Checks if the job is paused which is identified by the
-     * &lt;WpsProcessEntity.Identifier, WpsProcessEntity.wps.processIdentifier>
-     * {@link org.quartz.JobKey}.
+     * Deletes a WpsEntity which is identified through the given endpoint.
      *
-     * @param processEntity WpsProcessEntity instance
-     * @return true if the job is paused
+     * @param endpoint WpsEntity identifier
+     * @return true if successfully removed
      */
-    public Boolean isPausedMonitoring(final WpsProcessEntity processEntity);
+    public Boolean deleteWps(final URL endpoint);
 
     /**
-     * Resumes the monitoring of the WpsProcess-Job which is identified by the
-     * &lt;wpsIdentifier, processIdentifier> {@link org.quartz.JobKey} .
+     * Deletes a WpsEntity which is identified through the given wpsId.
      *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
+     * @param wpsId The intern Database ID of the WPS
+     * @return true if successfully removed
      */
-    public void resumeMonitoring(final String wpsIdentifier, final String processIdentifier);
+    public Boolean deleteWps(final Long wpsId);
 
     /**
-     * Resumes the monitoring of the WpsProcess-Job which is identified by the
-     * &lt;WpsProcessEntity.Identifier, WpsProcessEntity.wps.processIdentifier>
-     * {@link org.quartz.JobKey}.
-     *
-     * @param processEntity WpsProcessEntity instance
-     */
-    public void resumeMonitoring(final WpsProcessEntity processEntity);
-
-    /**
-     * Pauses a job which is identified by the &lt;wpsIdentifier,
-     * processIdentifier> {@link org.quartz.JobKey} .
-     *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     */
-    public void pauseMonitoring(final String wpsIdentifier, final String processIdentifier);
-
-    /**
-     * Pauses a job which is identified by the &lt;WpsProcessEntity.Identifier,
-     * WpsProcessEntity.wps.processIdentifier> {@link org.quartz.JobKey}.
-     *
-     * @param processEntity WpsProcessEntity instance
-     */
-    public void pauseMonitoring(final WpsProcessEntity processEntity);
-
-    /**
-     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
-     * which are identified by the identifier string.
-     *
-     * @param identifier WpsEntity identifier
-     * @return List of WpsProcessEntity instances
-     */
-    public List<WpsProcessEntity> getProcessesOfWps(final String identifier);
-
-    /**
-     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
-     * which are identified by the wpsEntity.identifier string.
+     * Deletes the given {@link WpsEntity} instance.
      *
      * @param wpsEntity WpsEntity instance
-     * @return List of WpsProcessEntity instances
+     * @return true if successfully removed
      */
-    public List<WpsProcessEntity> getProcessesOfWps(final WpsEntity wpsEntity);
-
-    /**
-     * Gets all {@link TriggerConfig} instances of the job which are identified
-     * by the &lt;wpsIdentifier, processIdentifier> {@link org.quartz.JobKey}.
-     *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     * @return List of {@link TriggerConfig} instances
-     */
-    public List<TriggerConfig> getTriggers(final String wpsIdentifier, final String processIdentifier);
-
-    /**
-     * Gets all {@link TriggerConfig} instances of the job which are identified
-     * by the &lt;WpsProcessEntity.Identifier,
-     * WpsProcessEntity.wps.processIdentifier> {@link org.quartz.JobKey}.
-     *
-     * @param processEntity WpsProcessEntity instance
-     * @return List of {@link TriggerConfig} instances
-     */
-    public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity);
+    public Boolean deleteWps(final WpsEntity wpsEntity);
 
     /**
      * Gets all {@link MeasuredDataEntity} instances which were stored in the
      * Jobs' measure process of the specific {@link WpsProcessEntity} which is
-     * identified by the wpsIdentifier and processIdentifier string.
+     * identified by endpoint and processIdentifier.
      *
-     * @param wpsIdentifier WpsEntity identifier
+     * @param endpoint WPS endpoint.
      * @param processIdentifier WpsProcessEntity identifier
      * @return List of MeasuredDataEntity instances
      */
-    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier);
+    public List<MeasuredDataEntity> getMeasuredData(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Gets all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by wpsId and processIdentifier.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return List of MeasuredDataEntity instances
+     */
+    public List<MeasuredDataEntity> getMeasuredData(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Gets all {@link MeasuredDataEntity} instances which were stored in the
+     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
+     * identified by wpsId and processIdentifier.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param range {@link Range} instance
+     * @return List of MeasuredDataEntity instances
+     */
+    public List<MeasuredDataEntity> getMeasuredData(final Long wpsId, final String processIdentifier, final Range range);
 
     /**
      * Gets all {@link MeasuredDataEntity} instances which were stored in the
@@ -285,15 +262,15 @@ public interface MonitorControl {
     /**
      * Gets all {@link MeasuredDataEntity} instances in the given {@link Range}
      * which were stored in the Jobs' measure process of the specific
-     * {@link WpsProcessEntity} which is identified by the wpsIdentifier and
-     * processIdentifier string.
+     * {@link WpsProcessEntity} which is identified by endpoint and
+     * processIdentifier.
      *
-     * @param wpsIdentifier WpsEntity identifier
+     * @param endpoint WPS Endpoint
      * @param processIdentifier WpsProcessEntity identifier
      * @param range {@link Range} instance
      * @return List of MeasuredDataEntity instances
      */
-    public List<MeasuredDataEntity> getMeasuredData(final String wpsIdentifier, final String processIdentifier, final Range range);
+    public List<MeasuredDataEntity> getMeasuredData(final URL endpoint, final String processIdentifier, final Range range);
 
     /**
      * Gets all {@link MeasuredDataEntity} instances in the given {@link Range}
@@ -307,52 +284,59 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range);
 
     /**
-     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
-     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
-     * identified by the wpsIdentifier and processIdentifier string.
+     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
+     * which are identified by the endpoint.
      *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
+     * @param endpoint WPS Endpoint
+     * @return List of WpsProcessEntity instances
      */
-    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier);
+    public List<WpsProcessEntity> getProcesses(final URL endpoint);
 
     /**
-     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
-     * Jobs' measure process of the given {@link WpsProcessEntity}.
+     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
+     * which are identified by wpsId.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @return List of WpsProcessEntity instances
+     */
+    public List<WpsProcessEntity> getProcesses(final Long wpsId);
+
+    /**
+     * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
+     * which are identified by the wpsEntity.identifier string.
+     *
+     * @param wpsEntity WpsEntity instance
+     * @return List of WpsProcessEntity instances
+     */
+    public List<WpsProcessEntity> getProcesses(final WpsEntity wpsEntity);
+
+    /**
+     * Gets all {@link TriggerConfig} instances of a specific Job.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return List of {@link TriggerConfig} instances
+     */
+    public List<TriggerConfig> getTriggers(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Gets all {@link TriggerConfig} instances of a specific Job.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return List of {@link TriggerConfig} instances
+     */
+    public List<TriggerConfig> getTriggers(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Gets all {@link TriggerConfig} instances of the job which are identified
+     * by the &lt;WpsProcessEntity.Identifier,
+     * WpsProcessEntity.wps.processIdentifier> {@link org.quartz.JobKey}.
      *
      * @param processEntity WpsProcessEntity instance
+     * @return List of {@link TriggerConfig} instances
      */
-    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity);
-
-    /**
-     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
-     * Jobs' measure process of the specific {@link WpsProcessEntity} which is
-     * identified by the wpsIdentifier and processIdentifier string and they are
-     * older as olderAs.
-     *
-     * @param wpsIdentifier WpsEntity identifier
-     * @param processIdentifier WpsProcessEntity identifier
-     * @param olderAs Date instance
-     */
-    public void deleteMeasuredDataOfProcess(final String wpsIdentifier, final String processIdentifier, final Date olderAs);
-
-    /**
-     * Deletes all {@link MeasuredDataEntity} instances which were stored in the
-     * Jobs' measure process of the specific {@link WpsProcessEntity} and they
-     * are older as olderAs.
-     *
-     * @param processEntity WpsProcessEntity instance
-     * @param olderAs Date instance
-     */
-    public void deleteMeasuredDataOfProcess(final WpsProcessEntity processEntity, final Date olderAs);
-
-    /**
-     * Deletes a trigger whith the given {@link TriggerConfig}.
-     *
-     * @param config {@link TriggerConfig} instance
-     * @return true if successfully deleted
-     */
-    public Boolean deleteTrigger(TriggerConfig config);
+    public List<TriggerConfig> getTriggers(final WpsProcessEntity processEntity);
 
     /**
      * Gets all WpsEntity instances.
@@ -362,12 +346,56 @@ public interface MonitorControl {
     public List<WpsEntity> getWpsList();
 
     /**
-     * Deletes all {@link MeasuredDataEntity} instances which are older as
-     * olderAs.
+     * Checks if the job is paused.
      *
-     * @param olderAs Date instance
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return true if the job is paused
      */
-    public void deleteMeasuredData(final Date olderAs);
+    public Boolean isMonitoringPaused(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Checks if the job is paused.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @return true if the job is paused
+     */
+    public Boolean isMonitoringPaused(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Checks if the job is paused.
+     *
+     * @param processEntity WpsProcessEntity instance
+     * @return true if the job is paused
+     */
+    public Boolean isMonitoringPaused(final WpsProcessEntity processEntity);
+
+    /**
+     * Checks if the Process is exists.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier {@link WpsProcessEntity} identifier
+     * @return true if the process is exists
+     */
+    public Boolean isProcessExists(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Checks if the Process is exists.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier {@link WpsProcessEntity} identifier
+     * @return true if the process is exists
+     */
+    public Boolean isProcessExists(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Checks if the Process is exists.
+     *
+     * @param wpsProcess {@link WpsProcessEntity} instance
+     * @return true if the process is exists
+     */
+    public Boolean isProcessExists(final WpsProcessEntity wpsProcess);
 
     /**
      * Checks if the Job of the given {@link WpsProcessEntity} exists.
@@ -378,37 +406,187 @@ public interface MonitorControl {
     public Boolean isProcessScheduled(final WpsProcessEntity wpsProcess);
 
     /**
-     * Checks if the Job of the {@link WpsProcessEntity}, which is identified
-     * through the wpsIdentifier and processIdentifier String, exists.
+     * Checks if the Job of the {@link WpsProcessEntity}, which is identified by
+     * endpoint and processIdentifier, exists.
      *
-     * @param wpsIdentifier {@link WpsEntity} identifier
+     * @param endpoint WPS endpoint
      * @param processIdentifier {@link WpsProcessEntity} identifier
      * @return true if the job is exists
      */
-    public Boolean isProcessScheduled(final String wpsIdentifier, final String processIdentifier);
-    
+    public Boolean isProcessScheduled(final URL endpoint, final String processIdentifier);
+
     /**
-     * Checks if the Process is exists.
-     * 
-     * @param wpsIdentifier {@link WpsEntity} identifier
+     * Checks if the Job of the {@link WpsProcessEntity}, which is identified by
+     * wpsId and processIdentifier, exists.
+     *
+     * @param wpsId The intern Database ID of the WPS
      * @param processIdentifier {@link WpsProcessEntity} identifier
-     * @return true if the process is exists
+     * @return true if the job is exists
      */
-    public Boolean isProcessExists(final String wpsIdentifier, final String processIdentifier);
-    
-    /**
-     * Checks if the Process is exists.
-     * 
-     * @param wpsProcess {@link WpsProcessEntity} instance
-     * @return true if the process is exists
-     */
-    public Boolean isProcessExists(final WpsProcessEntity wpsProcess);
-    
+    public Boolean isProcessScheduled(final Long wpsId, final String processIdentifier);
+
     /**
      * Checks if the Wps is exists.
-     * 
-     * @param wpsIdentifier WpsEntity identifier
+     *
+     * @param endpoint WPS Endpoint
      * @return true if the wps is exists
      */
-    public Boolean isWpsExists(final String wpsIdentifier);
+    public Boolean isWpsExists(final URL endpoint);
+
+    /**
+     * Checks if the Wps is exists.
+     *
+     * @param wpsId WPS Endpoint
+     * @return true if the wps is exists
+     */
+    public Boolean isWpsExists(final Long wpsId);
+
+    /**
+     * Pauses a Process Job.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void pauseMonitoring(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Pauses a Process Job.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void pauseMonitoring(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Pauses a Process Job.
+     *
+     * @param processEntity WpsProcessEntity instance
+     */
+    public void pauseMonitoring(final WpsProcessEntity processEntity);
+
+    /**
+     * Resumes the monitoring of the Process Job.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void resumeMonitoring(final URL endpoint, final String processIdentifier);
+
+    /**
+     * Resumes the monitoring of the Process Job.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     */
+    public void resumeMonitoring(final Long wpsId, final String processIdentifier);
+
+    /**
+     * Resumes the monitoring of the Process Job.
+     *
+     * @param processEntity WpsProcessEntity instance
+     */
+    public void resumeMonitoring(final WpsProcessEntity processEntity);
+
+    /**
+     * Creates and saves a trigger for the job which matches the JobKey name of
+     * processIdentifier and group name of wps id.
+     *
+     * @param endpoint WPS endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param config {@link TriggerConfig} instance
+     * @return {@link TriggerConfig} instance
+     */
+    public TriggerConfig saveTrigger(final URL endpoint, final String processIdentifier, final TriggerConfig config);
+
+    /**
+     * Creates and saves a trigger for the job which matches the JobKey name of
+     * processIdentifier and group name of wps id.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param config {@link TriggerConfig} instance
+     * @return {@link TriggerConfig} instance
+     */
+    public TriggerConfig saveTrigger(final Long wpsId, final String processIdentifier, final TriggerConfig config);
+
+    /**
+     * Creates and saves a trigger for the job which matches the JobKey name of
+     * processEntity.identifier and group name of processEntity.wps.identifier.
+     *
+     * @param processEntity WpsProcessEntity instance
+     * @param config {@link TriggerConfig} instance
+     * @return {@link TriggerConfig} instance
+     */
+    public TriggerConfig saveTrigger(final WpsProcessEntity processEntity, final TriggerConfig config);
+
+    /**
+     * Sets a test request string to {@link WpsProcessEntity} instance which
+     * matches the given WPS endpoint and processIdentifier.
+     *
+     * @param endpoint WPS endpoint
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param testRequest Testrequest string as XML format
+     * @return true if the request ist sucessfully added to the WpsProcessEntity
+     */
+    public Boolean setTestRequest(final URL endpoint, final String processIdentifier, final String testRequest);
+
+    /**
+     * Sets a test request string to {@link WpsProcessEntity} instance which
+     * matches the given WPS Database ID and processIdentifier.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param processIdentifier WpsProcessEntity identifier
+     * @param testRequest Testrequest string as XML format
+     * @return true if the request ist sucessfully added to the WpsProcessEntity
+     */
+    public Boolean setTestRequest(final Long wpsId, final String processIdentifier, final String testRequest);
+
+    /**
+     * Sets a test request string to {@link WpsProcessEntity} instance.
+     *
+     * @param processEntity WpsProcessEntity instance.
+     * @param testRequest Testrequest string as XML format
+     * @return true if the request ist sucessfully added to the WpsProcessEntity
+     */
+    public Boolean setTestRequest(final WpsProcessEntity processEntity, final String testRequest);
+
+    /**
+     * Selects a WpsEntity instance that matches the given oldEndpoint and
+     * replaces the WpsEntitys endpoint with the newEndpoint.
+     *
+     * @param oldEndpoint The old Endpoint
+     * @param newEndpoint The new one
+     * @return Updated WpsEntity instance
+     */
+    public WpsEntity updateWps(final URL oldEndpoint, final URL newEndpoint);
+
+    /**
+     * Selects a WpsEntity instance that matches the given wüsId and replaces
+     * the WpsEntitys endpoint with newEndpoint.
+     *
+     * @param wpsId The intern Database ID of the WPS
+     * @param newEndpoint The new one
+     * @return Updated WpsEntity instance
+     */
+    public WpsEntity updateWps(final Long wpsId, final URL newEndpoint);
+
+    /**
+     * Gets the intern ID of a registred WPS which is fetched by the given
+     * endpoint. If no WPS registred by this endpoint, null is returned.
+     *
+     * @param endpoint WPS Endpoint
+     * @return WPS ID, null if no WPS is found
+     */
+    public Long getWpsId(final URL endpoint);
+
+    /**
+     * Gets the intern ID of a registred WPS Process which is fetched by the
+     * given endpoint and processIdentifier. If no WPS Process registred by the
+     * given parameters, null is returned.
+     *
+     * @param endpoint WPS Endpoint
+     * @param processIdentifier
+     * @return WPS Process ID, null if no WPS is found
+     */
+    public Long getWpsProcessId(final URL endpoint, final String processIdentifier);
 }

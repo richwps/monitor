@@ -19,6 +19,7 @@ import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.MeasureJob;
+import de.hsos.ecs.richwps.wpsmonitor.measurement.MeasureJobFactory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
+import org.quartz.spi.JobFactory;
 
 /**
  * Holds a Quartz-{@link Scheduler} instance and delegates some complex
@@ -50,7 +52,7 @@ public final class SchedulerControl {
     protected final Scheduler scheduler;
     protected final JobFactoryService jobFactoryService;
 
-    public SchedulerControl(Scheduler scheduler, JobFactoryService jobFactoryService) {
+    public SchedulerControl(final Scheduler scheduler, final JobFactoryService jobFactoryService) {
         this.scheduler = Validate.notNull(scheduler, "scheduler");
         this.jobFactoryService = Validate.notNull(jobFactoryService, "jobFactoryService");
     }
@@ -111,26 +113,17 @@ public final class SchedulerControl {
      * @throws SchedulerException
      */
     public synchronized JobKey addWpsAsJob(final WpsProcessEntity process) throws SchedulerException {
-        return addWpsAsJob(process.getWps().getIdentifier(), process.getIdentifier());
-    }
-
-    /**
-     * Adds a Wps measurement job; The job will be replaced if it already
-     * exists.
-     *
-     * @param wpsIdentifier Wps entity identifier
-     * @param processIdentifier wpsprocess entity identifier
-     * @return The jobKey, name = wpsProcess identifier, group = wps identifier
-     * @throws SchedulerException
-     */
-    public synchronized JobKey addWpsAsJob(final String wpsIdentifier, final String processIdentifier) throws SchedulerException {
-        Validate.notNull(wpsIdentifier, "wpsIdentifier");
+        Long wpsId = process.getWps().getId(); 
+        String processIdentifier = process.getIdentifier();
+        
+        Validate.notNull(wpsId, "wpsId");
         Validate.notNull(processIdentifier, "processIdentifier");
 
-        JobKey wpsJobKey = new JobKey(processIdentifier, wpsIdentifier);
-
+        JobKey wpsJobKey = new JobKey(processIdentifier, wpsId.toString());
+        
         return addJob(wpsJobKey, MeasureJob.class);
     }
+
 
     /**
      * Adds a trigger to a job; internally calendarIntervalSchedule is used.
@@ -209,6 +202,7 @@ public final class SchedulerControl {
         return matched;
     }
 
+    // TODO Not necessary yet because the change of use wps ids instead of wpsidentifier
     /**
      * All of the jobs' groupnames with the groupname "oldWpsIdentifier" will be
      * updated to the groupnames of newWpsIdentifier. New jobs will be created
@@ -219,8 +213,8 @@ public final class SchedulerControl {
      * @param oldWpsIdentifier Old name to identify the Jobs
      * @param newWpsIdentifier New name which will replace the old one
      * @throws SchedulerException
-     */
-    public synchronized void updateJobsWpsGroupName(final String oldWpsIdentifier, final String newWpsIdentifier) throws SchedulerException {
+     
+    public synchronized void updateJobsWpsGroupName(final Long oldWpsId, final Long newWpsId) throws SchedulerException {
         Set<JobKey> jobKeys = scheduler.getJobKeys(
                 GroupMatcher.jobGroupEquals(Validate.notNull(oldWpsIdentifier, "oldWpsIdentifier"))
         );
@@ -236,7 +230,7 @@ public final class SchedulerControl {
 
             removeJob(k);
         }
-    }
+    }*/
 
     /**
      * Creates a trigger by the given {@link TriggerConfig}.
@@ -351,14 +345,14 @@ public final class SchedulerControl {
     }
 
     /**
-     * Removes all Jobs for the given wpsIdentifier (groupname).
+     * Removes all Jobs for the given wpsId (groupname).
      *
-     * @param wpsIdentifier Wps identifier
+     * @param wpsId
      * @return true if is sucessfully removed
      * @throws SchedulerException
      */
-    public synchronized Boolean removeWpsJobs(final String wpsIdentifier) throws SchedulerException {
-        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsIdentifier));
+    public synchronized Boolean removeWpsJobs(final Long wpsId) throws SchedulerException {
+        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(wpsId.toString()));
         Boolean result = false;
 
         if (!jobKeys.isEmpty()) {
@@ -415,6 +409,10 @@ public final class SchedulerControl {
         }
 
         return result;
+    }
+    
+    private MeasureJobFactory getMeasureJobFactory() {
+        return (MeasureJobFactory) jobFactoryService.get(MeasureJob.class);
     }
 
     /**

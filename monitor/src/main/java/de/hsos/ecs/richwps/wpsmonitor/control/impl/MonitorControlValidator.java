@@ -20,19 +20,19 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
- * This class uses the static Validate Class to check parameters of the 
+ * This class uses the static Validate Class to check parameters of the
  * MonitorControl implementation.
- * 
+ *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class MonitorControlValidator {
-    
+
     private final Long minStringLength;
-    private final Long maxStringLength;    
+    private final Long maxStringLength;
 
     public MonitorControlValidator(final Long minStringLength, final Long maxStringLength) {
         this.minStringLength = minStringLength;
-        this.maxStringLength = maxStringLength;        
+        this.maxStringLength = maxStringLength;
     }
 
     public void validateStringParam(final String... vars) {
@@ -44,21 +44,32 @@ public class MonitorControlValidator {
         }
     }
 
-    public void validateProcessEntityFlat(final WpsProcessEntity wpsProcessEntity) {
+    private void validateProcessEntityFlat(final WpsProcessEntity wpsProcessEntity) {
         Validate.notNull(wpsProcessEntity, "WpsProcessEntity Parameter");
-        Validate.notNull(wpsProcessEntity.getWps(), "The WPS Identifier of the inner WpsEntity of the given WpsProcessEntity");
+        Validate.notNull(wpsProcessEntity.getWps(), "The WPS Instance of the inner WpsEntity of the given WpsProcessEntity");
+        validateStringParam(wpsProcessEntity.getIdentifier());
     }
 
-    public void validateProcessEntityDeep(final WpsProcessEntity wpsProcessEntity) {
+    public void validateProcessEntity(final WpsProcessEntity wpsProcessEntity) {
+        validateProcessEntity(wpsProcessEntity, false);
+    }
+
+    public void validateProcessEntity(final WpsProcessEntity wpsProcessEntity, final Boolean withWpsId) {
         validateProcessEntityFlat(wpsProcessEntity);
-        validateWpsEntity(wpsProcessEntity.getWps());
+        validateWpsEntity(wpsProcessEntity.getWps(), withWpsId);
     }
 
     public void validateWpsEntity(final WpsEntity wpsEntity) {
-        Validate.notNull(wpsEntity, "wpsEntity");
-        Validate.notNull(wpsEntity.getUri(), "The URI instance of the given wpsEntity ");
-        Validate.notEmpty(wpsEntity.getIdentifier());
+        validateWpsEntity(wpsEntity, false);
+    }
 
-        MonitorControlValidator.this.validateStringParam(wpsEntity.getIdentifier());
+    public void validateWpsEntity(final WpsEntity wpsEntity, final Boolean withWpsId) {
+        Validate.notNull(wpsEntity, "wpsEntity");
+        Validate.notNull(wpsEntity.getEndpoint(), "The endpoint of the given wpsEntity");
+        validateStringParam(wpsEntity.getEndpoint().toString());
+
+        if (withWpsId) {
+            Validate.notNull(wpsEntity.getId(), "The ID of the given WpsEntity");
+        }
     }
 }

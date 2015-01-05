@@ -25,6 +25,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 import org.junit.After;
@@ -64,7 +65,7 @@ public class WpsProcessDaoTest {
     private WpsProcessDataAccess wpsProcessDao;
     private Long[] insertedIds;
 
-    private String wpsIdentifier;
+    private Long wpsId;
     private String processIdentifier;
 
     @Before
@@ -81,10 +82,10 @@ public class WpsProcessDaoTest {
 
             WpsEntity wps;
             try {
-                wps = new WpsEntity(UUID.randomUUID().toString(), "http://" + UUID.randomUUID().toString());
+                wps = new WpsEntity("http://" + UUID.randomUUID().toString());
                 wpsDao.persist(wps);
 
-                wpsIdentifier = wps.getIdentifier();
+                wpsId = wps.getId();
 
                 for (int i = 0; i < GENERATE_COUNT; i++) {
                     WpsProcessEntity wpsProcess = new WpsProcessEntity(UUID.randomUUID().toString(), wps);
@@ -96,7 +97,7 @@ public class WpsProcessDaoTest {
 
                     insertedIds[i] = wpsProcess.getId();
                 }
-            } catch (MalformedURLException | URISyntaxException ex) {
+            } catch (MalformedURLException ex) {
                 fail(ex.toString());
             }
 
@@ -137,13 +138,13 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testFindByWpsAndProcessIdentifier() {
-        WpsProcessEntity find = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        WpsProcessEntity find = wpsProcessDao.find(wpsId, processIdentifier);
 
         Assert.assertTrue(find != null
                 && find.getIdentifier()
                 .equals(processIdentifier)
-                && find.getWps().getIdentifier()
-                .equals(wpsIdentifier)
+                && find.getWps().getId()
+                .equals(wpsId)
         );
     }
 
@@ -152,15 +153,15 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testGetAll() {
-        List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsIdentifier);
+        List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsId);
 
         Boolean isValid = true;
 
         for (WpsProcessEntity e : all) {
             isValid = isValid
                     && e.getWps()
-                    .getIdentifier()
-                    .equals(wpsIdentifier);
+                    .getId()
+                    .equals(wpsId);
         }
 
         Assert.assertTrue(all != null && all.size() == GENERATE_COUNT && isValid);
@@ -171,9 +172,9 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testDeleteProcessesFromWps() {
-        wpsProcessDao.deleteProcessesOfWps(wpsIdentifier);
+        wpsProcessDao.deleteProcessesOfWps(wpsId);
 
-        List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsIdentifier);
+        List<WpsProcessEntity> all = wpsProcessDao.getAll(wpsId);
 
         Assert.assertTrue(all.isEmpty());
     }
@@ -184,24 +185,26 @@ public class WpsProcessDaoTest {
     @Test
     public void testFind_String_String() {
         WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
-        WpsProcessEntity findByStrings = wpsProcessDao.find(findById.getWps().getIdentifier(), findById.getIdentifier());
+        WpsProcessEntity findByStrings = wpsProcessDao.find(findById.getWps().getEndpoint(), findById.getIdentifier());
 
         Assert.assertTrue(findById.equals(findByStrings));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_firstParamNull() {
-        wpsProcessDao.find(null, processIdentifier);
+        URL wps = null;
+        wpsProcessDao.find(wps, processIdentifier);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_secondParamNull() {
-        wpsProcessDao.find(wpsIdentifier, null);
+        wpsProcessDao.find(wpsId, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFind_String_String_allParamNull() {
-        wpsProcessDao.find(null, null);
+        URL wps = null;
+        wpsProcessDao.find(wps, null);
     }
 
     /**
@@ -210,15 +213,16 @@ public class WpsProcessDaoTest {
     @Test
     public void testDeleteProcessesOfWps() {
         WpsProcessEntity findById = wpsProcessDao.find(insertedIds[0]);
-        wpsProcessDao.deleteProcessesOfWps(findById.getWps().getIdentifier());
-        List<WpsProcessEntity> all = wpsProcessDao.getAll(findById.getWps().getIdentifier());
+        wpsProcessDao.deleteProcessesOfWps(findById.getWps().getEndpoint());
+        List<WpsProcessEntity> all = wpsProcessDao.getAll(findById.getWps().getEndpoint());
 
         Assert.assertTrue(all.isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteProcessesOfWps_allParamNull() {
-        wpsProcessDao.deleteProcessesOfWps(null);
+        URL wps = null;
+        wpsProcessDao.deleteProcessesOfWps(wps);
     }
 
     /**
@@ -226,8 +230,8 @@ public class WpsProcessDaoTest {
      */
     @Test
     public void testRemove_String_String() {
-        wpsProcessDao.remove(wpsIdentifier, processIdentifier);
-        WpsProcessEntity findById = wpsProcessDao.find(wpsIdentifier, processIdentifier);
+        wpsProcessDao.remove(wpsId, processIdentifier);
+        WpsProcessEntity findById = wpsProcessDao.find(wpsId, processIdentifier);
 
         Assert.assertTrue(findById == null);
     }
