@@ -31,10 +31,10 @@ Changelog:
 ## Monitor RESTful Routes
 By default the Monitor RESTful Interface is reachable on port 1111.
 
-* List registred WPS: /measurement/wps 
-* List processes of a WPS: /measurement/wps/:wpsId
-* List calculated metrics of a WPS Process: /measurement/wps/:wpdId/process/:processIdentifier/count/:count 
-   * :count means the count of measurement values which should be considered for the calculation of metrics
+* List registred WPS: `/measurement/wps` 
+* List processes of a WPS: `/measurement/wps/:wpsId`
+* List calculated metrics of a WPS Process: `/measurement/wps/:wpdId/process/:processIdentifier/count/:count` 
+   * `:count` means the count of measurement values which should be considered for the calculation of metrics
 
 ## Monitor Events
 
@@ -73,7 +73,7 @@ By default the Monitor RESTful Interface is reachable on port 1111.
 The Monitor Client uses the RESTful Interface of the monitor to fetch QoSMetrics of WPS Processes of a specific WPS endpoint. The Client is a library which can be used in your project.
 
 ###Create a Client instance
-To create a new WpsMonitorClient you can use the WpsMonitorClientFactory class.
+To create a new `WpsMonitorClient` instance you can use the `WpsMonitorClientFactory` class.
 
 e.g.
 ``` java
@@ -82,11 +82,14 @@ WpsMonitorClient wpsMonitorClient = new WpsMonitorClientFactory()
 ```
 
 ### Get Metrics 
-To get metrics from the monitor, you can use the getWpsProcess(wpsEndpoint : URL, wpsProcessIdentifier : String) : WpsProcessResource method.
+You can use the `getWpsProcess(wpsEndpoint : URL, wpsProcessIdentifier : String) : WpsProcessResource` method to get metrics from the monitor.
 
 e.h.
 ``` java 
-WpsProcessResource wpsProcess = client.getWpsProcess(new URL("http://example.com/WebProcessingService", "SimpleBuffer");
+WpsProcessResource wpsProcess = client.getWpsProcess(
+		new URL("http://example.com/WebProcessingService", 
+		"SimpleBuffer"
+);
 
 for (final WpsMetricResource metric : wpsProcess.getMetricsAsList()) {
 	System.out.println(metric.toString());
@@ -94,7 +97,9 @@ for (final WpsMetricResource metric : wpsProcess.getMetricsAsList()) {
 ```
 
 #### Exceptions
-If a WPS or a WPS process not found in the monitor, the client will throw different exceptions. If a WPS not found in the monitor, the client will throw a WpsMonitorClientWpsNotFoundException, otherwise is a WPS Process not found in the monitor, the client will throw a WpsMonitorClientWpsProcessNotFoundException instead.
+The client will throw different exceptions if a WPS or WPS process is found within the monitor. For example:
+WPS not found: `WpsMonitorClientWpsNotFoundException`
+Wps process not found: `WpsMonitorClientWpsProcessNotFoundException` 
 
 ### More Examples
-For more examples and a simple Testcase watch out the de.hsos.ecs.richwps.wpsmonitor.client.Main class which support a static void main method to test the client with a prepared WpsMonitor.
+For more examples and a simple Testcase check out the `de.hsos.ecs.richwps.wpsmonitor.client.Main` class which supports a static void main method to test the client with a prepared WpsMonitor.
