@@ -45,8 +45,10 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * A very simple WpsClient Implementation based on Apache HTTP Components Lib.
@@ -203,7 +205,27 @@ public class SimpleWpsClient implements WpsClient {
     private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         docBuilderFactory.setNamespaceAware(true);
+        
+        DocumentBuilder newDocumentBuilder = docBuilderFactory.newDocumentBuilder();
+        
+        // Configure error handler
+        newDocumentBuilder.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void error(SAXParseException saxpe) throws SAXException {
+                LOG.warn(saxpe);
+            }
 
-        return docBuilderFactory.newDocumentBuilder();
+            @Override
+            public void fatalError(SAXParseException saxpe) throws SAXException {
+                LOG.warn(saxpe);
+            }
+
+            @Override
+            public void warning(SAXParseException saxpe) throws SAXException {
+                LOG.warn(saxpe);
+            }
+        });
+        
+        return newDocumentBuilder;
     }
 }

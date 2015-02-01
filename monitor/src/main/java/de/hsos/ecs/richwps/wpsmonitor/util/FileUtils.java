@@ -32,7 +32,7 @@ public class FileUtils {
 
     public static String loadFile(final Path filePath) throws IOException {
         if (!isExists(filePath) || !isFile(filePath)) {
-            throw new IllegalArgumentException("The given path doesn't point to a existing file");
+            throw new IllegalArgumentException("The given path doesn't point to an existing file");
         }
 
         StringBuilder strBuilder = new StringBuilder();
@@ -48,7 +48,7 @@ public class FileUtils {
 
     public static Set<Path> scanDirectoryForFiles(final Path path) {
         if (!isExists(path) || !isDirectory(path)) {
-            throw new IllegalArgumentException("The given path doesn't point to a existing directory.");
+            throw new IllegalArgumentException("The given path doesn't point to an existing directory.");
         }
 
         Set<Path> files = new HashSet<>();

@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements;
 
+import de.hsos.ecs.richwps.wpsmonitor.ApplicationInfo;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,9 @@ public class AboutDialog extends JDialog {
         super(parent, true);
 
         initComponents();
+        
+        monitorInfoTextLabel.setText(monitorInfoTextLabel.getText().replace("{VERSION}", ApplicationInfo.VERSION));
+        monitorInfoTextLabel.setText(monitorInfoTextLabel.getText().replace("{PROJECT_SITE}", ApplicationInfo.PROJECT_SITE));
         setLocationRelativeTo(parent);
     }
 
@@ -59,7 +63,7 @@ public class AboutDialog extends JDialog {
         JPanel jPanel1 = new JPanel();
         JLabel jLabel1 = new JLabel();
         JLabel jLabel2 = new JLabel();
-        JLabel jLabel3 = new JLabel();
+        monitorInfoTextLabel = new JLabel();
         JLabel jLabel4 = new JLabel();
         closeButton = new JButton();
 
@@ -73,37 +77,35 @@ public class AboutDialog extends JDialog {
 
         jLabel2.setIcon(new ImageIcon(getClass().getResource("/images/Logo_HS_Osnabrueck.PNG"))); // NOI18N
 
-        jLabel3.setText("<html> <body style=\"text-align:center\"> <p> <strong style=\"font-size:10px\">WPS Monitor</strong> </p> A system to monitor Web Processing Services (WPS) </body> </html>");
+        monitorInfoTextLabel.setText("<html> <body style=\"text-align:center\"> <p> <strong style=\"font-size:10px\">WPS Monitor {VERSION}</strong> </p> A system to monitor Web Processing Services (WPS)<br/>Projectsite: <a href=\"{PROJECT_SITE}\">{PROJECT_SITE}</a> </body> </html>");
 
         jLabel4.setText("<html><body style=\"text-align:center;\">As part of the RichWPS Project of the Faculty of Engineering and Computer Science</body></html>");
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                             .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 298, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(monitorInfoTextLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addGap(38, 38, 38)
-                .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(monitorInfoTextLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -119,8 +121,7 @@ public class AboutDialog extends JDialog {
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -128,8 +129,7 @@ public class AboutDialog extends JDialog {
                     .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -147,5 +147,6 @@ public class AboutDialog extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton closeButton;
+    private JLabel monitorInfoTextLabel;
     // End of variables declaration//GEN-END:variables
 }

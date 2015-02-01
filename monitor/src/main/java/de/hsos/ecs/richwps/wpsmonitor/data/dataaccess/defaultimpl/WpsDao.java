@@ -19,13 +19,10 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Default implementation of a WpsDataAccess interface

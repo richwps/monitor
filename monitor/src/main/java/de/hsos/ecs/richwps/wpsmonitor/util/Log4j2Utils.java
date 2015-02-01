@@ -17,11 +17,13 @@ package de.hsos.ecs.richwps.wpsmonitor.util;
 
 import java.nio.file.Paths;
 import java.util.Map;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 /**
@@ -33,7 +35,6 @@ public class Log4j2Utils {
 
     public static String getFileNameIfExists() {
         String match = null;
-
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         for (Map.Entry e : ctx.getConfiguration().getLoggers().entrySet()) {
             LoggerConfig c = (LoggerConfig) e.getValue();
@@ -57,6 +58,15 @@ public class Log4j2Utils {
         }
 
         return match;
+    }
+    
+    public static void setLogLevel(final Level level) {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig lConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        lConfig.setLevel(level);
+        
+        ctx.updateLoggers();
     }
 
     private Log4j2Utils() {

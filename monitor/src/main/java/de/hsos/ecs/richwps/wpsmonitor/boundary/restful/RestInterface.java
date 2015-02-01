@@ -21,6 +21,7 @@ import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
+import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,7 +37,7 @@ import spark.Response;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public class RestInterface {
+public class RestInterface implements AutoCloseable {
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -159,11 +160,20 @@ public class RestInterface {
         return this;
     }
 
+    @Override
+    public void close() throws Exception {
+        // Not the best soulution. Is a design error in the spark framework.
+        // this is fixed in newer version (java 8)
+        Method stopServer = spark.Spark.class.getDeclaredMethod("stop");
+        stopServer.setAccessible(true);
+        stopServer.invoke(null, new Object[] {});
+    }
+
     /**
      * Initializes and registers all added {@link MonitorRoute} instances.
      */
     public void start() {
-        spark.Spark.setPort(port);
+        spark.Spark.setPort(port); 
         initAndRegisterRoutes();
     }
 

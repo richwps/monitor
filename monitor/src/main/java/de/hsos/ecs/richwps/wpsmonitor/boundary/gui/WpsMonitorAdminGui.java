@@ -36,15 +36,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -103,6 +102,13 @@ public class WpsMonitorAdminGui extends JFrame {
         this.dsDialog = new DataSourceDialog(this, dataSources);
         this.lvDialog = new LogViewerDialog(this, Paths.get(logDirectory));
 
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                exitMenuItemActionPerformed(null);
+            }
+        }) ;
+        
         init();
     }
 
@@ -254,7 +260,7 @@ public class WpsMonitorAdminGui extends JFrame {
         JMenu aboutMenu = new JMenu();
         JMenuItem aboutMenuItem = new JMenuItem();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("WPS Monitor - Admin Interface");
         setBackground(new Color(255, 255, 255));
         setIconImage(new ImageIcon(getClass().getResource("/icons/wpsmonitor-64x64.png")).getImage());
@@ -526,8 +532,6 @@ public class WpsMonitorAdminGui extends JFrame {
 
             }
         }
-
-        System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed

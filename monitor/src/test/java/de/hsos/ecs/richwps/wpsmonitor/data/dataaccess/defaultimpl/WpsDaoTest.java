@@ -21,7 +21,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;

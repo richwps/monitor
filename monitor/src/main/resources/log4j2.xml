@@ -43,7 +43,7 @@
     </Appenders>
     <Loggers>
         <Root level="all">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Console" level="error"/>
             <AppenderRef ref="ErrorFile" level="error" />
             <AppenderRef ref="FatalFile" level="fatal" />
             <AppenderRef ref="WarnFile" level="warn" />

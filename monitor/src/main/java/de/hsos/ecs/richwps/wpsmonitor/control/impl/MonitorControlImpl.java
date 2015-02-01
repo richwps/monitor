@@ -28,7 +28,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
-import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsDao;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
@@ -37,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobKey;
@@ -583,6 +581,22 @@ public class MonitorControlImpl implements MonitorControl {
         }
 
         return measuredData;
+    }
+
+    @Override
+    public WpsProcessEntity getProcess(final URL endpoint, final String identifier) {
+        Validate.notNull(endpoint, "endpoint");
+        validator.validateStringParam(endpoint.toString());
+        validator.validateStringParam(identifier);
+        
+        WpsProcessEntity result = null;
+        try(WpsProcessDataAccess processDao = wpsProcessDaoFactory.create()) {
+            result = processDao.find(endpoint, identifier);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create processDao. Execution aborted.", ex);
+        }
+        
+        return result;
     }
 
     @Override

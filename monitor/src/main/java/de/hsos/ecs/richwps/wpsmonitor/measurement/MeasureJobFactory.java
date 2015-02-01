@@ -22,7 +22,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +30,6 @@ import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.simpl.SimpleJobFactory;
 import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
 

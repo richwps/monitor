@@ -284,6 +284,16 @@ public interface MonitorControl {
     public List<MeasuredDataEntity> getMeasuredData(final WpsProcessEntity processEntity, final Range range);
 
     /**
+     * Gets an WpsProcessEntity instance which matches the given WPS endpoint 
+     * and Process identifier.
+     * 
+     * @param endpoint WPS Endpoint
+     * @param identifier Process identifier
+     * @return The specific WpsProcessEntity instance
+     */
+    public WpsProcessEntity getProcess(final URL endpoint, final String identifier);
+    
+    /**
      * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
      * which are identified by the endpoint.
      *

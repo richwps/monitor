@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.control.scheduler;
 
+import com.google.gson.annotations.Expose;
 import de.hsos.ecs.richwps.wpsmonitor.util.Pair;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;
@@ -49,6 +50,7 @@ public class TriggerConfig {
     /**
      * TriggerKey - can be null.
      */
+    @Expose
     private Pair<String, String> triggerKey;
 
     /**

@@ -16,7 +16,6 @@
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource;
 
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;

@@ -39,7 +39,6 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
-import org.quartz.spi.JobFactory;
 
 /**
  * Holds a Quartz-{@link Scheduler} instance and delegates some complex

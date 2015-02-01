@@ -24,7 +24,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;

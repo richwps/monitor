@@ -43,6 +43,7 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.defaultimpl.WpsProcessDaoD
 import de.hsos.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
 import java.io.File;
+import org.quartz.Scheduler;
 
 /**
  * Builder pattern to build a Monitor-instance. First, call setupDefault() and
@@ -556,7 +557,8 @@ public class MonitorBuilder {
         SchedulerFactory schedulerFactory = new SchedulerFactory(storage.getJobFactoryService(), storage.getJobListeners());
 
         try {
-            return new SchedulerControl(schedulerFactory.create(), storage.getJobFactoryService());
+            Scheduler scheduler = schedulerFactory.create();
+            return new SchedulerControl(scheduler, storage.getJobFactoryService());
         } catch (CreateException ex) {
             throw new BuilderException(ex);
         }

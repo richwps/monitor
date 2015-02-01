@@ -15,6 +15,19 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.CommandLineInterfaceBuilder;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.AddCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.CreateCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.DeleteCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.MonitorExitCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.PauseCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.ResumeCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.ShowCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.StatusCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.TestCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.console.MonitorConsole;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.console.MonitorConsoleBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.GuiStarter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
@@ -51,28 +64,26 @@ import org.apache.logging.log4j.Logger;
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
 public class Application {
-
-    private static final Logger LOG = LogManager.getLogger();
-    private static final String LOG_DIRECTORY = Log4j2Utils.getFileNameIfExists();
+    private static final Logger LOG;
+    private final ApplicationStartOptions opt;
 
     public static void main(String[] args) {
-        Locale.setDefault(Locale.GERMANY);
-
         try {
-            new Application().run();
+            new Application(new ApplicationStartOptions(args)).run();
         } catch (Throwable ex) {
-            LOG.fatal("Execution Error. Execution of WPS-Monitor aborted.", ex);
-
-            // exit the application
+            LOG.fatal("Fatal execution Error.", ex);
             Runtime.getRuntime().exit(1);
         }
     }
 
-    public Application() {
+    public Application(final ApplicationStartOptions opt) {
+        this.opt = opt;
+        Log4j2Utils.setLogLevel(this.opt.getLogLevel());
     }
 
     public void run() {
         try {
+
             Monitor monitor = setupMonitor();
 
             LOG.trace("WpsMonitor is starting up ...");
@@ -82,18 +93,67 @@ public class Application {
             RestInterface rest = setupRest(monitor.getMonitorControl());
             rest.start();
 
-            LOG.trace("Setup DataDriver Set ...");
-            Set<DataSourceCreator> drivers = new HashSet<>();
-            drivers.add(new SemanticProxyData());
+            monitor.addShutdownRoutine(rest);
 
-            LOG.trace("Start GUI ...");
-            GuiStarter.start(monitor, LOG_DIRECTORY, drivers);
-
-            LOG.info("WpsMonitor is started.");
+            switch (opt.getUi()) {
+                case CLI:
+                    startCli(monitor);
+                    break;
+                case GUI:
+                    startGui(monitor);
+                    break;
+                case NONE:
+                default:
+                    LOG.trace("Start Monitor in server mode...");
+                    break;
+            }
         } catch (MonitorException ex) {
             throw new AssertionError("Can't start the monitor!", ex);
         } catch (BuilderException ex) {
             throw new AssertionError("Can't build the monitor!", ex);
+        }
+    }
+
+    public void startGui(final Monitor monitor) {
+        LOG.trace("Setup DataDriver Set ...");
+        Set<DataSourceCreator> drivers = new HashSet<>();
+        drivers.add(new SemanticProxyData());
+
+        LOG.trace("Start GUI ...");
+        GuiStarter.start(monitor, ApplicationInfo.LOG_DIRECTORY, drivers);
+    }
+
+    /**
+     * Starts the CLI with silence mode. The silence mode is a dirty hack
+     * to prevent bad libraries to print content to the std out if the cli is 
+     * active.
+     * 
+     * @param monitor Monitor instance
+     */
+    public void startCli(final Monitor monitor) {
+        try {
+            LOG.trace("Start CLI ...");
+            
+            final MonitorConsole console = new MonitorConsoleBuilder()
+                    .withStdInAndOut()
+                    .silenceMode(true)
+                    .build();
+            
+            new CommandLineInterfaceBuilder(console)
+                    .addCommand(new AddCommand(monitor))
+                    .addCommand(new MonitorExitCommand(monitor))
+                    .addCommand(new CreateCommand(monitor))
+                    .addCommand(new ShowCommand(monitor))
+                    .addCommand(new StatusCommand(monitor))
+                    .addCommand(new DeleteCommand(monitor))
+                    .addCommand(new ResumeCommand(monitor))
+                    .addCommand(new PauseCommand(monitor))
+                    .addCommand(new TestCommand(monitor))
+                    .withDefaultCommands()
+                    .build()
+                    .run();
+        } catch (CommandException ex) {
+            LOG.fatal("Can't build CLI.", ex);
         }
     }
 
@@ -122,7 +182,7 @@ public class Application {
      * @return RestInterface Instance
      * @throws de.hsos.ecs.richwps.wpsmonitor.util.BuilderException
      */
-    public RestInterface setupRest(MonitorControl monitor) throws BuilderException {
+    public RestInterface setupRest(final MonitorControl monitor) throws BuilderException {
 
         // create RESTful service
         RestInterface restInterface = new RestInterfaceBuilder()
@@ -147,5 +207,13 @@ public class Application {
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 
         return restInterface;
+    }
+
+    static {
+        // forces all JUL logging prints to log4j
+        System.setProperty("java.util.logging.manager", org.apache.logging.log4j.jul.LogManager.class.getName());
+        Locale.setDefault(Locale.GERMANY);
+
+        LOG = LogManager.getLogger();
     }
 }
