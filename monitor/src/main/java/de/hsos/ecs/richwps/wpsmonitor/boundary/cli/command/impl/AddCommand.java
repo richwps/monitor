@@ -62,6 +62,11 @@ public class AddCommand extends MonitorCommandWithTrigger {
                     }
                 } else if (monitorControl.isWpsExists(endpoint)) {
                     createProcess(endpoint, identifier);
+                    
+                    if(triggerJson != null || requestFile != null) {
+                        super.consoleProxy.printLine("Only the process was added. "
+                                + "To also add the request or trigger, call the command again.");
+                    }
                 } else {
                     throw new CommandException("WPS not found.");
                 }
@@ -76,10 +81,6 @@ public class AddCommand extends MonitorCommandWithTrigger {
         }
     }
 
-    private boolean isProcessExists(final URL endpoint, final String identifier) {
-        return monitorControl.isProcessExists(endpoint, identifier);
-    }
-
     private void createProcess(final URL endpoint, final String identifier) {
         if (monitorControl.createAndScheduleProcess(endpoint, identifier)) {
             super.consoleProxy.printLine("Process was added and registred in the scheduler.");
@@ -91,7 +92,7 @@ public class AddCommand extends MonitorCommandWithTrigger {
         monitorControl.setTestRequest(endpoint, identifier, fileContent);
     }
 
-    private void addTrigger(final URL endpoint, final String identifier, final String triggerJson) {
+    private void addTrigger(final URL endpoint, final String identifier, final String triggerJson) throws CommandException {
         TriggerConfig tConfig = unmarshallJson(triggerJson);
         super.addTrigger(endpoint, identifier, tConfig);
     }
