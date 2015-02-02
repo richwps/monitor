@@ -18,6 +18,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOption;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.net.URL;
@@ -47,10 +48,18 @@ public abstract class MonitorCommandWithTrigger extends MonitorCommand {
         monitorControl.saveTrigger(endpoint, processIdentifier, config);
     }
 
-    protected TriggerConfig unmarshallJson(final String json) {
+    protected TriggerConfig unmarshallJson(final String json) throws CommandException {
         final Gson gson = new Gson();
 
-        return gson.fromJson(json, new TypeToken<TriggerConfig>() {
+        final TriggerConfig result = gson.fromJson(json, new TypeToken<TriggerConfig>() {
         }.getType());
+        
+        if(result.getStart() == null || result.getEnd() == null || result.getInterval() == null || result.getIntervalType() == null) {
+            throw new CommandException("One of the required config options of the given "
+                    + "trigger string are missing. "
+                    + "start, end, intervalType and interval are required.");
+        }
+        
+        return result;
     }
 }
