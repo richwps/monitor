@@ -15,11 +15,14 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.MonitorCommand;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOption;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.Hide;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
@@ -59,9 +62,7 @@ public class ShowCommand extends MonitorCommand {
 
     @Override
     public void execute() throws CommandException {
-        final Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
+        final Gson gson = getGson();
 
         StringBuilder strBuilder = new StringBuilder();
         try {
@@ -118,6 +119,22 @@ public class ShowCommand extends MonitorCommand {
         }
 
         super.consoleProxy.printLine(strBuilder.toString());
+    }
+    
+    private Gson getGson() {
+        return new GsonBuilder().setExclusionStrategies(
+                new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        return f.getAnnotation(Hide.class) != null;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> arg0) {
+                        return false;
+                    }
+                }
+        ).create();
     }
 
     private void appenProcessOutput(final URL endpoint, final StringBuilder strBuilder) {
