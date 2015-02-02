@@ -52,13 +52,20 @@ public class AddCommand extends MonitorCommandWithTrigger {
         try {
             if (endpoint != null && identifier != null) {
 
-                if (triggerJson != null) {
-                    addTrigger(endpoint, identifier, triggerJson);
-                } else if (requestFile != null) {
-                    setTestRequest(endpoint, identifier, requestFile);
-                } else {
+                if (monitorControl.isProcessExists(endpoint, identifier)) {
+                    if (triggerJson != null) {
+                        addTrigger(endpoint, identifier, triggerJson);
+                    }
+
+                    if (requestFile != null) {
+                        setTestRequest(endpoint, identifier, requestFile);
+                    }
+                } else if (monitorControl.isWpsExists(endpoint)) {
                     createProcess(endpoint, identifier);
+                } else {
+                    throw new CommandException("WPS not found.");
                 }
+
             } else {
                 throw new WpsProcessMissingException();
             }
@@ -67,6 +74,10 @@ public class AddCommand extends MonitorCommandWithTrigger {
         } catch (IOException ex) {
             throw new CommandException("Can't read file.", ex);
         }
+    }
+
+    private boolean isProcessExists(final URL endpoint, final String identifier) {
+        return monitorControl.isProcessExists(endpoint, identifier);
     }
 
     private void createProcess(final URL endpoint, final String identifier) {
