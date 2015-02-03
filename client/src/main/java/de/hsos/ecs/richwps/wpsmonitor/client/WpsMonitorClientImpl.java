@@ -77,15 +77,19 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
             throw new WpsMonitorOfflineClientException(monitorEndpoint);
         }
 
-        if (isMonitorReachable(monitorEndpoint) && (wpsContext.isEmpty() || refresh)) {
+        if (wpsContext.isEmpty() || refresh) {
             List<WpsEntity> wpsList = requester.getWpsList();
+
+            if (wpsList == null) {
+                throw new WpsMonitorOfflineClientException(monitorEndpoint);
+            }
 
             for (final WpsEntity entity : wpsList) {
                 wpsContext.put(entity.getEndpoint(), ResourceConverter.WpsEntityToResource(entity));
             }
         }
     }
-    
+
     @Override
     public Boolean isReachable() {
         return isMonitorReachable(monitorEndpoint);
@@ -126,7 +130,7 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
             if (!isMonitorReachable(monitorEndpoint)) {
                 throw new WpsMonitorOfflineClientException(monitorEndpoint);
             }
-            
+
             WpsProcessResource process = requester.getProcess(wpsResource, wpsProcessIdentifier, consider);
 
             if (process == null) {
@@ -160,7 +164,7 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
 
             return result;
         } catch (HttpException ex) {
-            throw new WpsMonitorClientException("Can't initalize WpsContent.", ex);
+            throw new WpsMonitorClientException("Can't initalize WpsContext.", ex);
         }
     }
 
