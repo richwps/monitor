@@ -24,6 +24,7 @@ import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.FileUtils;
 import java.io.IOException;
@@ -53,6 +54,16 @@ public class TestCommand extends MonitorCommand {
     @Override
     public void execute() throws CommandException {
         try {
+            if(endpoint == null && wpsId != null) {
+                final WpsEntity wps = monitorControl.getWps(wpsId);
+                
+                if(wps != null) {
+                    endpoint = wps.getEndpoint();
+                } else {
+                    throw new CommandException("WPS with the given ID is not registred within the monitor.");
+                }
+            }
+            
             if (endpoint != null && identifier != null) {
                 final WpsClient client = getWpsClientInstance();
                 

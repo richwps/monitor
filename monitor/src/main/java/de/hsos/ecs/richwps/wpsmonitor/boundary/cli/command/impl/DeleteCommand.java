@@ -65,21 +65,24 @@ public class DeleteCommand extends MonitorCommand {
 
     @Override
     public void execute() throws CommandException {
-
-        if(endpoint != null && identifier != null) {
+        if(endpoint != null && wpsId == null) {
+            monitorControl.getWpsId(endpoint);
+        }
+        
+        if(wpsId != null && identifier != null) {
             if(onlyMeasuredData) {
-                monitorControl.deleteMeasuredDataOfProcess(endpoint, identifier, date);
+                monitorControl.deleteMeasuredDataOfProcess(wpsId, identifier, date);
             } else if(triggerId != null) {
-                if(!deleteTrigger(endpoint, identifier, triggerId)) {
+                if(!deleteTrigger(wpsId, identifier, triggerId)) {
                     super.consoleProxy.printLine("No trigger found for id " + triggerId.toString());
                 }
             }else {                
-                if(!monitorControl.deleteProcess(endpoint, identifier)) {
+                if(!monitorControl.deleteProcess(wpsId, identifier)) {
                     super.consoleProxy.printLine("No process found for deletetion.");
                 }
             }
-        } else if(endpoint != null) {
-            if(!monitorControl.deleteWps(endpoint)) {
+        } else if(wpsId != null) {
+            if(!monitorControl.deleteWps(wpsId)) {
                 super.consoleProxy.printLine("No WPS found for deletetation.");
             }
         } else {
@@ -87,8 +90,8 @@ public class DeleteCommand extends MonitorCommand {
         }
     }
     
-    private Boolean deleteTrigger(final URL endpoint, final String identifier, final Integer id) {
-        List<TriggerConfig> triggers = monitorControl.getTriggers(endpoint, identifier);
+    private Boolean deleteTrigger(final Long wpsId, final String identifier, final Integer id) {
+        List<TriggerConfig> triggers = monitorControl.getTriggers(wpsId, identifier);
         
         for(int i = 0; i < triggers.size(); i++) {
             if(id == i) {

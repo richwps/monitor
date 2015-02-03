@@ -31,9 +31,13 @@ public class StatusCommand extends MonitorCommand {
 
     @Override
     public void execute() throws CommandException {
-        if(endpoint != null && identifier != null) {
-            if(monitorControl.isProcessExists(endpoint, identifier)) {
-                if(monitorControl.isMonitoringPaused(endpoint, identifier)) {
+        if (endpoint != null && wpsId == null) {
+            wpsId = monitorControl.getWpsId(endpoint);
+        }
+
+        if (wpsId != null && identifier != null) {
+            if (monitorControl.isProcessExists(wpsId, identifier)) {
+                if (monitorControl.isMonitoringPaused(wpsId, identifier)) {
                     super.consoleProxy.printLine("Monitoring paused.");
                 } else {
                     super.consoleProxy.printLine("Monitoring in progress.");
@@ -45,5 +49,5 @@ public class StatusCommand extends MonitorCommand {
             throw new WpsProcessMissingException();
         }
     }
-    
+
 }

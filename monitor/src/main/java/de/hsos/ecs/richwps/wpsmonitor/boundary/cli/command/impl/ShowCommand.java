@@ -66,9 +66,13 @@ public class ShowCommand extends MonitorCommand {
 
         StringBuilder strBuilder = new StringBuilder();
         try {
+            if(wpsId == null && endpoint != null) {
+                wpsId = monitorControl.getWpsId(endpoint);
+            }
+            
             if (showTriggers) {
-                if (endpoint != null && identifier != null) {
-                    List<TriggerConfig> triggers = monitorControl.getTriggers(endpoint, identifier);
+                if (wpsId != null && identifier != null) {
+                    List<TriggerConfig> triggers = monitorControl.getTriggers(wpsId, identifier);
 
                     for (int i = 0; i < triggers.size(); i++) {
                         TriggerConfig t = triggers.get(i);
@@ -82,9 +86,9 @@ public class ShowCommand extends MonitorCommand {
                     throw new WpsProcessMissingException();
                 }
             } else {
-                if (endpoint != null && identifier != null) {
+                if (wpsId != null && identifier != null) {
                     if (showMeasuredData) {
-                        List<MeasuredDataEntity> measuredData = monitorControl.getMeasuredData(endpoint, identifier, new Range(0, 15));
+                        List<MeasuredDataEntity> measuredData = monitorControl.getMeasuredData(wpsId, identifier, new Range(0, 15));
 
                         for (MeasuredDataEntity m : measuredData) {
                             strBuilder.append("\t")
@@ -92,7 +96,7 @@ public class ShowCommand extends MonitorCommand {
                                     .append("\n");
                         }
                     } else {
-                        WpsProcessEntity process = monitorControl.getProcess(endpoint, identifier);
+                        WpsProcessEntity process = monitorControl.getProcess(wpsId, identifier);
                         
                         if(process != null) {
                             strBuilder.append(process.getRawRequest());
@@ -100,17 +104,21 @@ public class ShowCommand extends MonitorCommand {
                             strBuilder.append("Process not found.");
                         }
                     }
-                } else if (endpoint != null) {
-                    appenProcessOutput(endpoint, strBuilder);
+                } else if (wpsId != null) {
+                    appenProcessOutput(wpsId, strBuilder);
                 } else {
                     List<WpsEntity> wpsList = monitorControl.getWpsList();
+                    
                     for (final WpsEntity wps : wpsList) {
-                        strBuilder.append(wps.getEndpoint().toString())
+                        strBuilder.append("ID (")
+                                .append(wps.getId())
+                                .append(") ")
+                                .append(wps.getEndpoint().toString())
                                 .append("\n")
                                 .append("Processes: ")
                                 .append("\n");
 
-                        appenProcessOutput(wps.getEndpoint(), strBuilder);
+                        appenProcessOutput(wps.getId(), strBuilder);
                     }
                 }
             }
@@ -137,8 +145,8 @@ public class ShowCommand extends MonitorCommand {
         ).create();
     }
 
-    private void appenProcessOutput(final URL endpoint, final StringBuilder strBuilder) {
-        List<WpsProcessEntity> processes = monitorControl.getProcesses(endpoint);
+    private void appenProcessOutput(final Long wpsId, final StringBuilder strBuilder) {
+        List<WpsProcessEntity> processes = monitorControl.getProcesses(wpsId);
         for (final WpsProcessEntity process : processes) {
             strBuilder.append("\tIdentifier: ")
                     .append(process.getIdentifier())

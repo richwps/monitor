@@ -19,10 +19,8 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.MonitorCommandWithTri
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOption;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import de.hsos.ecs.richwps.wpsmonitor.util.FileUtils;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Paths;
 
 /**
@@ -50,20 +48,23 @@ public class AddCommand extends MonitorCommandWithTrigger {
     @Override
     public void execute() throws CommandException {
         try {
-            if (endpoint != null && identifier != null) {
-
-                if (monitorControl.isProcessExists(endpoint, identifier)) {
-                    if (triggerJson != null) {
-                        addTrigger(endpoint, identifier, triggerJson);
+            if (endpoint != null && wpsId == null) {
+                wpsId = monitorControl.getWpsId(endpoint);
+            }
+            
+            if (wpsId != null && identifier != null) {
+                if (monitorControl.isProcessExists(wpsId, identifier)) {
+                    if (triggerStringRepresentation != null) {
+                        addTrigger(wpsId, identifier, triggerStringRepresentation);
                     }
 
                     if (requestFile != null) {
-                        setTestRequest(endpoint, identifier, requestFile);
+                        setTestRequest(wpsId, identifier, requestFile);
                     }
-                } else if (monitorControl.isWpsExists(endpoint)) {
-                    createProcess(endpoint, identifier);
-                    
-                    if(triggerJson != null || requestFile != null) {
+                } else if (monitorControl.isWpsExists(wpsId)) {
+                    createProcess(wpsId, identifier);
+
+                    if (triggerStringRepresentation != null || requestFile != null) {
                         super.consoleProxy.printLine("Only the process was added. "
                                 + "To also add the request or trigger, call the command again.");
                     }
@@ -81,20 +82,14 @@ public class AddCommand extends MonitorCommandWithTrigger {
         }
     }
 
-    private void createProcess(final URL endpoint, final String identifier) {
-        if (monitorControl.createAndScheduleProcess(endpoint, identifier)) {
+    private void createProcess(final Long wpsId, final String identifier) {
+        if (monitorControl.createAndScheduleProcess(wpsId, identifier)) {
             super.consoleProxy.printLine("Process was added and registred in the scheduler.");
         }
     }
 
-    private void setTestRequest(final URL endpoint, final String identifier, final String requestFile) throws IOException {
+    private void setTestRequest(final Long wpsId, final String identifier, final String requestFile) throws IOException {
         final String fileContent = FileUtils.loadFile(Paths.get(requestFile));
-        monitorControl.setTestRequest(endpoint, identifier, fileContent);
+        monitorControl.setTestRequest(wpsId, identifier, fileContent);
     }
-
-    private void addTrigger(final URL endpoint, final String identifier, final String triggerJson) throws CommandException {
-        TriggerConfig tConfig = unmarshallJson(triggerJson);
-        super.addTrigger(endpoint, identifier, tConfig);
-    }
-
 }

@@ -43,10 +43,8 @@ public class CreateCommand extends MonitorCommandWithTrigger {
                 if (identifier != null) {
                     addProcess(endpoint, identifier);
 
-                    if (triggerJson != null && !triggerJson.isEmpty()) {
-                        TriggerConfig tConfig = unmarshallJson(triggerJson);
-
-                        addTrigger(endpoint, identifier, tConfig);
+                    if (triggerStringRepresentation != null && !triggerStringRepresentation.isEmpty()) {
+                        super.addTrigger(wpsId, identifier, triggerStringRepresentation);
                     }
                 }
             } else {

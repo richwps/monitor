@@ -31,11 +31,15 @@ public class ResumeCommand extends MonitorCommand {
 
     @Override
     public void execute() throws CommandException {
-        if(endpoint != null && identifier != null) {
-            monitorControl.resumeMonitoring(endpoint, identifier);
+        if (endpoint != null && wpsId == null) {
+            wpsId = monitorControl.getWpsId(endpoint);
+        }
+
+        if (wpsId != null && identifier != null) {
+            monitorControl.resumeMonitoring(wpsId, identifier);
         } else {
             throw new WpsProcessMissingException();
         }
     }
-    
+
 }
