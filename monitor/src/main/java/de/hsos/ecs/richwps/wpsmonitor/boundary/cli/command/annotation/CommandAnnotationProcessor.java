@@ -123,7 +123,7 @@ public class CommandAnnotationProcessor {
                 }
             }
         } catch (ParseException | ConverterException | IllegalArgumentException | IllegalAccessException ex) {
-            throw new CommandAnnotationProcessorException("Parse Exception", ex);
+            throw new CommandAnnotationProcessorException("Parse Exception.", ex);
         }
     }
 
