@@ -50,7 +50,9 @@ Changelog:
 * `none` The monitor starts without any UI type
 
 ## Monitor CLI
-Overview:
+For all commands which needs the --wps parameter (except create), you can also use --wps-id instead if you know about the WPS ID. You can find out the wps id with the show command.
+
+Command Overview:
 ```
 create --wps=<endpoint>[ --process=<identifier>[ --trigger={start:<start>, end:<end>, interval:<interval>, type:<type>}]]
 add --wps=<endpoint> --process=<identifier> [ --trigger={start:<start>, end:<end>, interval:<interval>, type:<type>} | --request-file=<filepath>]
@@ -61,15 +63,38 @@ pause --wps=<endpoint> --process=<identifier>
 resume --wps=<endpoint> --process=<identifier>
 ```
 
-General help usage:
+###Add Triggers
+To add triggers you can use the --trigger parameter of the create or add command. The trigger can be in JSON or in the Simple Trigger Notation. The last of the two possibilities is easier to use.
+
+Json Example:
+```json
+create --wps http://example.com --process SimpleBuffer --trigger '{"intervalType":"SECOND", "start":"Jan 31, 2015 7:20:04 PM", "end":"Feb 19, 2015 7:20:04 PM", "interval":120}'
 ```
+
+Simple Trigger Notation (STN) Example:
+```
+create --wps http://example.com --process SimpleBuffer --trigger "@Second(120), now, 22.02.2015"
+```
+
+The keyword now will be replaced with the current time.
+
+STN general usage:
+```
+@second|minute|hour|day|week|month(<interval : integer>), <start : date>, <end : date>
+```
+
+###help usage
+```
+WPSMonitor> help
+
 add		Adds a Process to a already registred WPS, or a Trigger to a already registred WPS Process.
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
-		--trigger=<triggerjson> : The TriggerConfig Object as JSON string. e.g.
+		--trigger=<triggerString> : The TriggerConfig Object as JSON string. e.g.
 					'{"intervalType":"SECOND|MINUTE|HOUR|DAY|WEEK|MONTH", "start":"Jan 31, 2015 7:20:04 PM",
 					"end":"Feb 19, 2015 7:20:04 PM", "interval":2}'
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 		--rf, --request-file=<requestfile> : Enter a valid path to a file with a xml test request to import.
 
@@ -77,6 +102,7 @@ exit		Exits the Application
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 
 create		Registers a new WPS, Process or Trigger to a Process in the monitor. If the WPS of thr entered
@@ -84,9 +110,10 @@ create		Registers a new WPS, Process or Trigger to a Process in the monitor. If 
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
-		--trigger=<triggerjson> : The TriggerConfig Object as JSON string. e.g.
+		--trigger=<triggerString> : The TriggerConfig Object as JSON string. e.g.
 					'{"intervalType":"SECOND|MINUTE|HOUR|DAY|WEEK|MONTH", "start":"Jan 31, 2015 7:20:04 PM",
 					"end":"Feb 19, 2015 7:20:04 PM", "interval":2}'
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 
 show		shows all WPS and Processes. Can be specified by parameters. --wps to show a list of WPS and
@@ -96,6 +123,7 @@ show		shows all WPS and Processes. Can be specified by parameters. --wps to show
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 		--md, --measured-data : Shows the last 15 measured data of the wps process. This functionallity is only for testing
 					purposes.
@@ -105,6 +133,7 @@ status		Displays the current status of a monitored WPS process.
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 
 delete		Deletes a WPS, Process of a WPS, Trigger of a WPS process or the measured Data of a WPS process. If
@@ -114,6 +143,7 @@ delete		Deletes a WPS, Process of a WPS, Trigger of a WPS process or the measure
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
 		--d, --date=<date> : Specified the date at which the measured data should be deleted. e.g. 12.03.2012
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 		--omd, --only-measured-data : Delete only the measured Data of the specified WPS process
 		--tid, --trigger-id=<triggerid> : Deletes the trigger with the given ID. type show <wps> <process> --triggers to find out the
@@ -123,12 +153,14 @@ resume		Resumes the monitoring of a process.
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 
 pause		Pauses the monitoring of a process.
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 
 test		Requests a WPS with the testrequest of a file or an already saved testrequest of the specified
@@ -136,6 +168,7 @@ test		Requests a WPS with the testrequest of a file or an already saved testrequ
 
 		Options:		
 		--process=<identifier> : Specifies which WPS process should be selected by identifier.
+		--wid, --wps-id=<wpsid> : Specifies which WPS should be selected by ID.
 		--wps=<endpoint> : Specifies which WPS should be selected by endpoint.
 		--rf, --request-file=<requestfile> : Enter a valid path to a file with a xml test request to import.
 
