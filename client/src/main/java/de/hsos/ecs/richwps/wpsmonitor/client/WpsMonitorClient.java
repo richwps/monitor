@@ -145,4 +145,10 @@ public interface WpsMonitorClient {
      */
     public List<WpsResource> getAllWps(final Boolean forceRefresh)
             throws WpsMonitorClientException;
+    /**
+     * Checks if the WpsMonitor is available.
+     * 
+     * @return true if available, otherwise false 
+     */
+    public Boolean isReachable();
 }
