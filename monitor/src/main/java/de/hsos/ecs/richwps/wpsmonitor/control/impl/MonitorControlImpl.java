@@ -125,7 +125,8 @@ public class MonitorControlImpl implements MonitorControl {
         return result;
     }
 
-    private WpsEntity getWps(final URL endpoint) {
+    @Override
+    public WpsEntity getWps(final URL endpoint) {
         Validate.notNull(endpoint, "endpoint");
         validator.validateStringParam(endpoint.toString());
 
@@ -136,7 +137,8 @@ public class MonitorControlImpl implements MonitorControl {
         }
     }
 
-    private WpsEntity getWps(final Long wpsId) {
+    @Override
+    public WpsEntity getWps(final Long wpsId) {
         Validate.notNull(wpsId, "wpsid");
 
         try (WpsDataAccess wpsDao = wpsDaoFactory.create()) {
@@ -592,6 +594,21 @@ public class MonitorControlImpl implements MonitorControl {
         WpsProcessEntity result = null;
         try(WpsProcessDataAccess processDao = wpsProcessDaoFactory.create()) {
             result = processDao.find(endpoint, identifier);
+        } catch (CreateException ex) {
+            throw new AssertionError("Can't create processDao. Execution aborted.", ex);
+        }
+        
+        return result;
+    }
+    
+    @Override
+    public WpsProcessEntity getProcess(final Long wpsId, final String identifier) {
+        Validate.notNull(wpsId, "endpoint");
+        validator.validateStringParam(identifier);
+        
+        WpsProcessEntity result = null;
+        try(WpsProcessDataAccess processDao = wpsProcessDaoFactory.create()) {
+            result = processDao.find(wpsId, identifier);
         } catch (CreateException ex) {
             throw new AssertionError("Can't create processDao. Execution aborted.", ex);
         }

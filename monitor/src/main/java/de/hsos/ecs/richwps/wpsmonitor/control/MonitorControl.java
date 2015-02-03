@@ -294,6 +294,16 @@ public interface MonitorControl {
     public WpsProcessEntity getProcess(final URL endpoint, final String identifier);
     
     /**
+     * Gets an WpsProcessEntity instance which matches the given WPS id 
+     * and Process identifier.
+     * 
+     * @param wpsId WPS Endpoint
+     * @param identifier Process identifier
+     * @return The specific WpsProcessEntity instance
+     */
+    public WpsProcessEntity getProcess(final Long wpsId, final String identifier);
+    
+    /**
      * Gets all {@link WpsProcessEntity} instances of the {@link WpsEntity}
      * which are identified by the endpoint.
      *
@@ -588,6 +598,22 @@ public interface MonitorControl {
      * @return WPS ID, null if no WPS is found
      */
     public Long getWpsId(final URL endpoint);
+    
+    /**
+     * Gets an WPS by ID
+     * 
+     * @param wpsId WPS ID
+     * @return The matched WpsEntity instance, otherwise null
+     */
+    public WpsEntity getWps(final Long wpsId);
+    
+    /**
+     * Gets an WPS by their endpoint
+     * 
+     * @param endpoint WPS endpoint
+     * @return The matched WpsEntity instance, otherwise null
+     */
+    public WpsEntity getWps(final URL endpoint);
 
     /**
      * Gets the intern ID of a registred WPS Process which is fetched by the
