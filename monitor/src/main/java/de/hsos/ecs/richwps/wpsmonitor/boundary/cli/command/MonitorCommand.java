@@ -38,6 +38,15 @@ public abstract class MonitorCommand extends Command {
     protected URL endpoint;
     
     @CommandOption(
+            shortOptionName = "wid",
+            longOptionName = "wps-id",
+            description = "Specifies which WPS should be selected by ID.",
+            hasArgument = true,
+            argumentName = "wpsid"
+    )
+    protected Long wpsId;
+    
+    @CommandOption(
             shortOptionName = "process", 
             description = "Specifies which WPS process should be selected by identifier.",
             hasArgument = true,
