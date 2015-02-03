@@ -16,14 +16,17 @@
 package de.hsos.ecs.richwps.wpsmonitor.client;
 
 import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientException;
-import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsProcessNotFoundException;
 import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsNotFoundException;
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsProcessNotFoundException;
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorOfflineClientException;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.HttpException;
 import de.hsos.ecs.richwps.wpsmonitor.client.http.WpsMonitorRequester;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.converter.ResourceConverter;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,17 +68,34 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
         wpsContext = new HashMap<>();
     }
 
-    private void initContext() throws HttpException {
+    private void initContext() throws HttpException, WpsMonitorOfflineClientException {
         initContext(false);
     }
 
-    private void initContext(final Boolean refresh) throws HttpException {
-        if (wpsContext.isEmpty() || refresh) {
+    private void initContext(final Boolean refresh) throws HttpException, WpsMonitorOfflineClientException {
+        if (!isMonitorReachable(monitorEndpoint)) {
+            throw new WpsMonitorOfflineClientException(monitorEndpoint);
+        }
+
+        if (isMonitorReachable(monitorEndpoint) && (wpsContext.isEmpty() || refresh)) {
             List<WpsEntity> wpsList = requester.getWpsList();
 
             for (final WpsEntity entity : wpsList) {
                 wpsContext.put(entity.getEndpoint(), ResourceConverter.WpsEntityToResource(entity));
             }
+        }
+    }
+    
+    @Override
+    public Boolean isReachable() {
+        return isMonitorReachable(monitorEndpoint);
+    }
+
+    private Boolean isMonitorReachable(final URL endpoint) {
+        try (Socket socket = new Socket(endpoint.getHost(), endpoint.getPort())) {
+            return true;
+        } catch (IOException ex) {
+            return false;
         }
     }
 
@@ -103,12 +123,16 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
     public WpsProcessResource getWpsProcess(final WpsResource wpsResource, final String wpsProcessIdentifier, final Integer consider)
             throws WpsMonitorClientException {
         try {
-            WpsProcessResource process = requester.getProcess(wpsResource, wpsProcessIdentifier, consider);
-            
-            if(process == null) {
-                throw new WpsMonitorClientWpsProcessNotFoundException(wpsProcessIdentifier, wpsResource.getWpsEndPoint());
+            if (!isMonitorReachable(monitorEndpoint)) {
+                throw new WpsMonitorOfflineClientException(monitorEndpoint);
             }
             
+            WpsProcessResource process = requester.getProcess(wpsResource, wpsProcessIdentifier, consider);
+
+            if (process == null) {
+                throw new WpsMonitorClientWpsProcessNotFoundException(wpsProcessIdentifier, wpsResource.getWpsEndPoint());
+            }
+
             return process;
         } catch (HttpException ex) {
             throw new WpsMonitorClientException("Can't Request Process metrics.", ex);
@@ -129,11 +153,11 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
         try {
             initContext(forceRefresh);
             WpsResource result = wpsContext.get(wpsEndPoint);
-            
-            if(result == null) {
+
+            if (result == null) {
                 throw new WpsMonitorClientWpsNotFoundException(wpsEndPoint);
             }
-            
+
             return result;
         } catch (HttpException ex) {
             throw new WpsMonitorClientException("Can't initalize WpsContent.", ex);
