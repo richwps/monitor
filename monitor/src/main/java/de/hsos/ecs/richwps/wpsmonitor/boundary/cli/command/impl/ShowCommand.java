@@ -29,7 +29,6 @@ import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.Range;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import java.net.URL;
 import java.util.List;
 
 /**

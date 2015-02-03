@@ -20,7 +20,6 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOpt
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
