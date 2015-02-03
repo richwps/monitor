@@ -69,11 +69,7 @@ public class CommandLineInterface extends CommandLineInterfaceProxy {
             try {
                 fetchCommand(readFromPrompt()).execute();
             } catch (CommandException ex) {
-                printLine(ex.getMessage());
-
-                if (ex.getCause() != null) {
-                    printLine(ex.getCause().getMessage());
-                }
+                printLine(getExceptionMessages(ex));
             } catch (Exception ex) {
                 printLine(ExceptionUtils.getStackTrace(ex));
             }
@@ -106,9 +102,26 @@ public class CommandLineInterface extends CommandLineInterfaceProxy {
         try {
             this.annotationProcessor.injectOptions(cmd, args);
         } catch (CommandAnnotationProcessorException ex) {
-            throw new CommandException("Can't pass options.", ex);
+            throw new CommandException("Can't pass Options.", ex);
         }
 
         return cmd;
+    }
+    
+    private String getExceptionMessages(final Exception ex) {
+        final StringBuilder strBuilder = new StringBuilder();
+        
+        appendExceptionMessages(strBuilder, ex);
+        
+        return strBuilder.toString();
+    }
+    
+    private void appendExceptionMessages(final StringBuilder strBuilder, final Throwable ex) {
+        strBuilder.append(ex.getMessage());
+        
+        if(ex.getCause() != null) {
+            strBuilder.append(" ");
+            appendExceptionMessages(strBuilder, ex.getCause());
+        }
     }
 }
