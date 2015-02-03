@@ -22,8 +22,6 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandExce
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -33,10 +31,9 @@ public abstract class MonitorCommandWithTrigger extends MonitorCommand {
 
     @CommandOption(
             shortOptionName = "trigger",
-            description = "The TriggerConfig Object as JSON string. "
-            + "e.g. '{\"intervalType\":\"SECOND|MINUTE|HOUR|DAY|WEEK|MONTH\", "
-            + "\"start\":\"Jan 31, 2015 7:20:04 PM\", \"end\":\"Feb 19, 2015 7:20:04 PM\", "
-            + "\"interval\":2}'",
+            description = "The TriggerConfig Object as STN string. "
+            + "e.g. \"@second|minute|hour|day|week|month(<interval : integer>), <start : date>, <end : date>\""
+            + "=> @Second(120), now, 22.02.2015",
             hasArgument = true,
             argumentName = "triggerString"
     )
@@ -49,29 +46,29 @@ public abstract class MonitorCommandWithTrigger extends MonitorCommand {
     protected void addTrigger(final URL endpoint, final String processIdentifier, final TriggerConfig config) {
         monitorControl.saveTrigger(endpoint, processIdentifier, config);
     }
-    
+
     protected void addTrigger(final Long wpsId, final String processIdentifier, final TriggerConfig config) {
         monitorControl.saveTrigger(wpsId, processIdentifier, config);
     }
-    
+
     protected void addTrigger(final Long wpsId, final String identifier, final String stringRepresentation) throws CommandException {
         TriggerConfig tConfig = null;
-        
-        if(stringRepresentation.startsWith("@")) {
+
+        if (stringRepresentation.startsWith("@")) {
             tConfig = unmarshallSimpleNotation(stringRepresentation);
         }
-        
-        if(stringRepresentation.startsWith("{")) {
+
+        if (stringRepresentation.startsWith("{")) {
             tConfig = unmarshallJson(stringRepresentation);
         }
-        
-        if(tConfig == null) {
+
+        if (tConfig == null) {
             throw new CommandException("Can't read the given trigger string. Must be JSON or in SimpleTriggerNotation");
         }
-        
+
         addTrigger(wpsId, identifier, tConfig);
     }
-    
+
     protected TriggerConfig unmarshallSimpleNotation(final String notation) throws CommandException {
         return new SimpleTriggerNotationParser().parse(notation);
     }
@@ -81,13 +78,13 @@ public abstract class MonitorCommandWithTrigger extends MonitorCommand {
 
         final TriggerConfig result = gson.fromJson(json, new TypeToken<TriggerConfig>() {
         }.getType());
-        
-        if(result.getStart() == null || result.getEnd() == null || result.getInterval() == null || result.getIntervalType() == null) {
+
+        if (result.getStart() == null || result.getEnd() == null || result.getInterval() == null || result.getIntervalType() == null) {
             throw new CommandException("One of the required config options of the given "
                     + "trigger string are missing. "
                     + "start, end, intervalType and interval are required.");
         }
-        
+
         return result;
     }
 }
