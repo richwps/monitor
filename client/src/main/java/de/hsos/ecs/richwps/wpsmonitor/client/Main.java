@@ -17,8 +17,8 @@ package de.hsos.ecs.richwps.wpsmonitor.client;
 
 import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientCreateException;
 import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientException;
-import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsProcessNotFoundException;
 import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsNotFoundException;
+import de.hsos.ecs.richwps.wpsmonitor.client.exception.WpsMonitorClientWpsProcessNotFoundException;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsMetricResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;

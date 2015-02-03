@@ -17,7 +17,6 @@ package de.hsos.ecs.richwps.wpsmonitor.client.resource.converter;
 
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import java.net.MalformedURLException;
 
 /**
  *
