@@ -20,6 +20,7 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandAnn
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.StringConverter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.impl.StringToDateConverter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.impl.StringToIntegerConverter;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.impl.StringToLongConverter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.impl.StringToUrlConverter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.HelpCommand;
@@ -67,6 +68,7 @@ public class CommandLineInterfaceBuilder {
         converterMap.put(Date.class, new StringToDateConverter());
         converterMap.put(URL.class, new StringToUrlConverter());
         converterMap.put(Integer.class, new StringToIntegerConverter());
+        converterMap.put(Long.class, new StringToLongConverter());
         
         return new CommandAnnotationProcessor(new GnuParser(), converterMap);
     }
