@@ -26,10 +26,9 @@ See the [Project Site](http://fruchuxs.github.io/RichWPS-Monitor/) for Releases 
 
 
 ## V2 Changelog
-Changelog: 
 * WPS Identifier removed 
 * MeasureJobFactory now caches WpsProcessEntity instances instead of querying the database at every create call 
-* MonitorControl Facade extended and adjusted (endpoint selection instead of wpsIdentifier, selection by wpsId also possible) 
+* MonitorControl Facade extended and adjusted (endpoint selection instead of wpsIdentifier, selection by wpsId also possible)
 * getWpsId(URL) and getWpsProcessId(URL, String) methods added to the monitorcontrol facade to fetch the internal database IDs 
 * DataAccess API extended and adjusted (selection by wpsId, endpoint selection instead of wpsIdentifier) 
 * wpsUri renamed to endpoint 
@@ -40,6 +39,60 @@ Changelog:
 * GUI tests removed (in fact the gui should be replaced in the future and the tests are not working on every machine ..) 
 * RESTful Interface display option removed.  Metrics are now always shown
 
+
+##System requirements
+* Java SE 1.7
+* JDK 1.7
+
+##Installation
+Clone the repository and build the Application. Move the compiled `WPSMonitor-x.jar` from the target directory to the destination directory and place the `Database` directory relative to the *.jar binary. The *.jar binary needs write rights to their directory to create the logs directory to write the logs and monitor.properties file.
+
+**Example:**
+```
+./WPSMonitor-2.0.jar
+./Database/MonitoredData
+./Database/QuartzJobStore
+```
+
+##Start and Systemservice script for Linux (Ubuntu)
+Thanks for the Scripts to Dalcacer!
+
+**Startscript:**
+`startmonitor.sh`
+```shell
+#!/bin/bash
+cd /home/monitor/bin/
+find . -name "*.lck" -exec rm {} +
+nohup java -jar target/WPSMonitor-2.1.jar --ui-type none &
+
+```
+
+**Startservice Script (expected you have an user called `monitor`)**
+`/etc/init.d/monitor`:
+```shell
+#! /bin/sh
+user=monitor
+bin_dir=/home/monitor/bin
+start_log=${bin_dir}/init.log
+
+case "$1" in
+    start)
+    echo "Starting monitor."
+        sudo -u ${user} /home/monitor/startmonitor.sh >> ${start_log}
+        ;;
+    stop)
+    echo "Stoping monitor"
+    pgrep -u monitor java | xargs kill    
+        ;;
+    restart)
+    echo "Restarting monitor"
+    pgrep -u monitor java | xargs kill
+    sudo -u ${user} /home/monitor/startmonitor.sh >> ${start_log}
+        ;;
+esac
+
+exit 0
+```
 ## Monitor Start Parameters
 ```
 --ui-type <cli|gui|none>
@@ -52,7 +105,7 @@ Changelog:
 ## Monitor CLI
 For all commands which needs the --wps parameter (except create), you can also use --wps-id instead if you know about the WPS ID. You can find out the wps id with the show command.
 
-Command Overview:
+**Command Overview:**
 ```
 create --wps=<endpoint>[ --process=<identifier>[ --trigger={start:<start>, end:<end>, interval:<interval>, type:<type>}]]
 add --wps=<endpoint> --process=<identifier> [ --trigger={start:<start>, end:<end>, interval:<interval>, type:<type>} | --request-file=<filepath>]
@@ -66,19 +119,19 @@ resume --wps=<endpoint> --process=<identifier>
 ###Add Triggers
 To add triggers you can use the --trigger parameter of the create or add command. The trigger can be in JSON or in the Simple Trigger Notation. The last of the two possibilities is easier to use.
 
-Json Example:
+**Json Example:**
 ```json
 create --wps http://example.com --process SimpleBuffer --trigger '{"intervalType":"SECOND", "start":"Jan 31, 2015 7:20:04 PM", "end":"Feb 19, 2015 7:20:04 PM", "interval":120}'
 ```
 
-Simple Trigger Notation (STN) Example:
+**Simple Trigger Notation (STN) Example:**
 ```
 create --wps http://example.com --process SimpleBuffer --trigger "@Second(120), now, 22.02.2015"
 ```
 
-The keyword now will be replaced with the current time.
+The keyword `now` will be replaced with the current time.
 
-STN general usage:
+**STN general usage:**
 ```
 @second|minute|hour|day|week|month(<interval : integer>), <start : date>, <end : date>
 ```
@@ -178,7 +231,7 @@ help		Prints all Commands with their descriptions and options.
 ### Create own Commands
 For own `MonitorCommand` implementations you need to create an own class which extends the abstract class `MonitorCommand` and implements the `execute`() method. For own options like `--file=<file>` it's necessary to create a non final field like `private String fileName` with the `@CommandOption` annotation.
 
-Annotation Overview:
+**Annotation Overview:**
 ```java 
 public @interface CommandOption {
     String shortOptionName();
@@ -203,7 +256,7 @@ The example below creates an option `--f` (`--file` also possible) with the give
     private String file;
 ```
 
-Complete Example:
+**Complete Example:**
 ```java
 public class ExampleCommand extends MonitorCommand {
     @CommandOption(
