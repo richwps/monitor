@@ -55,7 +55,6 @@ Clone the repository and build the Application. Move the compiled `WPSMonitor-x.
 ```
 
 ##Start and Systemservice script for Linux (Ubuntu)
-Thanks for the Scripts to Dalcacer!
 
 **Startscript:**
 `startmonitor.sh`
