@@ -325,6 +325,7 @@ By default the Monitor RESTful Interface is reachable on port 1111.
 | MonitorControlService.pauseMonitoring          | WpsProcessEntity  |
 
 ### Monitor package structure for developers
+```
 +---boundary
 ¦   +---cli : The command line interface for the monitor
 ¦   ¦   ¦   
@@ -391,7 +392,7 @@ By default the Monitor RESTful Interface is reachable on port 1111.
     +---qos : QOS implementations packge
         ¦   
         +---response : Response metric and measurement implementation
-
+```
 ## Client
 The Monitor Client uses the RESTful Interface of the monitor to fetch QoSMetrics of WPS Processes of a specific WPS endpoint. The Client is a library which can be used in your project.
 
