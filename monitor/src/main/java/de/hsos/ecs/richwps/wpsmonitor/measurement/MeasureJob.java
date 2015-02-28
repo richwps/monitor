@@ -76,7 +76,7 @@ public class MeasureJob implements Job {
         this.processEntity = Validate.notNull(entity, "entity");
         this.wpsClient = Validate.notNull(wpsClient, "wpsClient");
 
-        error = false;
+        this.error = false;
     }
 
     @Override

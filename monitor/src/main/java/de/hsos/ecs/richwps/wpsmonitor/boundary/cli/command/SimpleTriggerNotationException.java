@@ -15,8 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
-
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>

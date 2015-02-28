@@ -20,11 +20,11 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * DataAccess for {@link WpsProcessEntity}-objects.
+ * GenericDataAccess for {@link WpsProcessEntity}-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface WpsProcessDataAccess extends DataAccess<WpsProcessEntity> {
+public interface WpsProcessDataAccess extends GenericDataAccess<WpsProcessEntity> {
 
     /**
      * Finds a {@link WpsProcessEntity}-object that matches the given wpsId &&

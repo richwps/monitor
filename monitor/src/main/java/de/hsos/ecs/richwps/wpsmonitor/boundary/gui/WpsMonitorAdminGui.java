@@ -16,11 +16,11 @@
 package de.hsos.ecs.richwps.wpsmonitor.boundary.gui;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.AboutDialog;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.MonitorPropertiesDialog;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.datasource.DataSourceDialog;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.elements.wps.WpsPanel;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.logviewer.LogViewerDialog;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.controls.miscs.AboutDialog;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.controls.miscs.MonitorPropertiesDialog;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.controls.datasource.DataSourceDialog;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.controls.wps.WpsPanel;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.controls.miscs.LogViewerDialog;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.utils.MessageDialogs;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.MonitorException;
@@ -116,7 +116,7 @@ public class WpsMonitorAdminGui extends JFrame {
      * Load data
      */
     private void init() {
-        List<WpsEntity> wpsList = monitor.getMonitorControl()
+        List<WpsEntity> wpsList = monitor.ServicegetMonitorControl()
                 .getWpsList();
 
         wpsAddPanel.removeAll();
@@ -179,7 +179,7 @@ public class WpsMonitorAdminGui extends JFrame {
         WpsEntity wps = new WpsEntity(endpoint);
 
         Boolean isWpsCreated = monitor
-                .getMonitorControl()
+                .ServicegetMonitorControl()
                 .createWps(wps);
 
         if (isWpsCreated) {
@@ -490,7 +490,7 @@ public class WpsMonitorAdminGui extends JFrame {
                         "Error!",
                         "Please enter a valid Endpoint!"
                 );
-            } else if (monitor.getMonitorControl().isWpsExists(wpsEndpoint)) {
+            } else if (monitor.ServicegetMonitorControl().isWpsExists(wpsEndpoint)) {
                 MessageDialogs.showError(this,
                         "Already exists!",
                         "A WPS-Server with this identifier is already registered in the monitor. Choose another Identifier instead."

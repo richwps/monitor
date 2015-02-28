@@ -15,8 +15,8 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.measurement;
 
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.ArrayList;
 import java.util.List;

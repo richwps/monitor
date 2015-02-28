@@ -19,8 +19,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.Hide;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.Hide;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 
 /**
  * The prefered PresentateStrategy. It uses Gson.

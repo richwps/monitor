@@ -24,18 +24,20 @@ import java.util.List;
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface WpsDataAccess extends DataAccess<WpsEntity> {
+public interface WpsDataAccess extends GenericDataAccess<WpsEntity> {
 
     /**
-     * Gets all WpsEntity-objects.
+     * Gets all WpsEntity-objects. This method should be uses carefully. If you
+     * want to select a specific range of objects, use get(range : Range)
+     * instead.
      *
      * @return List of WpsEntity objects
      */
     public List<WpsEntity> getAll();
-    
+
     /**
      * Gets a WpsEntity-Object which matches the given endpoint.
-     * 
+     *
      * @param endpoint Endpoint of the specific WPS
      * @return WpsEntity Instance
      */

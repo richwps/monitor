@@ -15,13 +15,12 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.measurement.clean;
 
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.Application;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
 import java.util.Date;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -35,10 +34,9 @@ import org.quartz.spi.TriggerFiredBundle;
  */
 public final class CleanUpJobFactory implements JobFactory {
 
-    private static final Logger LOG = LogManager.getLogger();
-
     private final QosDaoFactory qosDaoFactory;
     private Integer olderAs;
+    private Date olderAsDate;
 
     public CleanUpJobFactory(final QosDaoFactory qosDaoFactory, final Integer olderAs) {
         this.qosDaoFactory = Validate.notNull(qosDaoFactory, "qosDaoFactory");
@@ -48,23 +46,32 @@ public final class CleanUpJobFactory implements JobFactory {
     @Override
     public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
         Job newJobInstance = null;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, -olderAs);
 
         try {
-            newJobInstance = new CleanUpJob(qosDaoFactory.create(), cal.getTime());
+            newJobInstance = new CleanUpJob(qosDaoFactory.create(), olderAsDate);
         } catch (CreateException ex) {
-            LOG.error("Can't create the qosDao-dependencie. This is necessary for the CleanUpJob. Execution aborted.", ex);
-
+            Application.exitApplicationImmediately(
+                    new AssertionError("Can't create the qosDao-dependencie. "
+                            + "This is necessary for the CleanUpJob. Execution aborted.", ex)
+            );
         }
 
         return newJobInstance;
     }
+    
+    private Date computeOlderAsDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -olderAs);
+        
+        return cal.getTime();
+    }
 
     public void setOlderAs(Integer olderAs) {
-        if (olderAs == null || olderAs > 0) {
+        if (olderAs != null && olderAs > 0) {
             this.olderAs = olderAs;
+            
+            this.olderAsDate = computeOlderAsDate();
         }
     }
 }

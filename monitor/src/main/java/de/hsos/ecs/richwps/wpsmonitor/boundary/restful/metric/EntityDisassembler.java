@@ -15,8 +15,8 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;

@@ -37,7 +37,9 @@ public class CleanUpJob implements Job {
     private final Date olderAs;
 
     /**
-     *
+     * Creates a CleanUpJob instance which will call the deleteAllOlderAss method
+     * of the monitor which are older as oderAs.
+     * 
      * @param qosDao QosDataAccess instance
      * @param olderAs Date instance
      */

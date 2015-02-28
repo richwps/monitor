@@ -15,7 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 
 /**

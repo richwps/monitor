@@ -15,8 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.units.MeasureUnit;
-
 /**
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>

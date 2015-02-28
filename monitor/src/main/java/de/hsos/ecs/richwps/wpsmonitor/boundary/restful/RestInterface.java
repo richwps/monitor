@@ -15,11 +15,12 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControlService;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
@@ -32,8 +33,8 @@ import spark.Request;
 import spark.Response;
 
 /**
- * A REST interface to interact with the MonitorControl instance over a
- * webbrowser.
+ * A REST interface to interact with the MonitorControlService instance over a
+ webbrowser.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -53,10 +54,10 @@ public class RestInterface implements AutoCloseable {
     private final RouteRegister routeRegister;
 
     /**
-     * MonitorControl instance to interact with the Monitor. It is used as
+     * MonitorControlService instance to interact with the Monitor. It is used as
      * dependency for the registred routes.
      */
-    private final MonitorControl monitorControl;
+    private final MonitorControlService monitorControl;
 
     /**
      * DispatcherFactory instance. It is used as dependency for the registred
@@ -79,10 +80,10 @@ public class RestInterface implements AutoCloseable {
      * Creates a new RestInterface instance.
      *
      * @param strategy {@link PresentateStrategy} instance
-     * @param control {@link MonitorControl} instance
+     * @param control {@link MonitorControlService} instance
      * @param dispatchFactory {@link DispatcherFactory} instance
      */
-    public RestInterface(final PresentateStrategy strategy, final MonitorControl control, final DispatcherFactory dispatchFactory) {
+    public RestInterface(final PresentateStrategy strategy, final MonitorControlService control, final DispatcherFactory dispatchFactory) {
         this.strategy = Validate.notNull(strategy, "strategy");
         this.monitorControl = Validate.notNull(control, "control");
         this.dispatchFactory = Validate.notNull(dispatchFactory, "dispatchFactory");

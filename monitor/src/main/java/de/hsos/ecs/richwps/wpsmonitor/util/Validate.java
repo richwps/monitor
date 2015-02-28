@@ -15,6 +15,8 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.util;
 
+import org.apache.http.util.Args;
+
 /**
  * Class which many validation methods.
  * 
@@ -31,9 +33,7 @@ public class Validate {
      * @return T
      */
     public static <T> T notNull(final T var, final String name) {
-        if (var == null) {
-            throw new IllegalArgumentException(name + " was null.");
-        }
+        Args.notNull(var, name);
 
         return var;
     }
@@ -103,8 +103,25 @@ public class Validate {
      * @return var
      */
     public static String notEmpty(final String var) {
+        return notEmpty(var, "");
+    }
+    
+    /**
+     * Checks if the given String is not Empty
+     *
+     * @param var String to validate
+     * @param varName Name of the variable
+     * @return var
+     */
+    public static String notEmpty(final String var, final String varName) {
+        String msg = "The given String has no content.";
+        
+        if(varName != null) {
+            msg = "The given String \"" + varName +"\" has no content.";
+        }
+        
         if (var == null || var.isEmpty()) {
-            throw new IllegalArgumentException("The given String is empty.");
+            throw new IllegalArgumentException(msg);
         }
 
         return var;

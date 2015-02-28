@@ -39,7 +39,7 @@ public class Range {
      * @param offset Startvalue
      * @param count Total number of elements
      */
-    public Range(Integer offset, Integer count) {
+    public Range(final Integer offset, final Integer count) {
         if (offset != null && offset < 0
                 || count != null && count < 0) {
             throw new IllegalArgumentException("Count and offset need to be greater than zero.");

@@ -15,8 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.CommandLineInterfaceProxy;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.CliProxy;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -30,7 +29,7 @@ public abstract class Command {
     protected String commandName;
     protected String description;
     protected Options options;
-    protected CommandLineInterfaceProxy consoleProxy;
+    protected CliProxy consoleProxy;
 
     protected static final String LINE_SEPERATOR = System.getProperty("line.separator");
 
@@ -40,7 +39,7 @@ public abstract class Command {
         this.options = new Options();
     }
 
-    public final void setConsoleProxy(final CommandLineInterfaceProxy consoleProxy) {
+    public final void setConsoleProxy(final CliProxy consoleProxy) {
         this.consoleProxy = consoleProxy;
     }
 

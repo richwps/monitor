@@ -16,12 +16,11 @@
 package de.hsos.ecs.richwps.wpsmonitor.control;
 
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
-import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
-import de.hsos.ecs.richwps.wpsmonitor.control.impl.MonitorControlImpl;
+import de.hsos.ecs.richwps.wpsmonitor.control.threadsave.ThreadSaveMonitorControlService;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.JobFactoryService;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.config.MonitorConfig;
 import de.hsos.ecs.richwps.wpsmonitor.data.config.MonitorConfigException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDaoFactory;
@@ -31,7 +30,7 @@ import de.hsos.ecs.richwps.wpsmonitor.measurement.MeasureJobFactory;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.ProbeService;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJob;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.clean.CleanUpJobFactory;
-import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.BuilderException;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -48,15 +47,15 @@ import org.quartz.TriggerKey;
 
 /**
  * Representation of the WpsMonitor. To control the Monitor, call
- * getMonitorControl. MonitorControl is a facade to control the monitor (e.g.
- * create a WPS and trigger processes for it). Call start() or shutdown() to
- * start or stop the monitor. The monitor fires a monitor.shutdown-event if
- * shutdown() is called. shutdown() will be called through a shutdownHook if the
- * monitor is not shut down already. Also a cleanUp-job is registred, which will
- * try to clean up old measurements. This behavior can be configured in the
- * monitor.properties file.
- *
- * This instance initializt the Monitor with the MonitorBuilder instance.
+ ServicegetMonitorControl. MonitorControlService is a facade to control the monitor
+ (e.g. create a WPS and trigger processes for it). Call start() or shutdown()
+ to start or stop the monitor. The monitor fires a monitor.shutdown-event if
+ shutdown() is called. shutdown() will be called through a shutdownHook if the
+ monitor is not shut down already. Also a cleanUp-job is registred, which will
+ try to clean up old measurements. This behavior can be configured in the
+ monitor.properties file.
+
+ This instance initializt the Monitor with the MonitorBuilder instance.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
@@ -64,7 +63,7 @@ public class Monitor {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private MonitorControlImpl monitorControl;
+    private ThreadSaveMonitorControlService monitorControl;
     private MonitorBuilder builderInstance;
     private MonitorConfig config;
     private MonitorEventHandler eventHandler;
@@ -131,9 +130,9 @@ public class Monitor {
 
     /**
      * Restarts the Monitor-Instance.
-     * 
+     *
      * @throws MonitorException
-     * @throws MonitorConfigException 
+     * @throws MonitorConfigException
      */
     public void restart() throws MonitorException, MonitorConfigException {
         eventHandler
@@ -196,7 +195,7 @@ public class Monitor {
 
     private void cleanupJob() {
         try {
-            SchedulerControl schedulerControl = monitorControl.getSchedulerControl();
+            SchedulerControlService schedulerControl = monitorControl.getSchedulerControl();
             String schedulerName = schedulerControl.getScheduler()
                     .getSchedulerName();
 
@@ -278,11 +277,11 @@ public class Monitor {
     }
 
     /**
-     * Gets the MonitorControl-Facade.
+     * Gets the MonitorControlService.
      *
-     * @return MonitorControl instance
+     * @return MonitorControlService instance
      */
-    public MonitorControl getMonitorControl() {
+    public MonitorControlService ServicegetMonitorControl() {
         return monitorControl;
     }
 
@@ -298,9 +297,9 @@ public class Monitor {
     /**
      * Gets the Scheduler control.
      *
-     * @return SchedulerControl instance
+     * @return SchedulerControlService instance
      */
-    public SchedulerControl getSchedulerControl() {
+    public SchedulerControlService getSchedulerControlService() {
         return monitorControl.getSchedulerControl();
     }
 

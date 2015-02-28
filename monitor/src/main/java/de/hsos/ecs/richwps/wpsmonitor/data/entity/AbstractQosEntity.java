@@ -15,7 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.data.entity;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.Hide;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.Hide;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

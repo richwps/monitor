@@ -17,7 +17,7 @@ package de.hsos.ecs.richwps.wpsmonitor.control;
 
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEvent;
 import de.hsos.ecs.richwps.wpsmonitor.control.event.MonitorEventHandler;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDaoFactory;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;

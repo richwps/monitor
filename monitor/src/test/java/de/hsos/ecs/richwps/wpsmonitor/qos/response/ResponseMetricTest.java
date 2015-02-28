@@ -15,6 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.qos.response;
 
+import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetric;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import junit.framework.Assert;

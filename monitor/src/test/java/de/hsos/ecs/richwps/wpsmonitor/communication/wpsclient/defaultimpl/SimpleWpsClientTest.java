@@ -15,12 +15,13 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.defaultimpl;
 
+import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.simple.SimpleWpsClientFactory;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClient;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsClientFactory;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsProcessInfo;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsRequest;
 import de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient.WpsResponse;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

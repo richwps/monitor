@@ -84,13 +84,13 @@ public class MonitorEventHandler {
      *
      * @param eventName name of the event which the listener should listen
      * @param eventToRegister EventListener instance
-     * @throws EventNotFound If the event is not found
+     * @throws EventNotFoundException If the event is not found
      */
-    public void registerListener(final String eventName, final MonitorEventListener eventToRegister) throws EventNotFound {
+    public void registerListener(final String eventName, final MonitorEventListener eventToRegister) throws EventNotFoundException {
         if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
             LOG.debug("EventHandler: registerListener: Event {} not found!", eventName);
 
-            throw new EventNotFound(eventName);
+            throw new EventNotFoundException(eventName);
         }
 
         events.get(eventName)
@@ -104,13 +104,13 @@ public class MonitorEventHandler {
      *
      * @param eventName name of the event
      * @param listenerToRemove Eventlistener object which should be removed
-     * @throws EventNotFound If the event is not found
+     * @throws EventNotFoundException If the event is not found
      */
-    public void removeListener(final String eventName, final MonitorEventListener listenerToRemove) throws EventNotFound {
+    public void removeListener(final String eventName, final MonitorEventListener listenerToRemove) throws EventNotFoundException {
         if (!events.containsKey(Validate.notNull(eventName, "eventName"))) {
             LOG.debug("EventHandler: removeListener: Event {} not found!", eventName);
 
-            throw new EventNotFound(eventName);
+            throw new EventNotFoundException(eventName);
         }
 
         events.get(eventName)

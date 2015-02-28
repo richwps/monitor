@@ -18,7 +18,6 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOption;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.net.URL;

@@ -49,5 +49,10 @@ public interface WpsClient {
      */
     public WpsResponse execute(final WpsRequest wpsRequest);
 
+    /**
+     * Inits the specific client implementation with a WpsClientConfig instance.
+     *
+     * @param config
+     */
     public void init(final WpsClientConfig config);
 }

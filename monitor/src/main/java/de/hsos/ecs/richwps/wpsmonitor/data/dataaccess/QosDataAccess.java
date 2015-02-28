@@ -22,11 +22,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * DataAccess for {@link MeasuredDataEntity}-objects.
+ * GenericDataAccess for {@link MeasuredDataEntity}-objects.
  *
  * @author Florian Vogelpohl <floriantobias@gmail.com>
  */
-public interface QosDataAccess extends DataAccess<MeasuredDataEntity> {
+public interface QosDataAccess extends GenericDataAccess<MeasuredDataEntity> {
 
     /**
      * Gets all {@link MeasuredDataEntity}-Objects that match the given

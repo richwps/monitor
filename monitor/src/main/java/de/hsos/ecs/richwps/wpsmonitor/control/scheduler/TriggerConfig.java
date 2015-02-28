@@ -15,7 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.control.scheduler;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.Hide;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.Hide;
 import de.hsos.ecs.richwps.wpsmonitor.util.Pair;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 import java.util.Date;

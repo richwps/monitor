@@ -15,12 +15,13 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.DispatcherFactory;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.MetricFactoryMap;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.QosMetric;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
-import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControlService;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.BuilderException;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 
 /**
@@ -36,9 +37,9 @@ public class RestInterfaceBuilder {
     private PresentateStrategy strategy;
 
     /**
-     * MonitorControl instance.
+     * MonitorControlService instance.
      */
-    private MonitorControl monitorControl;
+    private MonitorControlService monitorControl;
 
     /**
      * Metric factory Map.
@@ -91,12 +92,12 @@ public class RestInterfaceBuilder {
     }
 
     /**
-     * Sets the MonitorControl instance.
+     * Sets the MonitorControlService instance.
      *
-     * @param monitorControl MonitorControl instance
+     * @param monitorControl MonitorControlService instance
      * @return RestInterfaceBuilder instance
      */
-    public RestInterfaceBuilder withMonitorControl(final MonitorControl monitorControl) {
+    public RestInterfaceBuilder withMonitorControl(final MonitorControlService monitorControl) {
         this.monitorControl = Validate.notNull(monitorControl, "monitorControl");
 
         return this;

@@ -15,7 +15,6 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.units.MeasureUnit;
 import java.util.HashMap;
 import java.util.Map;
 

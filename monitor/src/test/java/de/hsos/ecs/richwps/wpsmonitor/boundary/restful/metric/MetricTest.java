@@ -15,7 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.AbstractQosEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.MeasuredDataEntity;

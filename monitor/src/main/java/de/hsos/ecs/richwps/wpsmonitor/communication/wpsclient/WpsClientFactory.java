@@ -15,9 +15,9 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.communication.wpsclient;
 
-import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorBuilder;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
 import de.hsos.ecs.richwps.wpsmonitor.measurement.MeasureJob;
 import de.hsos.ecs.richwps.wpsmonitor.util.Validate;
 

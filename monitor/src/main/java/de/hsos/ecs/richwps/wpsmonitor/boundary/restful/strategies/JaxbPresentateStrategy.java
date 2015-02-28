@@ -15,7 +15,7 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

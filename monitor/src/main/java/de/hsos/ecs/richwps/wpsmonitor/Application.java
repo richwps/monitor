@@ -15,22 +15,22 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor;
 
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.CommandLineInterfaceBuilder;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.exception.CommandException;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.AddCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.CreateCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.DeleteCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.MonitorExitCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.PauseCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.ResumeCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.ShowCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.StatusCommand;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.impl.TestCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.CliBuilder;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.CommandException;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.AddCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.CreateCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.DeleteCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.MonitorExitCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.PauseCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.ResumeCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.ShowCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.StatusCommand;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.commands.TestCommand;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.console.MonitorConsole;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.console.MonitorConsoleBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.GuiStarter;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.DataSourceCreator;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasource.semanticproxy.SemanticProxyData;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.gui.datasources.SemanticProxyData;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.HttpOperation;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.MonitorRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.RestInterface;
@@ -41,14 +41,14 @@ import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsProcessesRo
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.routes.ListWpsRoute;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies.JsonPresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControlService;
 import de.hsos.ecs.richwps.wpsmonitor.control.MonitorException;
-import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
-import de.hsos.ecs.richwps.wpsmonitor.create.Factory;
-import de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
-import de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseMetricFactory;
-import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorBuilder;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.Factory;
+import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
+import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseMetricFactory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.BuilderException;
 import de.hsos.ecs.richwps.wpsmonitor.util.Log4j2Utils;
 import java.util.HashSet;
 import java.util.Locale;
@@ -71,8 +71,7 @@ public class Application {
         try {
             new Application(new ApplicationStartOptions(args)).run();
         } catch (Throwable ex) {
-            LOG.fatal("Fatal execution Error.", ex);
-            Runtime.getRuntime().exit(1);
+            exitApplicationImmediately(ex);
         }
     }
 
@@ -90,7 +89,7 @@ public class Application {
             monitor.start();
 
             LOG.trace("Start REST Interface ...");
-            RestInterface rest = setupRest(monitor.getMonitorControl());
+            RestInterface rest = setupRest(monitor.ServicegetMonitorControl());
             rest.start();
 
             monitor.addShutdownRoutine(rest);
@@ -139,7 +138,7 @@ public class Application {
                     .silenceMode(true)
                     .build();
             
-            new CommandLineInterfaceBuilder(console)
+            new CliBuilder(console)
                     .addCommand(new AddCommand(monitor))
                     .addCommand(new MonitorExitCommand(monitor))
                     .addCommand(new CreateCommand(monitor))
@@ -180,9 +179,9 @@ public class Application {
      *
      * @param monitor Monitor instance
      * @return RestInterface Instance
-     * @throws de.hsos.ecs.richwps.wpsmonitor.util.BuilderException
+     * @throws de.hsos.ecs.richwps.wpsmonitor.creation.BuilderException
      */
-    public RestInterface setupRest(final MonitorControl monitor) throws BuilderException {
+    public RestInterface setupRest(final MonitorControlService monitor) throws BuilderException {
 
         // create RESTful service
         RestInterface restInterface = new RestInterfaceBuilder()
@@ -207,6 +206,11 @@ public class Application {
                 .addRoute(HttpOperation.GET, new ListWpsRoute());
 
         return restInterface;
+    }
+    
+    public static void exitApplicationImmediately(final Throwable t) {
+        LOG.fatal("Fatal execution Error.", t);
+        Runtime.getRuntime().exit(1);
     }
 
     static {

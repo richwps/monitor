@@ -15,16 +15,15 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.control;
 
-import de.hsos.ecs.richwps.wpsmonitor.control.builder.MonitorBuilder;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
-import de.hsos.ecs.richwps.wpsmonitor.create.CreateException;
+import de.hsos.ecs.richwps.wpsmonitor.creation.CreateException;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.QosDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.dataaccess.WpsProcessDataAccess;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsProcessEntity;
-import de.hsos.ecs.richwps.wpsmonitor.qos.response.ResponseFactory;
-import de.hsos.ecs.richwps.wpsmonitor.util.BuilderException;
+import de.hsos.ecs.richwps.wpsmonitor.measurement.qos.response.ResponseFactory;
+import de.hsos.ecs.richwps.wpsmonitor.creation.BuilderException;
 import java.net.MalformedURLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,7 +53,7 @@ public class MonitorControlTest {
     public static void tearDownClass() {
     }
 
-    private MonitorControl mControl;
+    private MonitorControlService mControl;
     private Monitor monitor;
     private WpsProcessDataAccess wpsProcessDao;
     private WpsDataAccess wpsDao;
@@ -74,7 +73,7 @@ public class MonitorControlTest {
             monitor.getProbeService()
                     .addProbe(new ResponseFactory());
 
-            mControl = monitor.getMonitorControl();
+            mControl = monitor.ServicegetMonitorControl();
 
             wpsProcessDao = monitor.getBuilderInstance()
                     .getWpsProcessDaoFactory().create();
@@ -122,7 +121,7 @@ public class MonitorControlTest {
 
         Boolean isRegistred = false;
         try {
-            isRegistred = monitor.getSchedulerControl()
+            isRegistred = monitor.getSchedulerControlService()
                     .isJobRegistred(jobKey);
         } catch (SchedulerException ex) {
 
@@ -149,7 +148,7 @@ public class MonitorControlTest {
 
     private Boolean checkIfSaved(TriggerKey tKey) {
         try {
-            return monitor.getSchedulerControl()
+            return monitor.getSchedulerControlService()
                     .isTriggerRegistred(tKey);
         } catch (SchedulerException ex) {
             return false;
@@ -161,7 +160,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of createWps method, of class MonitorControl.
+     * Test of createWps method, of class MonitorControlService.
      */
     @Test
     public void testCreateWps_WpsEntity() {
@@ -172,7 +171,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of createWps method, of class MonitorControl.
+     * Test of createWps method, of class MonitorControlService.
      */
     @Test
     public void testCreateWps_String_URI() {
@@ -183,7 +182,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of createAndScheduleProcess method, of class MonitorControl.
+     * Test of createAndScheduleProcess method, of class MonitorControlService.
      */
     @Test
     public void testCreateAndScheduleProcess_String_String() {
@@ -197,7 +196,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of createAndScheduleProcess method, of class MonitorControl.
+     * Test of createAndScheduleProcess method, of class MonitorControlService.
      */
     @Test
     public void testCreateAndScheduleProcess_WpsProcessEntity() {
@@ -209,7 +208,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of createAndScheduleProcess method, of class MonitorControl.
+     * Test of createAndScheduleProcess method, of class MonitorControlService.
      */
     @Test
     public void testCreateAndScheduleProcessWithAlreadyExistedProcess() {
@@ -220,7 +219,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of saveTrigger method, of class MonitorControl.
+     * Test of saveTrigger method, of class MonitorControlService.
      */
     @Test
     public void testSaveTrigger_WpsProcessEntity_TriggerConfig() {
@@ -234,7 +233,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of setTestRequest method, of class MonitorControl.
+     * Test of setTestRequest method, of class MonitorControlService.
      */
     @Test
     public void testSetTestRequest_3args() {
@@ -246,7 +245,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of updateWps method, of class MonitorControl.
+     * Test of updateWps method, of class MonitorControlService.
      */
     @Test
     public void testUpdateWps_3args() {
@@ -274,7 +273,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of isMonitoringPaused method, of class MonitorControl.
+     * Test of isMonitoringPaused method, of class MonitorControlService.
      */
     @Test
     public void testPauseAndIsPausedMonitoring() {
@@ -290,7 +289,7 @@ public class MonitorControlTest {
     }
 
     /**
-     * Test of resumeMonitoring method, of class MonitorControl.
+     * Test of resumeMonitoring method, of class MonitorControlService.
      */
     @Test
     public void testResumeMonitoring() {

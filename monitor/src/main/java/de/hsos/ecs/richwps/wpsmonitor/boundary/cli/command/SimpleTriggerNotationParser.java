@@ -16,7 +16,7 @@
 package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.ConverterException;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converter.impl.StringToDateConverter;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.converters.StringToDateConverter;
 import de.hsos.ecs.richwps.wpsmonitor.control.scheduler.TriggerConfig;
 import java.util.Date;
 import java.util.HashMap;

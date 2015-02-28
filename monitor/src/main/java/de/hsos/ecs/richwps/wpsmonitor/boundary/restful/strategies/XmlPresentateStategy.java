@@ -17,7 +17,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategies;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.PresentateStrategy;
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 
 /**
  * A very bad JAXB alternative. The XML string is not good.

@@ -15,13 +15,14 @@
  */
 package de.hsos.ecs.richwps.wpsmonitor.boundary.restful;
 
+import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.strategy.PresentateStrategy;
 import de.hsos.ecs.richwps.wpsmonitor.boundary.restful.metric.EntityDispatcher;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControlService;
 import spark.Route;
 
 /**
  * Abstract class for routes in Spark. However the route objects need some
- * dependencies: {@link MonitorControl}, {@link EntityDispatcher} and the
+ * dependencies: {@link MonitorControlService}, {@link EntityDispatcher} and the
  * {@link PresentateStrategy} instance. This class is abstract because of the
  * init method, which is called before a route is registered through the
  * {@link RouteRegister} class.
@@ -30,7 +31,7 @@ import spark.Route;
  */
 public abstract class MonitorRoute extends Route {
 
-    private MonitorControl monitorControl;
+    private MonitorControlService monitorControl;
     private EntityDispatcher dispatch;
     private PresentateStrategy strategy;
     protected final String route;
@@ -44,17 +45,17 @@ public abstract class MonitorRoute extends Route {
     /**
      * Initialize a route instance with the necessary dependencies.
      *
-     * @param monitorControl {@link MonitorControl} instance
+     * @param monitorControl {@link MonitorControlService} instance
      * @param dispatch {@link EntityDispatcher} instance
      * @param strategy {@link PresentateStrategy} instance
      */
-    public void init(final MonitorControl monitorControl, final EntityDispatcher dispatch, final PresentateStrategy strategy) {
+    public void init(final MonitorControlService monitorControl, final EntityDispatcher dispatch, final PresentateStrategy strategy) {
         this.monitorControl = monitorControl;
         this.dispatch = dispatch;
         this.strategy = strategy;
     }
 
-    public MonitorControl getMonitorControl() {
+    public MonitorControlService getMonitorControl() {
         return monitorControl;
     }
 

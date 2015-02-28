@@ -17,7 +17,7 @@ package de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command;
 
 import de.hsos.ecs.richwps.wpsmonitor.boundary.cli.command.annotation.CommandOption;
 import de.hsos.ecs.richwps.wpsmonitor.control.Monitor;
-import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControl;
+import de.hsos.ecs.richwps.wpsmonitor.control.MonitorControlService;
 import java.net.URL;
 
 /**
@@ -55,12 +55,12 @@ public abstract class MonitorCommand extends Command {
     protected String identifier;
     
     protected final Monitor monitor;
-    protected final MonitorControl monitorControl;
+    protected final MonitorControlService monitorControl;
 
     public MonitorCommand(final String commandName, final String description, final Monitor monitor) {
         super(commandName, description);
 
         this.monitor = monitor;
-        this.monitorControl = monitor.getMonitorControl();    
+        this.monitorControl = monitor.ServicegetMonitorControl();    
     }
 }
