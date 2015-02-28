@@ -20,7 +20,7 @@ See the [Project Site](http://fruchuxs.github.io/RichWPS-Monitor/) for Releases 
 * CLI added
 * Start parameters added
 * `ApplicationInfo` class added with some constants like VERSION, PROJECT_SITE, etc.
-* `getProcess(endpoint : URL, identifier : String) : WpsProcessEntity` method added to the `MonitorControl` facade
+* `getProcess(endpoint : URL, identifier : String) : WpsProcessEntity` method added to the `MonitorControlService` 
 * The RESTful Interface now implements the `java.lang.AutoCloseable` interface
 * `Monitor#shutdown()` now also shutdowns the underlying Jetty Webserver
 
@@ -29,8 +29,8 @@ See the [Project Site](http://fruchuxs.github.io/RichWPS-Monitor/) for Releases 
 Changelog: 
 * WPS Identifier removed 
 * MeasureJobFactory now caches WpsProcessEntity instances instead of querying the database at every create call 
-* MonitorControl Facade extended and adjusted (endpoint selection instead of wpsIdentifier, selection by wpsId also possible) 
-* getWpsId(URL) and getWpsProcessId(URL, String) methods added to the monitorcontrol facade to fetch the internal database IDs 
+* MonitorControlService extended and adjusted (endpoint selection instead of wpsIdentifier, selection by wpsId also possible) 
+* getWpsId(URL) and getWpsProcessId(URL, String) methods added to the MonitorControlService  to fetch the internal database IDs 
 * DataAccess API extended and adjusted (selection by wpsId, endpoint selection instead of wpsIdentifier) 
 * wpsUri renamed to endpoint 
 * endpoint (previously wpsUri) now saved as String (VARCHAR in the database). This makes it easier to handle URLs in the database. The WpsEntity class encapsulate the String field as URL by getter and setter methods. This changes limit the URL length to 255 characters. I have tried to save the endpoints as URL and URI, but this makes selections impossible, because JPA can't compare CLOB in JPQL statements
@@ -249,20 +249,20 @@ By default the Monitor RESTful Interface is reachable on port 1111.
 | monitor.restart                         |                   |
 | monitor.shutdown                        |                   |
 
-### Events triggered by MonitorControl
+### Events triggered by MonitorControlService
 
 | Event identifier                        | Message datatype  |
 |-----------------------------------------| ----------------- |
-| monitorcontrol.pauseMonitoring          | WpsProcessEntity  |
-| monitorcontrol.resumeMonitoring         | WpsProcessEntity  |
-| monitorcontrol.deleteProcess            | WpsProcessEntity  |
-| monitorcontrol.deleteWps                | WpsEntity         |
-| monitorcontrol.updateWps                | WpsEntity         |
-| monitorcontrol.setTestRequest           | WpsProcessEntity  |
-| monitorcontrol.createAndScheduleProcess | WpsProcessEntity  |
-| monitorcontrol.createWps                | WpsEntity         |  
-| monitorcontrol.deleteTrigger            | TriggerConfig     |
-| monitorcontrol.saveTrigger              | TriggerConfig     |
+| MonitorControlService.pauseMonitoring          | WpsProcessEntity  |
+| MonitorControlService.resumeMonitoring         | WpsProcessEntity  |
+| MonitorControlService.deleteProcess            | WpsProcessEntity  |
+| MonitorControlService.deleteWps                | WpsEntity         |
+| MonitorControlService.updateWps                | WpsEntity         |
+| MonitorControlService.setTestRequest           | WpsProcessEntity  |
+| MonitorControlService.createAndScheduleProcess | WpsProcessEntity  |
+| MonitorControlService.createWps                | WpsEntity         |  
+| MonitorControlService.deleteTrigger            | TriggerConfig     |
+| MonitorControlService.saveTrigger              | TriggerConfig     |
 
 ### Events triggered by JobExecutedHandlerThread
 
@@ -270,7 +270,75 @@ By default the Monitor RESTful Interface is reachable on port 1111.
 |-----------------------------------------| ----------------- |
 | measurement.wpsjob.wpsexception         | WpsProcessEntity  |
 | scheduler.wpsjob.wasexecuted            | WpsProcessEntity  |
-| monitorcontrol.pauseMonitoring          | WpsProcessEntity  |
+| MonitorControlService.pauseMonitoring          | WpsProcessEntity  |
+
+### Monitor package structure for developers
++---boundary
+¦   +---cli : The command line interface for the monitor
+¦   ¦   ¦   
+¦   ¦   +---command : The command API and processing
+¦   ¦   ¦   ¦   
+¦   ¦   ¦   +---annotation : Annontation processing
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---converter : Command parameter converter API
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---converters : Converter implementations
+¦   ¦   ¦           
+¦   ¦   +---commands : Command implementations
+¦   ¦   ¦       
+¦   ¦   +---console : Console implementation which is use by the CLI
+¦   ¦           
+¦   +---gui : The GUI for the monitor
+¦   ¦   ¦   
+¦   ¦   +---controls : The controls of the GUI
+¦   ¦   ¦           
+¦   ¦   +---datasource : Datasource API
+¦   ¦   ¦        
+¦   ¦   +---datasources : Datasource implementations, e.g. for the SemenaticProxy
+¦   ¦           
+¦   +---restful : The RESTful Service for the monitor
+¦       ¦   
+¦       +---metric : Metric API 
+¦       ¦       
+¦       +---routes : Route implementations
+¦       ¦     
+¦       +---strategies : Strategy implementations
+¦       ¦       
+¦       +---strategy : Strategy API
+¦               
++---communication : The communication layer of the monitor
+¦   ¦ 
+¦   +---wpsclient : WPS-client API
+¦       ¦   
+¦       +---simple : One simple WPS-Client implementation
+¦               
++---control : The control layer of the monitor
+¦   ¦   
+¦   +---event : Event handler system
+¦   ¦       
+¦   +---scheduler : Sheduler encapsulation
+¦   ¦       
+¦   +---threadsave : A thread save MonitorControlService implementation
+¦           
++---creation : Interfaces and exceptions for the serveral Builder and Factory impelementations
+¦       
++---data : The data layer of the monitor (DB abstraction, Config file)
+¦   ¦ 
+¦   +---config : Config implementation
+¦   ¦       
+¦   +---dataaccess : DataAccess API
+¦   ¦   ¦   
+¦   ¦   +---jpa : JPA implementation of the DataAccess API
+¦   ¦           
+¦   +---entity : Entities of the monitor (JPA based)
+¦           
++---measurement : Measurement Layer of the monitor
+    ¦   
+    +---clean : Cleans all measurements
+    ¦       
+    +---qos : QOS implementations packge
+        ¦   
+        +---response : Response metric and measurement implementation
 
 ## Client
 The Monitor Client uses the RESTful Interface of the monitor to fetch QoSMetrics of WPS Processes of a specific WPS endpoint. The Client is a library which can be used in your project.
