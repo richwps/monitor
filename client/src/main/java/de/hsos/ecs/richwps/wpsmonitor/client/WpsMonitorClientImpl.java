@@ -96,7 +96,11 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
     }
 
     private Boolean isMonitorReachable(final URL endpoint) {
-        try (Socket socket = new Socket(endpoint.getHost(), endpoint.getPort())) {
+        int port = endpoint.getPort();
+        if(port==-1){
+            port=80;
+        }
+        try (Socket socket = new Socket(endpoint.getHost(), port)) {
             return true;
         } catch (IOException ex) {
             return false;
