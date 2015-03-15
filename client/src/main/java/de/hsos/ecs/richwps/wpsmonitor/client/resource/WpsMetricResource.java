@@ -29,7 +29,6 @@ public class WpsMetricResource {
 
     public WpsMetricResource(final String name, final Map<String, MeasuredValue> values) {
         Validate.notNull(name);
-        Validate.notEmpty(values);
         
         this.name = name;
         this.values = values;
