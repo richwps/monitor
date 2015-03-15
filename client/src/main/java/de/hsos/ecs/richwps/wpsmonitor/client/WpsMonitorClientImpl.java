@@ -25,8 +25,6 @@ import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.converter.ResourceConverter;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
-import java.io.IOException;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,15 +94,7 @@ public class WpsMonitorClientImpl implements WpsMonitorClient {
     }
 
     private Boolean isMonitorReachable(final URL endpoint) {
-        int port = endpoint.getPort();
-        if(port==-1){
-            port=80;
-        }
-        try (Socket socket = new Socket(endpoint.getHost(), port)) {
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
+        return requester.isRequestable(endpoint);
     }
 
     @Override

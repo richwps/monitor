@@ -22,10 +22,13 @@ import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsMetricResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsProcessResource;
 import de.hsos.ecs.richwps.wpsmonitor.client.resource.WpsResource;
 import de.hsos.ecs.richwps.wpsmonitor.data.entity.WpsEntity;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang.Validate;
 
 /**
@@ -49,6 +52,23 @@ public class WpsMonitorRequester {
         this.gson = gson;
 
         this.wpsUrl = buildWpsUrl();
+    }
+    
+    public Boolean isRequestable() {
+        return isRequestable(monitorEndpoint);
+    }
+    
+    public Boolean isRequestable(final URL monitorEndpoint) {
+        try {
+            final URL wpsEndpoint = buildWpsUrl(monitorEndpoint);
+            getJson(wpsEndpoint);
+        } catch (HttpException ex) {
+            if(ex.getCause() instanceof ConnectException) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     public List<WpsEntity> getWpsList() throws HttpException {
@@ -110,6 +130,10 @@ public class WpsMonitorRequester {
     }
     
     private URL buildWpsUrl() throws HttpException {
+        return buildWpsUrl(monitorEndpoint);
+    }
+    
+    private URL buildWpsUrl(final URL monitorEndpoint) throws HttpException {
         return WpsMonitorJsonRequester.buildWpsURL(monitorEndpoint);
     }
     
